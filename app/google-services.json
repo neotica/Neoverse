@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "946324464730",
+    "project_id": "neoverse-neotica",
+    "storage_bucket": "neoverse-neotica.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:946324464730:android:8199b2d51a31374473a463",
+        "android_client_info": {
+          "package_name": "id.neotica.neoverse"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD7syN3V7wPiQ5kZW07If3idX3IkQxFEjg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
