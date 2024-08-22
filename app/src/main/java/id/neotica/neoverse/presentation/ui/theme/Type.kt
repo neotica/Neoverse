@@ -1,4 +1,4 @@
-package id.neotica.neoverse.ui.theme
+package id.neotica.neoverse.presentation.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
