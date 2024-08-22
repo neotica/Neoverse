@@ -10,6 +10,6 @@ import androidx.compose.ui.Modifier
 @Composable
 fun ChatView(paddingValues: PaddingValues) {
     Column(modifier = Modifier.padding(paddingValues)) {
-        Text("hello")
+        Text("ChatView")
     }
 }
