@@ -5,26 +5,23 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import id.neotica.neoverse.presentation.screen.auth.LoginView
-import id.neotica.neoverse.presentation.screen.auth.RegisterView
+import id.neotica.neoverse.presentation.screen.auth.login.LoginView
+import id.neotica.neoverse.presentation.screen.auth.register.RegisterView
+import id.neotica.neoverse.presentation.screen.profile.ProfileView
 
 fun NavGraphBuilder.authNavGraph(
     navController: NavController,
     paddingValues: PaddingValues
 ){
-    navigation(
-        startDestination = Screen.Login.route,
-        route = RootScreen.AuthNav.route
+    navigation<RootScreen.AuthNav>(
+        startDestination = Screen.ProfileScreen,
     ) {
-        composable(
-            route = Screen.Login.route
-        ) {
+        composable<Screen.LoginScreen>{
             LoginView(navController, paddingValues = paddingValues)
         }
-        composable(
-            route = Screen.Register.route
-        ) {
+        composable<Screen.RegisterScreen>{
             RegisterView(navController, paddingValues = paddingValues)
         }
+        composable<Screen.ProfileScreen> { ProfileView(navController, paddingValues = paddingValues) }
     }
 }

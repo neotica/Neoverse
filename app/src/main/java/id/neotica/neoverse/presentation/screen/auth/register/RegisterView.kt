@@ -1,4 +1,4 @@
-package id.neotica.neoverse.presentation.screen.auth
+package id.neotica.neoverse.presentation.screen.auth.register
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
@@ -16,7 +16,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import id.neotica.droidcore.component.textfield.NeoTextField
 import id.neotica.droidcore.component.textfield.PasswordTextField
-import id.neotica.neoverse.data.User
+import id.neotica.neoverse.data.model.User
 import id.neotica.neoverse.presentation.navigation.RootScreen
 
 private lateinit var auth: FirebaseAuth
@@ -50,7 +50,7 @@ fun RegisterView(navController: NavController, paddingValues: PaddingValues) {
 
                     firestore.collection("Users").document(user.uid).set(dataUser)
 
-                    navController.navigate(RootScreen.HomeNav.route)
+                    navController.navigate(RootScreen.HomeNav)
 
                 } else {
                     Toast.makeText(context, "Oops not working.", Toast.LENGTH_SHORT).show()

@@ -1,4 +1,4 @@
-package id.neotica.neoverse.presentation.screen
+package id.neotica.neoverse.presentation.screen.home
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavController
 import com.google.firebase.auth.FirebaseAuth
 import id.neotica.neoverse.presentation.navigation.RootScreen
+import id.neotica.neoverse.presentation.navigation.Screen
 
 private lateinit var auth: FirebaseAuth
 
@@ -30,13 +31,13 @@ fun HomeView(navController: NavController, paddingValues: PaddingValues) {
         Column(modifier = Modifier.padding(paddingValues)) {
             Text("homeview")
             Button(onClick = {
-                if (auth.currentUser != null) {
-                    auth.signOut()
-                } else {
-                    navController.navigate(RootScreen.AuthNav.route)
-                }
+                navController.navigate(RootScreen.AuthNav)
             }) {
                 Text("To auth")
+            }
+
+            Button(onClick = { navController.navigate(Screen.Chat) }) {
+                Text("Chat")
             }
         }
     }

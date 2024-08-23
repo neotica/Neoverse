@@ -1,4 +1,4 @@
-package id.neotica.neoverse.data
+package id.neotica.neoverse.data.model
 
 data class User(
     var userId: String,

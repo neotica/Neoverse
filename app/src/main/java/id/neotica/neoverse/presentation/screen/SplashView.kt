@@ -29,7 +29,7 @@ fun SplashView(navController: NavController) {
 
     LaunchedEffect(Unit) {
         delay(200)
-        navController.navigate(RootScreen.HomeNav.route) {
+        navController.navigate(RootScreen.HomeNav) {
             popUpTo(navController.graph.startDestinationId) {
                 inclusive = true
             }

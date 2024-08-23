@@ -1,25 +1,44 @@
 package id.neotica.neoverse.presentation.navigation
 
 import androidx.compose.ui.graphics.vector.ImageVector
+import kotlinx.serialization.Serializable
 
-sealed class Screen(val route: String) {
-    object Splash: Screen("splashView")
-    object Chat: Screen("chatView")
-    object Setting: Screen("settingView")
-    object ChatFromHome: Screen("chatFromHomeView")
+@Serializable
+sealed class Screen {
+    @Serializable
+    object Splash
+
+    // Home Navigation
+    @Serializable
+    object HomeScreen
+
+    @Serializable
+    object Chat
+    @Serializable
+    object Setting
+    @Serializable
+    object ChatFromHome
 
     // Auth Navigation
-    object Login: Screen("loginView")
-    object Register: Screen("registerView")
+    @Serializable
+    object LoginScreen
+    @Serializable
+    object RegisterScreen
+    @Serializable
+    object ProfileScreen
 }
 
-sealed class RootScreen(val route: String) {
-    object AuthNav: RootScreen("authNavigation")
-    object HomeNav: RootScreen("homeNavigation")
+@Serializable
+sealed class RootScreen {
+
+    @Serializable
+    object AuthNav
+    @Serializable
+    object HomeNav
 }
 
 data class NavigationItem(
     val title: String,
     val icon: ImageVector,
-    val screen: String
+    val screen: Any
 )
