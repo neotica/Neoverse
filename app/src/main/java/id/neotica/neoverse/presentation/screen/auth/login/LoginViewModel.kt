@@ -5,9 +5,7 @@ import androidx.lifecycle.viewModelScope
 import id.neotica.neoverse.data.remote.ApiResult
 import id.neotica.neoverse.data.repo.AuthRepository
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.onStart
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class LoginViewModel(
@@ -15,13 +13,11 @@ class LoginViewModel(
 ): ViewModel() {
 
     private var _loginCred: MutableStateFlow<ApiResult<String>> = MutableStateFlow(ApiResult.Loading())
-    val loginCred = _loginCred.stateIn(viewModelScope, SharingStarted.Lazily, ApiResult.Loading())
+    val loginCred = _loginCred.asStateFlow()
 
     fun login(email: String, password: String) = viewModelScope.launch {
         _loginCred.emit(ApiResult.Loading())
-        authRepo.login(email, password)
-            .onStart { _loginCred.value = ApiResult.Loading() }
-            .collect { _loginCred.value = it }
+        _loginCred.value = authRepo.login(email, password)
     }
 
     fun isLoggedIn(): Boolean {

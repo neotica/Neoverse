@@ -5,6 +5,9 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
@@ -15,14 +18,9 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -40,18 +38,10 @@ class MainActivity : ComponentActivity() {
         setContent {
             NeoverseTheme {
                 val navController = rememberNavController()
-                val bottomBarState = rememberSaveable { (mutableStateOf(true)) }
 
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
-                val currentRoute = navBackStackEntry.fromRoute() //navBackStackEntry ?.destination?.route
                 val currentDestination = navBackStackEntry?.destination
 
-                LaunchedEffect(Unit) {
-                    when(currentRoute) {
-                        Screen.Splash.toString() -> bottomBarState.value = false
-                        Screen.LoginScreen.toString() -> bottomBarState.value = false
-                    }
-                }
                 val navItems = listOf(
                     NavigationItem(
                         title = "Home",
@@ -70,34 +60,40 @@ class MainActivity : ComponentActivity() {
                     )
                 )
                 val excludedRoutes = listOf(
-                    Screen.Splash.toString(),
+                    Screen.Splash,
                     Screen.LoginScreen,
-                    Screen.RegisterScreen,
-                ).map { it.toString().reformatScreen() }
+                    Screen.RegisterScreen
+                )
 
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
                     bottomBar = {
                         val currentHierarchy = currentDestination?.hierarchy
+                        val includeRoute = excludedRoutes.none {
+                            if (navBackStackEntry?.destination?.route == null) true else
+                            navBackStackEntry?.destination?.hasRoute(it::class) == true
+                        }
 
-                        if (currentDestination?.route?.reformatScreen() !in excludedRoutes) {
+                        AnimatedVisibility (
+                            visible = includeRoute,
+                            enter = slideInVertically(initialOffsetY = { it }),
+                            exit = slideOutVertically(targetOffsetY = { it }),
+                        ) {
 
                             NavigationBar {
                                 navItems.map {
                                     NavigationBarItem(
-                                        selected = currentHierarchy?.any { current ->
-                                            current.route?.reformatScreen() == it.screen.toString().reformatScreen()
-                                        } == true ,
-                                        //currentDestination?.route?.reformatScreen() == it.screen.toString().reformatScreen(),
+                                        selected = currentDestination?.hierarchy?.any { current ->
+                                            current.hasRoute(it.screen::class)
+                                        } == true,
                                         onClick = {
                                             Log.d("neoActivity", "destination hierarchy: " + currentHierarchy.toString())
-                                            Log.d("neoActivity", it.screen.toString().reformatScreen())
+                                            Log.d("neoActivity", "screen: " + it.screen.toString())
                                             Log.d("neoActivity", "findStart: ${navController.graph.findStartDestination()}")
-                                            Log.d("neoActivity", "reformat current: ${currentRoute.toString().reformatScreen()}")
                                             Log.d("neoActivity", "destination: ${currentDestination?.route}")
 
 
-                                            navController.navigate(it.screen.toString().reformatScreen()) {
+                                            navController.navigate(it.screen) {
                                                 navController.graph.startDestinationRoute?.let { route ->
                                                     popUpTo(route) {
                                                         saveState = true
@@ -125,38 +121,4 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-
-    private fun NavBackStackEntry?.fromRoute(): Any {
-        val route = this?.destination?.route?.substringBefore("?")?.substringBefore("/")?.substringAfterLast(".")
-        return when (route) {
-            RootScreen.HomeNav::class.simpleName -> RootScreen.HomeNav
-            Screen.HomeScreen::class.simpleName -> Screen.HomeScreen
-            RootScreen.AuthNav::class.simpleName -> RootScreen.AuthNav
-            Screen.RegisterScreen::class.simpleName -> Screen.RegisterScreen
-            Screen.LoginScreen::class.simpleName -> Screen.LoginScreen
-            Screen.Setting::class.simpleName -> Screen.Setting
-            Screen.Splash::class.simpleName -> Screen.Splash
-            else -> ""
-        }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    NeoverseTheme {
-        Greeting("Android")
-    }
-}
-
-fun String.reformatScreen(): String {
-    return this.substringBefore("@").replace("$", ".")
 }

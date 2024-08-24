@@ -23,7 +23,23 @@ class AuthRepository {
         return if (isLoggedIn()) auth.currentUser!!.uid else ""
     }
 
-    suspend fun login(email: String, password: String): Flow<ApiResult<String>> = flow {
+    suspend fun login(email: String, password: String): ApiResult<String> {
+        auth = FirebaseAuth.getInstance()
+        Log.d("repo", "Masuk loginbase")
+        val loginResult = auth.signInWithEmailAndPassword(email, password)
+        return try {
+            loginResult.await()
+            if (loginResult.isSuccessful) {
+                 ApiResult.Success("Success")
+            } else {
+                ApiResult.Error("Error")
+            }
+        } catch (e: Exception) {
+            ApiResult.Error("Exception")
+        }
+    }
+
+    fun loginFlow(email: String, password: String): Flow<ApiResult<String>> = flow {
         auth = FirebaseAuth.getInstance()
         Log.d("repo", "Masuk loginbase")
         val loginResult = auth.signInWithEmailAndPassword(email, password)

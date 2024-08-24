@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 sealed class Screen {
     @Serializable
-    object Splash
+    data object Splash: Screen()
 
     // Home Navigation
     @Serializable
@@ -21,9 +21,9 @@ sealed class Screen {
 
     // Auth Navigation
     @Serializable
-    object LoginScreen
+    data object LoginScreen: Screen()
     @Serializable
-    object RegisterScreen
+    data object RegisterScreen: Screen()
     @Serializable
     object ProfileScreen
 }

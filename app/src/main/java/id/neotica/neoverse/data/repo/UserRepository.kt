@@ -1,10 +1,10 @@
 package id.neotica.neoverse.data.repo
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import id.neotica.neoverse.data.model.User
+import id.neotica.neoverse.data.remote.ApiResult
+import kotlinx.coroutines.tasks.await
 
 class UserRepository {
     private lateinit var firestore: FirebaseFirestore
@@ -19,51 +19,17 @@ class UserRepository {
         return if (isLoggedIn()) auth.currentUser!!.uid else ""
     }
 
-    fun getUsers(): LiveData<List<User>> {
-
-        val users = MutableLiveData<List<User>>()
-
-        firestore.collection("Users").addSnapshotListener { snapshot, exception ->
-
-            if (exception != null) {
-
-                return@addSnapshotListener
+    suspend fun getUsers(): ApiResult<List<User>> {
+        firestore = FirebaseFirestore.getInstance()
+        return try {
+            val snapshot = firestore.collection("Users").get().await()
+            val userList = snapshot.documents.mapNotNull {
+                it.toObject(User::class.java)
             }
-
-            val usersList = mutableListOf<User>()
-            snapshot?.documents?.forEach { document ->
-
-                val user = document.toObject(User::class.java)
-
-                if (user!!.userId != userId()) {
-                    user.let {
-                        usersList.add(it)
-                    }
-                }
-                users.value = usersList
-            }
+            ApiResult.Success(userList)
+        } catch (e: Exception) {
+            ApiResult.Error(e.message)
         }
-        return users
     }
 
-    /*suspend fun getUsers(): Flow<ApiResult<List<User>>> = flow {
-        emit(ApiResult.Loading())
-        val userList = listOf<User>()
-
-        val snapshotListener = firestore.collection("Users")
-            .addSnapshotListener { snapshot, exception ->
-                if (exception != null) throw exception
-
-                snapshot?.documents?.forEach { document ->
-                    val user = document.toObject(User::class.java)
-
-                    if (user != null && user.userId != userId()) {
-                        userList
-                    }
-                }
-
-                emit(ApiResult.Success(userList))
-            }
-
-    }.flowOn(Dispatchers.IO)*/
 }

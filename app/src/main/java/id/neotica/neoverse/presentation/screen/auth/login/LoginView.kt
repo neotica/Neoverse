@@ -57,10 +57,6 @@ fun LoginView(
         }
     }
 
-    LaunchedEffect(Unit) {
-      //  if (viewModel.isLoggedIn()) navController.navigate(Screen.ProfileScreen)
-    }
-
     Column(modifier = Modifier.padding(paddingValues)) {
 
         val context = LocalContext.current
