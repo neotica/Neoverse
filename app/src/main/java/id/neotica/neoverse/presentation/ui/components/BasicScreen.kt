@@ -12,7 +12,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun BasicScreen(paddingValues: PaddingValues, isLoading: Boolean = false, content: @Composable () -> Unit) {
+fun BasicScreen(
+    paddingValues: PaddingValues,
+    isLoading: Boolean = false,
+    horizontalAlign: Alignment.Horizontal = Alignment.Start,
+    content: @Composable () -> Unit) {
     Box(
         modifier = Modifier
             .padding(paddingValues)
@@ -28,7 +32,8 @@ fun BasicScreen(paddingValues: PaddingValues, isLoading: Boolean = false, conten
             LazyColumn(
                 modifier = Modifier
                     .padding(4.dp)
-                    .fillMaxSize()
+                    .fillMaxSize(),
+                horizontalAlignment = horizontalAlign
             ) {
                 item { content() }
             }

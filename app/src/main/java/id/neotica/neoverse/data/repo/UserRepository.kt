@@ -19,6 +19,17 @@ class UserRepository {
         return if (isLoggedIn()) auth.currentUser!!.uid else ""
     }
 
+    suspend fun getUserDetail(): ApiResult<User?> {
+        firestore = FirebaseFirestore.getInstance()
+        return try {
+            val snapshot = firestore.collection("Users").document(userId()).get().await()
+            val user = snapshot.toObject(User::class.java)
+            ApiResult.Success(user!!)
+        } catch (e: Exception) {
+            ApiResult.Error(e.message)
+        }
+    }
+
     suspend fun getUsers(): ApiResult<List<User>> {
         firestore = FirebaseFirestore.getInstance()
         return try {
@@ -31,5 +42,4 @@ class UserRepository {
             ApiResult.Error(e.message)
         }
     }
-
 }
