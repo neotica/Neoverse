@@ -88,6 +88,8 @@ dependencies {
     // Koin
     implementation("io.insert-koin:koin-androidx-compose:3.5.6")
 
+    // Coil
+    implementation("io.coil-kt:coil-compose:2.7.0")
 
     //DroidCore
     implementation ("com.github.laetuz:Droidcore:1.2.4")

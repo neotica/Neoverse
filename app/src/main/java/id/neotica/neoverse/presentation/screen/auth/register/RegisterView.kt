@@ -7,57 +7,73 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
 import id.neotica.droidcore.component.textfield.NeoTextField
 import id.neotica.droidcore.component.textfield.PasswordTextField
-import id.neotica.neoverse.data.model.User
+import id.neotica.neoverse.data.remote.ApiResult
 import id.neotica.neoverse.presentation.navigation.RootScreen
-
-private lateinit var auth: FirebaseAuth
-lateinit var firestore : FirebaseFirestore
+import id.neotica.neoverse.presentation.ui.components.BasicScreen
+import id.neotica.neoverse.presentation.ui.components.LoadingIndicatorBool
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun RegisterView(navController: NavController, paddingValues: PaddingValues) {
+fun RegisterView(
+    navController: NavController,
+    paddingValues: PaddingValues,
+    viewModel: RegisterViewModel = koinViewModel()
+    ) {
     Column(modifier = Modifier.padding(paddingValues)) {
         val nameValue = remember { mutableStateOf("") }
         val emailValue = remember { mutableStateOf("") }
         val passwordValue = remember { mutableStateOf("") }
+        var isButtonPressed by remember { mutableStateOf(false) }
+        var isLoading by remember { mutableStateOf(false) }
+
+
         val context = LocalContext.current
 
-        auth = FirebaseAuth.getInstance()
-        firestore = FirebaseFirestore.getInstance()
+        LaunchedEffect(isButtonPressed) {
+            if (isButtonPressed) {
+                viewModel.registerStatus.collect { result ->
+                    when (result) {
+                        is ApiResult.Loading -> isLoading = true
+                        is ApiResult.Success -> {
+                        isLoading = false
+                            navController.navigate(RootScreen.HomeNav)
+                            Toast.makeText(context, "Success registered ${nameValue.value}", Toast.LENGTH_SHORT).show()
+                        }
 
-        Text("Register")
-        NeoTextField(value = nameValue, label = "Name")
-        NeoTextField(value = emailValue, label = "Email")
-        PasswordTextField(value = passwordValue, placeholder = "Password")
-
-        Button(onClick = {
-            auth.createUserWithEmailAndPassword(emailValue.value, passwordValue.value).addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    val user = auth.currentUser
-                    val dataUser = User(
-                        userId = user!!.uid,
-                        username = nameValue.value,
-                        userEmail = emailValue.value
-                    )
-
-                    firestore.collection("Users").document(user.uid).set(dataUser)
-
-                    navController.navigate(RootScreen.HomeNav)
-
-                } else {
-                    Toast.makeText(context, "Oops not working.", Toast.LENGTH_SHORT).show()
+                        is ApiResult.Error -> {
+                        isLoading = false
+                            Toast.makeText(context, result.errorMessage, Toast.LENGTH_SHORT).show()
+                        }
+                    }
                 }
             }
-        }) {
-            Text(text = "Register")
+        }
+
+        BasicScreen(paddingValues = paddingValues) {
+            LoadingIndicatorBool(isLoading = isLoading) {
+                Text("Register")
+                NeoTextField(value = nameValue, label = "Name")
+                NeoTextField(value = emailValue, label = "Email")
+                PasswordTextField(value = passwordValue, placeholder = "Password")
+                Button(
+                    enabled = nameValue.value.isNotEmpty() && emailValue.value.isNotEmpty() && passwordValue.value.isNotEmpty(),
+                    onClick = {
+                    isButtonPressed = true
+                    viewModel.register(nameValue.value, emailValue.value, passwordValue.value)
+                }) {
+                    Text(text = "Register")
+                }
+            }
         }
     }
 }

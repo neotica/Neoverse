@@ -2,8 +2,8 @@ package id.neotica.neoverse.presentation.screen.auth.login
 
 import android.util.Log
 import android.widget.Toast
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
@@ -16,12 +16,14 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import id.neotica.droidcore.component.textfield.NeoTextField
 import id.neotica.droidcore.component.textfield.PasswordTextField
 import id.neotica.neoverse.data.remote.ApiResult
 import id.neotica.neoverse.presentation.navigation.RootScreen
 import id.neotica.neoverse.presentation.navigation.Screen
+import id.neotica.neoverse.presentation.ui.components.BasicScreen
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -57,21 +59,20 @@ fun LoginView(
         }
     }
 
-    Column(modifier = Modifier.padding(paddingValues)) {
-
-        val context = LocalContext.current
+    BasicScreen(paddingValues = paddingValues) {
         Text("Login")
         NeoTextField(value = emailValue, label = "Email")
+        Spacer(modifier = Modifier.padding(4.dp))
         PasswordTextField(value = passwordValue)
-        Button(onClick = {
+        Button(
+            enabled = emailValue.value.isNotEmpty() && passwordValue.value.isNotEmpty(),
+            onClick = {
             isButtonPressed = true
             viewModel.login(emailValue.value, passwordValue.value)
         }) {
             Text("Login")
         }
-        Button(onClick = {
-            navController.navigate(Screen.RegisterScreen)
-        }) {
+        Button(onClick = { navController.navigate(Screen.RegisterScreen) }) {
             Text("Register")
         }
     }

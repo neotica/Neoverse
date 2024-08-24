@@ -1,16 +1,14 @@
 package id.neotica.neoverse.presentation.screen.profile
 
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import id.neotica.neoverse.presentation.navigation.RootScreen
 import id.neotica.neoverse.presentation.navigation.Screen
+import id.neotica.neoverse.presentation.ui.components.BasicScreen
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -27,7 +25,7 @@ fun ProfileView(
         }
     }
 
-    Column(modifier = Modifier.padding(paddingValues)) {
+    BasicScreen(paddingValues = paddingValues) {
         Text("Profile")
         Button(onClick = {
             if (!viewModel.isLoggedIn()) {
@@ -39,7 +37,6 @@ fun ProfileView(
             Text("Logout")
         }
     }
-
 
 }
 
