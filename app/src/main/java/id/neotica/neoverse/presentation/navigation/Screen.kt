@@ -13,7 +13,7 @@ sealed class Screen {
     object HomeScreen
 
     @Serializable
-    object Chat
+    data class Chat(val chatId: String)
     @Serializable
     object Setting
     @Serializable

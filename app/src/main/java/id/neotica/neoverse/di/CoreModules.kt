@@ -4,6 +4,7 @@ import id.neotica.neoverse.data.repo.AuthRepository
 import id.neotica.neoverse.data.repo.UserRepository
 import id.neotica.neoverse.presentation.screen.auth.login.LoginViewModel
 import id.neotica.neoverse.presentation.screen.auth.register.RegisterViewModel
+import id.neotica.neoverse.presentation.screen.chat.ChatViewModel
 import id.neotica.neoverse.presentation.screen.home.HomeViewModel
 import id.neotica.neoverse.presentation.screen.profile.ProfileViewModel
 import org.koin.androidx.viewmodel.dsl.viewModelOf
@@ -21,4 +22,5 @@ val viewModelModules = module {
     viewModelOf(::ProfileViewModel)
     viewModelOf(::HomeViewModel)
     viewModelOf(::RegisterViewModel)
+    viewModelOf(::ChatViewModel)
 }

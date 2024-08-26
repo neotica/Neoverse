@@ -5,7 +5,8 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import id.neotica.neoverse.presentation.screen.ChatView
+import androidx.navigation.toRoute
+import id.neotica.neoverse.presentation.screen.chat.ChatView
 import id.neotica.neoverse.presentation.screen.home.HomeView
 
 fun NavGraphBuilder.homeNavGraph(
@@ -18,6 +19,9 @@ fun NavGraphBuilder.homeNavGraph(
         composable<Screen.HomeScreen> {
             HomeView(navController, paddingValues)
         }
-        composable<Screen.Chat> { ChatView(paddingValues = paddingValues) }
+        composable<Screen.Chat> {
+            val args = it.toRoute<Screen.Chat>()
+            ChatView(navController, paddingValues, args)
+        }
     }
 }

@@ -13,7 +13,7 @@ import kotlinx.coroutines.tasks.await
 
 class AuthRepository {
     private lateinit var auth: FirebaseAuth
-    lateinit var firestore: FirebaseFirestore
+    private lateinit var firestore: FirebaseFirestore
 
     fun isLoggedIn(): Boolean {
         auth = FirebaseAuth.getInstance()

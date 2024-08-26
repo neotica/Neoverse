@@ -62,7 +62,7 @@ class MainActivity : ComponentActivity() {
                 val excludedRoutes = listOf(
                     Screen.Splash,
                     Screen.LoginScreen,
-                    Screen.RegisterScreen
+                    Screen.RegisterScreen,
                 )
 
                 Scaffold(

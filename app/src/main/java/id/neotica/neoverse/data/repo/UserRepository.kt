@@ -19,6 +19,8 @@ class UserRepository {
         return if (isLoggedIn()) auth.currentUser!!.uid else ""
     }
 
+//    fun currentUsername(): String = if (isLoggedIn()) auth.us
+
     suspend fun getUserDetail(): ApiResult<User?> {
         firestore = FirebaseFirestore.getInstance()
         return try {
