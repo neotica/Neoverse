@@ -10,7 +10,7 @@ class UserRepository {
     private lateinit var firestore: FirebaseFirestore
     private lateinit var auth: FirebaseAuth
 
-    fun isLoggedIn(): Boolean {
+    private fun isLoggedIn(): Boolean {
         auth = FirebaseAuth.getInstance()
         return auth.currentUser != null
     }
@@ -18,8 +18,6 @@ class UserRepository {
     fun userId(): String {
         return if (isLoggedIn()) auth.currentUser!!.uid else ""
     }
-
-//    fun currentUsername(): String = if (isLoggedIn()) auth.us
 
     suspend fun getUserDetail(): ApiResult<User?> {
         firestore = FirebaseFirestore.getInstance()

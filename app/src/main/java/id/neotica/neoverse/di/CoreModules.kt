@@ -1,6 +1,7 @@
 package id.neotica.neoverse.di
 
 import id.neotica.neoverse.data.repo.AuthRepository
+import id.neotica.neoverse.data.repo.ChatRepository
 import id.neotica.neoverse.data.repo.UserRepository
 import id.neotica.neoverse.presentation.screen.auth.login.LoginViewModel
 import id.neotica.neoverse.presentation.screen.auth.register.RegisterViewModel
@@ -15,6 +16,7 @@ import org.koin.dsl.module
 val coreModule = module {
     singleOf(::AuthRepository)
     singleOf(::UserRepository)
+    singleOf(::ChatRepository)
 }
 
 val viewModelModules = module {

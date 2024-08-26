@@ -1,6 +1,5 @@
 package id.neotica.neoverse.presentation.screen.chat
 
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -47,7 +46,6 @@ fun ChatView(
     args: Screen.Chat,
     viewModel: ChatViewModel = koinViewModel()
 ) {
-    Toast.makeText(LocalContext.current, args.chatId, Toast.LENGTH_SHORT).show()
     LaunchedEffect(key1 = true) {
         viewModel.getMessages(args.chatId)
     }
@@ -111,7 +109,7 @@ fun ChatMessages(
 }
 
 @Composable
-fun ChatBubble(message: Message, viewModel: ChatViewModel = koinViewModel()) {
+fun ChatBubble(message: Message) {
     val isCurrentUser = message.senderId == Firebase.auth.currentUser?.uid
     val bubbleColor = if (isCurrentUser) {
         Color.Blue
