@@ -13,7 +13,6 @@ import id.neotica.neoverse.data.remote.ApiResult
 import id.neotica.neoverse.data.repo.ChatRepository
 import id.neotica.neoverse.data.repo.UserRepository
 import id.neotica.neoverse.presentation.navigation.Screen
-import id.neotica.neoverse.utils.getPartWithUser
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -59,7 +58,7 @@ class HomeViewModel(
     }
 
 
-    fun filterChatrooms(chatroom: List<ChatRoom>): List<ChatRoom> {
+    /*fun filterChatrooms(chatroom: List<ChatRoom>): List<ChatRoom> {
         return if (currentUserName() != null) {
             chatroom.filter { cr ->
                 cr.name.isNotEmpty() && getPartWithUser(cr.name, currentUserName()!!) != "No match!"
@@ -67,53 +66,33 @@ class HomeViewModel(
         } else {
             emptyList()
         }
-    }
+    }*/
 
     fun gotoChatRoom(channel: String, navController: NavController) = viewModelScope.launch {
         currentUserName()?.let {
-            val exactMatch = getPartWithUser(
-                combinedRoomName = channel,
-                current = it
-            )
-            if (exactMatch != "No match found") {
-                navController.navigate(Screen.Chat(chatId = channel))
-            }
-            Log.d("hvm", "current: $it, exact: $exactMatch")
+            navController.navigate(Screen.Chat(chatId = channel))
+            Log.d("hvm", "current: $it, exact: $channel")
         }
-    }
-
-    fun chatroomName(channel: String): String {
-        currentUserName()?.let {
-            val exactMatch = getPartWithUser(
-                combinedRoomName = channel,
-                current = it
-            )
-            val channelParse = channel.replace(exactMatch, "").substringAfter(":").replace("and", "").trim()
-            if (exactMatch != "No match found") {
-                return channelParse
-            }
-            Log.d("hvm", "current: $it, exact: $exactMatch")
-        }
-        return ""
     }
 
     fun addChatroom(user2: String, chatrooms: List<ChatRoom>, navController: NavController) = viewModelScope.launch {
         if (currentUserName().isNullOrEmpty()) navController.navigate(Screen.LoginScreen)
         currentUserName()?.let { currentUser ->
-            val combinedRoomName1 = "1:$currentUser and 2:$user2"
-            val combinedRoomName2 = "1:$user2 and 2:$currentUser"
 
-            val existingRoom = chatrooms.find { it.name == combinedRoomName1 || it.name == combinedRoomName2 }
+            val chatroom1 = chatrooms.find {
+                currentUser+user2 == it.user1+it.user2 || currentUser+user2 == it.user2+it.user1
+            }
 
-            if (existingRoom != null) {
-                navController.navigate(Screen.Chat(existingRoom.name))
+            if (chatroom1 != null) {
+                navController.navigate(Screen.Chat(chatroom1.name))
             } else {
                 val chatroomDetail = ChatRoom(
-                    name = combinedRoomName1,
-                    owner = currentUser
+                    name = currentUser+user2,
+                    user1 = currentUser,
+                    user2 = user2
                 )
                 chatRepo.addChatroom(chatroomDetail)
-                navController.navigate(Screen.Chat(combinedRoomName1))
+                navController.navigate(Screen.Chat(currentUser+user2))
             }
         }
     }
