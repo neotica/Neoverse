@@ -27,6 +27,7 @@ import androidx.navigation.NavController
 import id.neotica.neoverse.data.model.ChatRoom
 import id.neotica.neoverse.data.model.User
 import id.neotica.neoverse.data.remote.ApiResult
+import id.neotica.neoverse.presentation.navigation.RootScreen
 import id.neotica.neoverse.presentation.navigation.Screen
 import id.neotica.neoverse.presentation.ui.components.BasicScreen
 import id.neotica.neoverse.presentation.ui.components.ImageCoil
@@ -145,12 +146,9 @@ fun HomeView(
                 )
             } else {
                 LazyRow(modifier = Modifier.fillMaxSize()) {
-                    items(//chatrooms.value
-                        chatrooms.value.filter { channels ->
-                            currentuser?.let { user1 ->
-                            getPartWithUser(channels.name, user1.username.toString()) != "No match found"
-                            } ?: false
-                        }
+                    items(chatrooms.value.filter { channels ->
+                        currentuser?.username == channels.user1 || currentuser?.username == channels.user2
+                    }
                     ) { channelItem ->
                         Card(
                             modifier = Modifier.padding(4.dp),
@@ -162,10 +160,12 @@ fun HomeView(
                                 modifier = Modifier.padding(8.dp),
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
-                                val channelParse = viewModel.chatroomName(channelItem.name)
-                                Log.d("hvcolumn", channelParse)
 
-                                Text(text = channelParse)
+                                if (currentuser?.username != channelItem.user1) {
+                                    Text(text = channelItem.user1)
+                                } else {
+                                    Text(text = channelItem.user2)
+                                }
                             }
                         }
                     }
@@ -183,9 +183,9 @@ fun HomeView(
             Text("Show user")
         }
         Button(onClick = {
-            navController.navigate(Screen.Chat("test"))
+            navController.navigate(RootScreen.GameNav)
         }) {
-            Text("Chat")
+            Text("Game")
         }
     }
 }
