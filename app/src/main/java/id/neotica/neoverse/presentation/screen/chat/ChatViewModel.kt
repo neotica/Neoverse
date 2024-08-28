@@ -8,13 +8,15 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
 import id.neotica.neoverse.data.model.Message
+import id.neotica.neoverse.data.repo.ChatRepository
 import id.neotica.neoverse.data.repo.UserRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import java.util.UUID
 
 class ChatViewModel(
-    private val userRepo: UserRepository
+    private val userRepo: UserRepository,
+    private val chatRepo: ChatRepository
 ): ViewModel() {
     private val _messages = MutableStateFlow<List<Message>>(emptyList())
     val message = _messages.asStateFlow()
@@ -31,7 +33,7 @@ class ChatViewModel(
             imageUrl = null
         )
 
-        db.getReference("messages").child(chatId).push().setValue(messageValue)
+        chatRepo.sendMessage(chatId, messageValue)
     }
 
     fun getMessages(chatId: String) {

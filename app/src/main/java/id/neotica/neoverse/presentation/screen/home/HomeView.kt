@@ -42,6 +42,7 @@ fun HomeView(
     val isPressed = remember { mutableStateOf(false) }
     var userList by remember { mutableStateOf<List<User>>(emptyList()) }
     val chatrooms = remember { mutableStateOf<List<ChatRoom>>(emptyList()) }
+
     var isLoading by remember { mutableStateOf(false) }
     var currentuser by remember { mutableStateOf<User?>(null) }
     var context = LocalContext.current
@@ -84,7 +85,14 @@ fun HomeView(
         viewModel.chatroom.collect { result ->
             when(result) {
                 is ApiResult.Loading -> {}
-                is ApiResult.Success -> {chatrooms.value = result.data!!
+                is ApiResult.Success -> {
+                    val list = mutableListOf<ChatRoom>()
+                    result.data?.forEach { chatResult ->
+                        list.add(chatResult.value)
+                    }
+                    Log.d("hvcolumn", "name: "+ result.data)
+
+                    chatrooms.value = list
                 }
                 is ApiResult.Error -> {}
             }
@@ -137,12 +145,12 @@ fun HomeView(
                 )
             } else {
                 LazyRow(modifier = Modifier.fillMaxSize()) {
-                    items(
+                    items(//chatrooms.value
                         chatrooms.value.filter { channels ->
-                        currentuser?.let { user1 ->
+                            currentuser?.let { user1 ->
                             getPartWithUser(channels.name, user1.username.toString()) != "No match found"
-                        } ?: false
-                    }
+                            } ?: false
+                        }
                     ) { channelItem ->
                         Card(
                             modifier = Modifier.padding(4.dp),
@@ -156,6 +164,7 @@ fun HomeView(
                             ) {
                                 val channelParse = viewModel.chatroomName(channelItem.name)
                                 Log.d("hvcolumn", channelParse)
+
                                 Text(text = channelParse)
                             }
                         }

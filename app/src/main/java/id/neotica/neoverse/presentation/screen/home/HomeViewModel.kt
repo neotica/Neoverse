@@ -7,6 +7,7 @@ import androidx.navigation.NavController
 import com.google.firebase.Firebase
 import com.google.firebase.database.database
 import id.neotica.neoverse.data.model.ChatRoom
+import id.neotica.neoverse.data.model.ParentChatRoom
 import id.neotica.neoverse.data.model.User
 import id.neotica.neoverse.data.remote.ApiResult
 import id.neotica.neoverse.data.repo.ChatRepository
@@ -28,7 +29,7 @@ class HomeViewModel(
     private var _user: MutableStateFlow<ApiResult<User?>> = MutableStateFlow(ApiResult.Loading())
     val user = _user.asStateFlow()
 
-    private val _chatroom = MutableStateFlow<ApiResult<List<ChatRoom>>>(ApiResult.Loading())
+    private val _chatroom = MutableStateFlow<ApiResult<List<ParentChatRoom>>>(ApiResult.Loading())
     val chatroom = _chatroom.asStateFlow()
 
     private val firebaseDatabase = Firebase.database
@@ -53,22 +54,10 @@ class HomeViewModel(
     fun getChatroom() = viewModelScope.launch {
         chatRepo.getChatroom().collect {
             _chatroom.value = it
-            Log.d("homevm", "getChatroom: $it")
-
+            Log.d("homevm", "getChatroom: ${it}")
         }
     }
 
-    fun getUserChatroom(navController: NavController) = viewModelScope.launch {
-        chatRepo.getChatroom().collect {
-            it.data?.forEach { chatItems ->
-                gotoChatRoom(chatItems.name, navController)
-            }
-
-            _chatroom.value = it
-            Log.d("homevm", "getChatroom: $it")
-
-        }
-    }
 
     fun filterChatrooms(chatroom: List<ChatRoom>): List<ChatRoom> {
         return if (currentUserName() != null) {
@@ -119,7 +108,11 @@ class HomeViewModel(
             if (existingRoom != null) {
                 navController.navigate(Screen.Chat(existingRoom.name))
             } else {
-                chatRepo.addChatroom(combinedRoomName1)
+                val chatroomDetail = ChatRoom(
+                    name = combinedRoomName1,
+                    owner = currentUser
+                )
+                chatRepo.addChatroom(chatroomDetail)
                 navController.navigate(Screen.Chat(combinedRoomName1))
             }
         }
