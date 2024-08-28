@@ -25,13 +25,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import id.neotica.neoverse.data.model.ChatRoom
+import id.neotica.neoverse.data.model.ParentChatRoom
 import id.neotica.neoverse.data.model.User
 import id.neotica.neoverse.data.remote.ApiResult
 import id.neotica.neoverse.presentation.navigation.RootScreen
 import id.neotica.neoverse.presentation.navigation.Screen
 import id.neotica.neoverse.presentation.ui.components.BasicScreen
 import id.neotica.neoverse.presentation.ui.components.ImageCoil
-import id.neotica.neoverse.utils.getPartWithUser
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -43,8 +43,10 @@ fun HomeView(
     val isPressed = remember { mutableStateOf(false) }
     var userList by remember { mutableStateOf<List<User>>(emptyList()) }
     val chatrooms = remember { mutableStateOf<List<ChatRoom>>(emptyList()) }
+    val parentChatrooms = remember { mutableStateOf<List<ParentChatRoom>>(emptyList()) }
 
     var isLoading by remember { mutableStateOf(false) }
+    var isLoadingChats by remember { mutableStateOf(false) }
     var currentuser by remember { mutableStateOf<User?>(null) }
     var context = LocalContext.current
 
@@ -85,17 +87,18 @@ fun HomeView(
         viewModel.getChatroom()
         viewModel.chatroom.collect { result ->
             when(result) {
-                is ApiResult.Loading -> {}
+                is ApiResult.Loading -> { isLoadingChats = true }
                 is ApiResult.Success -> {
+                    isLoadingChats = false
                     val list = mutableListOf<ChatRoom>()
                     result.data?.forEach { chatResult ->
                         list.add(chatResult.value)
                     }
-                    Log.d("hvcolumn", "name: "+ result.data)
 
+                    parentChatrooms.value = result.data!!
                     chatrooms.value = list
                 }
-                is ApiResult.Error -> {}
+                is ApiResult.Error -> {isLoadingChats = false}
             }
         }
     }
@@ -116,11 +119,13 @@ fun HomeView(
                             Card(
                                 modifier = Modifier.padding(4.dp),
                                 onClick = {
-                                    viewModel.addChatroom(
-                                        user2 = user.username.toString(),
-                                        chatrooms = chatrooms.value,
-                                        navController = navController
+                                    if (!isLoadingChats) {
+                                        viewModel.addChatroom(
+                                            user2 = user.username.toString(),
+                                            chatrooms = chatrooms.value,
+                                            navController = navController
                                         )
+                                    }
                                 }
                             ) {
                                 Column(
@@ -139,21 +144,36 @@ fun HomeView(
         }
 
         Box(modifier = Modifier.fillMaxWidth()) {
-            if (isLoading) {
+            if (isLoadingChats) {
                 CircularProgressIndicator(
                     modifier = Modifier
                         .align(Alignment.Center)
                 )
             } else {
-                LazyRow(modifier = Modifier.fillMaxSize()) {
-                    items(chatrooms.value.filter { channels ->
-                        currentuser?.username == channels.user1 || currentuser?.username == channels.user2
-                    }
-                    ) { channelItem ->
+                LazyRow(
+                    modifier = Modifier
+                        .fillMaxSize()
+                ) {
+                    items(parentChatrooms.value.filter { channels ->
+                        currentuser?.username == channels.value.user1 || currentuser?.username == channels.value.user2
+
+                    }) { channelItemParent ->
+                        val channelItem = channelItemParent.value
+                        val chatName = if (currentuser?.username != channelItem.user1) {
+                            channelItem.user1
+                        } else {
+                            channelItem.user2
+                        }
                         Card(
                             modifier = Modifier.padding(4.dp),
                             onClick = {
-                                viewModel.gotoChatRoom(channelItem.name, navController)
+                                currentuser?.let {
+                                    viewModel.readMessage(channelItemParent.key, channelItemParent.value, it.username!!)
+                                    navController.navigate(Screen.Chat(
+                                        chatId = channelItem.name,
+                                        user2 = chatName,
+                                    ))
+                                }
                             }
                         ) {
                             Column(

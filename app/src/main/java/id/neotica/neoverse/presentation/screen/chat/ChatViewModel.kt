@@ -1,6 +1,8 @@
 package id.neotica.neoverse.presentation.screen.chat
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.google.firebase.database.DataSnapshot
@@ -8,10 +10,12 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
 import id.neotica.neoverse.data.model.Message
+import id.neotica.neoverse.data.remote.ApiResult
 import id.neotica.neoverse.data.repo.ChatRepository
 import id.neotica.neoverse.data.repo.UserRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import java.util.UUID
 
 class ChatViewModel(
@@ -20,6 +24,8 @@ class ChatViewModel(
 ): ViewModel() {
     private val _messages = MutableStateFlow<List<Message>>(emptyList())
     val message = _messages.asStateFlow()
+    private val _messages1 = MutableStateFlow<ApiResult<List<Message>>>(ApiResult.Loading())
+    val message1 = _messages1.asStateFlow()
     private val db = Firebase.database
 
     fun sendMessage(chatId: String, chat: String) {

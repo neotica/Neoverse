@@ -11,8 +11,8 @@ import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -48,15 +48,16 @@ class MainActivity : ComponentActivity() {
                         icon = Icons.Default.Home,
                         screen = RootScreen.HomeNav
                     ),
+
+                    NavigationItem(
+                        title = "Games",
+                        icon = Icons.Default.Favorite,
+                        screen = RootScreen.GameNav
+                    ),
                     NavigationItem(
                         title = "Profile",
                         icon = Icons.Default.AccountCircle,
                         screen = RootScreen.AuthNav
-                    ),
-                    NavigationItem(
-                        title = "Settings",
-                        icon = Icons.Default.Settings,
-                        screen = Screen.Setting
                     )
                 )
                 val excludedRoutes = listOf(
@@ -99,9 +100,6 @@ class MainActivity : ComponentActivity() {
                                                         saveState = true
                                                     }
                                                 }
-                                                /*popUpTo(navController.graph.findStartDestination().id) {
-                                                    saveState = true
-                                                }*/
                                                 launchSingleTop = true
                                                 restoreState = true
                                             }

@@ -57,6 +57,32 @@ class HomeViewModel(
         }
     }
 
+    fun readMessage(chatId: String, chatRoom: ChatRoom, currentUser: String) = viewModelScope.launch {
+        if (currentUser != chatRoom.user2) {
+            val chatRoomRead = ChatRoom(
+                id = chatId,
+                name = chatRoom.name,
+                user1 = chatRoom.user1,
+                user1Read = true,
+                user2 = chatRoom.user2,
+                user2Read = false,
+                createdAt = chatRoom.createdAt
+            )
+            chatRepo.readMessage(chatId, chatRoomRead)
+        } else {
+            val chatRoomRead = ChatRoom(
+                id = chatId,
+                name = chatRoom.name,
+                user1 = chatRoom.user1,
+                user1Read = false,
+                user2 = chatRoom.user2,
+                user2Read = true,
+                createdAt = chatRoom.createdAt
+            )
+            chatRepo.readMessage(chatId, chatRoomRead)
+        }
+    }
+
 
     /*fun filterChatrooms(chatroom: List<ChatRoom>): List<ChatRoom> {
         return if (currentUserName() != null) {
@@ -68,13 +94,6 @@ class HomeViewModel(
         }
     }*/
 
-    fun gotoChatRoom(channel: String, navController: NavController) = viewModelScope.launch {
-        currentUserName()?.let {
-            navController.navigate(Screen.Chat(chatId = channel))
-            Log.d("hvm", "current: $it, exact: $channel")
-        }
-    }
-
     fun addChatroom(user2: String, chatrooms: List<ChatRoom>, navController: NavController) = viewModelScope.launch {
         if (currentUserName().isNullOrEmpty()) navController.navigate(Screen.LoginScreen)
         currentUserName()?.let { currentUser ->
@@ -84,7 +103,7 @@ class HomeViewModel(
             }
 
             if (chatroom1 != null) {
-                navController.navigate(Screen.Chat(chatroom1.name))
+                navController.navigate(Screen.Chat(chatroom1.name, chatroom1.user2))
             } else {
                 val chatroomDetail = ChatRoom(
                     name = currentUser+user2,
@@ -92,7 +111,7 @@ class HomeViewModel(
                     user2 = user2
                 )
                 chatRepo.addChatroom(chatroomDetail)
-                navController.navigate(Screen.Chat(currentUser+user2))
+                navController.navigate(Screen.Chat(currentUser+user2, user2))
             }
         }
     }

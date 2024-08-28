@@ -9,7 +9,6 @@ import id.neotica.neoverse.presentation.screen.ChatFromHomeView
 import id.neotica.neoverse.presentation.screen.SettingView
 import id.neotica.neoverse.presentation.screen.SplashView
 
-
 @Composable
 fun NavGraph(navController: NavHostController, paddingValues: PaddingValues) {
     NavHost(navController, startDestination = Screen.Splash) {
