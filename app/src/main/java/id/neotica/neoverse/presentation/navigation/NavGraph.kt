@@ -19,5 +19,6 @@ fun NavGraph(navController: NavHostController, paddingValues: PaddingValues) {
         homeNavGraph(navController, paddingValues)
         authNavGraph(navController, paddingValues)
         gameNavGraph(navController, paddingValues)
+        friendNavGraph(navController, paddingValues)
     }
 }

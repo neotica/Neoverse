@@ -33,6 +33,16 @@ sealed class Screen {
     // Games Navigation
     @Serializable
     data object HomeGame: Screen()
+
+    //Friend Navigation
+    @Serializable
+    data object FriendScreen: Screen()
+    @Serializable
+    data object SearchUserScreen: Screen()
+    @Serializable
+    data class FriendProfileScreen(
+        val userId: String
+    )
 }
 
 @Serializable
@@ -44,6 +54,8 @@ sealed class RootScreen {
     object HomeNav
     @Serializable
     object GameNav
+    @Serializable
+    object FriendNav
 }
 
 data class NavigationItem(

@@ -60,7 +60,7 @@ fun ChatView(
 
     Scaffold(modifier = Modifier
         .fillMaxSize()
-        .padding(paddingValues)) {
+        .padding(start = 8.dp, end = 8.dp, bottom = paddingValues.calculateBottomPadding())) {
         Column(modifier = Modifier
             .fillMaxSize()
             .padding(it)) {

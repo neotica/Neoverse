@@ -206,8 +206,7 @@ fun HomeView(
         Text("homeview")
         viewModel.getUsers()
         Button(onClick = {
-            isPressed.value = true
-            viewModel.getUsers()
+            navController.navigate(Screen.FriendScreen)
         }) {
             Text("Show user")
         }

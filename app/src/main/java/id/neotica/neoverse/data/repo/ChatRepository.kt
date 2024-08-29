@@ -23,10 +23,7 @@ class ChatRepository {
         try {
             val reference = firebase.getReference("chatroom").get().await()
             reference.children.forEach { data ->
-                Log.d("chatRepo", "getParentChatroom snap: $data")
-
                 val cr = data.getValue(ChatRoom::class.java)
-
                 val channel = ParentNeo(
                     key = data.key!!,
                     value = cr!!
@@ -37,8 +34,6 @@ class ChatRepository {
                 } else {
                     emit(ApiResult.Error("data null"))
                 }
-                Log.d("chatRepo", "channel: ${channel.value}")
-
             }
         } catch (e: Exception) {
             emit(ApiResult.Error("exception: ${e.message}"))
@@ -52,16 +47,14 @@ class ChatRepository {
         if (reference.isSuccessful) getChatroom()
     }
 
-    suspend fun addChatroomRead(name: ChatRoom) {
-//        val key = firebase.getReference("chatroom").push().key
-        val reference = firebase.getReference("chatroom").child(name.id).setValue(name)
-        reference.await()
-        if (reference.isSuccessful) getChatroom()
-    }
-
     fun sendMessage(chatId: String, message: Message) {
         Log.d("sendMessage", message.toString())
         firebase.getReference("messages").child(chatId).push().setValue(message)
+    }
+
+    suspend fun readMessage(chatId: String, chatRoom: ChatRoom) {
+        val key = firebase.getReference("chatroom").child(chatId).setValue(chatRoom)
+        key.await()
     }
 
     suspend fun sendMessageRead(chatId: String, message: Message, parent: ParentNeo<Message>) {
@@ -71,8 +64,12 @@ class ChatRepository {
 //        firebase.getReference("messages").child(chatId).child(message.id).setValue(message).await()
     }
 
-    suspend fun readMessage(chatId: String, chatRoom: ChatRoom) {
-        val key = firebase.getReference("chatroom").child(chatId).setValue(chatRoom)
-        key.await()
+    suspend fun addChatroomRead(name: ChatRoom) {
+//        val key = firebase.getReference("chatroom").push().key
+        val reference = firebase.getReference("chatroom").child(name.id).setValue(name)
+        reference.await()
+        if (reference.isSuccessful) getChatroom()
     }
+
+
 }
