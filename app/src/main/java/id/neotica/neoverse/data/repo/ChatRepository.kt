@@ -3,14 +3,25 @@ package id.neotica.neoverse.data.repo
 import android.util.Log
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
+import com.google.firebase.database.snapshots
+import com.google.protobuf.Api
 import id.neotica.neoverse.data.model.ChatRoom
 import id.neotica.neoverse.data.model.Message
 import id.neotica.neoverse.data.model.ParentChatRoom
 import id.neotica.neoverse.data.remote.ApiResult
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import okhttp3.Dispatcher
+import kotlin.math.log
 
 class ChatRepository {
     private lateinit var auth: FirebaseAuth
@@ -54,5 +65,11 @@ class ChatRepository {
 
     fun sendMessage(chatId: String, message: Message) {
         firebase.getReference("messages").child(chatId).push().setValue(message)
+    }
+
+    suspend fun readMessage(chatId: String, chatRoom: ChatRoom) {
+        val key = firebase.getReference("chatroom").child(chatId).setValue(chatRoom)
+        key.await()
+//        if (key.isSuccessful)
     }
 }

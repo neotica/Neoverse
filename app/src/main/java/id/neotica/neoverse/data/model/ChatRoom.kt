@@ -7,6 +7,7 @@ data class ChatRoom(
     val user1Read: Boolean = false,
     val user2: String = "",
     val user2Read: Boolean = false,
+    val lastOpened: Long = System.currentTimeMillis(),
     val createdAt: Long = System.currentTimeMillis()
 )
 

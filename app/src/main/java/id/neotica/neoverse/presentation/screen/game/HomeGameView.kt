@@ -1,15 +1,11 @@
 package id.neotica.neoverse.presentation.screen.game
 
-import android.util.Log
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.navigation.NavController
 import id.neotica.neoverse.presentation.ui.components.BasicScreen
 import kotlin.random.Random
