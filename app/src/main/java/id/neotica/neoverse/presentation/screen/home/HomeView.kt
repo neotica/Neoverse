@@ -21,7 +21,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import id.neotica.neoverse.data.model.ChatRoom
@@ -48,7 +47,6 @@ fun HomeView(
     var isLoading by remember { mutableStateOf(false) }
     var isLoadingChats by remember { mutableStateOf(false) }
     var currentuser by remember { mutableStateOf<User?>(null) }
-    var context = LocalContext.current
 
     LaunchedEffect(isPressed.value) {
         viewModel.userList.collect { result ->
@@ -171,7 +169,7 @@ fun HomeView(
                                 userCheck(current, channels.value.user1, true)
                     }) { channelItemParent ->
                         val channelItem = channelItemParent.value
-                        val chatName = chatRoomName(currentuser?.username.toString(), channelItem.user1)
+                        val chatName = chatRoomName(currentuser?.username.toString(), channelItemParent.value.user2)
                         Card(
                             modifier = Modifier.padding(4.dp),
                             onClick = {
@@ -190,11 +188,11 @@ fun HomeView(
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
 
-                                if (currentuser?.username != channelItem.user1) {
-                                    Text(text = channelItem.user1)
-                                } else {
-                                    Text(text = channelItem.user2)
-                                }
+                                Text(
+                                    chatRoomName(currentuser?.username.toString(),
+                                    channelItem.user2)
+                                )
+
                             }
                         }
                     }
@@ -223,5 +221,5 @@ fun chatRoomName(current: String, user2: String): String {
 }
 
 fun userCheck(current: String, user2: String, equal: Boolean = false): Boolean {
-    if (!equal) return current != user2 else return current == user2
+    return if (!equal) current != user2 else current == user2
 }
