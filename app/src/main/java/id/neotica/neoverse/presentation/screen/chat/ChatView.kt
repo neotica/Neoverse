@@ -1,6 +1,6 @@
 package id.neotica.neoverse.presentation.screen.chat
 
-import android.util.Log
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -27,15 +26,12 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
@@ -44,7 +40,6 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import id.neotica.neoverse.data.model.Message
 import id.neotica.neoverse.presentation.navigation.Screen
-import id.neotica.neoverse.presentation.ui.components.ImageCoil
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
@@ -55,12 +50,13 @@ fun ChatView(
     args: Screen.Chat,
     viewModel: ChatViewModel = koinViewModel()
 ) {
+    val messages = viewModel.message.collectAsState()
+    val parentMessages = viewModel.parentMessage.collectAsState()
+
+
     LaunchedEffect(key1 = true) {
         viewModel.getMessages(args.chatId)
     }
-
-    val messages = viewModel.message.collectAsState()
-
 
     Scaffold(modifier = Modifier
         .fillMaxSize()
@@ -68,21 +64,28 @@ fun ChatView(
         Column(modifier = Modifier
             .fillMaxSize()
             .padding(it)) {
-            ChatMessages(messages = messages.value, name2 = args.user2) { msg ->
+            ChatMessages(
+                messages = messages.value,
+                name2 = args.user2
+            ) { msg ->
+
                 viewModel.sendMessage(chatId = args.chatId, msg)
             }
         }
     }
 }
 
+@SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun ChatMessages(
     modifier: Modifier = Modifier,
     name2: String,
     messages: List<Message>,
+    viewModel: ChatViewModel = koinViewModel(),
     onSendMessage: (String) -> Unit
 ) {
     val hideKeyboardController = LocalSoftwareKeyboardController.current
+    val parentMessages = viewModel.parentMessage.collectAsState()
 
     val msg = remember { mutableStateOf("") }
     val scrollState = rememberLazyListState()
@@ -113,7 +116,6 @@ fun ChatMessages(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-//                    .padding(8.dp)
                     .background(Color.LightGray), verticalAlignment = Alignment.CenterVertically
             ) {
                 TextField(
@@ -168,7 +170,5 @@ fun ChatBubble(message: Message) {
                 )
             }
         }
-
     }
-
 }

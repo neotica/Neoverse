@@ -3,33 +3,22 @@ package id.neotica.neoverse.data.repo
 import android.util.Log
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
-import com.google.firebase.database.snapshots
-import com.google.protobuf.Api
 import id.neotica.neoverse.data.model.ChatRoom
 import id.neotica.neoverse.data.model.Message
-import id.neotica.neoverse.data.model.ParentChatRoom
+import id.neotica.neoverse.data.model.ParentNeo
 import id.neotica.neoverse.data.remote.ApiResult
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
-import okhttp3.Dispatcher
-import kotlin.math.log
 
 class ChatRepository {
     private lateinit var auth: FirebaseAuth
 
     private val firebase = Firebase.database
 
-    suspend fun getChatroom(): Flow<ApiResult<List<ParentChatRoom>>> = flow {
-        val list = mutableListOf<ParentChatRoom>()
+    suspend fun getChatroom(): Flow<ApiResult<List<ParentNeo<ChatRoom>>>> = flow {
+        val list = mutableListOf<ParentNeo<ChatRoom>>()
         emit(ApiResult.Loading())
         try {
             val reference = firebase.getReference("chatroom").get().await()
@@ -38,13 +27,13 @@ class ChatRepository {
 
                 val cr = data.getValue(ChatRoom::class.java)
 
-                val channel = ParentChatRoom(
+                val channel = ParentNeo(
                     key = data.key!!,
                     value = cr!!
                 )
                 list.add(channel)
                 if (data != null) {
-                    emit(ApiResult.Success(list))
+                    emit(ApiResult.Success(list.sortedByDescending { it.value.lastOpened }))
                 } else {
                     emit(ApiResult.Error("data null"))
                 }
@@ -63,13 +52,27 @@ class ChatRepository {
         if (reference.isSuccessful) getChatroom()
     }
 
+    suspend fun addChatroomRead(name: ChatRoom) {
+//        val key = firebase.getReference("chatroom").push().key
+        val reference = firebase.getReference("chatroom").child(name.id).setValue(name)
+        reference.await()
+        if (reference.isSuccessful) getChatroom()
+    }
+
     fun sendMessage(chatId: String, message: Message) {
+        Log.d("sendMessage", message.toString())
         firebase.getReference("messages").child(chatId).push().setValue(message)
+    }
+
+    suspend fun sendMessageRead(chatId: String, message: Message, parent: ParentNeo<Message>) {
+        Log.d("sendMessage", message.toString())
+        Log.d("sendMessage", "chatId: $chatId")
+
+//        firebase.getReference("messages").child(chatId).child(message.id).setValue(message).await()
     }
 
     suspend fun readMessage(chatId: String, chatRoom: ChatRoom) {
         val key = firebase.getReference("chatroom").child(chatId).setValue(chatRoom)
         key.await()
-//        if (key.isSuccessful)
     }
 }

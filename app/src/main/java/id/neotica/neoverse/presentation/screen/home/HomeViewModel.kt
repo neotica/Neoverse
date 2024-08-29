@@ -3,16 +3,14 @@ package id.neotica.neoverse.presentation.screen.home
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.NavController
 import com.google.firebase.Firebase
 import com.google.firebase.database.database
 import id.neotica.neoverse.data.model.ChatRoom
-import id.neotica.neoverse.data.model.ParentChatRoom
+import id.neotica.neoverse.data.model.ParentNeo
 import id.neotica.neoverse.data.model.User
 import id.neotica.neoverse.data.remote.ApiResult
 import id.neotica.neoverse.data.repo.ChatRepository
 import id.neotica.neoverse.data.repo.UserRepository
-import id.neotica.neoverse.presentation.navigation.Screen
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -28,13 +26,13 @@ class HomeViewModel(
     private var _user: MutableStateFlow<ApiResult<User?>> = MutableStateFlow(ApiResult.Loading())
     val user = _user.asStateFlow()
 
-    private val _chatroom = MutableStateFlow<ApiResult<List<ParentChatRoom>>>(ApiResult.Loading())
+    private val _chatroom = MutableStateFlow<ApiResult<List<ParentNeo<ChatRoom>>>>(ApiResult.Loading())
     val chatroom = _chatroom.asStateFlow()
 
     private val firebaseDatabase = Firebase.database
 
 
-    fun currentUser(): String = userRepo.userId()
+    fun currentUserId(): String = userRepo.userId()
 
     private fun currentUserName(): String? = _user.value.data?.username
 
@@ -63,8 +61,10 @@ class HomeViewModel(
                 id = chatId,
                 name = chatRoom.name,
                 user1 = chatRoom.user1,
+                user1id = chatRoom.user1id,
                 user1Read = true,
                 user2 = chatRoom.user2,
+                user2id = chatRoom.user2id,
                 user2Read = false,
                 createdAt = chatRoom.createdAt
             )
@@ -74,8 +74,10 @@ class HomeViewModel(
                 id = chatId,
                 name = chatRoom.name,
                 user1 = chatRoom.user1,
+                user1id = chatRoom.user1id,
                 user1Read = false,
                 user2 = chatRoom.user2,
+                user2id = chatRoom.user2id,
                 user2Read = true,
                 createdAt = chatRoom.createdAt
             )
@@ -83,36 +85,16 @@ class HomeViewModel(
         }
     }
 
-
-    /*fun filterChatrooms(chatroom: List<ChatRoom>): List<ChatRoom> {
-        return if (currentUserName() != null) {
-            chatroom.filter { cr ->
-                cr.name.isNotEmpty() && getPartWithUser(cr.name, currentUserName()!!) != "No match!"
-            }
-        } else {
-            emptyList()
-        }
-    }*/
-
-    fun addChatroom(user2: String, chatrooms: List<ChatRoom>, navController: NavController) = viewModelScope.launch {
-        if (currentUserName().isNullOrEmpty()) navController.navigate(Screen.LoginScreen)
+    fun addChatroom(user2: String, user: User) = viewModelScope.launch {
         currentUserName()?.let { currentUser ->
-
-            val chatroom1 = chatrooms.find {
-                currentUser+user2 == it.user1+it.user2 || currentUser+user2 == it.user2+it.user1
-            }
-
-            if (chatroom1 != null) {
-                navController.navigate(Screen.Chat(chatroom1.name, chatroom1.user2))
-            } else {
-                val chatroomDetail = ChatRoom(
-                    name = currentUser+user2,
-                    user1 = currentUser,
-                    user2 = user2
-                )
-                chatRepo.addChatroom(chatroomDetail)
-                navController.navigate(Screen.Chat(currentUser+user2, user2))
-            }
+            val chatroomDetail = ChatRoom(
+                name = currentUserId()+user.userId.toString(),
+                user1 = currentUser,
+                user2 = user2,
+                user1id = currentUserId(),
+                user2id = user.userId.toString()
+            )
+            chatRepo.addChatroom(chatroomDetail)
         }
     }
 }
