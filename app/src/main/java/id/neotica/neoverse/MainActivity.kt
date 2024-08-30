@@ -10,6 +10,7 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
@@ -48,7 +49,11 @@ class MainActivity : ComponentActivity() {
                         icon = Icons.Default.Home,
                         screen = RootScreen.HomeNav
                     ),
-
+                    NavigationItem(
+                        title = "Friends",
+                        icon = Icons.Default.AccountBox,
+                        screen = RootScreen.FriendNav
+                    ),
                     NavigationItem(
                         title = "Games",
                         icon = Icons.Default.Favorite,
