@@ -1,5 +1,8 @@
 package id.neotica.neoverse.data.model
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class User(
     var userId: String? = "",
     val username: String? = "",

@@ -35,11 +35,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import id.neotica.neoverse.data.model.Message
 import id.neotica.neoverse.presentation.navigation.Screen
+import id.neotica.neoverse.utils.convertLongToTime
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
@@ -60,7 +62,7 @@ fun ChatView(
 
     Scaffold(modifier = Modifier
         .fillMaxSize()
-        .padding(paddingValues)) {
+        .padding(start = 8.dp, end = 8.dp, bottom = paddingValues.calculateBottomPadding())) {
         Column(modifier = Modifier
             .fillMaxSize()
             .padding(it)) {
@@ -154,19 +156,34 @@ fun ChatBubble(message: Message) {
 
     ) {
         val alignment = if (!isCurrentUser) Alignment.CenterStart else Alignment.CenterEnd
-        Row(
+
+        Column(
             modifier = Modifier
-                .align(alignment)
+                .align(alignment),
         ) {
-            Text("Unread")
-            Text("Read")
             Box(
-                modifier = Modifier
-                    .padding(8.dp)
-                    .background(color = bubbleColor, shape = RoundedCornerShape(8.dp))
+                modifier = Modifier.fillMaxWidth()
             ) {
+                Box(
+                    modifier = Modifier.align(alignment)
+                        .background(color = bubbleColor, shape = RoundedCornerShape(8.dp)),
+
+                    ) {
+                    Text(
+                        text = message.message,
+                        color = Color.White,
+                        modifier = Modifier
+                            .padding(8.dp)
+                            .align(alignment),
+                    )
+                }
+            }
+
+            Box(Modifier.fillMaxWidth()) {
                 Text(
-                    text = message.message, color = Color.White, modifier = Modifier.padding(8.dp)
+                    modifier = Modifier.align(alignment),
+                    fontSize = 12.sp,
+                    text = convertLongToTime(message.createdAt, true)
                 )
             }
         }
