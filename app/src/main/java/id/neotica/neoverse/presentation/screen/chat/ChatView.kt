@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -20,7 +19,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -60,19 +58,14 @@ fun ChatView(
         viewModel.getMessages(args.chatId)
     }
 
-    Scaffold(modifier = Modifier
+    Column(modifier = Modifier
         .fillMaxSize()
-        .padding(start = 8.dp, end = 8.dp, bottom = paddingValues.calculateBottomPadding())) {
-        Column(modifier = Modifier
-            .fillMaxSize()
-            .padding(it)) {
-            ChatMessages(
-                messages = messages.value,
-                name2 = args.user2
-            ) { msg ->
-
-                viewModel.sendMessage(chatId = args.chatId, msg)
-            }
+        .padding(paddingValues)) {
+        ChatMessages(
+            messages = messages.value,
+            name2 = args.user2
+        ) { msg ->
+            viewModel.sendMessage(chatId = args.chatId, msg)
         }
     }
 }
@@ -80,14 +73,11 @@ fun ChatView(
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun ChatMessages(
-    modifier: Modifier = Modifier,
     name2: String,
     messages: List<Message>,
-    viewModel: ChatViewModel = koinViewModel(),
     onSendMessage: (String) -> Unit
 ) {
     val hideKeyboardController = LocalSoftwareKeyboardController.current
-    val parentMessages = viewModel.parentMessage.collectAsState()
 
     val msg = remember { mutableStateOf("") }
     val scrollState = rememberLazyListState()
@@ -107,7 +97,6 @@ fun ChatMessages(
             }
             LazyColumn(
                 modifier = Modifier
-                    .height(200.dp)
                     .weight(1f),
                 state = scrollState
             ) {

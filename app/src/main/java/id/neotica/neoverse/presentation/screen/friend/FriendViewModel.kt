@@ -20,6 +20,9 @@ class FriendViewModel(
     private var _user: MutableStateFlow<ApiResult<User?>> = MutableStateFlow(ApiResult.Loading())
     val user = _user.asStateFlow()
 
+    private var _friendList: MutableStateFlow<ApiResult<List<Friends>>> = MutableStateFlow(ApiResult.Loading())
+    val friendList = _friendList.asStateFlow()
+
     fun getCurrentId(): String = userRepo.userId()
 
     fun addFriend(friend: Friends) = viewModelScope.launch {
@@ -36,5 +39,12 @@ class FriendViewModel(
         val user = userRepo.getUserDetail(userId)
         _user.value = ApiResult.Loading()
         _user.value = user
+    }
+
+    fun getFriends() = viewModelScope.launch {
+//        _friendList.value = userRepo.getFriends()
+        userRepo.getFriends().collect {
+            _friendList.value = it
+        }
     }
 }
