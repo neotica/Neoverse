@@ -23,6 +23,7 @@ import androidx.navigation.NavController
 import id.neotica.droidcore.component.textfield.NeoTextField
 import id.neotica.neoverse.data.model.User
 import id.neotica.neoverse.data.remote.ApiResult
+import id.neotica.neoverse.presentation.navigation.RootScreen
 import id.neotica.neoverse.presentation.navigation.Screen
 import id.neotica.neoverse.presentation.screen.friend.FriendViewModel
 import org.koin.androidx.compose.koinViewModel
@@ -75,7 +76,12 @@ fun SearchUser(
                             userList.forEach { user ->
                                 Card(
                                     onClick = {
-                                        navController.navigate(Screen.FriendProfileScreen(user.userId.toString()))
+                                        val friendId = user.userId.toString()
+                                        if (friendId != viewModel.getCurrentId()) {
+                                            navController.navigate(Screen.FriendProfileScreen(friendId))
+                                        } else {
+                                            navController.navigate(RootScreen.AuthNav)
+                                        }
                                     }
                                 ) {
                                     Text(user.username.toString())
