@@ -77,7 +77,7 @@ fun SearchUser(
                                 Card(
                                     onClick = {
                                         val friendId = user.userId.toString()
-                                        if (friendId != viewModel.getCurrentId()) {
+                                        if (friendId != viewModel.currentUserId()) {
                                             navController.navigate(Screen.FriendProfileScreen(friendId))
                                         } else {
                                             navController.navigate(RootScreen.AuthNav)
