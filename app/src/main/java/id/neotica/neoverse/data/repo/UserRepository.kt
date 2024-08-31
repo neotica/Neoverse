@@ -4,7 +4,9 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.database
 import com.google.firebase.firestore.FirebaseFirestore
+import id.neotica.neoverse.data.model.ChatRoom
 import id.neotica.neoverse.data.model.Friends
+import id.neotica.neoverse.data.model.ParentNeo
 import id.neotica.neoverse.data.model.User
 import id.neotica.neoverse.data.remote.ApiResult
 import kotlinx.coroutines.flow.Flow
@@ -103,6 +105,32 @@ class UserRepository {
             .child(userId()).child("friends")
             .child(friend.id).setValue(friend)
         original.await()
+    }
+
+    suspend fun getChatroomFriend(): Flow<ApiResult<List<ParentNeo<ChatRoom>>>> = flow {
+        val list = mutableListOf<ParentNeo<ChatRoom>>()
+        emit(ApiResult.Loading())
+        try {
+            val reference = firebase.getReference("chatroom").get().await()
+            reference.children.forEach { data ->
+                val cr = data.getValue(ChatRoom::class.java)
+                val channel = ParentNeo(
+                    key = data.key!!,
+                    value = cr!!
+                )
+                list.add(channel)
+                if (data != null) {
+                    emit(ApiResult.Success(list.sortedByDescending {
+
+                        it.value.lastOpened }.filter { it == it
+                        }))
+                } else {
+                    emit(ApiResult.Error("data null"))
+                }
+            }
+        } catch (e: Exception) {
+            emit(ApiResult.Error("exception: ${e.message}"))
+        }
     }
 
 }

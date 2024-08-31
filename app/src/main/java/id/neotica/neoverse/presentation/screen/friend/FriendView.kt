@@ -20,7 +20,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import id.neotica.neoverse.data.model.ChatRoom
 import id.neotica.neoverse.data.model.Friends
+import id.neotica.neoverse.data.model.User
 import id.neotica.neoverse.data.remote.ApiResult
 import id.neotica.neoverse.presentation.navigation.Screen
 import org.koin.androidx.compose.koinViewModel
@@ -32,8 +34,49 @@ fun FriendView(
     viewModel: FriendViewModel = koinViewModel()
 ) {
 
+    val chatrooms = remember { mutableStateOf<List<ChatRoom>>(emptyList()) }
     var friendList by remember { mutableStateOf<List<Friends>>(emptyList()) }
     var isLoading by remember { mutableStateOf(false) }
+    var isLoadingChats by remember { mutableStateOf(false) }
+    var currentuser by remember { mutableStateOf<User?>(null) }
+
+    LaunchedEffect(key1 = true) {
+        viewModel.getChatroom()
+        viewModel.chatroom.collect { result ->
+            Log.d("chatroomcollect", result.data .toString())
+            when(result) {
+                is ApiResult.Loading -> { isLoadingChats = true }
+                is ApiResult.Success -> {
+                    isLoadingChats = false
+                    val list = mutableListOf<ChatRoom>()
+                    result.data?.forEach { chatResult ->
+                        list.add(chatResult.value)
+                    }
+
+                    chatrooms.value = list
+                }
+                is ApiResult.Error -> {
+                    isLoadingChats = false
+                }
+            }
+        }
+    }
+
+    LaunchedEffect(key1 = true) {
+        viewModel.getUser()
+        viewModel.user.collect { result ->
+            when(result) {
+                is ApiResult.Loading -> isLoading = true
+                is ApiResult.Success -> {
+                    isLoading = false
+                    currentuser = result.data
+                }
+                is ApiResult.Error -> {
+                    isLoading = false
+                }
+            }
+        }
+    }
 
     LaunchedEffect(key1 = true) {
         viewModel.getFriends()
@@ -54,7 +97,10 @@ fun FriendView(
     }
 
 
-    Column(Modifier.fillMaxSize().padding(paddingValues)) {
+    Column(
+        Modifier
+            .fillMaxSize()
+            .padding(paddingValues)) {
         val idValue = rememberSaveable { mutableStateOf("") }
 
         Text("Friend screen")
@@ -73,7 +119,44 @@ fun FriendView(
                         Card(
                             modifier = Modifier.padding(4.dp),
                             onClick = {
-//                            navController.navigate(Screen.Chat(chatId = ))
+                                val chatRoomFiltered = viewModel.getRoomFiltered(friends.id, chatrooms.value)
+                                val currentId = viewModel.currentUserId()
+
+                                if (currentId.isEmpty()) navController.navigate(Screen.LoginScreen)
+                                if (!isLoadingChats) {
+                                    Log.d("friendchat", chatRoomFiltered.toString())
+                                    if (chatRoomFiltered.toString() == "null") {
+                                        Log.d("friendchat", "null")
+
+                                        navController.navigate(
+                                            Screen.Chat(
+                                                currentId + friends.id,
+                                                user2 = friends.name
+                                            )
+                                        )
+                                        val addUser = User(
+                                            userId = friends.id,
+                                            username = friends.name
+                                        )
+                                        viewModel.addChatroom(
+                                            user2 =  friends.name,
+                                            user = addUser,
+                                        )
+                                    } else {
+                                        Log.d("friendchat", "not null")
+
+                                        val chatUser2 =
+                                            if (chatRoomFiltered?.user1 != viewModel.currentUserName()) chatRoomFiltered?.user1 else friends.name
+                                        chatRoomFiltered.let {
+                                            navController.navigate(
+                                                Screen.Chat(
+                                                    chatId = chatRoomFiltered?.name.toString(),
+                                                    user2 = friends.name
+                                                )
+                                            )
+                                        }
+                                    }
+                                }
                             }
                         ) {
                             Text(

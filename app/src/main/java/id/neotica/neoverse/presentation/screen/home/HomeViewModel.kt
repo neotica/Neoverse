@@ -11,13 +11,15 @@ import id.neotica.neoverse.data.model.User
 import id.neotica.neoverse.data.remote.ApiResult
 import id.neotica.neoverse.data.repo.ChatRepository
 import id.neotica.neoverse.data.repo.UserRepository
+import id.neotica.neoverse.domain.AuthRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
     private val userRepo: UserRepository,
-    private val chatRepo: ChatRepository
+    private val chatRepo: ChatRepository,
+    private val authRepo: AuthRepository
 ): ViewModel() {
 
     private var _userList: MutableStateFlow<ApiResult<List<User>>> = MutableStateFlow(ApiResult.Loading())
@@ -32,7 +34,7 @@ class HomeViewModel(
     private val firebaseDatabase = Firebase.database
 
 
-    fun currentUserId(): String = userRepo.userId()
+    fun currentUserId(): String = authRepo.getUserId()
 
     private fun currentUserName(): String? = _user.value.data?.username
 

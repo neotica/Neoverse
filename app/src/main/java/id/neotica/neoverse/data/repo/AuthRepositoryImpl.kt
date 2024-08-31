@@ -5,26 +5,27 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import id.neotica.neoverse.data.model.User
 import id.neotica.neoverse.data.remote.ApiResult
+import id.neotica.neoverse.domain.AuthRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.tasks.await
 
-class AuthRepository {
+class AuthRepositoryImpl: AuthRepository {
     private lateinit var auth: FirebaseAuth
     private lateinit var firestore: FirebaseFirestore
 
-    fun isLoggedIn(): Boolean {
+    override fun isLoggedIn(): Boolean {
         auth = FirebaseAuth.getInstance()
         return auth.currentUser != null
     }
 
-    fun userId(): String {
+    override fun getUserId(): String {
         return if (isLoggedIn()) auth.currentUser!!.uid else ""
     }
 
-    suspend fun login(email: String, password: String): ApiResult<String> {
+    override suspend fun login(email: String, password: String): ApiResult<String> {
         auth = FirebaseAuth.getInstance()
 
         Log.d("repo", "Masuk loginbase")
@@ -41,7 +42,7 @@ class AuthRepository {
         }
     }
 
-    suspend fun register(username: String, email: String, password: String): ApiResult<String> {
+    override suspend fun register(username: String, email: String, password: String): ApiResult<String> {
         auth = FirebaseAuth.getInstance()
         firestore = FirebaseFirestore.getInstance()
 
@@ -84,7 +85,7 @@ class AuthRepository {
         }
     }.flowOn(Dispatchers.IO)
 
-    fun logout() {
+    override fun logout() {
         auth.signOut()
     }
 }
