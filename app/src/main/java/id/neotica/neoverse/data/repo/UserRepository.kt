@@ -4,9 +4,13 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.database
 import com.google.firebase.firestore.FirebaseFirestore
+import id.neotica.neoverse.data.model.ChatRoom
 import id.neotica.neoverse.data.model.Friends
+import id.neotica.neoverse.data.model.ParentNeo
 import id.neotica.neoverse.data.model.User
 import id.neotica.neoverse.data.remote.ApiResult
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
 
 class UserRepository {
@@ -48,6 +52,40 @@ class UserRepository {
         }
     }
 
+    suspend fun getFriends(): Flow<ApiResult<List<Friends>>> = flow {
+        val list = mutableListOf<Friends>()
+        emit(ApiResult.Loading())
+        try {
+            val reference = firebase.getReference("userdata").child(userId()).child("friends").get().await()
+            reference.children.forEach { data ->
+                val userData = data.getValue(Friends::class.java)
+
+                if (data != null) {
+                    list.add(userData!!)
+                    emit(ApiResult.Success(list))
+                } else {
+                    emit(ApiResult.Error("data null"))
+                }
+            }
+        } catch (e: Exception) {
+            emit(ApiResult.Error("exception: ${e.message}"))
+        }
+    }
+
+    suspend fun getFriends2(searchName: String): ApiResult<List<User>> {
+        firestore = FirebaseFirestore.getInstance()
+        return try {
+            val snapshot = firestore.collection("Users").get().await()
+            val userList = snapshot.documents.mapNotNull {
+                it.toObject(User::class.java)
+            }
+            val userFiltered = userList.filter { it.username == searchName }
+            ApiResult.Success(userFiltered)
+        } catch (e: Exception) {
+            ApiResult.Error(e.message)
+        }
+    }
+
     suspend fun searchUser(searchName: String): ApiResult<List<User>> {
         firestore = FirebaseFirestore.getInstance()
         return try {
@@ -63,10 +101,36 @@ class UserRepository {
     }
 
     suspend fun addFriend(friend: Friends) {
-        val key = firebase.getReference("userdata")
+        val original = firebase.getReference("userdata")
             .child(userId()).child("friends")
             .child(friend.id).setValue(friend)
-        key.await()
+        original.await()
+    }
+
+    suspend fun getChatroomFriend(): Flow<ApiResult<List<ParentNeo<ChatRoom>>>> = flow {
+        val list = mutableListOf<ParentNeo<ChatRoom>>()
+        emit(ApiResult.Loading())
+        try {
+            val reference = firebase.getReference("chatroom").get().await()
+            reference.children.forEach { data ->
+                val cr = data.getValue(ChatRoom::class.java)
+                val channel = ParentNeo(
+                    key = data.key!!,
+                    value = cr!!
+                )
+                list.add(channel)
+                if (data != null) {
+                    emit(ApiResult.Success(list.sortedByDescending {
+
+                        it.value.lastOpened }.filter { it == it
+                        }))
+                } else {
+                    emit(ApiResult.Error("data null"))
+                }
+            }
+        } catch (e: Exception) {
+            emit(ApiResult.Error("exception: ${e.message}"))
+        }
     }
 
 }

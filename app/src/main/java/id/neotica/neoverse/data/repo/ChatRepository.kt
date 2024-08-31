@@ -1,6 +1,5 @@
 package id.neotica.neoverse.data.repo
 
-import android.util.Log
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.database
@@ -48,7 +47,6 @@ class ChatRepository {
     }
 
     fun sendMessage(chatId: String, message: Message) {
-        Log.d("sendMessage", message.toString())
         firebase.getReference("messages").child(chatId).push().setValue(message)
     }
 
@@ -56,20 +54,4 @@ class ChatRepository {
         val key = firebase.getReference("chatroom").child(chatId).setValue(chatRoom)
         key.await()
     }
-
-    suspend fun sendMessageRead(chatId: String, message: Message, parent: ParentNeo<Message>) {
-        Log.d("sendMessage", message.toString())
-        Log.d("sendMessage", "chatId: $chatId")
-
-//        firebase.getReference("messages").child(chatId).child(message.id).setValue(message).await()
-    }
-
-    suspend fun addChatroomRead(name: ChatRoom) {
-//        val key = firebase.getReference("chatroom").push().key
-        val reference = firebase.getReference("chatroom").child(name.id).setValue(name)
-        reference.await()
-        if (reference.isSuccessful) getChatroom()
-    }
-
-
 }

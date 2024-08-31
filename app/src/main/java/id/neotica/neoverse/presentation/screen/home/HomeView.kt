@@ -84,6 +84,7 @@ fun HomeView(
     LaunchedEffect(key1 = true) {
         viewModel.getChatroom()
         viewModel.chatroom.collect { result ->
+            Log.d("chatroomcollect", result.data .toString())
             when(result) {
                 is ApiResult.Loading -> { isLoadingChats = true }
                 is ApiResult.Success -> {
@@ -96,7 +97,9 @@ fun HomeView(
                     parentChatrooms.value = result.data!!
                     chatrooms.value = list
                 }
-                is ApiResult.Error -> {isLoadingChats = false}
+                is ApiResult.Error -> {
+                    isLoadingChats = false
+                }
             }
         }
     }
@@ -117,23 +120,21 @@ fun HomeView(
                             Card(
                                 modifier = Modifier.padding(4.dp),
                                 onClick = {
-                                    val chatroom1 = chatrooms.value.find {
-                                        val current = currentuser?.userId.toString()+user.userId
-                                        userCheck(current, it.user1id+it.user2id, true) ||
-                                                userCheck(current, it.user2id+it.user1id, true)
-                                    }
-                                    val chatRoomName = chatRoomName(currentuser?.username.toString(), chatroom1?.user1.toString(), chatroom1?.user2.toString())
+                                    val chatRoomFiltered = viewModel.getRoomFiltered(user.userId.toString(), chatrooms.value)
+
                                     if (currentuser?.username.isNullOrEmpty()) navController.navigate(Screen.LoginScreen)
                                     if (!isLoadingChats) {
-                                        val roomName = chatRoomName(currentuser?.username.toString(), user.username.toString())
-                                        if (chatroom1 == null) {
-                                            navController.navigate(Screen.Chat(currentuser?.userId+user.userId, user2 = user.username.toString()))
+                                        if (chatRoomFiltered == null) {
+                                            navController.navigate(Screen.Chat(currentuser?.userId.toString()+user.userId, user2 = user.username.toString()))
                                             viewModel.addChatroom(
-                                                user2 = roomName,
+                                                user2 = user.username.toString(),
                                                 user = user,
                                             )
                                         } else {
-                                            navController.navigate(Screen.Chat(chatroom1.name, user2 = chatRoomName))
+                                            val chatUser2 = if (chatRoomFiltered.user1 != currentuser?.username) chatRoomFiltered.user1 else user.username
+                                            chatRoomFiltered.let {
+                                                navController.navigate(Screen.Chat(chatId = chatRoomFiltered.name, user2 = chatUser2.toString()))
+                                            }
                                         }
                                     }
                                 }

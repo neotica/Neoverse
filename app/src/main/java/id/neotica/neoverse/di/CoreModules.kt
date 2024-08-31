@@ -1,8 +1,9 @@
 package id.neotica.neoverse.di
 
-import id.neotica.neoverse.data.repo.AuthRepository
+import id.neotica.neoverse.data.repo.AuthRepositoryImpl
 import id.neotica.neoverse.data.repo.ChatRepository
 import id.neotica.neoverse.data.repo.UserRepository
+import id.neotica.neoverse.domain.AuthRepository
 import id.neotica.neoverse.presentation.screen.auth.login.LoginViewModel
 import id.neotica.neoverse.presentation.screen.auth.register.RegisterViewModel
 import id.neotica.neoverse.presentation.screen.chat.ChatViewModel
@@ -10,12 +11,14 @@ import id.neotica.neoverse.presentation.screen.friend.FriendViewModel
 import id.neotica.neoverse.presentation.screen.home.HomeViewModel
 import id.neotica.neoverse.presentation.screen.profile.ProfileViewModel
 import org.koin.androidx.viewmodel.dsl.viewModelOf
+import org.koin.core.module.dsl.bind
+import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 
 
 val coreModule = module {
-    singleOf(::AuthRepository)
+    singleOf(::AuthRepositoryImpl) { bind<AuthRepository>()}
     singleOf(::UserRepository)
     singleOf(::ChatRepository)
 }
@@ -27,4 +30,12 @@ val viewModelModules = module {
     viewModelOf(::RegisterViewModel)
     viewModelOf(::ChatViewModel)
     viewModelOf(::FriendViewModel)
+}
+
+val domainModules = module {
+//    factoryOf(::GetUserIdUseCase)
+}
+
+val useCaseModules = module {
+
 }

@@ -11,13 +11,15 @@ import id.neotica.neoverse.data.model.User
 import id.neotica.neoverse.data.remote.ApiResult
 import id.neotica.neoverse.data.repo.ChatRepository
 import id.neotica.neoverse.data.repo.UserRepository
+import id.neotica.neoverse.domain.AuthRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
     private val userRepo: UserRepository,
-    private val chatRepo: ChatRepository
+    private val chatRepo: ChatRepository,
+    private val authRepo: AuthRepository
 ): ViewModel() {
 
     private var _userList: MutableStateFlow<ApiResult<List<User>>> = MutableStateFlow(ApiResult.Loading())
@@ -32,7 +34,7 @@ class HomeViewModel(
     private val firebaseDatabase = Firebase.database
 
 
-    fun currentUserId(): String = userRepo.userId()
+    fun currentUserId(): String = authRepo.getUserId()
 
     private fun currentUserName(): String? = _user.value.data?.username
 
@@ -50,10 +52,50 @@ class HomeViewModel(
 
     fun getChatroom() = viewModelScope.launch {
         chatRepo.getChatroom().collect {
-            _chatroom.value = it
-            Log.d("homevm", "getChatroom: ${it}")
+            if (it.data != null) {
+                _chatroom.value = it
+            } else {
+                _chatroom.value = ApiResult.Error("data empty")
+            }
         }
     }
+
+    fun isRoomExist(user: String, chatroom: List<ChatRoom>): Boolean {
+        val name = currentUserName()
+        val find1 = chatroom.find {
+            it.user1 == name || it.user2 == name
+        }
+        val find2 = chatroom.find {
+            it.user1 == name
+        }
+        val user1 = find1?.user1
+        val check = if (user == name) true else false
+        Log.d("isUserExist", "check: $chatroom")
+        return check
+    }
+
+    fun getRoomFiltered(user: String, chatroom: List<ChatRoom>): ChatRoom? {
+        val name = "kingkong"
+        val find1 = chatroom.find {
+            Log.d("isUserExist", it.name)
+
+            currentUserId()+user == it.name || user+currentUserId() == it.name
+        }
+        val find2 = chatroom.find {
+            it.user1 == name
+        }
+        val user1 = find1?.user1
+        val check = if (user1 == name) true else false
+        Log.d("isUserExist", "find: $find1")
+        return find1
+    }
+
+    /*fun isUserOne(chatroom: List<ChatRoom>) {
+        val name = "kingkong"
+        val find = chatroom.find {
+            name
+        }
+    }*/
 
     fun readMessage(chatId: String, chatRoom: ChatRoom, currentUser: String) = viewModelScope.launch {
         if (currentUser != chatRoom.user2) {
