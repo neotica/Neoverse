@@ -9,7 +9,8 @@ import id.neotica.neoverse.data.model.ParentNeo
 import id.neotica.neoverse.data.model.User
 import id.neotica.neoverse.data.remote.ApiResult
 import id.neotica.neoverse.data.repo.ChatRepository
-import id.neotica.neoverse.data.repo.UserRepository
+import id.neotica.neoverse.domain.AuthRepository
+import id.neotica.neoverse.domain.UserRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -31,9 +32,7 @@ class FriendViewModel(
     private var _friendList: MutableStateFlow<ApiResult<List<Friends>>> = MutableStateFlow(ApiResult.Loading())
     val friendList = _friendList.asStateFlow()
 
-    val isOk = MutableStateFlow<Boolean>(false)
-
-    fun currentUserId(): String = userRepo.userId()
+    fun currentUserId(): String = userRepo.getUserId()
     fun currentUserName(): String? = _user.value.data?.username
 
     fun addFriend(friend: Friends) = viewModelScope.launch {
@@ -46,32 +45,16 @@ class FriendViewModel(
         _userList.value = user
     }
 
-    fun getUser(userId: String = "") = viewModelScope.launch {
-        Log.d("getUser", "userId: $userId" +
-                "\n" +
-                "bool; ${userId != ""}")
-        if (userId != "") {
-            val user = userRepo.getUserDetail(userId)
-            _user.value = ApiResult.Loading()
-            _user.value = user
-            Log.d("getUser", "notnull")
-        } else {
-            Log.d("getUser", "null")
-
-            _user.value = userRepo.getUserDetail()
-        }
+    fun getUser(userId: String = currentUserId()) = viewModelScope.launch {
+        val user = userRepo.getUserDetail(userId)
+        _user.value = ApiResult.Loading()
+        _user.value = user
+        Log.d("getUser", "notnull")
     }
 
     fun getFriends() = viewModelScope.launch {
         userRepo.getFriends().collect {
             _friendList.value = it
-        }
-    }
-
-    fun getFriends2() = viewModelScope.launch {
-        getChatroom()
-        _chatroom.value.data?.forEach {
-            val name = it.value.name
         }
     }
 
@@ -97,17 +80,9 @@ class FriendViewModel(
     }
 
     fun getRoomFiltered(user: String, chatroom: List<ChatRoom>): ChatRoom? {
-        val name = "kingkong"
         val find1 = chatroom.find {
-            Log.d("isUserExist", it.name)
-
             currentUserId()+user == it.name || user+currentUserId() == it.name
         }
-        val find2 = chatroom.find {
-            it.user1 == name
-        }
-        val user1 = find1?.user1
-        val check = if (user1 == name) true else false
         Log.d("isUserExist", "find: $find1")
         return find1
     }

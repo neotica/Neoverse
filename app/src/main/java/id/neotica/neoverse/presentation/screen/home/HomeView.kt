@@ -84,20 +84,27 @@ fun HomeView(
     LaunchedEffect(key1 = true) {
         viewModel.getChatroom()
         viewModel.chatroom.collect { result ->
-            Log.d("chatroomcollect", result.data .toString())
+            Log.d("chatroomcollect", result.data.toString())
             when(result) {
-                is ApiResult.Loading -> { isLoadingChats = true }
+                is ApiResult.Loading -> {
+                    Log.d("chatroomcollect", "loading")
+
+                    isLoadingChats = true
+                }
                 is ApiResult.Success -> {
+                    Log.d("chatroomcollect", "scs")
+
                     isLoadingChats = false
                     val list = mutableListOf<ChatRoom>()
                     result.data?.forEach { chatResult ->
                         list.add(chatResult.value)
+                        parentChatrooms.value = result.data
+                        chatrooms.value = list
                     }
-
-                    parentChatrooms.value = result.data!!
-                    chatrooms.value = list
                 }
                 is ApiResult.Error -> {
+                    Log.d("chatroomcollect", "error")
+
                     isLoadingChats = false
                 }
             }

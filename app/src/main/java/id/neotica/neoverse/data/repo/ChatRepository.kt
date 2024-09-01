@@ -18,7 +18,6 @@ class ChatRepository {
 
     suspend fun getChatroom(): Flow<ApiResult<List<ParentNeo<ChatRoom>>>> = flow {
         val list = mutableListOf<ParentNeo<ChatRoom>>()
-        emit(ApiResult.Loading())
         try {
             val reference = firebase.getReference("chatroom").get().await()
             reference.children.forEach { data ->
@@ -28,13 +27,13 @@ class ChatRepository {
                     value = cr!!
                 )
                 list.add(channel)
-                if (data != null) {
+                if (data.value != null) {
                     emit(ApiResult.Success(list.sortedByDescending { it.value.lastOpened }))
                 } else {
                     emit(ApiResult.Error("data null"))
                 }
             }
-        } catch (e: Exception) {
+        } catch (e: NullPointerException) {
             emit(ApiResult.Error("exception: ${e.message}"))
         }
     }
