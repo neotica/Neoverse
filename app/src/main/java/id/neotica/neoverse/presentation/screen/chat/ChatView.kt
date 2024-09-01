@@ -54,9 +54,7 @@ fun ChatView(
     val parentMessages = viewModel.parentMessage.collectAsState()
 
 
-    LaunchedEffect(key1 = true) {
-        viewModel.getMessages(args.chatId)
-    }
+//    viewModel.getMessages(args.chatId)
 
     Column(modifier = Modifier
         .fillMaxSize()

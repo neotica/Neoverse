@@ -8,8 +8,7 @@ import id.neotica.neoverse.data.model.Friends
 import id.neotica.neoverse.data.model.ParentNeo
 import id.neotica.neoverse.data.model.User
 import id.neotica.neoverse.data.remote.ApiResult
-import id.neotica.neoverse.data.repo.ChatRepository
-import id.neotica.neoverse.domain.AuthRepository
+import id.neotica.neoverse.domain.ChatRepository
 import id.neotica.neoverse.domain.UserRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
