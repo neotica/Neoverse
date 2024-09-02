@@ -10,7 +10,7 @@ interface UserRepository {
     fun getUserId(): String
     suspend fun getUserDetail(user: String): ApiResult<User?>
     suspend fun getAllUsers(): ApiResult<List<User>>
-    suspend fun getFriends(): Flow<ApiResult<List<Friends>>>
+    fun getFriends(): Flow<ApiResult<List<Friends>>>
     suspend fun searchUser(search: String): ApiResult<List<User>>
     suspend fun addFriend(friend: Friends)
 }

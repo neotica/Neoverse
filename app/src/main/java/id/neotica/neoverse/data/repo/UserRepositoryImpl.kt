@@ -53,7 +53,7 @@ class UserRepositoryImpl: UserRepository {
         }
     }
 
-    override suspend fun getFriends(): Flow<ApiResult<List<Friends>>> = flow {
+    override fun getFriends(): Flow<ApiResult<List<Friends>>> = flow {
         val list = mutableListOf<Friends>()
         emit(ApiResult.Loading())
         try {

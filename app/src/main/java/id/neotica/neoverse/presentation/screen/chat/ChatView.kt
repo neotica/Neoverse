@@ -22,7 +22,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -39,6 +38,7 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import id.neotica.neoverse.data.model.Message
 import id.neotica.neoverse.presentation.navigation.Screen
+import id.neotica.neoverse.presentation.ui.components.BasicScaffold
 import id.neotica.neoverse.utils.convertLongToTime
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
@@ -51,27 +51,30 @@ fun ChatView(
     viewModel: ChatViewModel = koinViewModel()
 ) {
     val messages = viewModel.message.collectAsState()
-    val parentMessages = viewModel.parentMessage.collectAsState()
 
-
-//    viewModel.getMessages(args.chatId)
-
-    Column(modifier = Modifier
-        .fillMaxSize()
-        .padding(paddingValues)) {
+    BasicScaffold(
+        topBarTitle = args.user2,
+        enableActionBar = true,
+        navController = navController,
+        paddingValues = paddingValues,
+        fullScreen = true
+    ) {
         ChatMessages(
             messages = messages.value,
-            name2 = args.user2
         ) { msg ->
             viewModel.sendMessage(chatId = args.chatId, msg)
         }
+    }
+    Column(modifier = Modifier
+        .fillMaxSize()
+        .padding(paddingValues)) {
+
     }
 }
 
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun ChatMessages(
-    name2: String,
     messages: List<Message>,
     onSendMessage: (String) -> Unit
 ) {
@@ -89,9 +92,9 @@ fun ChatMessages(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(Color.LightGray), verticalAlignment = Alignment.CenterVertically
+                    .background(Color.Transparent), verticalAlignment = Alignment.CenterVertically
             ){
-                Text(name2)
+                Text("\n")
             }
             LazyColumn(
                 modifier = Modifier
