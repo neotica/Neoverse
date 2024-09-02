@@ -16,15 +16,6 @@ class AuthRepositoryImpl: AuthRepository {
     private lateinit var auth: FirebaseAuth
     private lateinit var firestore: FirebaseFirestore
 
-    override fun isLoggedIn(): Boolean {
-        auth = FirebaseAuth.getInstance()
-        return auth.currentUser != null
-    }
-
-    override fun getUserId(): String {
-        return if (isLoggedIn()) auth.currentUser!!.uid else ""
-    }
-
     override suspend fun login(email: String, password: String): ApiResult<String> {
         auth = FirebaseAuth.getInstance()
 

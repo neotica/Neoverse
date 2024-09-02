@@ -1,24 +1,26 @@
 package id.neotica.neoverse.data.repo
 
 import com.google.firebase.Firebase
-import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
 import id.neotica.neoverse.data.model.ChatRoom
 import id.neotica.neoverse.data.model.Message
 import id.neotica.neoverse.data.model.ParentNeo
 import id.neotica.neoverse.data.remote.ApiResult
+import id.neotica.neoverse.domain.ChatRepository
+import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
 
-class ChatRepository {
-    private lateinit var auth: FirebaseAuth
-
+class ChatRepositoryImpl: ChatRepository {
     private val firebase = Firebase.database
 
-    suspend fun getChatroom(): Flow<ApiResult<List<ParentNeo<ChatRoom>>>> = flow {
+    override suspend fun getChatroom(): Flow<ApiResult<List<ParentNeo<ChatRoom>>>> = flow {
         val list = mutableListOf<ParentNeo<ChatRoom>>()
-        emit(ApiResult.Loading())
         try {
             val reference = firebase.getReference("chatroom").get().await()
             reference.children.forEach { data ->
@@ -28,29 +30,50 @@ class ChatRepository {
                     value = cr!!
                 )
                 list.add(channel)
-                if (data != null) {
+                if (data.value != null) {
                     emit(ApiResult.Success(list.sortedByDescending { it.value.lastOpened }))
                 } else {
                     emit(ApiResult.Error("data null"))
                 }
             }
-        } catch (e: Exception) {
+        } catch (e: NullPointerException) {
             emit(ApiResult.Error("exception: ${e.message}"))
         }
     }
 
-    suspend fun addChatroom(name: ChatRoom) {
+    override suspend fun addChatroom(name: ChatRoom) {
         val key = firebase.getReference("chatroom").push().key
         val reference = firebase.getReference("chatroom").child(key!!).setValue(name)
         reference.await()
         if (reference.isSuccessful) getChatroom()
     }
 
-    fun sendMessage(chatId: String, message: Message) {
+    override fun getMessages(chatId: String): Flow<List<Message>> = callbackFlow {
+        val reqDb = firebase.getReference("messages").child(chatId).orderByChild("createdAt")
+
+        val event = reqDb.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val list2 = snapshot.children.mapNotNull { data ->
+                    val message = data.getValue(Message::class.java)
+                    message
+                }
+                trySend(list2)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                close()
+            }
+        })
+        awaitClose {
+            reqDb.removeEventListener(event)
+        }
+    }
+
+    override fun sendMessage(chatId: String, message: Message) {
         firebase.getReference("messages").child(chatId).push().setValue(message)
     }
 
-    suspend fun readMessage(chatId: String, chatRoom: ChatRoom) {
+    override suspend fun readMessage(chatId: String, chatRoom: ChatRoom) {
         val key = firebase.getReference("chatroom").child(chatId).setValue(chatRoom)
         key.await()
     }

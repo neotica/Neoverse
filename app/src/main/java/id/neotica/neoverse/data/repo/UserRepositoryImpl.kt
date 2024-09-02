@@ -9,26 +9,27 @@ import id.neotica.neoverse.data.model.Friends
 import id.neotica.neoverse.data.model.ParentNeo
 import id.neotica.neoverse.data.model.User
 import id.neotica.neoverse.data.remote.ApiResult
+import id.neotica.neoverse.domain.UserRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
 
-class UserRepository {
+class UserRepositoryImpl: UserRepository {
     private lateinit var firestore: FirebaseFirestore
     private lateinit var auth: FirebaseAuth
     private val firebase = Firebase.database
 
 
-    private fun isLoggedIn(): Boolean {
+    override fun isLoggedIn(): Boolean {
         auth = FirebaseAuth.getInstance()
         return auth.currentUser != null
     }
 
-    fun userId(): String {
+    override fun getUserId(): String {
         return if (isLoggedIn()) auth.currentUser!!.uid else ""
     }
 
-    suspend fun getUserDetail(user: String = userId()): ApiResult<User?> {
+    override suspend fun getUserDetail(user: String): ApiResult<User?> {
         firestore = FirebaseFirestore.getInstance()
         return try {
             val snapshot = firestore.collection("Users").document(user).get().await()
@@ -39,7 +40,7 @@ class UserRepository {
         }
     }
 
-    suspend fun getUsers(): ApiResult<List<User>> {
+    override suspend fun getAllUsers(): ApiResult<List<User>> {
         firestore = FirebaseFirestore.getInstance()
         return try {
             val snapshot = firestore.collection("Users").get().await()
@@ -52,11 +53,11 @@ class UserRepository {
         }
     }
 
-    suspend fun getFriends(): Flow<ApiResult<List<Friends>>> = flow {
+    override fun getFriends(): Flow<ApiResult<List<Friends>>> = flow {
         val list = mutableListOf<Friends>()
         emit(ApiResult.Loading())
         try {
-            val reference = firebase.getReference("userdata").child(userId()).child("friends").get().await()
+            val reference = firebase.getReference("userdata").child(getUserId()).child("friends").get().await()
             reference.children.forEach { data ->
                 val userData = data.getValue(Friends::class.java)
 
@@ -86,23 +87,23 @@ class UserRepository {
         }
     }
 
-    suspend fun searchUser(searchName: String): ApiResult<List<User>> {
+    override suspend fun searchUser(search: String): ApiResult<List<User>> {
         firestore = FirebaseFirestore.getInstance()
         return try {
             val snapshot = firestore.collection("Users").get().await()
             val userList = snapshot.documents.mapNotNull {
                 it.toObject(User::class.java)
             }
-            val userFiltered = userList.filter { it.username == searchName }
+            val userFiltered = userList.filter { it.username == search }
             ApiResult.Success(userFiltered)
         } catch (e: Exception) {
             ApiResult.Error(e.message)
         }
     }
 
-    suspend fun addFriend(friend: Friends) {
+    override suspend fun addFriend(friend: Friends) {
         val original = firebase.getReference("userdata")
-            .child(userId()).child("friends")
+            .child(getUserId()).child("friends")
             .child(friend.id).setValue(friend)
         original.await()
     }

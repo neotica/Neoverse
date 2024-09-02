@@ -12,8 +12,8 @@ fun NavGraphBuilder.gameNavGraph(
     paddingValues: PaddingValues
 ) {
     navigation<RootScreen.GameNav>(
-        startDestination = Screen.HomeGame
+        startDestination = Screen.GameScreen
     ) {
-        composable<Screen.HomeGame> { HomeGameView(navController, paddingValues) }
+        composable<Screen.GameScreen> { HomeGameView(navController, paddingValues) }
     }
 }

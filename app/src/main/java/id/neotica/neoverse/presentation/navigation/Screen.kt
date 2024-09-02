@@ -32,7 +32,7 @@ sealed class Screen {
 
     // Games Navigation
     @Serializable
-    data object HomeGame: Screen()
+    data object GameScreen: Screen()
 
     //Friend Navigation
     @Serializable

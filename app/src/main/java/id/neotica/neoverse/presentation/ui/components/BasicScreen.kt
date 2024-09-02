@@ -13,6 +13,7 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun BasicScreen(
+    modifier: Modifier = Modifier,
     paddingValues: PaddingValues,
     isLoading: Boolean = false,
     horizontalAlign: Alignment.Horizontal = Alignment.Start,
@@ -23,20 +24,13 @@ fun BasicScreen(
             .fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        if (isLoading) {
-            CircularProgressIndicator(
-                modifier = Modifier
-                    .align(Alignment.Center)
-            )
-        } else {
-            LazyColumn(
-                modifier = Modifier
-                    .padding(4.dp)
-                    .fillMaxSize(),
-                horizontalAlignment = horizontalAlign
-            ) {
-                item { content() }
-            }
+        LazyColumn(
+            modifier = Modifier
+                .padding(4.dp)
+                .fillMaxSize(),
+            horizontalAlignment = horizontalAlign
+        ) {
+            item { content() }
         }
     }
 }

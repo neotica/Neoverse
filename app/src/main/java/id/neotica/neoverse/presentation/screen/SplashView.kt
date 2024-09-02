@@ -1,6 +1,6 @@
 package id.neotica.neoverse.presentation.screen
 
-import androidx.compose.foundation.background
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,18 +9,32 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.draw.paint
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
+import id.neotica.neoverse.R
 import id.neotica.neoverse.presentation.navigation.RootScreen
 import kotlinx.coroutines.delay
 
 @Composable
 fun SplashView(navController: NavController) {
     Box(
-        modifier = Modifier.fillMaxSize()
-            .background(color = Color.Green),
+        modifier = Modifier
+            .paint(
+                painter = painterResource(id = R.drawable.splash_screen),
+                contentScale = ContentScale.Crop
+            )
+            .fillMaxSize(),
         contentAlignment = Alignment.Center,
     ) {
+        Image(
+            modifier = Modifier
+                .fillMaxSize(),
+            painter = painterResource(
+                id = R.drawable.splash_screen),
+            contentScale = ContentScale.Crop,
+            contentDescription = "")
         Column {
             Text("This is splash screen.")
             Text("💀\uD83D\uDC80\uD83D\uDC80")

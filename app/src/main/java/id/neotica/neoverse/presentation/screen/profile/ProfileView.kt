@@ -15,6 +15,7 @@ import id.neotica.neoverse.data.model.User
 import id.neotica.neoverse.data.remote.ApiResult
 import id.neotica.neoverse.presentation.navigation.RootScreen
 import id.neotica.neoverse.presentation.navigation.Screen
+import id.neotica.neoverse.presentation.ui.components.BasicScaffold
 import id.neotica.neoverse.presentation.ui.components.BasicScreen
 import id.neotica.neoverse.presentation.ui.components.ImageCoil
 import id.neotica.neoverse.presentation.ui.components.LoadingIndicatorBool
@@ -54,7 +55,10 @@ fun ProfileView(
         }
     }
 
-    BasicScreen(paddingValues = paddingValues, horizontalAlign = Alignment.CenterHorizontally) {
+    BasicScaffold(
+        topBarTitle = "Profile",
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         LoadingIndicatorBool(isLoading = isLoading) {
 
             Text("Profile")
@@ -74,7 +78,6 @@ fun ProfileView(
                 Text("Logout")
             }
         }
-
     }
 
 }

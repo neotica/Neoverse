@@ -7,12 +7,12 @@ plugins {
 
 android {
     namespace = "id.neotica.neoverse"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "id.neotica.neoverse"
         minSdk = 28
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -31,7 +31,7 @@ android {
             )
         }
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"

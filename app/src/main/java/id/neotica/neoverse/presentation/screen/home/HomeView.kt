@@ -4,14 +4,13 @@ import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -29,8 +28,9 @@ import id.neotica.neoverse.data.model.User
 import id.neotica.neoverse.data.remote.ApiResult
 import id.neotica.neoverse.presentation.navigation.RootScreen
 import id.neotica.neoverse.presentation.navigation.Screen
-import id.neotica.neoverse.presentation.ui.components.BasicScreen
+import id.neotica.neoverse.presentation.ui.components.BasicScaffold
 import id.neotica.neoverse.presentation.ui.components.ImageCoil
+import id.neotica.neoverse.presentation.ui.components.NeoButton
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -84,70 +84,65 @@ fun HomeView(
     LaunchedEffect(key1 = true) {
         viewModel.getChatroom()
         viewModel.chatroom.collect { result ->
-            Log.d("chatroomcollect", result.data .toString())
+            Log.d("chatroomcollect", result.data.toString())
             when(result) {
-                is ApiResult.Loading -> { isLoadingChats = true }
+                is ApiResult.Loading -> {
+                    Log.d("chatroomcollect", "loading")
+
+                    isLoadingChats = true
+                }
                 is ApiResult.Success -> {
+                    Log.d("chatroomcollect", "scs")
+
                     isLoadingChats = false
                     val list = mutableListOf<ChatRoom>()
                     result.data?.forEach { chatResult ->
                         list.add(chatResult.value)
+                        parentChatrooms.value = result.data
+                        chatrooms.value = list
                     }
-
-                    parentChatrooms.value = result.data!!
-                    chatrooms.value = list
                 }
                 is ApiResult.Error -> {
+                    Log.d("chatroomcollect", "error")
+
                     isLoadingChats = false
                 }
             }
         }
     }
+    BasicScaffold(topBarTitle = "Home") {
+        LazyRow {
+            item {
+                userList.forEach { user ->
+                    Card(
+                        modifier = Modifier.padding(4.dp),
+                        onClick = {
+                            val chatRoomFiltered = viewModel.getRoomFiltered(user.userId.toString(), chatrooms.value)
 
-    BasicScreen(paddingValues = paddingValues) {
-        Box(modifier = Modifier.fillMaxWidth()) {
-            if (isLoading) {
-                CircularProgressIndicator(
-                    modifier = Modifier
-                        .align(Alignment.Center)
-                )
-            } else {
-                LazyRow(
-                    modifier = Modifier.fillMaxSize(),
-                ) {
-                    item {
-                        userList.forEach { user ->
-                            Card(
-                                modifier = Modifier.padding(4.dp),
-                                onClick = {
-                                    val chatRoomFiltered = viewModel.getRoomFiltered(user.userId.toString(), chatrooms.value)
-
-                                    if (currentuser?.username.isNullOrEmpty()) navController.navigate(Screen.LoginScreen)
-                                    if (!isLoadingChats) {
-                                        if (chatRoomFiltered == null) {
-                                            navController.navigate(Screen.Chat(currentuser?.userId.toString()+user.userId, user2 = user.username.toString()))
-                                            viewModel.addChatroom(
-                                                user2 = user.username.toString(),
-                                                user = user,
-                                            )
-                                        } else {
-                                            val chatUser2 = if (chatRoomFiltered.user1 != currentuser?.username) chatRoomFiltered.user1 else user.username
-                                            chatRoomFiltered.let {
-                                                navController.navigate(Screen.Chat(chatId = chatRoomFiltered.name, user2 = chatUser2.toString()))
-                                            }
-                                        }
+                            if (currentuser?.username.isNullOrEmpty()) navController.navigate(Screen.LoginScreen)
+                            if (!isLoadingChats) {
+                                if (chatRoomFiltered == null) {
+                                    navController.navigate(Screen.Chat(currentuser?.userId.toString()+user.userId, user2 = user.username.toString()))
+                                    viewModel.addChatroom(
+                                        user2 = user.username.toString(),
+                                        user = user,
+                                    )
+                                } else {
+                                    val chatUser2 = if (chatRoomFiltered.user1 != currentuser?.username) chatRoomFiltered.user1 else user.username
+                                    chatRoomFiltered.let {
+                                        navController.navigate(Screen.Chat(chatId = chatRoomFiltered.name, user2 = chatUser2.toString()))
                                     }
                                 }
-                            ) {
-                                Column(
-                                    modifier = Modifier
-                                        .padding(8.dp),
-                                    horizontalAlignment = Alignment.CenterHorizontally
-                                ) {
-                                    ImageCoil(url = user.imageUrl.toString())
-                                    Text(text = user.username.toString())
-                                }
                             }
+                        }
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .padding(8.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            ImageCoil(url = user.imageUrl.toString())
+                            Text(text = user.username.toString())
                         }
                     }
                 }
@@ -161,10 +156,7 @@ fun HomeView(
                         .align(Alignment.Center)
                 )
             } else {
-                LazyRow(
-                    modifier = Modifier
-                        .fillMaxSize()
-                ) {
+                LazyRow {
                     items(parentChatrooms.value.filter { channels ->
                         val current = currentuser?.username.toString()
                         filteredRoom(current, channels.value.user1, channels.value.user2)
@@ -178,7 +170,7 @@ fun HomeView(
                                     navController.navigate(Screen.Chat(
                                         chatId = channelItemParent.value.name,
                                         user2 = chatName,
-                                        )
+                                    )
                                     )
                                 }
                             }
@@ -195,19 +187,11 @@ fun HomeView(
             }
         }
 
-
-        Text("homeview")
         viewModel.getUsers()
-        Button(onClick = {
-            navController.navigate(Screen.FriendScreen)
-        }) {
-            Text("Show user")
-        }
-        Button(onClick = {
-            navController.navigate(RootScreen.GameNav)
-        }) {
-            Text("Game")
-        }
+
+        NeoButton("Show user") { navController.navigate(Screen.FriendScreen)}
+        NeoButton("Game") { navController.navigate(RootScreen.GameNav) }
+
     }
 }
 
