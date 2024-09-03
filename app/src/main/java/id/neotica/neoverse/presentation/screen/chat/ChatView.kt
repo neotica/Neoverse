@@ -62,7 +62,9 @@ fun ChatView(
         ChatMessages(
             messages = messages.value,
         ) { msg ->
-            viewModel.sendMessage(chatId = args.chatId, msg)
+            if (msg.isNotEmpty()) {
+                viewModel.sendMessage(chatId = args.chatId, msg)
+            }
         }
     }
     Column(modifier = Modifier

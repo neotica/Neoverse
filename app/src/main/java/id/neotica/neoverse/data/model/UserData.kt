@@ -12,5 +12,5 @@ data class Friends(
 )
 
 data class Games(
-    val points: Long = 0
+    var aura: Int = 0
 )

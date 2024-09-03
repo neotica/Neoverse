@@ -2,14 +2,17 @@ package id.neotica.neoverse.di
 
 import id.neotica.neoverse.data.repo.AuthRepositoryImpl
 import id.neotica.neoverse.data.repo.ChatRepositoryImpl
+import id.neotica.neoverse.data.repo.GameRepositoryImpl
 import id.neotica.neoverse.data.repo.UserRepositoryImpl
 import id.neotica.neoverse.domain.AuthRepository
 import id.neotica.neoverse.domain.ChatRepository
+import id.neotica.neoverse.domain.GameRepository
 import id.neotica.neoverse.domain.UserRepository
 import id.neotica.neoverse.presentation.screen.auth.login.LoginViewModel
 import id.neotica.neoverse.presentation.screen.auth.register.RegisterViewModel
 import id.neotica.neoverse.presentation.screen.chat.ChatViewModel
 import id.neotica.neoverse.presentation.screen.friend.FriendViewModel
+import id.neotica.neoverse.presentation.screen.game.GameViewModel
 import id.neotica.neoverse.presentation.screen.home.HomeViewModel
 import id.neotica.neoverse.presentation.screen.profile.ProfileViewModel
 import org.koin.androidx.viewmodel.dsl.viewModelOf
@@ -23,6 +26,7 @@ val coreModule = module {
     singleOf(::AuthRepositoryImpl) { bind<AuthRepository>()}
     singleOf(::UserRepositoryImpl) { bind<UserRepository>()}
     singleOf(::ChatRepositoryImpl) bind ChatRepository::class
+    singleOf(::GameRepositoryImpl) bind GameRepository::class
 }
 
 val viewModelModules = module {
@@ -32,6 +36,7 @@ val viewModelModules = module {
     viewModelOf(::RegisterViewModel)
     viewModelOf(::ChatViewModel)
     viewModelOf(::FriendViewModel)
+    viewModelOf(::GameViewModel)
 }
 
 val domainModules = module {

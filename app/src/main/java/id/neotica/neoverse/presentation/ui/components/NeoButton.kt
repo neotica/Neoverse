@@ -11,13 +11,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import id.neotica.neoverse.presentation.ui.theme.DarkPrimary
 
 @Composable
 fun NeoButton(
     text: String,
     width: Dp = Dp.Unspecified,
+    enabled: Boolean = true,
     onClick: () -> Unit = {}
 ) {
     Button(
@@ -25,6 +25,7 @@ fun NeoButton(
             .width(width)
         ,
         onClick = onClick,
+        enabled = enabled,
         colors = ButtonDefaults.buttonColors(
             containerColor = DarkPrimary,
             contentColor = Color.White,
