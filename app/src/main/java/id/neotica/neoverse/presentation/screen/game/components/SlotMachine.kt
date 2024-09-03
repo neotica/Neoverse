@@ -1,5 +1,6 @@
 package id.neotica.neoverse.presentation.screen.game.components
 
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,6 +18,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -26,9 +28,12 @@ import id.neotica.neoverse.presentation.screen.game.utils.generateTranspose
 import id.neotica.neoverse.presentation.ui.components.NeoButton
 import id.neotica.neoverse.presentation.ui.components.SlideInto
 import id.neotica.neoverse.presentation.ui.theme.DarkPrimaryTransparent
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 import java.security.SecureRandom
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun SlotMachine(modifier: Modifier = Modifier, viewModel: GameViewModel = koinViewModel()) {
     Column(Modifier.padding(20.dp)) {
@@ -43,6 +48,7 @@ fun SlotMachine(modifier: Modifier = Modifier, viewModel: GameViewModel = koinVi
 
         var onClick by remember { mutableStateOf(false) }
         var delayedClick by remember { mutableStateOf(true) }
+        var stopEnabled by remember { mutableStateOf(true) }
 
         var giveAura by remember { mutableStateOf(false) }
 
@@ -89,6 +95,7 @@ fun SlotMachine(modifier: Modifier = Modifier, viewModel: GameViewModel = koinVi
             Text("<- Good luck!")
         }
 
+        val scope = rememberCoroutineScope() // Use a coroutine scope
 
         Row(Modifier.width(224.dp)) {
             NeoButton(
@@ -98,7 +105,9 @@ fun SlotMachine(modifier: Modifier = Modifier, viewModel: GameViewModel = koinVi
                 onClick = !onClick
                 delayedClick = false
                 giveAura = true
+                stopEnabled = true
                 viewModel.fetchAuras()
+                viewModel.sendAuraPoints(-10)
                 randomStrings.forEachIndexed { index, _ ->
                     randomStrings[index] = generateTranspose(SecureRandom())
                 }
@@ -108,12 +117,17 @@ fun SlotMachine(modifier: Modifier = Modifier, viewModel: GameViewModel = koinVi
             SlideInto(onClick) {
                 NeoButton(
                     text="Stop!",
+                    enabled = stopEnabled
                 ) {
-                    onClick = !onClick
-                    delayedClick = true
                     viewModel.getAuraPoints(numbComb)
                     viewModel.sendAuraPoints(viewModel.auraPoints.value)
                     viewModel.fetchAuras()
+                    stopEnabled = false
+                    scope.launch {
+                        delay(1000)
+                        onClick = !onClick
+                        delayedClick = true
+                    }
                 }
             }
         }
