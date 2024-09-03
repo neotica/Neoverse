@@ -20,7 +20,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import id.neotica.neoverse.presentation.screen.game.GameViewModel
 import id.neotica.neoverse.presentation.screen.game.utils.generateTranspose
@@ -34,14 +33,17 @@ import java.security.SecureRandom
 fun SlotMachine(modifier: Modifier = Modifier, viewModel: GameViewModel = koinViewModel()) {
     Column(Modifier.padding(20.dp)) {
         val randomNum = viewModel.randomNum.collectAsState()
-        val randomStrings = remember { mutableStateListOf(
-            randomNum.value,randomNum.value,randomNum.value)
+        val randomStrings = remember {
+            mutableStateListOf(
+                randomNum.value,
+                randomNum.value,
+                randomNum.value
+            )
         }
 
         var onClick by remember { mutableStateOf(false) }
         var delayedClick by remember { mutableStateOf(true) }
 
-        var auraState by remember { mutableStateOf(false) }
         var giveAura by remember { mutableStateOf(false) }
 
         val numbComb = "${randomStrings[0]}${randomStrings[1]}${randomStrings[2]}"
@@ -84,18 +86,16 @@ fun SlotMachine(modifier: Modifier = Modifier, viewModel: GameViewModel = koinVi
                     }
                 }
             }
-
             Text("<- Good luck!")
         }
 
 
-        Row(Modifier.width(200.dp)) {
+        Row(Modifier.width(224.dp)) {
             NeoButton(
                 text="Play",
                 enabled = delayedClick,
             ) {
                 onClick = !onClick
-                auraState = !auraState
                 delayedClick = false
                 giveAura = true
                 viewModel.fetchAuras()
@@ -118,12 +118,11 @@ fun SlotMachine(modifier: Modifier = Modifier, viewModel: GameViewModel = koinVi
             }
         }
         Log.d("slot", "numb"+ numbComb)
-        Box() {
+        Box {
             SlideInto(delayedClick) {
                 Text("You received ${viewModel.auraPoints.value} auras")
             }
             Text("")
         }
-
     }
 }

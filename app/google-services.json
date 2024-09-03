@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "946324464730",
+    "firebase_url": "https://neoverse-neotica-default-rtdb.firebaseio.com",
     "project_id": "neoverse-neotica",
     "storage_bucket": "neoverse-neotica.appspot.com"
   },
@@ -12,7 +13,20 @@
           "package_name": "id.neotica.neoverse"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "946324464730-1j605rs9tkcg4quog5raphncp5qgthqb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "id.neotica.neoverse",
+            "certificate_hash": "e3933de05358631f98d12e8e2670a492d9266079"
+          }
+        },
+        {
+          "client_id": "946324464730-4gm6snt5i74emn1aak6ke95v7f5r2bt9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyD7syN3V7wPiQ5kZW07If3idX3IkQxFEjg"
@@ -20,7 +34,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "946324464730-4gm6snt5i74emn1aak6ke95v7f5r2bt9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

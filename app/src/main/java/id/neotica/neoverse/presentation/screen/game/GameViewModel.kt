@@ -1,17 +1,13 @@
 package id.neotica.neoverse.presentation.screen.game
 
 import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import id.neotica.neoverse.data.model.Games
 import id.neotica.neoverse.data.remote.ApiResult
 import id.neotica.neoverse.domain.GameRepository
 import id.neotica.neoverse.domain.UserRepository
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.security.SecureRandom
@@ -24,10 +20,6 @@ class GameViewModel(
     private val _randomNum = MutableStateFlow("")
     val randomNum = _randomNum.asStateFlow()
 
-    private var _randomStrings = MutableStateFlow(listOf(getTranspose(),getTranspose(),getTranspose()))
-    val randomStrings: MutableStateFlow<List<String>> = _randomStrings
-
-
     private val _value = MutableStateFlow("")
     val value = _value.asStateFlow()
 
@@ -37,46 +29,21 @@ class GameViewModel(
     private val _totalAuras: MutableStateFlow<ApiResult<Games?>> = MutableStateFlow(ApiResult.Loading())
     val totalAuras = _totalAuras.asStateFlow()
 
-    private val _auraSent = MutableStateFlow(0)
-    val auraSent = _auraSent.asStateFlow()
-
-    private val _combinedSlot = MutableStateFlow("")
-    val combinedSLot = _combinedSlot.asStateFlow()
-
     private fun currentUserId(): String = userRepo.getUserId()
 
     init {
         generateTranspose()
         fetchAuras()
-//        getAuraPoints()
-    }
-
-    fun getTranspose():String = _randomNum.value
-
-    fun getStrings(get: String) = viewModelScope.launch {
-        delay(200)
-        _value.value = get
-    }
-
-    fun randomStrings3() {
-        generateTranspose()
-    }
-
-    fun fanumTax(aura: Int) = viewModelScope.launch {
-        val tot = _totalAuras.value.data?.aura
-        if (tot != null) {
-            gameRepo.receiveAuras(tot + aura, currentUserId())
-        }
     }
 
     fun sendInitialAura(aura: Int) = viewModelScope.launch {
-        gameRepo.receiveAuras(aura, currentUserId())
+        gameRepo.postAuras(aura, currentUserId())
     }
 
     fun sendAuraPoints(aura: Int) = viewModelScope.launch {
         val tot = _totalAuras.value.data?.aura
         if (tot != null) {
-            gameRepo.receiveAuras(tot + aura, currentUserId())
+            gameRepo.postAuras(tot + aura, currentUserId())
         }
         Log.d("aura", aura.toString())
     }

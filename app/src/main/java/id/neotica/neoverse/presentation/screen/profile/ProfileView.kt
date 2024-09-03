@@ -16,7 +16,6 @@ import id.neotica.neoverse.data.remote.ApiResult
 import id.neotica.neoverse.presentation.navigation.RootScreen
 import id.neotica.neoverse.presentation.navigation.Screen
 import id.neotica.neoverse.presentation.ui.components.BasicScaffold
-import id.neotica.neoverse.presentation.ui.components.BasicScreen
 import id.neotica.neoverse.presentation.ui.components.ImageCoil
 import id.neotica.neoverse.presentation.ui.components.LoadingIndicatorBool
 import org.koin.androidx.compose.koinViewModel
@@ -60,8 +59,6 @@ fun ProfileView(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         LoadingIndicatorBool(isLoading = isLoading) {
-
-            Text("Profile")
 
             user?.let {
                 ImageCoil(url = it.imageUrl.toString())

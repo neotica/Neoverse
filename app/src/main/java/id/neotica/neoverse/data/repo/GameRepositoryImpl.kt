@@ -5,7 +5,6 @@ import com.google.firebase.database.database
 import id.neotica.neoverse.data.model.Games
 import id.neotica.neoverse.data.remote.ApiResult
 import id.neotica.neoverse.domain.GameRepository
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.tasks.await
 
 class GameRepositoryImpl: GameRepository {
@@ -22,11 +21,7 @@ class GameRepositoryImpl: GameRepository {
          }
      }
 
-    override suspend fun lostAuras(aura: Int, userId: String) {
-
-    }
-
-    override suspend fun receiveAuras(aura: Int, userId: String) {
+    override suspend fun postAuras(aura: Int, userId: String) {
         val original = firebase.getReference("userdata")
             .child(userId).child("games")
             .child("aura").setValue(aura)
