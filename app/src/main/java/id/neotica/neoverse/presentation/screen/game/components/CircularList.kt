@@ -29,9 +29,10 @@ fun CircularList(
     LazyColumn(state = listState, modifier = modifier) {
         items(
             count = Int.MAX_VALUE,
-            key = { index -> index % items.size},
+            key = { index ->
+                "${index}-${index % items.size}"
+                  },
             itemContent = {
-                // your content
                 items.forEach {
                     Text(it)
                 }
