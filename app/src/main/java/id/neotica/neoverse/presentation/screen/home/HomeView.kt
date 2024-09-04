@@ -10,7 +10,6 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -66,6 +65,7 @@ fun HomeView(
     }
 
     LaunchedEffect(key1 = true) {
+        if (!viewModel.isUserVerified()) navController.navigate(Screen.VerifyEmailScreen)
         viewModel.getUser()
         viewModel.user.collect { result ->
             when(result) {
@@ -110,6 +110,7 @@ fun HomeView(
             }
         }
     }
+
     BasicScaffold(topBarTitle = "Home") {
         LazyRow {
             item {
@@ -170,7 +171,7 @@ fun HomeView(
                                     navController.navigate(Screen.Chat(
                                         chatId = channelItemParent.value.name,
                                         user2 = chatName,
-                                    )
+                                        )
                                     )
                                 }
                             }

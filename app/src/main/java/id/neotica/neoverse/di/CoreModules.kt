@@ -10,6 +10,7 @@ import id.neotica.neoverse.domain.GameRepository
 import id.neotica.neoverse.domain.UserRepository
 import id.neotica.neoverse.presentation.screen.auth.login.LoginViewModel
 import id.neotica.neoverse.presentation.screen.auth.register.RegisterViewModel
+import id.neotica.neoverse.presentation.screen.auth.verify.VerifyEmailViewModel
 import id.neotica.neoverse.presentation.screen.chat.ChatViewModel
 import id.neotica.neoverse.presentation.screen.friend.FriendViewModel
 import id.neotica.neoverse.presentation.screen.game.GameViewModel
@@ -37,6 +38,7 @@ val viewModelModules = module {
     viewModelOf(::ChatViewModel)
     viewModelOf(::FriendViewModel)
     viewModelOf(::GameViewModel)
+    viewModelOf(::VerifyEmailViewModel)
 }
 
 val domainModules = module {

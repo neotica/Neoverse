@@ -20,15 +20,14 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
 import id.neotica.neoverse.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BasicScaffold(
-    modifier: Modifier = Modifier,
     topBarTitle: String,
     enableActionBar: Boolean = false,
+    modifier: Modifier = Modifier,
     navController: NavController? = null,
     paddingValues: PaddingValues = PaddingValues(),
     fullScreen: Boolean = false,
@@ -71,7 +70,7 @@ fun BasicScaffold(
             ) { content() }
         } else {
             Column(
-                modifier = Modifier.padding(paddingValues),
+                modifier = Modifier.padding(paddingValues).fillMaxSize(),
                 horizontalAlignment = horizontalAlignment
             ) { content() }
         }

@@ -18,6 +18,7 @@ import id.neotica.neoverse.presentation.navigation.Screen
 import id.neotica.neoverse.presentation.ui.components.BasicScaffold
 import id.neotica.neoverse.presentation.ui.components.ImageCoil
 import id.neotica.neoverse.presentation.ui.components.LoadingIndicatorBool
+import id.neotica.neoverse.presentation.ui.components.NeoButton
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -74,11 +75,14 @@ fun ProfileView(
             }) {
                 Text("Logout")
             }
+            NeoButton("Delete Account") {
+                viewModel.deleteAccount()
+            }
         }
     }
 
 }
 
 fun navigateAuth(navController: NavController) {
-    navController.navigate(Screen.LoginScreen)
+    navController.navigate(RootScreen.HomeNav)
 }

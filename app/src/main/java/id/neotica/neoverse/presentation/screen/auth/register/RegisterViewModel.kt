@@ -4,13 +4,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import id.neotica.neoverse.data.remote.ApiResult
 import id.neotica.neoverse.domain.AuthRepository
+import id.neotica.neoverse.domain.UserRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class RegisterViewModel(
-    private val authRepo: AuthRepository
+    private val authRepo: AuthRepository,
+    private val userRepo: UserRepository
 ): ViewModel() {
 
     private var _registerStatus: MutableStateFlow<ApiResult<String>> = MutableStateFlow(ApiResult.Loading())

@@ -31,6 +31,8 @@ class HomeViewModel(
 
     private fun currentUserName(): String? = _user.value.data?.username
 
+    fun isUserVerified() = userRepo.isUserVerified()
+
     fun getUser() = viewModelScope.launch {
         val user = userRepo.getUserDetail(currentUserId())
         _user.value = ApiResult.Loading()

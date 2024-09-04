@@ -49,7 +49,8 @@ class ChatRepositoryImpl: ChatRepository {
     }
 
     override fun getMessages(chatId: String): Flow<List<Message>> = callbackFlow {
-        val reqDb = firebase.getReference("messages").child(chatId).orderByChild("createdAt")
+        val reqDb = firebase.getReference("messages").child(chatId)
+            .orderByChild("createdAt")
 
         val event = reqDb.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {

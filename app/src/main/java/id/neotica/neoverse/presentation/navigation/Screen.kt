@@ -29,6 +29,8 @@ sealed class Screen {
     data object RegisterScreen: Screen()
     @Serializable
     data object ProfileScreen: Screen()
+    @Serializable
+    data object VerifyEmailScreen: Screen()
 
     // Games Navigation
     @Serializable
