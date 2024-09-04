@@ -1,5 +1,6 @@
 package id.neotica.neoverse.presentation.screen.game
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -37,22 +38,26 @@ fun HomeGameView(
 ) {
 
     var currentAuras by remember { mutableStateOf<Games?>(null) }
-    var auraInit = remember { mutableStateOf(false) }
+    var auraInit by remember { mutableStateOf(false) }
     val random = Random.nextInt(2000)
     val context = LocalContext.current
 
     LaunchedEffect(Unit) {
+        Log.d("auraInit", auraInit.toString())
+
         viewModel.totalAuras.collect { result ->
+            Log.d("auraInit", result.errorMessage. toString())
+
             when(result) {
                 is ApiResult.Loading -> {
-                    auraInit.value = false
+                    auraInit = false
                 }
                 is ApiResult.Success -> {
                     currentAuras = result.data
-                    if (result.data?.aura == null) auraInit.value = true
+                    if (result.data?.aura == null) auraInit = true
                 }
                 is ApiResult.Error -> {
-                    auraInit.value = false
+                    if (result.data?.aura == null) auraInit = true
                 }
             }
         }
@@ -63,7 +68,7 @@ fun HomeGameView(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        if (!auraInit.value) {
+        if (!auraInit) {
             Text("Your Aura:" + currentAuras?.aura.toString())
 
             Spacer(Modifier.padding(20.dp))

@@ -124,7 +124,7 @@ fun SlotMachine(modifier: Modifier = Modifier, viewModel: GameViewModel = koinVi
                     viewModel.fetchAuras()
                     stopEnabled = false
                     scope.launch {
-                        delay(1000)
+                        delay(500)
                         onClick = !onClick
                         delayedClick = true
                     }
