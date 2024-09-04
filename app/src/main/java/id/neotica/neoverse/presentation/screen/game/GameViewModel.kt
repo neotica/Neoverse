@@ -31,6 +31,10 @@ class GameViewModel(
 
     private fun currentUserId(): String = userRepo.getUserId()
 
+    fun isLoggedIn(): Boolean {
+        return userRepo.isLoggedIn()
+    }
+
     init {
         generateTranspose()
         fetchAuras()

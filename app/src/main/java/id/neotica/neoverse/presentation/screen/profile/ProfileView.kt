@@ -35,6 +35,7 @@ fun ProfileView(
             popUpTo(RootScreen.HomeNav) {
                 inclusive = true
             }
+            launchSingleTop
         } else {
             viewModel.getUser()
         }

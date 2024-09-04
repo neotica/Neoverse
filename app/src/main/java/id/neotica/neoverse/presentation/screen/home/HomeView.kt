@@ -25,11 +25,8 @@ import id.neotica.neoverse.data.model.ChatRoom
 import id.neotica.neoverse.data.model.ParentNeo
 import id.neotica.neoverse.data.model.User
 import id.neotica.neoverse.data.remote.ApiResult
-import id.neotica.neoverse.presentation.navigation.RootScreen
 import id.neotica.neoverse.presentation.navigation.Screen
 import id.neotica.neoverse.presentation.ui.components.BasicScaffold
-import id.neotica.neoverse.presentation.ui.components.ImageCoil
-import id.neotica.neoverse.presentation.ui.components.NeoButton
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -65,7 +62,9 @@ fun HomeView(
     }
 
     LaunchedEffect(key1 = true) {
-        if (!viewModel.isUserVerified()) navController.navigate(Screen.VerifyEmailScreen)
+        if (viewModel.isLoggedIn()) {
+            if (!viewModel.isUserVerified()) navController.navigate(Screen.VerifyEmailScreen)
+        }
         viewModel.getUser()
         viewModel.user.collect { result ->
             when(result) {
@@ -115,7 +114,7 @@ fun HomeView(
         LazyRow {
             item {
                 userList.forEach { user ->
-                    Card(
+                    /*Card(
                         modifier = Modifier.padding(4.dp),
                         onClick = {
                             val chatRoomFiltered = viewModel.getRoomFiltered(user.userId.toString(), chatrooms.value)
@@ -145,7 +144,7 @@ fun HomeView(
                             ImageCoil(url = user.imageUrl.toString())
                             Text(text = user.username.toString())
                         }
-                    }
+                    }*/
                 }
             }
         }
@@ -190,8 +189,8 @@ fun HomeView(
 
         viewModel.getUsers()
 
-        NeoButton("Show user") { navController.navigate(Screen.FriendScreen)}
-        NeoButton("Game") { navController.navigate(RootScreen.GameNav) }
+//        NeoButton("Show user") { navController.navigate(Screen.FriendScreen)}
+//        NeoButton("Game") { navController.navigate(RootScreen.GameNav) }
 
     }
 }

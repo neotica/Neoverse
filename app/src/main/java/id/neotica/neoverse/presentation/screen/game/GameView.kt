@@ -63,6 +63,15 @@ fun HomeGameView(
         }
     }
 
+    LaunchedEffect(Unit) {
+        if (!viewModel.isLoggedIn()) navController.navigate(Screen.LoginScreen) {
+            popUpTo(RootScreen.HomeNav) {
+                inclusive = true
+            }
+            launchSingleTop
+        }
+    }
+
     BasicScaffold(
         topBarTitle = "Game",
         horizontalAlignment = Alignment.CenterHorizontally

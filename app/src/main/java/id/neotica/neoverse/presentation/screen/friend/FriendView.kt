@@ -24,6 +24,7 @@ import id.neotica.neoverse.data.model.ChatRoom
 import id.neotica.neoverse.data.model.Friends
 import id.neotica.neoverse.data.model.User
 import id.neotica.neoverse.data.remote.ApiResult
+import id.neotica.neoverse.presentation.navigation.RootScreen
 import id.neotica.neoverse.presentation.navigation.Screen
 import org.koin.androidx.compose.koinViewModel
 
@@ -79,6 +80,12 @@ fun FriendView(
     }
 
     LaunchedEffect(key1 = true) {
+        if (!viewModel.isLoggedIn()) navController.navigate(Screen.LoginScreen) {
+            popUpTo(RootScreen.HomeNav) {
+                inclusive = true
+            }
+            launchSingleTop
+        }
         viewModel.getFriends()
         viewModel.friendList.collect { result ->
             Log.d("friend", friendList.toString())
@@ -122,7 +129,6 @@ fun FriendView(
                                 val chatRoomFiltered = viewModel.getRoomFiltered(friends.id, chatrooms.value)
                                 val currentId = viewModel.currentUserId()
 
-                                if (currentId.isEmpty()) navController.navigate(Screen.LoginScreen)
                                 if (!isLoadingChats) {
                                     Log.d("friendchat", chatRoomFiltered.toString())
                                     if (chatRoomFiltered.toString() == "null") {
