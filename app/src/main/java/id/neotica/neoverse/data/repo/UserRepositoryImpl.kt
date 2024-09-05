@@ -25,6 +25,14 @@ class UserRepositoryImpl: UserRepository {
         return auth.currentUser != null
     }
 
+    override fun isUserVerified(): Boolean {
+        auth = FirebaseAuth.getInstance()
+
+        val verified = auth.currentUser?.isEmailVerified
+        if (!isLoggedIn()) return false
+        return verified!!
+    }
+
     override fun getUserId(): String {
         return if (isLoggedIn()) auth.currentUser!!.uid else ""
     }

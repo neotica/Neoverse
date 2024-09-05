@@ -28,8 +28,13 @@ class HomeViewModel(
     val chatroom = _chatroom.asStateFlow()
 
     private fun currentUserId(): String = userRepo.getUserId()
-
     private fun currentUserName(): String? = _user.value.data?.username
+
+    fun isLoggedIn(): Boolean {
+        return userRepo.isLoggedIn()
+    }
+
+    fun isUserVerified() = userRepo.isUserVerified()
 
     fun getUser() = viewModelScope.launch {
         val user = userRepo.getUserDetail(currentUserId())

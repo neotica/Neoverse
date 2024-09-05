@@ -34,6 +34,10 @@ class FriendViewModel(
     fun currentUserId(): String = userRepo.getUserId()
     fun currentUserName(): String? = _user.value.data?.username
 
+    fun isLoggedIn(): Boolean {
+        return userRepo.isLoggedIn()
+    }
+
     fun addFriend(friend: Friends) = viewModelScope.launch {
         userRepo.addFriend(friend)
     }

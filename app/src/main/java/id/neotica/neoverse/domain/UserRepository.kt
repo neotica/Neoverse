@@ -13,4 +13,5 @@ interface UserRepository {
     fun getFriends(): Flow<ApiResult<List<Friends>>>
     suspend fun searchUser(search: String): ApiResult<List<User>>
     suspend fun addFriend(friend: Friends)
+    fun isUserVerified(): Boolean
 }

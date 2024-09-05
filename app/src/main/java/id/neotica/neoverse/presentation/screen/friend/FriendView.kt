@@ -5,10 +5,10 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -24,7 +24,11 @@ import id.neotica.neoverse.data.model.ChatRoom
 import id.neotica.neoverse.data.model.Friends
 import id.neotica.neoverse.data.model.User
 import id.neotica.neoverse.data.remote.ApiResult
+import id.neotica.neoverse.presentation.navigation.RootScreen
 import id.neotica.neoverse.presentation.navigation.Screen
+import id.neotica.neoverse.presentation.ui.components.BasicScaffold
+import id.neotica.neoverse.presentation.ui.components.NeoButton
+import id.neotica.neoverse.presentation.ui.components.ProfileCard
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -79,6 +83,12 @@ fun FriendView(
     }
 
     LaunchedEffect(key1 = true) {
+        if (!viewModel.isLoggedIn()) navController.navigate(Screen.LoginScreen) {
+            popUpTo(RootScreen.HomeNav) {
+                inclusive = true
+            }
+            launchSingleTop
+        }
         viewModel.getFriends()
         viewModel.friendList.collect { result ->
             Log.d("friend", friendList.toString())
@@ -97,32 +107,35 @@ fun FriendView(
     }
 
 
-    Column(
-        Modifier
-            .fillMaxSize()
-            .padding(paddingValues)) {
-        val idValue = rememberSaveable { mutableStateOf("") }
+    BasicScaffold(
+        "Friends",
+        paddingValues = paddingValues
+    ) {
+        Column(
+            Modifier
+                .fillMaxSize()
+        ) {
+            val idValue = rememberSaveable { mutableStateOf("") }
 
-        Text("Friend screen")
-        Box {
-            Button(onClick = {
-                navController.navigate(Screen.SearchUserScreen)
-            }) {
-                Text("Navigate to search")
+            Box {
+                NeoButton("Add Friend") {
+                    navController.navigate(Screen.SearchUserScreen)
+                }
             }
-        }
 
-        Box {
-            LazyColumn {
-                item {
-                    friendList.forEach { friends ->
-                        Card(
-                            modifier = Modifier.padding(4.dp),
-                            onClick = {
-                                val chatRoomFiltered = viewModel.getRoomFiltered(friends.id, chatrooms.value)
-                                val currentId = viewModel.currentUserId()
-
-                                if (currentId.isEmpty()) navController.navigate(Screen.LoginScreen)
+            Box {
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(3)
+                ) {
+                    items(friendList) { friends ->
+                            val chatRoomFiltered =
+                                viewModel.getRoomFiltered(friends.id, chatrooms.value)
+                            val currentId = viewModel.currentUserId()
+                            ProfileCard(
+                                name = friends.name,
+                                image = friends.imageUrl,
+                                paddingValues = PaddingValues(4.dp)
+                            ) {
                                 if (!isLoadingChats) {
                                     Log.d("friendchat", chatRoomFiltered.toString())
                                     if (chatRoomFiltered.toString() == "null") {
@@ -139,7 +152,7 @@ fun FriendView(
                                             username = friends.name
                                         )
                                         viewModel.addChatroom(
-                                            user2 =  friends.name,
+                                            user2 = friends.name,
                                             user = addUser,
                                         )
                                     } else {
@@ -158,12 +171,6 @@ fun FriendView(
                                     }
                                 }
                             }
-                        ) {
-                            Text(
-                                modifier = Modifier.padding(4.dp),
-                                text = friends.name
-                            )
-                        }
                     }
                 }
             }

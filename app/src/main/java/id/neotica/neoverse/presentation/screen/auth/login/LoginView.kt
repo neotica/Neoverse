@@ -2,10 +2,15 @@ package id.neotica.neoverse.presentation.screen.auth.login
 
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -17,13 +22,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import id.neotica.droidcore.component.textfield.NeoTextField
 import id.neotica.droidcore.component.textfield.PasswordTextField
 import id.neotica.neoverse.data.remote.ApiResult
 import id.neotica.neoverse.presentation.navigation.RootScreen
 import id.neotica.neoverse.presentation.navigation.Screen
-import id.neotica.neoverse.presentation.ui.components.BasicScreen
+import id.neotica.neoverse.presentation.ui.components.BasicScaffold
+import id.neotica.neoverse.presentation.ui.components.NeoButton
+import id.neotica.neoverse.presentation.ui.theme.DarkPrimary
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -59,21 +67,52 @@ fun LoginView(
         }
     }
 
-    BasicScreen(paddingValues = paddingValues) {
-        Text("Login")
-        NeoTextField(value = emailValue, label = "Email")
-        Spacer(modifier = Modifier.padding(4.dp))
-        PasswordTextField(value = passwordValue)
-        Button(
-            enabled = emailValue.value.isNotEmpty() && passwordValue.value.isNotEmpty(),
-            onClick = {
-            isButtonPressed = true
-            viewModel.login(emailValue.value, passwordValue.value)
-        }) {
-            Text("Login")
+    BasicScaffold("Login") {
+        Box(Modifier.padding(4.dp)) {
+            Column {
+                Box(
+                    modifier = Modifier.weight(1f),
+                ) {
+                    Column {
+                        NeoTextField(value = emailValue, label = "Email")
+                        Spacer(modifier = Modifier.padding(4.dp))
+                        PasswordTextField(value = passwordValue, placeholder = "Password")
+                    }
+                }
+                Column(
+                    Modifier.padding(horizontal = 20.dp)
+                ) {
+                    NeoButton(
+                        text = "Login",
+                        enabled = emailValue.value.isNotEmpty() && passwordValue.value.isNotEmpty(),
+                        maxWidth = true
+                    ) {
+                        isButtonPressed = true
+                        viewModel.login(emailValue.value, passwordValue.value)
+                    }
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        Text(
+                            text = "Haven't made an account? ",
+                            fontSize = 14.sp,
+                            )
+                        Text(
+                            color = DarkPrimary,
+                            fontSize = 14.sp,
+                            text = "Register.",
+                            modifier = Modifier.clickable {
+                                navController.navigate(Screen.RegisterScreen)
+                            }
+                        )
+                    }
+                    Spacer(Modifier.padding(8.dp))
+                }
+            }
         }
-        Button(onClick = { navController.navigate(Screen.RegisterScreen) }) {
-            Text("Register")
-        }
+
+
+
     }
 }

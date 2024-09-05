@@ -70,6 +70,7 @@ class MainActivity: ComponentActivity() {
                     Screen.Splash,
                     Screen.LoginScreen,
                     Screen.RegisterScreen,
+                    Screen.VerifyEmailScreen
                 )
 
                 Scaffold(

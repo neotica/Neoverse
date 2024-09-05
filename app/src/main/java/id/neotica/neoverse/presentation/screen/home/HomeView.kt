@@ -10,7 +10,6 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -26,11 +25,8 @@ import id.neotica.neoverse.data.model.ChatRoom
 import id.neotica.neoverse.data.model.ParentNeo
 import id.neotica.neoverse.data.model.User
 import id.neotica.neoverse.data.remote.ApiResult
-import id.neotica.neoverse.presentation.navigation.RootScreen
 import id.neotica.neoverse.presentation.navigation.Screen
 import id.neotica.neoverse.presentation.ui.components.BasicScaffold
-import id.neotica.neoverse.presentation.ui.components.ImageCoil
-import id.neotica.neoverse.presentation.ui.components.NeoButton
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -66,6 +62,9 @@ fun HomeView(
     }
 
     LaunchedEffect(key1 = true) {
+        if (viewModel.isLoggedIn()) {
+            if (!viewModel.isUserVerified()) navController.navigate(Screen.VerifyEmailScreen)
+        }
         viewModel.getUser()
         viewModel.user.collect { result ->
             when(result) {
@@ -110,11 +109,12 @@ fun HomeView(
             }
         }
     }
+
     BasicScaffold(topBarTitle = "Home") {
         LazyRow {
             item {
                 userList.forEach { user ->
-                    Card(
+                    /*Card(
                         modifier = Modifier.padding(4.dp),
                         onClick = {
                             val chatRoomFiltered = viewModel.getRoomFiltered(user.userId.toString(), chatrooms.value)
@@ -144,7 +144,7 @@ fun HomeView(
                             ImageCoil(url = user.imageUrl.toString())
                             Text(text = user.username.toString())
                         }
-                    }
+                    }*/
                 }
             }
         }
@@ -170,7 +170,7 @@ fun HomeView(
                                     navController.navigate(Screen.Chat(
                                         chatId = channelItemParent.value.name,
                                         user2 = chatName,
-                                    )
+                                        )
                                     )
                                 }
                             }
@@ -189,8 +189,8 @@ fun HomeView(
 
         viewModel.getUsers()
 
-        NeoButton("Show user") { navController.navigate(Screen.FriendScreen)}
-        NeoButton("Game") { navController.navigate(RootScreen.GameNav) }
+//        NeoButton("Show user") { navController.navigate(Screen.FriendScreen)}
+//        NeoButton("Game") { navController.navigate(RootScreen.GameNav) }
 
     }
 }

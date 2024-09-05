@@ -1,7 +1,9 @@
 package id.neotica.neoverse.presentation.screen.profile
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.material3.Button
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -10,15 +12,17 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import id.neotica.neoverse.data.model.User
 import id.neotica.neoverse.data.remote.ApiResult
 import id.neotica.neoverse.presentation.navigation.RootScreen
 import id.neotica.neoverse.presentation.navigation.Screen
 import id.neotica.neoverse.presentation.ui.components.BasicScaffold
-import id.neotica.neoverse.presentation.ui.components.BasicScreen
 import id.neotica.neoverse.presentation.ui.components.ImageCoil
 import id.neotica.neoverse.presentation.ui.components.LoadingIndicatorBool
+import id.neotica.neoverse.presentation.ui.components.NeoButton
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -35,6 +39,7 @@ fun ProfileView(
             popUpTo(RootScreen.HomeNav) {
                 inclusive = true
             }
+            launchSingleTop
         } else {
             viewModel.getUser()
         }
@@ -57,31 +62,36 @@ fun ProfileView(
 
     BasicScaffold(
         topBarTitle = "Profile",
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
+        paddingValues = paddingValues
     ) {
         LoadingIndicatorBool(isLoading = isLoading) {
 
-            Text("Profile")
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                user?.let {
+                    ImageCoil(url = it.imageUrl.toString())
+                    Text(it.username.toString())
+                    Text(it.userEmail.toString())
+                }
 
-            user?.let {
-                ImageCoil(url = it.imageUrl.toString())
-                Text(it.username.toString())
-                Text(it.userEmail.toString())
-            }
-            Button(onClick = {
-                if (!viewModel.isLoggedIn()) {
+                Spacer(
+                    Modifier.padding(0.dp).weight(1f)
+                )
+
+                NeoButton("Logout") {
+                    if (!viewModel.isLoggedIn()) {
+                        viewModel.logout()
+                    }
                     viewModel.logout()
                 }
-                viewModel.logout()
-                navigateAuth(navController)
-            }) {
-                Text("Logout")
+                NeoButton("Delete Account") {
+                    viewModel.deleteAccount()
+                }
             }
         }
     }
-
 }
 
 fun navigateAuth(navController: NavController) {
-    navController.navigate(Screen.LoginScreen)
+    navController.navigate(RootScreen.HomeNav)
 }

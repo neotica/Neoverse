@@ -48,6 +48,7 @@ class AuthRepositoryImpl: AuthRepository {
                     username = username,
                     userEmail = email
                 )
+                currentUser.sendEmailVerification()
                 firestore.collection("Users").document(currentUser.uid).set(dataUser)
                 return ApiResult.Success("Success")
 
@@ -56,6 +57,13 @@ class AuthRepositoryImpl: AuthRepository {
             }
         } catch (e: Exception) {
             return ApiResult.Error("Exception")
+        }
+    }
+
+    override fun deleteAccount() {
+        auth = FirebaseAuth.getInstance()
+        auth.currentUser!!.delete().addOnCompleteListener {
+            Log.d("deleteuser", "usr deleted")
         }
     }
 
@@ -77,6 +85,7 @@ class AuthRepositoryImpl: AuthRepository {
     }.flowOn(Dispatchers.IO)
 
     override fun logout() {
+        auth = FirebaseAuth.getInstance()
         auth.signOut()
     }
 }
