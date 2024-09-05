@@ -15,6 +15,7 @@ import id.neotica.neoverse.data.model.User
 import id.neotica.neoverse.data.remote.ApiResult
 import id.neotica.neoverse.presentation.screen.friend.FriendViewModel
 import id.neotica.neoverse.presentation.ui.components.BasicScreen
+import id.neotica.neoverse.presentation.ui.components.ImageCoil
 import id.neotica.neoverse.presentation.ui.components.LoadingIndicatorBool
 import org.koin.androidx.compose.koinViewModel
 
@@ -44,10 +45,12 @@ fun FriendProfileView(
     }
     BasicScreen(paddingValues = paddingValues, horizontalAlign = Alignment.CenterHorizontally) {
         LoadingIndicatorBool(isLoading = isLoading) {
+            ImageCoil(user?.imageUrl.toString())
             Text(text = user?.username.toString())
             val friends = Friends(
                 userId,
-                user?.username.toString()
+                user?.username.toString(),
+                user?.imageUrl.toString()
             )
             Button(onClick = { viewModel.addFriend(friends) }) {
                 Text("Add Friend!")

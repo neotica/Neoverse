@@ -30,6 +30,7 @@ fun BasicScaffold(
     modifier: Modifier = Modifier,
     navController: NavController? = null,
     paddingValues: PaddingValues = PaddingValues(),
+    paddingValuesBottomOnly: Boolean = true,
     fullScreen: Boolean = false,
     horizontalAlignment: Alignment.Horizontal = Alignment.Start,
     content: @Composable () -> Unit
@@ -65,12 +66,31 @@ fun BasicScaffold(
     ) {
         if (!fullScreen) {
             Column(
-                modifier = Modifier.padding(it).fillMaxSize(),
+                modifier = Modifier
+                    .padding(
+                        if (paddingValuesBottomOnly) {
+                            PaddingValues(bottom = paddingValues.calculateBottomPadding())
+                        } else {
+                            paddingValues
+                        }
+                    )
+                    .fillMaxSize(),
                 horizontalAlignment = horizontalAlignment
-            ) { content() }
+            ) {
+                Column(
+                    modifier = Modifier
+                        .padding(it)
+                        .fillMaxSize(),
+                    horizontalAlignment = horizontalAlignment
+                ) {
+                    content()
+                }
+            }
         } else {
             Column(
-                modifier = Modifier.padding(paddingValues).fillMaxSize(),
+                modifier = Modifier
+                    .padding(paddingValues)
+                    .fillMaxSize(),
                 horizontalAlignment = horizontalAlignment
             ) { content() }
         }

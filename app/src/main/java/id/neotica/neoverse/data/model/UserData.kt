@@ -8,7 +8,8 @@ data class UserData(
 
 data class Friends(
     val id: String = "",
-    val name: String = ""
+    val name: String = "",
+    val imageUrl: String = ""
 )
 
 data class Games(

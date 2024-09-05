@@ -67,11 +67,6 @@ fun ChatView(
             }
         }
     }
-    Column(modifier = Modifier
-        .fillMaxSize()
-        .padding(paddingValues)) {
-
-    }
 }
 
 @SuppressLint("CoroutineCreationDuringComposition")
