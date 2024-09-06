@@ -59,6 +59,8 @@ fun SearchUser(
 
     BasicScaffold(
         topBarTitle = "Search User",
+        true,
+        navController = navController,
         paddingValues = paddingValues,
     ) {
         Box(

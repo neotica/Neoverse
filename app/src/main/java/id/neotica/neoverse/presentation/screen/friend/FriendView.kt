@@ -8,14 +8,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -27,6 +24,7 @@ import id.neotica.neoverse.data.remote.ApiResult
 import id.neotica.neoverse.presentation.navigation.RootScreen
 import id.neotica.neoverse.presentation.navigation.Screen
 import id.neotica.neoverse.presentation.ui.components.BasicScaffold
+import id.neotica.neoverse.presentation.ui.components.LoadingIndicatorBool
 import id.neotica.neoverse.presentation.ui.components.NeoButton
 import id.neotica.neoverse.presentation.ui.components.ProfileCard
 import org.koin.androidx.compose.koinViewModel
@@ -111,23 +109,22 @@ fun FriendView(
         "Friends",
         paddingValues = paddingValues
     ) {
-        Column(
-            Modifier
-                .fillMaxSize()
-        ) {
-            val idValue = rememberSaveable { mutableStateOf("") }
-
-            Box {
-                NeoButton("Add Friend") {
-                    navController.navigate(Screen.SearchUserScreen)
+        LoadingIndicatorBool(isLoadingChats) {
+            Column(
+                Modifier
+                    .fillMaxSize()
+            ) {
+                Box {
+                    NeoButton("Add Friend") {
+                        navController.navigate(Screen.SearchUserScreen)
+                    }
                 }
-            }
 
-            Box {
-                LazyVerticalGrid(
-                    columns = GridCells.Fixed(3)
-                ) {
-                    items(friendList) { friends ->
+                Box {
+                    LazyVerticalGrid(
+                        columns = GridCells.Fixed(3)
+                    ) {
+                        items(friendList) { friends ->
                             val chatRoomFiltered =
                                 viewModel.getRoomFiltered(friends.id, chatrooms.value)
                             val currentId = viewModel.currentUserId()
@@ -171,6 +168,7 @@ fun FriendView(
                                     }
                                 }
                             }
+                        }
                     }
                 }
             }
