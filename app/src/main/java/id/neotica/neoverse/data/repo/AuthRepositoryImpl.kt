@@ -84,6 +84,21 @@ class AuthRepositoryImpl: AuthRepository {
         }
     }.flowOn(Dispatchers.IO)
 
+    override suspend fun isUsernameExist(username: String): ApiResult<Boolean> {
+        firestore = FirebaseFirestore.getInstance()
+        return try {
+            val snapshot = firestore.collection("Users").get().await()
+            val userList = snapshot.documents.mapNotNull {
+                it.toObject(User::class.java)
+            }
+            val checkUser = userList.filter { it.username == username }
+            val isUserExist = checkUser[0].username == username
+            ApiResult.Success(isUserExist)
+        } catch (e: Exception) {
+            ApiResult.Success(false)
+        }
+    }
+
     override fun logout() {
         auth = FirebaseAuth.getInstance()
         auth.signOut()

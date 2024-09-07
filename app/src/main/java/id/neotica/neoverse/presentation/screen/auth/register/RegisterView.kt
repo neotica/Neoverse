@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -38,6 +39,8 @@ fun RegisterView(
     val passwordValue = remember { mutableStateOf("") }
     var isButtonPressed by remember { mutableStateOf(false) }
     var isLoading by remember { mutableStateOf(false) }
+    var isUserExist by remember { mutableStateOf(false) }
+    var onValueChange by remember { mutableStateOf(false) }
 
 
     val context = LocalContext.current
@@ -50,7 +53,11 @@ fun RegisterView(
                     is ApiResult.Success -> {
                         isLoading = false
                         navController.navigate(Screen.VerifyEmailScreen)
-                        Toast.makeText(context, "Success registered ${nameValue.value}", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            context,
+                            "Success registered ${nameValue.value}",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
 
                     is ApiResult.Error -> {
@@ -60,6 +67,25 @@ fun RegisterView(
                 }
             }
         }
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.isUserExist.collect { result ->
+            when(result) {
+                is ApiResult.Loading -> isUserExist = false
+                is ApiResult.Success -> {
+                    val user = result.data
+                    user?.let {
+                        isUserExist = !it
+                    }
+                }
+                is ApiResult.Error -> isUserExist = false
+            }
+        }
+    }
+
+    LaunchedEffect(onValueChange) {
+        viewModel.checkUsername(nameValue.value)
     }
 
     BasicScaffold(
@@ -72,7 +98,12 @@ fun RegisterView(
                 LoadingIndicatorBool(isLoading = isLoading) {
                     Box(Modifier.weight(1f)) {
                         Column {
-                            NeoTextField(value = nameValue, label = "Username")
+                            NeoTextField(
+                                value = nameValue, label = "Username",
+                                onValueChange = {
+                                    onValueChange = !onValueChange
+                                }
+                            )
                             NeoTextField(value = emailValue, label = "Email")
                             Spacer(Modifier.padding(4.dp))
                             PasswordTextField(value = passwordValue, placeholder = "Password")
@@ -82,15 +113,22 @@ fun RegisterView(
                         Modifier.padding(horizontal = 20.dp),
                         horizontalArrangement = Arrangement.Center
                     ) {
-                        NeoButton(
-                            "Register",
-                            maxWidth = true,
-                            enabled = nameValue.value.isNotEmpty()
-                                    && emailValue.value.isNotEmpty()
-                                    && passwordValue.value.isNotEmpty(),
-                        ) {
-                            isButtonPressed = true
-                            viewModel.register(nameValue.value, emailValue.value, passwordValue.value)
+                        Column {
+                            when {
+                                nameValue.value.isEmpty() -> Text("Please fill all the fields.")
+                                !isUserExist -> Text("Username is already used.")
+                            }
+                            NeoButton(
+                                "Register",
+                                maxWidth = true,
+                                enabled = nameValue.value.isNotEmpty()
+                                        && emailValue.value.isNotEmpty()
+                                        && passwordValue.value.isNotEmpty()
+                                        && isUserExist,
+                            ) {
+                                isButtonPressed = true
+                                viewModel.register(nameValue.value, emailValue.value, passwordValue.value)
+                            }
                         }
                     }
                     Spacer(Modifier.padding(8.dp))
