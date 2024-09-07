@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import id.neotica.neoverse.data.model.ChatRoom
-import id.neotica.neoverse.data.model.Friends
 import id.neotica.neoverse.data.model.ParentNeo
 import id.neotica.neoverse.data.model.User
 import id.neotica.neoverse.data.remote.ApiResult
@@ -30,7 +29,7 @@ class FriendViewModel(
     private var _user: MutableStateFlow<ApiResult<User?>> = MutableStateFlow(ApiResult.Loading())
     val user = _user.asStateFlow()
 
-    private var _friendList: MutableStateFlow<ApiResult<List<Friends>>> = MutableStateFlow(ApiResult.Loading())
+    private var _friendList: MutableStateFlow<ApiResult<List<User>>> = MutableStateFlow(ApiResult.Loading())
     val friendList = _friendList.asStateFlow()
 
     fun currentUserId(): String = userRepo.getUserId()
@@ -40,6 +39,12 @@ class FriendViewModel(
         return userRepo.isLoggedIn()
     }
 
+    fun getFriendsRoom() = databaseRepo.getFriends()
+
+    fun addFriendList(friends: List<User>) = viewModelScope.launch {
+        databaseRepo.addFriendList(friends)
+    }
+
     fun addFriend(friend: User) = viewModelScope.launch {
         userRepo.addFriend(friend)
         databaseRepo.addFriend(friend)
@@ -47,7 +52,10 @@ class FriendViewModel(
     }
 
     fun unFriend(friend: User) = viewModelScope.launch {
+        //  Create mapper from FriendEntity to User.
+        //  friend parameter should be FriendEntity.
         userRepo.unfriend(friend)
+        databaseRepo.unfriend(friend.username)
     }
 
     fun searchFriend(username: String) = viewModelScope.launch {
@@ -60,7 +68,6 @@ class FriendViewModel(
         val user = userRepo.getUserDetail(userId)
         _user.value = ApiResult.Loading()
         _user.value = user
-        Log.d("getUser", "notnull")
     }
 
     fun getFriends() = viewModelScope.launch {

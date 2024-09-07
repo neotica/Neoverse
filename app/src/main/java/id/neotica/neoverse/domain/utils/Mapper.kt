@@ -26,4 +26,12 @@ object Mapper {
         status = input.status,
         imageUrl = input.imageUrl
     )
+
+    fun friendEntityToResponse(input: FriendEntity) = User(
+        userId = input.id,
+        username = input.username,
+        userEmail = input.email,
+        status = input.status,
+        imageUrl = input.imageUrl
+    )
 }

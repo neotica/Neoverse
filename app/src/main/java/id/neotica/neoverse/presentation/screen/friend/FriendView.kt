@@ -17,10 +17,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import id.neotica.neoverse.data.local.FriendEntity
 import id.neotica.neoverse.data.model.ChatRoom
-import id.neotica.neoverse.data.model.Friends
 import id.neotica.neoverse.data.model.User
 import id.neotica.neoverse.data.remote.ApiResult
+import id.neotica.neoverse.domain.utils.Mapper
 import id.neotica.neoverse.presentation.navigation.RootScreen
 import id.neotica.neoverse.presentation.navigation.Screen
 import id.neotica.neoverse.presentation.ui.components.BasicScaffold
@@ -37,10 +38,12 @@ fun FriendView(
 ) {
 
     val chatrooms = remember { mutableStateOf<List<ChatRoom>>(emptyList()) }
-    var friendList by remember { mutableStateOf<List<Friends>>(emptyList()) }
+    var friendList by remember { mutableStateOf<List<FriendEntity>>(emptyList()) }
+    var friendList2 by remember { mutableStateOf<List<User>>(emptyList()) }
     var isLoading by remember { mutableStateOf(false) }
     var isLoadingChats by remember { mutableStateOf(false) }
     var currentuser by remember { mutableStateOf<User?>(null) }
+    var isFriendEmpty by remember { mutableStateOf(false) }
 
     LaunchedEffect(key1 = true) {
         viewModel.getChatroom()
@@ -87,14 +90,31 @@ fun FriendView(
             }
             launchSingleTop
         }
-        viewModel.getFriends()
+        viewModel.getFriendsRoom().collect {
+            if (it.isNotEmpty()) {
+                friendList = it
+                Log.d("friend", "didnt collect")
+
+            } else {
+                isFriendEmpty = true
+                viewModel.getFriends()
+                Log.d("friend", "else")
+
+            }
+        }
+    }
+
+    LaunchedEffect(isFriendEmpty) {
         viewModel.friendList.collect { result ->
-            Log.d("friend", friendList.toString())
+            Log.d("friend", result.toString())
             when(result) {
                 is ApiResult.Loading -> isLoading = true
                 is ApiResult.Success -> {
                     isLoading = false
-                    result.data?.let { friendList = result.data }
+                    result.data?.let {
+                        friendList2 = result.data
+                        viewModel.addFriendList(friendList2)
+                    }
                 }
                 is ApiResult.Error -> {
                     isLoading = false
@@ -129,9 +149,15 @@ fun FriendView(
                                 viewModel.getRoomFiltered(friends.id, chatrooms.value)
                             val currentId = viewModel.currentUserId()
                             ProfileCard(
-                                name = friends.name,
+                                name = friends.username,
                                 image = friends.imageUrl,
-                                paddingValues = PaddingValues(4.dp)
+                                paddingValues = PaddingValues(4.dp),
+                                alertTitle = "Delete ${friends.username}?",
+                                alertButton = "Delete",
+                                onLongClick = {
+                                    val mapper = Mapper.friendEntityToResponse(friends)
+                                    viewModel.unFriend(mapper)
+                                }
                             ) {
                                 if (!isLoadingChats) {
                                     Log.d("friendchat", chatRoomFiltered.toString())
@@ -141,27 +167,27 @@ fun FriendView(
                                         navController.navigate(
                                             Screen.Chat(
                                                 currentId + friends.id,
-                                                user2 = friends.name
+                                                user2 = friends.username
                                             )
                                         )
                                         val addUser = User(
                                             userId = friends.id,
-                                            username = friends.name
+                                            username = friends.username
                                         )
                                         viewModel.addChatroom(
-                                            user2 = friends.name,
+                                            user2 = friends.username,
                                             user = addUser,
                                         )
                                     } else {
                                         Log.d("friendchat", "not null")
 
                                         val chatUser2 =
-                                            if (chatRoomFiltered?.user1 != viewModel.currentUserName()) chatRoomFiltered?.user1 else friends.name
+                                            if (chatRoomFiltered?.user1 != viewModel.currentUserName()) chatRoomFiltered?.user1 else friends.username
                                         chatRoomFiltered.let {
                                             navController.navigate(
                                                 Screen.Chat(
                                                     chatId = chatRoomFiltered?.name.toString(),
-                                                    user2 = friends.name
+                                                    user2 = friends.username
                                                 )
                                             )
                                         }

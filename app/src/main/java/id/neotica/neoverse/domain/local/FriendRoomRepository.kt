@@ -7,4 +7,6 @@ import kotlinx.coroutines.flow.Flow
 interface FriendRoomRepository {
     fun getFriends(): Flow<List<FriendEntity>>
     suspend fun addFriend(friend: User)
+    suspend fun unfriend(friend: String)
+    suspend fun addFriendList(friends: List<User>)
 }

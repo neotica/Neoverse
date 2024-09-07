@@ -5,7 +5,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.database
 import com.google.firebase.firestore.FirebaseFirestore
 import id.neotica.neoverse.data.model.ChatRoom
-import id.neotica.neoverse.data.model.Friends
 import id.neotica.neoverse.data.model.ParentNeo
 import id.neotica.neoverse.data.model.User
 import id.neotica.neoverse.data.remote.ApiResult
@@ -61,13 +60,13 @@ class UserRepositoryImpl: UserRepository {
         }
     }
 
-    override fun getFriends(): Flow<ApiResult<List<Friends>>> = flow {
-        val list = mutableListOf<Friends>()
+    override fun getFriends(): Flow<ApiResult<List<User>>> = flow {
+        val list = mutableListOf<User>()
         emit(ApiResult.Loading())
         try {
             val reference = firebase.getReference("userdata").child(getUserId()).child("friends").get().await()
             reference.children.forEach { data ->
-                val userData = data.getValue(Friends::class.java)
+                val userData = data.getValue(User::class.java)
 
                 if (data != null) {
                     list.add(userData!!)

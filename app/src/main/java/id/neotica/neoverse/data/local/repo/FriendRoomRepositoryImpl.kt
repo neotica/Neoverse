@@ -14,6 +14,13 @@ class FriendRoomRepositoryImpl(
     private val dao: FriendDao
 ) : FriendRoomRepository {
     override fun getFriends(): Flow<List<FriendEntity>> = dao.getFriends()
+
+    override suspend fun addFriendList(friends: List<User>) = withContext(Dispatchers.IO) {
+        val friendsEnt = Mapper.friendsResponseToEntity(friends)
+        dao.addFriendList(friendsEnt)
+    }
+
+
     override suspend fun addFriend(friend: User) {
         Log.d("friendRepo", "fun addfriend")
         withContext(Dispatchers.IO) {
@@ -21,5 +28,8 @@ class FriendRoomRepositoryImpl(
 
             dao.addFriend(friendEnt)
         }
+    }
+    override suspend fun unfriend(friend: String) = withContext(Dispatchers.IO) {
+        dao.unfriend(friend)
     }
 }

@@ -12,6 +12,7 @@ import id.neotica.neoverse.domain.AuthRepository
 import id.neotica.neoverse.domain.ChatRepository
 import id.neotica.neoverse.domain.GameRepository
 import id.neotica.neoverse.domain.UserRepository
+import id.neotica.neoverse.domain.local.FriendRoomRepository
 import id.neotica.neoverse.presentation.screen.auth.login.LoginViewModel
 import id.neotica.neoverse.presentation.screen.auth.register.RegisterViewModel
 import id.neotica.neoverse.presentation.screen.auth.verify.VerifyEmailViewModel
@@ -45,7 +46,7 @@ val repositoryModules = module {
     singleOf(::UserRepositoryImpl) { bind<UserRepository>()}
     singleOf(::ChatRepositoryImpl) bind ChatRepository::class
     singleOf(::GameRepositoryImpl) bind GameRepository::class
-    singleOf(::FriendRoomRepositoryImpl)
+    singleOf(::FriendRoomRepositoryImpl) bind FriendRoomRepository::class
 }
 
 val viewModelModules = module {

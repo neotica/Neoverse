@@ -164,16 +164,6 @@ fun HomeView(
                         val chatName = chatRoomName(currentuser?.username.toString(), channelItemParent.value.user1, channelItemParent.value.user2)
                         Card(
                             modifier = Modifier.padding(4.dp),
-                            onClick = {
-                                currentuser?.let {
-                                    viewModel.readMessage(channelItemParent.key, channelItemParent.value, it.username!!)
-                                    navController.navigate(Screen.Chat(
-                                        chatId = channelItemParent.value.name,
-                                        user2 = chatName,
-                                        )
-                                    )
-                                }
-                            }
                         ) {
                             Column(
                                 modifier = Modifier.padding(8.dp),
@@ -182,7 +172,16 @@ fun HomeView(
                                 ProfileCard(
                                     name = chatName,
                                     image = ""
-                                )
+                                ) {
+                                    currentuser?.let {
+                                        viewModel.readMessage(channelItemParent.key, channelItemParent.value, it.username!!)
+                                        navController.navigate(Screen.Chat(
+                                            chatId = channelItemParent.value.name,
+                                            user2 = chatName,
+                                        )
+                                        )
+                                    }
+                                }
                             }
                         }
                     }

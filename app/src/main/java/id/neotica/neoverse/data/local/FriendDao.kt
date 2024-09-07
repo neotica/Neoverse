@@ -11,7 +11,10 @@ interface FriendDao {
     @Query("select * from friend order by username asc")
     fun getFriends(): Flow<List<FriendEntity>>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun addFriendList(friends: List<FriendEntity>)
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun addFriend(friend: FriendEntity)
 
     @Query("delete from friend where username = :username")
