@@ -1,0 +1,19 @@
+package id.neotica.neoverse.data.local
+
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import kotlinx.coroutines.flow.Flow
+
+@Dao
+interface FriendDao {
+    @Query("select * from friend order by username asc")
+    fun getFriends(): Flow<List<FriendEntity>>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun addFriend(friend: FriendEntity)
+
+    @Query("delete from friend where username = :username")
+    fun unfriend(username: String)
+}

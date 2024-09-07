@@ -109,10 +109,17 @@ class UserRepositoryImpl: UserRepository {
         }
     }
 
-    override suspend fun addFriend(friend: Friends) {
+    override suspend fun addFriend(friend: User) {
         val original = firebase.getReference("userdata")
             .child(getUserId()).child("friends")
-            .child(friend.id).setValue(friend)
+            .child(friend.userId).setValue(friend)
+        original.await()
+    }
+
+    override suspend fun unfriend(friend: User) {
+        val original = firebase.getReference("userdata")
+            .child(getUserId()).child("friends")
+            .child(friend.userId).removeValue()
         original.await()
     }
 

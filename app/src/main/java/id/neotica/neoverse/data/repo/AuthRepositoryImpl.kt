@@ -1,7 +1,9 @@
 package id.neotica.neoverse.data.repo
 
 import android.util.Log
+import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.database
 import com.google.firebase.firestore.FirebaseFirestore
 import id.neotica.neoverse.data.model.User
 import id.neotica.neoverse.data.remote.ApiResult
@@ -15,6 +17,7 @@ import kotlinx.coroutines.tasks.await
 class AuthRepositoryImpl: AuthRepository {
     private lateinit var auth: FirebaseAuth
     private lateinit var firestore: FirebaseFirestore
+    private val firebase = Firebase.database
 
     override suspend fun login(email: String, password: String): ApiResult<String> {
         auth = FirebaseAuth.getInstance()
@@ -62,9 +65,15 @@ class AuthRepositoryImpl: AuthRepository {
 
     override fun deleteAccount() {
         auth = FirebaseAuth.getInstance()
-        auth.currentUser!!.delete().addOnCompleteListener {
+        firestore = FirebaseFirestore.getInstance()
+        val currentUser = auth.currentUser
+        currentUser!!.delete().addOnCompleteListener {
             Log.d("deleteuser", "usr deleted")
         }
+        firestore.collection("Users").document(currentUser.uid).delete()
+
+        val reference = firebase.getReference("userdata").child(currentUser.uid)
+        reference.removeValue()
     }
 
     fun loginFlow(email: String, password: String): Flow<ApiResult<String>> = flow {

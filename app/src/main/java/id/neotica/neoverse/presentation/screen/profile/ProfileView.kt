@@ -119,9 +119,6 @@ fun ProfileView(
                         "Logout",
                         true
                     ) {
-                        if (!viewModel.isLoggedIn()) {
-                            viewModel.logout()
-                        }
                         viewModel.logout()
                     }
                     Row(

@@ -10,13 +10,15 @@ import id.neotica.neoverse.data.model.User
 import id.neotica.neoverse.data.remote.ApiResult
 import id.neotica.neoverse.domain.ChatRepository
 import id.neotica.neoverse.domain.UserRepository
+import id.neotica.neoverse.domain.local.FriendRoomRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class FriendViewModel(
     private val userRepo: UserRepository,
-    private val chatRepo: ChatRepository
+    private val chatRepo: ChatRepository,
+    private val databaseRepo: FriendRoomRepository
 ): ViewModel() {
 
     private var _userList: MutableStateFlow<ApiResult<List<User>>> = MutableStateFlow(ApiResult.Loading())
@@ -38,8 +40,14 @@ class FriendViewModel(
         return userRepo.isLoggedIn()
     }
 
-    fun addFriend(friend: Friends) = viewModelScope.launch {
+    fun addFriend(friend: User) = viewModelScope.launch {
         userRepo.addFriend(friend)
+        databaseRepo.addFriend(friend)
+        Log.d("friendvm", friend.toString())
+    }
+
+    fun unFriend(friend: User) = viewModelScope.launch {
+        userRepo.unfriend(friend)
     }
 
     fun searchFriend(username: String) = viewModelScope.launch {

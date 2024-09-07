@@ -23,7 +23,9 @@ class ProfileViewModel(
         authRepo.logout()
     }
 
-    fun deleteAccount() = authRepo.deleteAccount()
+    fun deleteAccount() = viewModelScope.launch {
+        authRepo.deleteAccount()
+    }
 
     private var _user: MutableStateFlow<ApiResult<User?>> = MutableStateFlow(ApiResult.Loading())
     val user = _user.asStateFlow()
