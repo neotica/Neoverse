@@ -1,4 +1,4 @@
-package id.neotica.neoverse.domain
+package id.neotica.neoverse.domain.remote
 
 import id.neotica.neoverse.data.model.User
 import id.neotica.neoverse.data.remote.ApiResult

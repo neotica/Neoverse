@@ -8,7 +8,7 @@ import id.neotica.neoverse.data.model.ChatRoom
 import id.neotica.neoverse.data.model.ParentNeo
 import id.neotica.neoverse.data.model.User
 import id.neotica.neoverse.data.remote.ApiResult
-import id.neotica.neoverse.domain.UserRepository
+import id.neotica.neoverse.domain.remote.UserRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await

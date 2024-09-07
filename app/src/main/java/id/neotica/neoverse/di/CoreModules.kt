@@ -1,6 +1,5 @@
 package id.neotica.neoverse.di
 
-import android.database.sqlite.SQLiteDatabase
 import androidx.room.Room
 import id.neotica.neoverse.data.local.FriendTable
 import id.neotica.neoverse.data.local.repo.FriendRoomRepositoryImpl
@@ -8,10 +7,10 @@ import id.neotica.neoverse.data.repo.AuthRepositoryImpl
 import id.neotica.neoverse.data.repo.ChatRepositoryImpl
 import id.neotica.neoverse.data.repo.GameRepositoryImpl
 import id.neotica.neoverse.data.repo.UserRepositoryImpl
-import id.neotica.neoverse.domain.AuthRepository
-import id.neotica.neoverse.domain.ChatRepository
-import id.neotica.neoverse.domain.GameRepository
-import id.neotica.neoverse.domain.UserRepository
+import id.neotica.neoverse.domain.remote.AuthRepository
+import id.neotica.neoverse.domain.remote.ChatRepository
+import id.neotica.neoverse.domain.remote.GameRepository
+import id.neotica.neoverse.domain.remote.UserRepository
 import id.neotica.neoverse.domain.local.FriendRoomRepository
 import id.neotica.neoverse.presentation.screen.auth.login.LoginViewModel
 import id.neotica.neoverse.presentation.screen.auth.register.RegisterViewModel

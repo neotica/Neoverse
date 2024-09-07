@@ -1,4 +1,4 @@
-package id.neotica.neoverse.domain
+package id.neotica.neoverse.domain.remote
 
 import id.neotica.neoverse.data.model.ChatRoom
 import id.neotica.neoverse.data.model.Message
