@@ -1,11 +1,13 @@
 package id.neotica.neoverse.data.repo
 
 import android.util.Log
+import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.database
 import com.google.firebase.firestore.FirebaseFirestore
 import id.neotica.neoverse.data.model.User
 import id.neotica.neoverse.data.remote.ApiResult
-import id.neotica.neoverse.domain.AuthRepository
+import id.neotica.neoverse.domain.remote.AuthRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -15,6 +17,7 @@ import kotlinx.coroutines.tasks.await
 class AuthRepositoryImpl: AuthRepository {
     private lateinit var auth: FirebaseAuth
     private lateinit var firestore: FirebaseFirestore
+    private val firebase = Firebase.database
 
     override suspend fun login(email: String, password: String): ApiResult<String> {
         auth = FirebaseAuth.getInstance()
@@ -62,9 +65,15 @@ class AuthRepositoryImpl: AuthRepository {
 
     override fun deleteAccount() {
         auth = FirebaseAuth.getInstance()
-        auth.currentUser!!.delete().addOnCompleteListener {
+        firestore = FirebaseFirestore.getInstance()
+        val currentUser = auth.currentUser
+        currentUser!!.delete().addOnCompleteListener {
             Log.d("deleteuser", "usr deleted")
         }
+        firestore.collection("Users").document(currentUser.uid).delete()
+
+        val reference = firebase.getReference("userdata").child(currentUser.uid)
+        reference.removeValue()
     }
 
     fun loginFlow(email: String, password: String): Flow<ApiResult<String>> = flow {
@@ -83,6 +92,21 @@ class AuthRepositoryImpl: AuthRepository {
             emit(ApiResult.Error("Exception"))
         }
     }.flowOn(Dispatchers.IO)
+
+    override suspend fun isUsernameExist(username: String): ApiResult<Boolean> {
+        firestore = FirebaseFirestore.getInstance()
+        return try {
+            val snapshot = firestore.collection("Users").get().await()
+            val userList = snapshot.documents.mapNotNull {
+                it.toObject(User::class.java)
+            }
+            val checkUser = userList.filter { it.username == username }
+            val isUserExist = checkUser[0].username == username
+            ApiResult.Success(isUserExist)
+        } catch (e: Exception) {
+            ApiResult.Success(false)
+        }
+    }
 
     override fun logout() {
         auth = FirebaseAuth.getInstance()

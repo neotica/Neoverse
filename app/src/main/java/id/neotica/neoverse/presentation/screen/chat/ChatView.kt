@@ -17,8 +17,11 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Send
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -39,6 +42,7 @@ import com.google.firebase.auth.auth
 import id.neotica.neoverse.data.model.Message
 import id.neotica.neoverse.presentation.navigation.Screen
 import id.neotica.neoverse.presentation.ui.components.BasicScaffold
+import id.neotica.neoverse.presentation.ui.theme.DarkPrimary
 import id.neotica.neoverse.utils.convertLongToTime
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
@@ -102,26 +106,42 @@ fun ChatMessages(
                     ChatBubble(message = messages)
                 }
             }
-            Row(
+            Surface(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .background(Color.LightGray), verticalAlignment = Alignment.CenterVertically
+                    .fillMaxWidth(),
+                shape = RoundedCornerShape(32.dp)
             ) {
-                TextField(
-                    value = msg.value,
-                    onValueChange = { msg.value = it },
-                    modifier = Modifier.weight(1f),
-                    placeholder = { Text(text = "Type a message") },
-                    keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
-                    keyboardActions = KeyboardActions(onDone = {
-                        hideKeyboardController?.hide()
-                    })
-                )
-                IconButton(onClick = {
-                    onSendMessage(msg.value)
-                    msg.value = ""
-                }) {
-                    Icon(imageVector = Icons.AutoMirrored.Filled.Send, contentDescription = "send")
+                Card(
+                    Modifier
+                        .padding(bottom = 8.dp, start = 4.dp, end = 4.dp, top = 4.dp),
+                    shape = RoundedCornerShape(32.dp),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .background(DarkPrimary)
+//                            .padding(bottom = 14.dp)
+                            .fillMaxWidth(),
+//                        .windowInsetsPadding(win),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        TextField(
+                            value = msg.value,
+                            onValueChange = { msg.value = it },
+                            modifier = Modifier.weight(1f),
+                            placeholder = { Text(text = "Type a message") },
+                            keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
+                            keyboardActions = KeyboardActions(onDone = {
+                                hideKeyboardController?.hide()
+                            })
+                        )
+                        IconButton(onClick = {
+                            onSendMessage(msg.value)
+                            msg.value = ""
+                        }) {
+                            Icon(imageVector = Icons.AutoMirrored.Filled.Send, contentDescription = "send")
+                        }
+                    }
                 }
             }
         }
@@ -152,7 +172,8 @@ fun ChatBubble(message: Message) {
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Box(
-                    modifier = Modifier.align(alignment)
+                    modifier = Modifier
+                        .align(alignment)
                         .background(color = bubbleColor, shape = RoundedCornerShape(8.dp)),
 
                     ) {

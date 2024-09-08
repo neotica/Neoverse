@@ -19,9 +19,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import id.neotica.droidcore.component.textfield.NeoTextField
-import id.neotica.neoverse.data.model.Friends
 import id.neotica.neoverse.data.model.User
 import id.neotica.neoverse.data.remote.ApiResult
 import id.neotica.neoverse.presentation.navigation.RootScreen
@@ -29,6 +29,7 @@ import id.neotica.neoverse.presentation.screen.friend.FriendViewModel
 import id.neotica.neoverse.presentation.ui.components.BasicScaffold
 import id.neotica.neoverse.presentation.ui.components.NeoButton
 import id.neotica.neoverse.presentation.ui.components.ProfileCard
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -59,6 +60,8 @@ fun SearchUser(
 
     BasicScaffold(
         topBarTitle = "Search User",
+        true,
+        navController = navController,
         paddingValues = paddingValues,
     ) {
         Box(
@@ -90,21 +93,26 @@ fun SearchUser(
                                         horizontalAlignment = Alignment.CenterHorizontally,
                                     ) {
                                         ProfileCard(
-                                            name = user.username.toString(),
-                                            image = user.imageUrl.toString(),
+                                            name = user.username,
+                                            image = user.imageUrl,
                                             size = 200.dp,
                                             content = {
                                                 NeoButton(
                                                     text = "Add Friend",
                                                     maxWidth = true
                                                 ) {
-                                                    val friends = Friends(
-                                                        id = user.userId.toString(),
-                                                        name = user.username.toString(),
-                                                        imageUrl = user.imageUrl.toString()
+                                                    val friends = User(
+                                                        userId = user.userId,
+                                                        username = user.username,
+                                                        userEmail = user.userEmail,
+                                                        status = user.status,
+                                                        imageUrl = user.imageUrl
                                                     )
-                                                    if (friends.id != viewModel.currentUserId()) {
-                                                        viewModel.addFriend(friends)
+
+                                                    if (friends.userId != viewModel.currentUserId()) {
+                                                        viewModel.viewModelScope.launch {
+                                                            viewModel.addFriend(friends)
+                                                        }
                                                     } else {
                                                         navController.navigate(RootScreen.AuthNav)
                                                     }
@@ -120,7 +128,12 @@ fun SearchUser(
                 Column(
                     Modifier.padding(horizontal = 4.dp)
                 ) {
-                    NeoTextField(value = username)
+                    NeoTextField(
+                        value = username,
+                        onValueChange = {
+                            viewModel.searchFriend(username.value.trim())
+                        }
+                    )
                     NeoButton(
                         text = "Search",
                         maxWidth = true

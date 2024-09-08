@@ -9,7 +9,7 @@ import id.neotica.neoverse.data.model.ChatRoom
 import id.neotica.neoverse.data.model.Message
 import id.neotica.neoverse.data.model.ParentNeo
 import id.neotica.neoverse.data.remote.ApiResult
-import id.neotica.neoverse.domain.ChatRepository
+import id.neotica.neoverse.domain.remote.ChatRepository
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow

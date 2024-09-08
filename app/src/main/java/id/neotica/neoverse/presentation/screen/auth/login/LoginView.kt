@@ -56,7 +56,12 @@ fun LoginView(
                     is ApiResult.Success -> {
                         Log.d("neotica", "success ${result.data}")
                         Toast.makeText(context, result.data, Toast.LENGTH_SHORT).show()
-                        navController.navigate(RootScreen.HomeNav)
+                        navController.navigate(RootScreen.HomeNav) {
+                            popUpTo(RootScreen.HomeNav) {
+                                inclusive = true
+                            }
+                            launchSingleTop
+                        }
                     }
                     is ApiResult.Error -> {
                         Log.d("neotica", "error: ${result.errorMessage} data: ${result.data}")
@@ -111,8 +116,5 @@ fun LoginView(
                 }
             }
         }
-
-
-
     }
 }

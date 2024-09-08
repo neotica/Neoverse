@@ -10,7 +10,6 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -27,13 +26,14 @@ import id.neotica.neoverse.data.model.User
 import id.neotica.neoverse.data.remote.ApiResult
 import id.neotica.neoverse.presentation.navigation.Screen
 import id.neotica.neoverse.presentation.ui.components.BasicScaffold
+import id.neotica.neoverse.presentation.ui.components.ProfileCard
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun HomeView(
     navController: NavController,
     paddingValues: PaddingValues,
-    viewModel: HomeViewModel = koinViewModel()
+    viewModel: HomeViewModel = koinViewModel(),
 ) {
     val isPressed = remember { mutableStateOf(false) }
     var userList by remember { mutableStateOf<List<User>>(emptyList()) }
@@ -164,22 +164,24 @@ fun HomeView(
                         val chatName = chatRoomName(currentuser?.username.toString(), channelItemParent.value.user1, channelItemParent.value.user2)
                         Card(
                             modifier = Modifier.padding(4.dp),
-                            onClick = {
-                                currentuser?.let {
-                                    viewModel.readMessage(channelItemParent.key, channelItemParent.value, it.username!!)
-                                    navController.navigate(Screen.Chat(
-                                        chatId = channelItemParent.value.name,
-                                        user2 = chatName,
-                                        )
-                                    )
-                                }
-                            }
                         ) {
                             Column(
                                 modifier = Modifier.padding(8.dp),
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
-                                Text(chatName)
+                                ProfileCard(
+                                    name = chatName,
+                                    image = ""
+                                ) {
+                                    currentuser?.let {
+                                        viewModel.readMessage(channelItemParent.key, channelItemParent.value, it.username!!)
+                                        navController.navigate(Screen.Chat(
+                                            chatId = channelItemParent.value.name,
+                                            user2 = chatName,
+                                        )
+                                        )
+                                    }
+                                }
                             }
                         }
                     }

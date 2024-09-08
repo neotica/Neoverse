@@ -3,8 +3,8 @@ package id.neotica.neoverse.presentation.screen.auth.login
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import id.neotica.neoverse.data.remote.ApiResult
-import id.neotica.neoverse.domain.AuthRepository
-import id.neotica.neoverse.domain.UserRepository
+import id.neotica.neoverse.domain.remote.AuthRepository
+import id.neotica.neoverse.domain.remote.UserRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch

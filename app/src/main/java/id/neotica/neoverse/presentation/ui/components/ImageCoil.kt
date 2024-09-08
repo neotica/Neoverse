@@ -1,8 +1,7 @@
 package id.neotica.neoverse.presentation.ui.components
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
@@ -23,7 +22,7 @@ fun ImageCoil(
     modifier: Modifier = Modifier
 ) {
     Box(
-        Modifier.fillMaxSize(),
+        Modifier.fillMaxWidth(),
         contentAlignment = Alignment.Center
     ) {
         AsyncImage(

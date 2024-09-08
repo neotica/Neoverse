@@ -4,19 +4,20 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import id.neotica.neoverse.data.model.ChatRoom
-import id.neotica.neoverse.data.model.Friends
 import id.neotica.neoverse.data.model.ParentNeo
 import id.neotica.neoverse.data.model.User
 import id.neotica.neoverse.data.remote.ApiResult
-import id.neotica.neoverse.domain.ChatRepository
-import id.neotica.neoverse.domain.UserRepository
+import id.neotica.neoverse.domain.remote.ChatRepository
+import id.neotica.neoverse.domain.remote.UserRepository
+import id.neotica.neoverse.domain.local.FriendDaoRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class FriendViewModel(
     private val userRepo: UserRepository,
-    private val chatRepo: ChatRepository
+    private val chatRepo: ChatRepository,
+    private val databaseRepo: FriendDaoRepository
 ): ViewModel() {
 
     private var _userList: MutableStateFlow<ApiResult<List<User>>> = MutableStateFlow(ApiResult.Loading())
@@ -28,7 +29,7 @@ class FriendViewModel(
     private var _user: MutableStateFlow<ApiResult<User?>> = MutableStateFlow(ApiResult.Loading())
     val user = _user.asStateFlow()
 
-    private var _friendList: MutableStateFlow<ApiResult<List<Friends>>> = MutableStateFlow(ApiResult.Loading())
+    private var _friendList: MutableStateFlow<ApiResult<List<User>>> = MutableStateFlow(ApiResult.Loading())
     val friendList = _friendList.asStateFlow()
 
     fun currentUserId(): String = userRepo.getUserId()
@@ -38,8 +39,21 @@ class FriendViewModel(
         return userRepo.isLoggedIn()
     }
 
-    fun addFriend(friend: Friends) = viewModelScope.launch {
+    fun getFriendsRoom() = databaseRepo.getFriends()
+
+    fun addFriendList(friends: List<User>) = viewModelScope.launch {
+        databaseRepo.addFriendList(friends)
+    }
+
+    fun addFriend(friend: User) = viewModelScope.launch {
         userRepo.addFriend(friend)
+        databaseRepo.addFriend(friend)
+        Log.d("friendvm", friend.toString())
+    }
+
+    fun unFriend(friend: User) = viewModelScope.launch {
+        userRepo.unfriend(friend)
+        databaseRepo.unfriend(friend.username)
     }
 
     fun searchFriend(username: String) = viewModelScope.launch {
@@ -52,7 +66,6 @@ class FriendViewModel(
         val user = userRepo.getUserDetail(userId)
         _user.value = ApiResult.Loading()
         _user.value = user
-        Log.d("getUser", "notnull")
     }
 
     fun getFriends() = viewModelScope.launch {
@@ -71,11 +84,11 @@ class FriendViewModel(
         Log.d("friendvm", currentUserName().toString())
         currentUserName()?.let {
             val chatroomDetail = ChatRoom(
-                name = currentUserId()+user.userId.toString(),
+                name = currentUserId()+ user.userId,
                 user1 = it,
                 user2 = user2,
                 user1id = currentUserId(),
-                user2id = user.userId.toString()
+                user2id = user.userId
             )
             chatRepo.addChatroom(chatroomDetail)
         }

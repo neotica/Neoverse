@@ -1,7 +1,6 @@
 package id.neotica.neoverse.presentation.screen.friend.profile
 
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -10,7 +9,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import id.neotica.neoverse.data.model.Friends
 import id.neotica.neoverse.data.model.User
 import id.neotica.neoverse.data.remote.ApiResult
 import id.neotica.neoverse.presentation.screen.friend.FriendViewModel
@@ -47,14 +45,16 @@ fun FriendProfileView(
         LoadingIndicatorBool(isLoading = isLoading) {
             ImageCoil(user?.imageUrl.toString())
             Text(text = user?.username.toString())
-            val friends = Friends(
-                userId,
-                user?.username.toString(),
-                user?.imageUrl.toString()
+            val friends = User(
+                userId = userId,
+                username = user?.username.toString(),
+                userEmail = user?.userEmail.toString(),
+                status = user?.status.toString(),
+                imageUrl = user?.imageUrl.toString()
             )
-            Button(onClick = { viewModel.addFriend(friends) }) {
+            /*Button(onClick = { viewModel.addFriend(friends) }) {
                 Text("Add Friend!")
-            }
+            }*/
         }
     }
 }

@@ -9,8 +9,8 @@ import com.google.firebase.auth.auth
 import com.google.firebase.database.database
 import id.neotica.neoverse.data.model.Message
 import id.neotica.neoverse.data.model.ParentNeo
-import id.neotica.neoverse.domain.ChatRepository
-import id.neotica.neoverse.domain.UserRepository
+import id.neotica.neoverse.domain.remote.ChatRepository
+import id.neotica.neoverse.domain.remote.UserRepository
 import id.neotica.neoverse.presentation.navigation.Screen
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
