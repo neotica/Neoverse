@@ -1,8 +1,9 @@
 package id.neotica.neoverse.di
 
 import androidx.room.Room
-import id.neotica.neoverse.data.local.FriendTable
-import id.neotica.neoverse.data.local.repo.FriendRoomRepositoryImpl
+import id.neotica.neoverse.data.local.MainDatabase
+import id.neotica.neoverse.data.local.repo.CurrentUserRepositoryImpl
+import id.neotica.neoverse.data.local.repo.FriendDaoRepositoryImpl
 import id.neotica.neoverse.data.repo.AuthRepositoryImpl
 import id.neotica.neoverse.data.repo.ChatRepositoryImpl
 import id.neotica.neoverse.data.repo.GameRepositoryImpl
@@ -11,7 +12,7 @@ import id.neotica.neoverse.domain.remote.AuthRepository
 import id.neotica.neoverse.domain.remote.ChatRepository
 import id.neotica.neoverse.domain.remote.GameRepository
 import id.neotica.neoverse.domain.remote.UserRepository
-import id.neotica.neoverse.domain.local.FriendRoomRepository
+import id.neotica.neoverse.domain.local.FriendDaoRepository
 import id.neotica.neoverse.presentation.screen.auth.login.LoginViewModel
 import id.neotica.neoverse.presentation.screen.auth.register.RegisterViewModel
 import id.neotica.neoverse.presentation.screen.auth.verify.VerifyEmailViewModel
@@ -28,11 +29,12 @@ import org.koin.dsl.bind
 import org.koin.dsl.module
 
 val databaseModule = module {
-    factory { get<FriendTable>().friendDao() }
+    factory { get<MainDatabase>().friendDao() }
+    factory { get<MainDatabase>().currentUserDao() }
     single {
         Room.databaseBuilder(
             context = androidContext(),
-            klass = FriendTable::class.java,
+            klass = MainDatabase::class.java,
             name = "Friend.db"
         )
             .fallbackToDestructiveMigration()
@@ -45,7 +47,8 @@ val repositoryModules = module {
     singleOf(::UserRepositoryImpl) { bind<UserRepository>()}
     singleOf(::ChatRepositoryImpl) bind ChatRepository::class
     singleOf(::GameRepositoryImpl) bind GameRepository::class
-    singleOf(::FriendRoomRepositoryImpl) bind FriendRoomRepository::class
+    singleOf(::FriendDaoRepositoryImpl) bind FriendDaoRepository::class
+    singleOf(::CurrentUserRepositoryImpl)
 }
 
 val viewModelModules = module {

@@ -1,4 +1,4 @@
-package id.neotica.neoverse.data.local
+package id.neotica.neoverse.data.local.friend
 
 import androidx.room.Dao
 import androidx.room.Insert
@@ -19,4 +19,7 @@ interface FriendDao {
 
     @Query("delete from friend where username = :username")
     fun unfriend(username: String)
+
+    @Query("delete from friend")
+    fun clearFriend()
 }

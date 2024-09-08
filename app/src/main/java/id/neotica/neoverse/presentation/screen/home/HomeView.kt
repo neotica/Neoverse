@@ -33,7 +33,7 @@ import org.koin.androidx.compose.koinViewModel
 fun HomeView(
     navController: NavController,
     paddingValues: PaddingValues,
-    viewModel: HomeViewModel = koinViewModel()
+    viewModel: HomeViewModel = koinViewModel(),
 ) {
     val isPressed = remember { mutableStateOf(false) }
     var userList by remember { mutableStateOf<List<User>>(emptyList()) }

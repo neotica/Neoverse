@@ -93,8 +93,8 @@ fun SearchUser(
                                         horizontalAlignment = Alignment.CenterHorizontally,
                                     ) {
                                         ProfileCard(
-                                            name = user.username.toString(),
-                                            image = user.imageUrl.toString(),
+                                            name = user.username,
+                                            image = user.imageUrl,
                                             size = 200.dp,
                                             content = {
                                                 NeoButton(
@@ -108,18 +108,10 @@ fun SearchUser(
                                                         status = user.status,
                                                         imageUrl = user.imageUrl
                                                     )
-                                                    val friendsDummy = User(
-                                                        userId = "dfsdff",
-                                                        username =" user.username.toString()",
-                                                        userEmail = "dsdffsd",
-                                                        status = "fssdv",
-                                                        imageUrl = "dsjknkcjd"
-                                                    )
 
                                                     if (friends.userId != viewModel.currentUserId()) {
                                                         viewModel.viewModelScope.launch {
                                                             viewModel.addFriend(friends)
-                                                            Log.d("friendUI", friendsDummy.toString())
                                                         }
                                                     } else {
                                                         navController.navigate(RootScreen.AuthNav)
@@ -136,7 +128,12 @@ fun SearchUser(
                 Column(
                     Modifier.padding(horizontal = 4.dp)
                 ) {
-                    NeoTextField(value = username)
+                    NeoTextField(
+                        value = username,
+                        onValueChange = {
+                            viewModel.searchFriend(username.value.trim())
+                        }
+                    )
                     NeoButton(
                         text = "Search",
                         maxWidth = true

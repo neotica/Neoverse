@@ -1,6 +1,7 @@
 package id.neotica.neoverse.domain.utils
 
-import id.neotica.neoverse.data.local.FriendEntity
+import id.neotica.neoverse.data.local.friend.FriendEntity
+import id.neotica.neoverse.data.local.user.CurrentUserEntity
 import id.neotica.neoverse.data.model.User
 
 object Mapper {
@@ -34,4 +35,20 @@ object Mapper {
         status = input.status,
         imageUrl = input.imageUrl
     )
+
+    fun userResponseToEntity(input: User) = CurrentUserEntity(
+        id = input.userId,
+        username = input.username,
+        email = input.userEmail,
+        status = input.status,
+        imageUrl = input.imageUrl
+    )
+
+    /*fun userEntityToResponse(input: CurrentUserEntity) = User(
+        userId = input.id,
+        username = input.username,
+        userEmail = input.email,
+        status = input.status,
+        imageUrl = input.imageUrl
+    )*/
 }

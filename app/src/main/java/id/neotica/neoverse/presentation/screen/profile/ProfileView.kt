@@ -19,8 +19,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
-import id.neotica.neoverse.data.model.User
+import id.neotica.neoverse.data.local.user.CurrentUserEntity
 import id.neotica.neoverse.data.remote.ApiResult
 import id.neotica.neoverse.presentation.navigation.RootScreen
 import id.neotica.neoverse.presentation.navigation.Screen
@@ -30,6 +31,7 @@ import id.neotica.neoverse.presentation.ui.components.LoadingIndicatorBool
 import id.neotica.neoverse.presentation.ui.components.NeoButton
 import id.neotica.neoverse.presentation.ui.components.SlideInto
 import id.neotica.neoverse.presentation.ui.theme.DarkPrimary
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -38,9 +40,10 @@ fun ProfileView(
     paddingValues: PaddingValues,
     viewModel: ProfileViewModel = koinViewModel()
 ) {
-    var user by remember { mutableStateOf<User?>(null) }
+    var user by remember { mutableStateOf<CurrentUserEntity?>(null) }
     var isLoading by remember { mutableStateOf(false) }
     var accountSettings by remember { mutableStateOf(false) }
+    var isUserEmpty by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         if (!viewModel.isLoggedIn()) navController.navigate(Screen.LoginScreen) {
@@ -49,20 +52,33 @@ fun ProfileView(
             }
             launchSingleTop
         } else {
-            viewModel.getUser()
+            viewModel.viewModelScope.launch {
+                val currentUser = viewModel.getUserRoom()
+                currentUser.collect {
+                    if (!it.isEmpty()) {
+                        user = it[0]
+                    } else {
+                        viewModel.getUser()
+                        isUserEmpty = true
+                    }
+                }
+            }
         }
     }
 
-    LaunchedEffect(Unit) {
-        viewModel.user.collect { result ->
-            when(result) {
-                is ApiResult.Loading -> isLoading = true
-                is ApiResult.Success -> {
-                    isLoading = false
-                    user = result.data
-                }
-                is ApiResult.Error -> {
-                    isLoading = false
+    LaunchedEffect(isUserEmpty) {
+        if (isUserEmpty) {
+            viewModel.user.collect { result ->
+                when (result) {
+                    is ApiResult.Loading -> isLoading = true
+                    is ApiResult.Success -> {
+                        isLoading = false
+                        viewModel.saveUserRoom(result.data!!)
+                    }
+
+                    is ApiResult.Error -> {
+                        isLoading = false
+                    }
                 }
             }
         }
@@ -79,9 +95,9 @@ fun ProfileView(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 user?.let {
-                    ImageCoil(url = it.imageUrl.toString())
-                    Text(it.username.toString())
-                    Text(it.userEmail.toString())
+                    ImageCoil(url = it.imageUrl)
+                    Text(it.username)
+                    Text(it.email)
                 }
 
                 Spacer(
@@ -120,6 +136,12 @@ fun ProfileView(
                         true
                     ) {
                         viewModel.logout()
+                        navController.navigate(RootScreen.HomeNav) {
+                            popUpTo(RootScreen.HomeNav) {
+                                inclusive = true
+                            }
+                            launchSingleTop
+                        }
                     }
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -147,8 +169,4 @@ fun ProfileView(
             }
         }
     }
-}
-
-fun navigateAuth(navController: NavController) {
-    navController.navigate(RootScreen.HomeNav)
 }

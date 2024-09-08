@@ -9,7 +9,7 @@ import id.neotica.neoverse.data.model.User
 import id.neotica.neoverse.data.remote.ApiResult
 import id.neotica.neoverse.domain.remote.ChatRepository
 import id.neotica.neoverse.domain.remote.UserRepository
-import id.neotica.neoverse.domain.local.FriendRoomRepository
+import id.neotica.neoverse.domain.local.FriendDaoRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 class FriendViewModel(
     private val userRepo: UserRepository,
     private val chatRepo: ChatRepository,
-    private val databaseRepo: FriendRoomRepository
+    private val databaseRepo: FriendDaoRepository
 ): ViewModel() {
 
     private var _userList: MutableStateFlow<ApiResult<List<User>>> = MutableStateFlow(ApiResult.Loading())
@@ -52,8 +52,6 @@ class FriendViewModel(
     }
 
     fun unFriend(friend: User) = viewModelScope.launch {
-        //  Create mapper from FriendEntity to User.
-        //  friend parameter should be FriendEntity.
         userRepo.unfriend(friend)
         databaseRepo.unfriend(friend.username)
     }
@@ -86,11 +84,11 @@ class FriendViewModel(
         Log.d("friendvm", currentUserName().toString())
         currentUserName()?.let {
             val chatroomDetail = ChatRoom(
-                name = currentUserId()+user.userId.toString(),
+                name = currentUserId()+ user.userId,
                 user1 = it,
                 user2 = user2,
                 user1id = currentUserId(),
-                user2id = user.userId.toString()
+                user2id = user.userId
             )
             chatRepo.addChatroom(chatroomDetail)
         }
