@@ -1,6 +1,6 @@
 package id.neotica.neoverse.domain.remote
 
-import id.neotica.neoverse.data.model.Games
+import id.neotica.neoverse.data.remote.model.Games
 import id.neotica.neoverse.data.remote.ApiResult
 
 interface GameRepository {

@@ -4,15 +4,16 @@ import androidx.room.Room
 import id.neotica.neoverse.data.local.MainDatabase
 import id.neotica.neoverse.data.local.repo.CurrentUserRepositoryImpl
 import id.neotica.neoverse.data.local.repo.FriendDaoRepositoryImpl
-import id.neotica.neoverse.data.repo.AuthRepositoryImpl
-import id.neotica.neoverse.data.repo.ChatRepositoryImpl
-import id.neotica.neoverse.data.repo.GameRepositoryImpl
-import id.neotica.neoverse.data.repo.UserRepositoryImpl
+import id.neotica.neoverse.data.remote.repo.AuthRepositoryImpl
+import id.neotica.neoverse.data.remote.repo.ChatRepositoryImpl
+import id.neotica.neoverse.data.remote.repo.GameRepositoryImpl
+import id.neotica.neoverse.data.remote.repo.UserRepositoryImpl
+import id.neotica.neoverse.domain.local.CurrentUserRepository
+import id.neotica.neoverse.domain.local.FriendDaoRepository
 import id.neotica.neoverse.domain.remote.AuthRepository
 import id.neotica.neoverse.domain.remote.ChatRepository
 import id.neotica.neoverse.domain.remote.GameRepository
 import id.neotica.neoverse.domain.remote.UserRepository
-import id.neotica.neoverse.domain.local.FriendDaoRepository
 import id.neotica.neoverse.presentation.screen.auth.login.LoginViewModel
 import id.neotica.neoverse.presentation.screen.auth.register.RegisterViewModel
 import id.neotica.neoverse.presentation.screen.auth.verify.VerifyEmailViewModel
@@ -48,7 +49,7 @@ val repositoryModules = module {
     singleOf(::ChatRepositoryImpl) bind ChatRepository::class
     singleOf(::GameRepositoryImpl) bind GameRepository::class
     singleOf(::FriendDaoRepositoryImpl) bind FriendDaoRepository::class
-    singleOf(::CurrentUserRepositoryImpl)
+    singleOf(::CurrentUserRepositoryImpl) bind CurrentUserRepository::class
 }
 
 val viewModelModules = module {

@@ -1,6 +1,6 @@
 package id.neotica.neoverse.domain.remote
 
-import id.neotica.neoverse.data.model.User
+import id.neotica.neoverse.data.remote.model.User
 import id.neotica.neoverse.data.remote.ApiResult
 import kotlinx.coroutines.flow.Flow
 

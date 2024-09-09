@@ -1,9 +1,9 @@
 package id.neotica.neoverse.data.local.repo
 
 import android.util.Log
-import id.neotica.neoverse.data.local.friend.FriendDao
-import id.neotica.neoverse.data.local.friend.FriendEntity
-import id.neotica.neoverse.data.model.User
+import id.neotica.neoverse.data.local.dao.FriendDao
+import id.neotica.neoverse.data.local.entity.FriendEntity
+import id.neotica.neoverse.data.remote.model.User
 import id.neotica.neoverse.domain.local.FriendDaoRepository
 import id.neotica.neoverse.domain.utils.Mapper
 import kotlinx.coroutines.Dispatchers

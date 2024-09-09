@@ -1,8 +1,8 @@
 package id.neotica.neoverse.domain.remote
 
-import id.neotica.neoverse.data.model.ChatRoom
-import id.neotica.neoverse.data.model.Message
-import id.neotica.neoverse.data.model.ParentNeo
+import id.neotica.neoverse.data.remote.model.ChatRoom
+import id.neotica.neoverse.data.remote.model.Message
+import id.neotica.neoverse.data.remote.model.ParentNeo
 import id.neotica.neoverse.data.remote.ApiResult
 import kotlinx.coroutines.flow.Flow
 

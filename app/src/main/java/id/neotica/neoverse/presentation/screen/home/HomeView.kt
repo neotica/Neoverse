@@ -20,9 +20,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import id.neotica.neoverse.data.model.ChatRoom
-import id.neotica.neoverse.data.model.ParentNeo
-import id.neotica.neoverse.data.model.User
+import id.neotica.neoverse.data.remote.model.ChatRoom
+import id.neotica.neoverse.data.remote.model.ParentNeo
+import id.neotica.neoverse.data.remote.model.User
 import id.neotica.neoverse.data.remote.ApiResult
 import id.neotica.neoverse.presentation.navigation.Screen
 import id.neotica.neoverse.presentation.ui.components.BasicScaffold

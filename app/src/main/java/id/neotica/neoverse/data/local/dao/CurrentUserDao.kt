@@ -1,9 +1,10 @@
-package id.neotica.neoverse.data.local.user
+package id.neotica.neoverse.data.local.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import id.neotica.neoverse.data.local.entity.CurrentUserEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -12,10 +13,7 @@ interface CurrentUserDao {
     suspend fun saveCurrentUser(user: CurrentUserEntity)
 
     @Query("select * from currentuser limit 1")
-    fun currentUser(): Flow<CurrentUserEntity>
-
-    @Query("select * from currentuser limit 1")
-    fun currentUser2(): Flow<List<CurrentUserEntity>>
+    fun currentUser(): Flow<List<CurrentUserEntity>>
 
     @Query("delete from currentuser")
     fun clearUser()

@@ -1,4 +1,4 @@
-package id.neotica.neoverse.data.local.user
+package id.neotica.neoverse.data.local.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
@@ -8,13 +8,13 @@ import androidx.room.PrimaryKey
 class CurrentUserEntity (
     @field:ColumnInfo("id")
     @field:PrimaryKey
-    val id: String,
+    val id: String = "",
     @field:ColumnInfo("username")
-    val username: String,
+    val username: String = "",
     @field:ColumnInfo("email")
-    val email: String,
+    val email: String = "",
     @field:ColumnInfo("status")
-    val status: String,
+    val status: String = "",
     @field:ColumnInfo("imageUrl")
-    val imageUrl: String
+    val imageUrl: String = ""
 )

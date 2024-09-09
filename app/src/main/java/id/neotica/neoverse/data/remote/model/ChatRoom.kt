@@ -1,4 +1,4 @@
-package id.neotica.neoverse.data.model
+package id.neotica.neoverse.data.remote.model
 
 data class ChatRoom(
     val id: String = "",

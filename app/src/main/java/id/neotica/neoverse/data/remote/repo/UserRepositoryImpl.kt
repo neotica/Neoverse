@@ -1,12 +1,12 @@
-package id.neotica.neoverse.data.repo
+package id.neotica.neoverse.data.remote.repo
 
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.database
 import com.google.firebase.firestore.FirebaseFirestore
-import id.neotica.neoverse.data.model.ChatRoom
-import id.neotica.neoverse.data.model.ParentNeo
-import id.neotica.neoverse.data.model.User
+import id.neotica.neoverse.data.remote.model.ChatRoom
+import id.neotica.neoverse.data.remote.model.ParentNeo
+import id.neotica.neoverse.data.remote.model.User
 import id.neotica.neoverse.data.remote.ApiResult
 import id.neotica.neoverse.domain.remote.UserRepository
 import kotlinx.coroutines.flow.Flow

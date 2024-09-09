@@ -17,9 +17,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import id.neotica.neoverse.data.local.friend.FriendEntity
-import id.neotica.neoverse.data.model.ChatRoom
-import id.neotica.neoverse.data.model.User
+import id.neotica.neoverse.data.local.entity.FriendEntity
+import id.neotica.neoverse.data.remote.model.ChatRoom
+import id.neotica.neoverse.data.remote.model.User
 import id.neotica.neoverse.data.remote.ApiResult
 import id.neotica.neoverse.domain.utils.Mapper
 import id.neotica.neoverse.presentation.navigation.RootScreen

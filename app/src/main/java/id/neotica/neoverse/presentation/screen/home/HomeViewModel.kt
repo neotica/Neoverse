@@ -3,9 +3,9 @@ package id.neotica.neoverse.presentation.screen.home
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import id.neotica.neoverse.data.model.ChatRoom
-import id.neotica.neoverse.data.model.ParentNeo
-import id.neotica.neoverse.data.model.User
+import id.neotica.neoverse.data.remote.model.ChatRoom
+import id.neotica.neoverse.data.remote.model.ParentNeo
+import id.neotica.neoverse.data.remote.model.User
 import id.neotica.neoverse.data.remote.ApiResult
 import id.neotica.neoverse.domain.remote.ChatRepository
 import id.neotica.neoverse.domain.remote.UserRepository

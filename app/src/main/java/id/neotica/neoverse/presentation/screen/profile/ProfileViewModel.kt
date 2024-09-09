@@ -3,7 +3,8 @@ package id.neotica.neoverse.presentation.screen.profile
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import id.neotica.neoverse.data.local.repo.CurrentUserRepositoryImpl
-import id.neotica.neoverse.data.model.User
+import id.neotica.neoverse.data.local.entity.CurrentUserEntity
+import id.neotica.neoverse.data.remote.model.User
 import id.neotica.neoverse.data.remote.ApiResult
 import id.neotica.neoverse.domain.local.FriendDaoRepository
 import id.neotica.neoverse.domain.remote.AuthRepository
@@ -18,6 +19,15 @@ class ProfileViewModel(
     private val friendDatabase: FriendDaoRepository,
     private val currentUserDatabase: CurrentUserRepositoryImpl
 ): ViewModel() {
+
+    private var _user: MutableStateFlow<ApiResult<User?>> = MutableStateFlow(ApiResult.Loading())
+
+    private var _currentUser: MutableStateFlow<ApiResult<CurrentUserEntity>?> = MutableStateFlow(ApiResult.Loading())
+    val currentUser = _currentUser.asStateFlow()
+
+    init {
+        getUserRoomInstance()
+    }
 
     fun isLoggedIn(): Boolean {
         return userRepo.isLoggedIn()
@@ -35,18 +45,20 @@ class ProfileViewModel(
         currentUserDatabase.clearCurrent()
     }
 
-    private var _user: MutableStateFlow<ApiResult<User?>> = MutableStateFlow(ApiResult.Loading())
-    val user = _user.asStateFlow()
-
-    fun getUser() = viewModelScope.launch {
+    private fun getUser() = viewModelScope.launch {
         val user = userRepo.getUserDetail(userRepo.getUserId())
         _user.value = ApiResult.Loading()
         _user.value = user
+        user.data?.let { currentUserDatabase.saveUser(it) }
     }
 
-    fun saveUserRoom(user: User) = viewModelScope.launch {
-        currentUserDatabase.saveUser(user)
+    private fun getUserRoomInstance() = viewModelScope.launch {
+        currentUserDatabase.getUser().collect {
+            if (it.isNotEmpty()) {
+                _currentUser.value = ApiResult.Success(it[0])
+            } else {
+                getUser()
+            }
+        }
     }
-
-    fun getUserRoom() = currentUserDatabase.getUser()
 }

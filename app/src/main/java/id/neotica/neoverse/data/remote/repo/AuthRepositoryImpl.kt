@@ -1,11 +1,11 @@
-package id.neotica.neoverse.data.repo
+package id.neotica.neoverse.data.remote.repo
 
 import android.util.Log
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.database
 import com.google.firebase.firestore.FirebaseFirestore
-import id.neotica.neoverse.data.model.User
+import id.neotica.neoverse.data.remote.model.User
 import id.neotica.neoverse.data.remote.ApiResult
 import id.neotica.neoverse.domain.remote.AuthRepository
 import kotlinx.coroutines.Dispatchers

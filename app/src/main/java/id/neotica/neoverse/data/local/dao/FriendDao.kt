@@ -1,9 +1,10 @@
-package id.neotica.neoverse.data.local.friend
+package id.neotica.neoverse.data.local.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import id.neotica.neoverse.data.local.entity.FriendEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao

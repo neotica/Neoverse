@@ -1,4 +1,4 @@
-package id.neotica.neoverse.data.local.friend
+package id.neotica.neoverse.data.local.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

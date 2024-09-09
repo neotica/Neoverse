@@ -1,8 +1,8 @@
-package id.neotica.neoverse.data.repo
+package id.neotica.neoverse.data.remote.repo
 
 import com.google.firebase.Firebase
 import com.google.firebase.database.database
-import id.neotica.neoverse.data.model.Games
+import id.neotica.neoverse.data.remote.model.Games
 import id.neotica.neoverse.data.remote.ApiResult
 import id.neotica.neoverse.domain.remote.GameRepository
 import kotlinx.coroutines.tasks.await

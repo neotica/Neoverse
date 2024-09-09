@@ -3,7 +3,7 @@ package id.neotica.neoverse.presentation.screen.game
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import id.neotica.neoverse.data.model.Games
+import id.neotica.neoverse.data.remote.model.Games
 import id.neotica.neoverse.data.remote.ApiResult
 import id.neotica.neoverse.domain.remote.GameRepository
 import id.neotica.neoverse.domain.remote.UserRepository

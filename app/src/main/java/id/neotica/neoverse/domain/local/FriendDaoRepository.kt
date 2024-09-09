@@ -1,7 +1,7 @@
 package id.neotica.neoverse.domain.local
 
-import id.neotica.neoverse.data.local.friend.FriendEntity
-import id.neotica.neoverse.data.model.User
+import id.neotica.neoverse.data.local.entity.FriendEntity
+import id.neotica.neoverse.data.remote.model.User
 import kotlinx.coroutines.flow.Flow
 
 interface FriendDaoRepository {

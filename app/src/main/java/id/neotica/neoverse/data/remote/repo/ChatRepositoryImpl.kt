@@ -1,13 +1,13 @@
-package id.neotica.neoverse.data.repo
+package id.neotica.neoverse.data.remote.repo
 
 import com.google.firebase.Firebase
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
-import id.neotica.neoverse.data.model.ChatRoom
-import id.neotica.neoverse.data.model.Message
-import id.neotica.neoverse.data.model.ParentNeo
+import id.neotica.neoverse.data.remote.model.ChatRoom
+import id.neotica.neoverse.data.remote.model.Message
+import id.neotica.neoverse.data.remote.model.ParentNeo
 import id.neotica.neoverse.data.remote.ApiResult
 import id.neotica.neoverse.domain.remote.ChatRepository
 import kotlinx.coroutines.channels.awaitClose
