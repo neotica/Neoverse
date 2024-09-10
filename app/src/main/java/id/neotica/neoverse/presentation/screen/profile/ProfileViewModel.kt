@@ -2,10 +2,10 @@ package id.neotica.neoverse.presentation.screen.profile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import id.neotica.neoverse.data.local.repo.CurrentUserRepositoryImpl
 import id.neotica.neoverse.data.local.entity.CurrentUserEntity
 import id.neotica.neoverse.data.remote.model.User
 import id.neotica.neoverse.data.remote.ApiResult
+import id.neotica.neoverse.domain.local.CurrentUserRepository
 import id.neotica.neoverse.domain.local.FriendDaoRepository
 import id.neotica.neoverse.domain.remote.AuthRepository
 import id.neotica.neoverse.domain.remote.UserRepository
@@ -17,7 +17,7 @@ class ProfileViewModel(
     private val authRepo: AuthRepository,
     private val userRepo: UserRepository,
     private val friendDatabase: FriendDaoRepository,
-    private val currentUserDatabase: CurrentUserRepositoryImpl
+    private val currentUserDatabase: CurrentUserRepository
 ): ViewModel() {
 
     private var _user: MutableStateFlow<ApiResult<User?>> = MutableStateFlow(ApiResult.Loading())
@@ -35,8 +35,8 @@ class ProfileViewModel(
 
     fun logout() = viewModelScope.launch {
         authRepo.logout()
-        friendDatabase.clearFriends()
         currentUserDatabase.clearCurrent()
+        friendDatabase.clearFriends()
     }
 
     fun deleteAccount() = viewModelScope.launch {

@@ -3,13 +3,15 @@ package id.neotica.neoverse.presentation.screen.friend
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import id.neotica.neoverse.data.local.entity.CurrentUserEntity
+import id.neotica.neoverse.data.remote.ApiResult
 import id.neotica.neoverse.data.remote.model.ChatRoom
 import id.neotica.neoverse.data.remote.model.ParentNeo
 import id.neotica.neoverse.data.remote.model.User
-import id.neotica.neoverse.data.remote.ApiResult
+import id.neotica.neoverse.domain.local.CurrentUserRepository
+import id.neotica.neoverse.domain.local.FriendDaoRepository
 import id.neotica.neoverse.domain.remote.ChatRepository
 import id.neotica.neoverse.domain.remote.UserRepository
-import id.neotica.neoverse.domain.local.FriendDaoRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -17,7 +19,8 @@ import kotlinx.coroutines.launch
 class FriendViewModel(
     private val userRepo: UserRepository,
     private val chatRepo: ChatRepository,
-    private val databaseRepo: FriendDaoRepository
+    private val databaseRepo: FriendDaoRepository,
+    private val userDatabase: CurrentUserRepository
 ): ViewModel() {
 
     private var _userList: MutableStateFlow<ApiResult<List<User>>> = MutableStateFlow(ApiResult.Loading())
@@ -27,13 +30,37 @@ class FriendViewModel(
     val chatroom = _chatroom.asStateFlow()
 
     private var _user: MutableStateFlow<ApiResult<User?>> = MutableStateFlow(ApiResult.Loading())
-    val user = _user.asStateFlow()
+
+    private var _userEntity: MutableStateFlow<ApiResult<CurrentUserEntity?>> = MutableStateFlow(ApiResult.Loading())
+    val user = _userEntity.asStateFlow()
 
     private var _friendList: MutableStateFlow<ApiResult<List<User>>> = MutableStateFlow(ApiResult.Loading())
     val friendList = _friendList.asStateFlow()
 
-    fun currentUserId(): String = userRepo.getUserId()
-    fun currentUserName(): String? = _user.value.data?.username
+    fun currentUserId(): String = _userEntity.value.data?.id ?: ""
+    fun currentUserName(): String = _userEntity.value.data?.username ?: ""
+
+    init {
+        getUser()
+    }
+
+    private fun getUser() = viewModelScope.launch {
+        val user = userRepo.getUserDetail(userRepo.getUserId())
+        val userData = userDatabase.getUser()
+        userData.collect {
+            if (it.isEmpty()) {
+                _user.value = user
+                _user.value.data?.let { remoteUser ->
+//                    userDatabase.saveUser(remoteUser)
+                }
+                Log.d("getUser fvm", "remote data")
+            } else {
+                Log.d("getUser fvm", "cached data")
+                _userEntity.value = ApiResult.Success(it[0])
+            }
+        }
+        Log.d("_user", "_user: ${_user.value}")
+    }
 
     fun isLoggedIn(): Boolean {
         return userRepo.isLoggedIn()
@@ -62,12 +89,6 @@ class FriendViewModel(
         _userList.value = user
     }
 
-    fun getUser(userId: String = currentUserId()) = viewModelScope.launch {
-        val user = userRepo.getUserDetail(userId)
-        _user.value = ApiResult.Loading()
-        _user.value = user
-    }
-
     fun getFriends() = viewModelScope.launch {
         userRepo.getFriends().collect {
             _friendList.value = it
@@ -81,8 +102,7 @@ class FriendViewModel(
     }
 
     fun addChatroom(user2: String, user: User) = viewModelScope.launch {
-        Log.d("friendvm", currentUserName().toString())
-        currentUserName()?.let {
+        currentUserName().let {
             val chatroomDetail = ChatRoom(
                 name = currentUserId()+ user.userId,
                 user1 = it,

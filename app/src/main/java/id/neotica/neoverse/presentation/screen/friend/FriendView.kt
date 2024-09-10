@@ -42,7 +42,6 @@ fun FriendView(
     var friendList2 by remember { mutableStateOf<List<User>>(emptyList()) }
     var isLoading by remember { mutableStateOf(false) }
     var isLoadingChats by remember { mutableStateOf(false) }
-    var currentuser by remember { mutableStateOf<User?>(null) }
     var isFriendEmpty by remember { mutableStateOf(false) }
 
     LaunchedEffect(key1 = true) {
@@ -57,27 +56,10 @@ fun FriendView(
                     result.data?.forEach { chatResult ->
                         list.add(chatResult.value)
                     }
-
                     chatrooms.value = list
                 }
                 is ApiResult.Error -> {
                     isLoadingChats = false
-                }
-            }
-        }
-    }
-
-    LaunchedEffect(key1 = true) {
-        viewModel.getUser()
-        viewModel.user.collect { result ->
-            when(result) {
-                is ApiResult.Loading -> isLoading = true
-                is ApiResult.Success -> {
-                    isLoading = false
-                    currentuser = result.data
-                }
-                is ApiResult.Error -> {
-                    isLoading = false
                 }
             }
         }

@@ -27,13 +27,13 @@ fun FriendProfileView(
     var isLoading by remember { mutableStateOf(false) }
 
     LaunchedEffect(key1 = true) {
-        viewModel.getUser(userId)
+//        viewModel.getUser(userId)
         viewModel.user.collect { result ->
             when(result) {
                 is ApiResult.Loading -> isLoading = true
                 is ApiResult.Success -> {
                     isLoading = false
-                    user = result.data
+//                    user = result.data
                 }
                 is ApiResult.Error -> {
                     isLoading = false

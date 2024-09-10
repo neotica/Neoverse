@@ -16,5 +16,5 @@ interface CurrentUserDao {
     fun currentUser(): Flow<List<CurrentUserEntity>>
 
     @Query("delete from currentuser")
-    fun clearUser()
+    suspend fun clearUser()
 }
