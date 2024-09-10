@@ -51,15 +51,11 @@ class FriendViewModel(
             if (it.isEmpty()) {
                 _user.value = user
                 _user.value.data?.let { remoteUser ->
-//                    userDatabase.saveUser(remoteUser)
                 }
-                Log.d("getUser fvm", "remote data")
             } else {
-                Log.d("getUser fvm", "cached data")
                 _userEntity.value = ApiResult.Success(it[0])
             }
         }
-        Log.d("_user", "_user: ${_user.value}")
     }
 
     fun isLoggedIn(): Boolean {
@@ -112,7 +108,6 @@ class FriendViewModel(
             )
             chatRepo.addChatroom(chatroomDetail)
         }
-
     }
 
     fun getRoomFiltered(user: String, chatroom: List<ChatRoom>): ChatRoom? {

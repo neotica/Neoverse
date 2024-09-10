@@ -20,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import id.neotica.neoverse.data.local.entity.CurrentUserEntity
 import id.neotica.neoverse.data.remote.model.ChatRoom
 import id.neotica.neoverse.data.remote.model.ParentNeo
 import id.neotica.neoverse.data.remote.model.User
@@ -42,7 +43,7 @@ fun HomeView(
 
     var isLoading by remember { mutableStateOf(false) }
     var isLoadingChats by remember { mutableStateOf(false) }
-    var currentuser by remember { mutableStateOf<User?>(null) }
+    var currentuser by remember { mutableStateOf<CurrentUserEntity?>(null) }
 
     LaunchedEffect(isPressed.value) {
         viewModel.userList.collect { result ->
@@ -61,11 +62,10 @@ fun HomeView(
         }
     }
 
-    LaunchedEffect(key1 = true) {
+    LaunchedEffect(Unit) {
         if (viewModel.isLoggedIn()) {
             if (!viewModel.isUserVerified()) navController.navigate(Screen.VerifyEmailScreen)
         }
-        viewModel.getUser()
         viewModel.user.collect { result ->
             when(result) {
                 is ApiResult.Loading -> isLoading = true
@@ -83,15 +83,15 @@ fun HomeView(
     LaunchedEffect(key1 = true) {
         viewModel.getChatroom()
         viewModel.chatroom.collect { result ->
-            Log.d("chatroomcollect", result.data.toString())
+//            Log.d("chatroomcollect", result.data.toString())
             when(result) {
                 is ApiResult.Loading -> {
-                    Log.d("chatroomcollect", "loading")
+//                    Log.d("chatroomcollect", "loading")
 
                     isLoadingChats = true
                 }
                 is ApiResult.Success -> {
-                    Log.d("chatroomcollect", "scs")
+//                    Log.d("chatroomcollect", "scs")
 
                     isLoadingChats = false
                     val list = mutableListOf<ChatRoom>()
@@ -102,7 +102,7 @@ fun HomeView(
                     }
                 }
                 is ApiResult.Error -> {
-                    Log.d("chatroomcollect", "error")
+//                    Log.d("chatroomcollect", "error")
 
                     isLoadingChats = false
                 }
@@ -175,10 +175,11 @@ fun HomeView(
                                 ) {
                                     currentuser?.let {
                                         viewModel.readMessage(channelItemParent.key, channelItemParent.value, it.username!!)
-                                        navController.navigate(Screen.Chat(
-                                            chatId = channelItemParent.value.name,
-                                            user2 = chatName,
-                                        )
+                                        navController.navigate(
+                                            Screen.Chat(
+                                                chatId = channelItemParent.value.name,
+                                                user2 = chatName,
+                                            )
                                         )
                                     }
                                 }
@@ -188,8 +189,6 @@ fun HomeView(
                 }
             }
         }
-
-        viewModel.getUsers()
 
 //        NeoButton("Show user") { navController.navigate(Screen.FriendScreen)}
 //        NeoButton("Game") { navController.navigate(RootScreen.GameNav) }

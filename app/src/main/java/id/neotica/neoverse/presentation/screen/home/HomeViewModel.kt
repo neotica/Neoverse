@@ -3,12 +3,15 @@ package id.neotica.neoverse.presentation.screen.home
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import id.neotica.neoverse.data.local.entity.CurrentUserEntity
 import id.neotica.neoverse.data.remote.model.ChatRoom
 import id.neotica.neoverse.data.remote.model.ParentNeo
 import id.neotica.neoverse.data.remote.model.User
 import id.neotica.neoverse.data.remote.ApiResult
+import id.neotica.neoverse.domain.local.CurrentUserRepository
 import id.neotica.neoverse.domain.remote.ChatRepository
 import id.neotica.neoverse.domain.remote.UserRepository
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -16,19 +19,26 @@ import kotlinx.coroutines.launch
 class HomeViewModel(
     private val userRepo: UserRepository,
     private val chatRepo: ChatRepository,
+    private val userDatabase: CurrentUserRepository
 ): ViewModel() {
 
     private var _userList: MutableStateFlow<ApiResult<List<User>>> = MutableStateFlow(ApiResult.Loading())
     val userList = _userList.asStateFlow()
 
     private var _user: MutableStateFlow<ApiResult<User?>> = MutableStateFlow(ApiResult.Loading())
-    val user = _user.asStateFlow()
+
+    private var _userEntity: MutableStateFlow<ApiResult<CurrentUserEntity?>> = MutableStateFlow(ApiResult.Loading())
+    val user = _userEntity.asStateFlow()
 
     private val _chatroom = MutableStateFlow<ApiResult<List<ParentNeo<ChatRoom>>>>(ApiResult.Loading())
     val chatroom = _chatroom.asStateFlow()
 
     private fun currentUserId(): String = userRepo.getUserId()
-    private fun currentUserName(): String? = _user.value.data?.username
+    fun currentUserName(): String = _userEntity.value.data?.username ?: ""
+
+    init {
+        getUser2()
+    }
 
     fun isLoggedIn(): Boolean {
         return userRepo.isLoggedIn()
@@ -36,10 +46,21 @@ class HomeViewModel(
 
     fun isUserVerified() = userRepo.isUserVerified()
 
-    fun getUser() = viewModelScope.launch {
-        val user = userRepo.getUserDetail(currentUserId())
-        _user.value = ApiResult.Loading()
-        _user.value = user
+    private fun getUser2() = viewModelScope.launch {
+        val user = userRepo.getUserDetail(userRepo.getUserId())
+        val userData = userDatabase.getUser()
+        if (isLoggedIn()) {
+            userData.collect {
+                if (it.isEmpty()) {
+                    _user.value = user
+                    _user.value.data?.let { remoteUser ->
+                        userDatabase.saveUser(remoteUser)
+                    }
+                } else {
+                    _userEntity.value = ApiResult.Success(it[0])
+                }
+            }
+        }
     }
 
     fun getUsers() = viewModelScope.launch {
