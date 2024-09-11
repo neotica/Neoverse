@@ -11,7 +11,6 @@ import id.neotica.neoverse.data.remote.ApiResult
 import id.neotica.neoverse.domain.local.CurrentUserRepository
 import id.neotica.neoverse.domain.remote.ChatRepository
 import id.neotica.neoverse.domain.remote.UserRepository
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -34,10 +33,11 @@ class HomeViewModel(
     val chatroom = _chatroom.asStateFlow()
 
     private fun currentUserId(): String = userRepo.getUserId()
-    fun currentUserName(): String = _userEntity.value.data?.username ?: ""
+    private fun currentUserName(): String = _userEntity.value.data?.username ?: ""
 
     init {
-        getUser2()
+        getUser()
+        getChatroom()
     }
 
     fun isLoggedIn(): Boolean {
@@ -46,7 +46,7 @@ class HomeViewModel(
 
     fun isUserVerified() = userRepo.isUserVerified()
 
-    private fun getUser2() = viewModelScope.launch {
+    private fun getUser() = viewModelScope.launch {
         val user = userRepo.getUserDetail(userRepo.getUserId())
         val userData = userDatabase.getUser()
         if (isLoggedIn()) {
@@ -69,7 +69,7 @@ class HomeViewModel(
         _userList.value = user
     }
 
-    fun getChatroom() = viewModelScope.launch {
+    private fun getChatroom() = viewModelScope.launch {
         chatRepo.getChatroom().collect {
             _chatroom.value = it
         }
@@ -128,8 +128,13 @@ class HomeViewModel(
         }
     }
 
+    fun deleteChatroom(chatroom: String) = viewModelScope.launch {
+        chatRepo.deleteChatroom(chatroom)
+        getChatroom()
+    }
+
     fun addChatroom(user2: String, user: User) = viewModelScope.launch {
-        currentUserName()?.let { currentUser ->
+        currentUserName().let { currentUser ->
             val chatroomDetail = ChatRoom(
                 name = currentUserId()+user.userId.toString(),
                 user1 = currentUser,

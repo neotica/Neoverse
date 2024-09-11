@@ -12,4 +12,5 @@ interface ChatRepository {
     fun getMessages(chatId: String): Flow<List<Message>>
     fun sendMessage(chatId: String, message: Message)
     suspend fun readMessage(chatId: String, chatRoom: ChatRoom)
+    suspend fun deleteChatroom(name: String)
 }

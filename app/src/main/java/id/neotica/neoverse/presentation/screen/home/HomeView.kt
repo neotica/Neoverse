@@ -45,7 +45,7 @@ fun HomeView(
     var isLoadingChats by remember { mutableStateOf(false) }
     var currentuser by remember { mutableStateOf<CurrentUserEntity?>(null) }
 
-    LaunchedEffect(isPressed.value) {
+    /*LaunchedEffect(isPressed.value) {
         viewModel.userList.collect { result ->
             when(result) {
                 is ApiResult.Loading -> isLoading = true
@@ -60,7 +60,7 @@ fun HomeView(
                 }
             }
         }
-    }
+    }*/
 
     LaunchedEffect(Unit) {
         if (viewModel.isLoggedIn()) {
@@ -80,8 +80,7 @@ fun HomeView(
         }
     }
 
-    LaunchedEffect(key1 = true) {
-        viewModel.getChatroom()
+    LaunchedEffect(isPressed) {
         viewModel.chatroom.collect { result ->
 //            Log.d("chatroomcollect", result.data.toString())
             when(result) {
@@ -171,7 +170,13 @@ fun HomeView(
                             ) {
                                 ProfileCard(
                                     name = chatName,
-                                    image = ""
+                                    image = "",
+                                    onLongClick = {
+                                        viewModel.deleteChatroom(channelItemParent.key)
+                                        isPressed.value = true
+                                    },
+                                    alertTitle = "Delete Chatroom",
+                                    alertButton = "Delete"
                                 ) {
                                     currentuser?.let {
                                         viewModel.readMessage(channelItemParent.key, channelItemParent.value, it.username!!)

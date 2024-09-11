@@ -48,6 +48,12 @@ class ChatRepositoryImpl: ChatRepository {
         if (reference.isSuccessful) getChatroom()
     }
 
+    override suspend fun deleteChatroom(name: String) {
+        val reference = firebase.getReference("chatroom").child(name).removeValue()
+        reference.await()
+        if (reference.isSuccessful) getChatroom()
+    }
+
     override fun getMessages(chatId: String): Flow<List<Message>> = callbackFlow {
         val reqDb = firebase.getReference("messages").child(chatId)
             .orderByChild("createdAt")
