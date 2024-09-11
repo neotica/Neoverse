@@ -38,6 +38,7 @@ fun HomeView(
     viewModel: HomeViewModel = koinViewModel(),
 ) {
     val isPressed = remember { mutableStateOf(false) }
+    Log.d("ispressed", isPressed.value.toString())
     var userList by remember { mutableStateOf<List<User>>(emptyList()) }
     val chatrooms = remember { mutableStateOf<List<ChatRoom>>(emptyList()) }
     val parentChatrooms = remember { mutableStateOf<List<ParentNeo<ChatRoom>>>(emptyList()) }
@@ -84,8 +85,9 @@ fun HomeView(
     }
 
     LaunchedEffect(isPressed) {
+
         viewModel.chatroom.collect { result ->
-//            Log.d("chatroomcollect", result.data.toString())
+            Log.d("chatroomcollect", result.data.toString())
             when(result) {
                 is ApiResult.Loading -> {
 //                    Log.d("chatroomcollect", "loading")
@@ -103,9 +105,9 @@ fun HomeView(
                         chatrooms.value = list
                         viewModel.getFriendsRoom().collect {
                             friendList = it
-                            /*val username = currentuser?.username.toString()
+                            val username = currentuser?.username.toString()
                             Log.d("home username", currentuser?.username.toString())
-                            val friendFiltered = it.map { friend ->
+                            /*val friendFiltered = it.map { friend ->
                                 if (username != chatResult.value.user2) {
                                     val same = friend.username == chatResult.value.user1
 

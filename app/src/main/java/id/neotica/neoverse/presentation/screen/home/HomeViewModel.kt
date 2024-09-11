@@ -65,7 +65,7 @@ class HomeViewModel(
         }
     }
 
-    fun getUsers() = viewModelScope.launch {
+    private fun getUsers() = viewModelScope.launch {
         val user = userRepo.getAllUsers()
         _userList.value = ApiResult.Loading()
         _userList.value = user
@@ -135,6 +135,7 @@ class HomeViewModel(
     fun deleteChatroom(chatroom: String) = viewModelScope.launch {
         chatRepo.deleteChatroom(chatroom)
         getChatroom()
+        getUsers()
     }
 
     fun addChatroom(user2: String, user: User) = viewModelScope.launch {

@@ -86,7 +86,7 @@ fun FriendView(
         }
     }
 
-    LaunchedEffect(isFriendEmpty) {
+    LaunchedEffect(Unit) {
         viewModel.friendList.collect { result ->
             Log.d("friend", result.toString())
             when(result) {
