@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import id.neotica.neoverse.data.local.entity.CurrentUserEntity
+import id.neotica.neoverse.data.local.entity.FriendEntity
 import id.neotica.neoverse.data.remote.model.ChatRoom
 import id.neotica.neoverse.data.remote.model.ParentNeo
 import id.neotica.neoverse.data.remote.model.User
@@ -40,6 +41,8 @@ fun HomeView(
     var userList by remember { mutableStateOf<List<User>>(emptyList()) }
     val chatrooms = remember { mutableStateOf<List<ChatRoom>>(emptyList()) }
     val parentChatrooms = remember { mutableStateOf<List<ParentNeo<ChatRoom>>>(emptyList()) }
+    var friendList by remember { mutableStateOf<List<FriendEntity>>(emptyList()) }
+
 
     var isLoading by remember { mutableStateOf(false) }
     var isLoadingChats by remember { mutableStateOf(false) }
@@ -98,6 +101,20 @@ fun HomeView(
                         list.add(chatResult.value)
                         parentChatrooms.value = result.data
                         chatrooms.value = list
+                        viewModel.getFriendsRoom().collect {
+                            friendList = it
+                            /*val username = currentuser?.username.toString()
+                            Log.d("home username", currentuser?.username.toString())
+                            val friendFiltered = it.map { friend ->
+                                if (username != chatResult.value.user2) {
+                                    val same = friend.username == chatResult.value.user1
+
+                                }
+                                else {
+                                    val same = friend.username == chatResult.value.user2
+                                }
+                            }*/
+                        }
                     }
                 }
                 is ApiResult.Error -> {
@@ -158,9 +175,17 @@ fun HomeView(
                 LazyRow {
                     items(parentChatrooms.value.filter { channels ->
                         val current = currentuser?.username.toString()
+                        /*friendList.any { friendData ->
+                            friendData.username == channels.value.user1 && current == channels.value.user2
+                                    || friendData.username == channels.value.user2 && current == channels.value.user1
+//                            filteredRoom(current, channels.value.user1, channels.value.user2)
+                        }*/
                         filteredRoom(current, channels.value.user1, channels.value.user2)
                     }) { channelItemParent ->
                         val chatName = chatRoomName(currentuser?.username.toString(), channelItemParent.value.user1, channelItemParent.value.user2)
+                        val friendInstance = friendList.firstOrNull {
+                            it.username == chatName
+                        }
                         Card(
                             modifier = Modifier.padding(4.dp),
                         ) {
@@ -168,9 +193,15 @@ fun HomeView(
                                 modifier = Modifier.padding(8.dp),
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
+
+                                val image = friendList.map {
+                                    if (it.username == chatName) it.imageUrl
+                                }
+                                Log.d("ff", friendInstance.toString())
+                                Log.d("imageff", image.toString())
                                 ProfileCard(
                                     name = chatName,
-                                    image = "",
+                                    image = friendInstance?.imageUrl.toString(),
                                     onLongClick = {
                                         viewModel.deleteChatroom(channelItemParent.key)
                                         isPressed.value = true
@@ -194,10 +225,6 @@ fun HomeView(
                 }
             }
         }
-
-//        NeoButton("Show user") { navController.navigate(Screen.FriendScreen)}
-//        NeoButton("Game") { navController.navigate(RootScreen.GameNav) }
-
     }
 }
 

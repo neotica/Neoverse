@@ -9,6 +9,7 @@ import id.neotica.neoverse.data.remote.model.ParentNeo
 import id.neotica.neoverse.data.remote.model.User
 import id.neotica.neoverse.data.remote.ApiResult
 import id.neotica.neoverse.domain.local.CurrentUserRepository
+import id.neotica.neoverse.domain.local.FriendDaoRepository
 import id.neotica.neoverse.domain.remote.ChatRepository
 import id.neotica.neoverse.domain.remote.UserRepository
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,7 +19,8 @@ import kotlinx.coroutines.launch
 class HomeViewModel(
     private val userRepo: UserRepository,
     private val chatRepo: ChatRepository,
-    private val userDatabase: CurrentUserRepository
+    private val userDatabase: CurrentUserRepository,
+    private val friendDatabase: FriendDaoRepository
 ): ViewModel() {
 
     private var _userList: MutableStateFlow<ApiResult<List<User>>> = MutableStateFlow(ApiResult.Loading())
@@ -74,6 +76,8 @@ class HomeViewModel(
             _chatroom.value = it
         }
     }
+
+    fun getFriendsRoom() = friendDatabase.getFriends()
 
     fun isRoomExist(user: String, chatroom: List<ChatRoom>): Boolean {
         val name = currentUserName()
