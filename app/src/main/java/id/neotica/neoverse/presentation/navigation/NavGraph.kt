@@ -8,6 +8,7 @@ import androidx.navigation.compose.composable
 import id.neotica.neoverse.presentation.screen.ChatFromHomeView
 import id.neotica.neoverse.presentation.screen.SettingView
 import id.neotica.neoverse.presentation.screen.SplashView
+import id.neotica.neoverse.presentation.screen.dump.DumpView
 
 @Composable
 fun NavGraph(navController: NavHostController, paddingValues: PaddingValues) {
@@ -15,6 +16,7 @@ fun NavGraph(navController: NavHostController, paddingValues: PaddingValues) {
         composable<Screen.Splash> { SplashView(navController = navController) }
         composable<Screen.Setting> { SettingView(paddingValues) }
         composable<Screen.ChatFromHome> { ChatFromHomeView(paddingValues = paddingValues) }
+        composable<Screen.DumpScreen> { DumpView(navController, paddingValues = paddingValues) }
 
         homeNavGraph(navController, paddingValues)
         authNavGraph(navController, paddingValues)

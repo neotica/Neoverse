@@ -22,10 +22,9 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import id.neotica.neoverse.data.local.entity.CurrentUserEntity
 import id.neotica.neoverse.data.local.entity.FriendEntity
+import id.neotica.neoverse.data.remote.ApiResult
 import id.neotica.neoverse.data.remote.model.ChatRoom
 import id.neotica.neoverse.data.remote.model.ParentNeo
-import id.neotica.neoverse.data.remote.model.User
-import id.neotica.neoverse.data.remote.ApiResult
 import id.neotica.neoverse.presentation.navigation.Screen
 import id.neotica.neoverse.presentation.ui.components.BasicScaffold
 import id.neotica.neoverse.presentation.ui.components.ProfileCard
@@ -37,11 +36,9 @@ fun HomeView(
     paddingValues: PaddingValues,
     viewModel: HomeViewModel = koinViewModel(),
 ) {
-    val isPressed = remember { mutableStateOf(false) }
-    Log.d("ispressed", isPressed.value.toString())
-    var userList by remember { mutableStateOf<List<User>>(emptyList()) }
-    val chatrooms = remember { mutableStateOf<List<ChatRoom>>(emptyList()) }
+    var isPressed by remember { mutableStateOf(false) }
     val parentChatrooms = remember { mutableStateOf<List<ParentNeo<ChatRoom>>>(emptyList()) }
+
     var friendList by remember { mutableStateOf<List<FriendEntity>>(emptyList()) }
 
 
@@ -49,24 +46,7 @@ fun HomeView(
     var isLoadingChats by remember { mutableStateOf(false) }
     var currentuser by remember { mutableStateOf<CurrentUserEntity?>(null) }
 
-    /*LaunchedEffect(isPressed.value) {
-        viewModel.userList.collect { result ->
-            when(result) {
-                is ApiResult.Loading -> isLoading = true
-                is ApiResult.Success -> {
-                    isLoading = false
-                    result.data?.let { userList = result.data }
-                    Log.d("neotica", result.data?.get(0)?.username.toString())
-                }
-                is ApiResult.Error -> {
-                    isLoading = false
-                    Log.d("neotica", result.errorMessage.toString())
-                }
-            }
-        }
-    }*/
-
-    LaunchedEffect(Unit) {
+    LaunchedEffect(isPressed) {
         if (viewModel.isLoggedIn()) {
             if (!viewModel.isUserVerified()) navController.navigate(Screen.VerifyEmailScreen)
         }
@@ -87,41 +67,21 @@ fun HomeView(
     LaunchedEffect(isPressed) {
 
         viewModel.chatroom.collect { result ->
-            Log.d("chatroomcollect", result.data.toString())
             when(result) {
                 is ApiResult.Loading -> {
-//                    Log.d("chatroomcollect", "loading")
-
                     isLoadingChats = true
                 }
                 is ApiResult.Success -> {
-//                    Log.d("chatroomcollect", "scs")
-
                     isLoadingChats = false
-                    val list = mutableListOf<ChatRoom>()
-                    result.data?.forEach { chatResult ->
-                        list.add(chatResult.value)
-                        parentChatrooms.value = result.data
-                        chatrooms.value = list
+
+                    viewModel.chatList.forEach { _ ->
+                        parentChatrooms.value = result.data!!
                         viewModel.getFriendsRoom().collect {
                             friendList = it
-                            val username = currentuser?.username.toString()
-                            Log.d("home username", currentuser?.username.toString())
-                            /*val friendFiltered = it.map { friend ->
-                                if (username != chatResult.value.user2) {
-                                    val same = friend.username == chatResult.value.user1
-
-                                }
-                                else {
-                                    val same = friend.username == chatResult.value.user2
-                                }
-                            }*/
                         }
                     }
                 }
                 is ApiResult.Error -> {
-//                    Log.d("chatroomcollect", "error")
-
                     isLoadingChats = false
                 }
             }
@@ -129,43 +89,6 @@ fun HomeView(
     }
 
     BasicScaffold(topBarTitle = "Home") {
-        LazyRow {
-            item {
-                userList.forEach { user ->
-                    /*Card(
-                        modifier = Modifier.padding(4.dp),
-                        onClick = {
-                            val chatRoomFiltered = viewModel.getRoomFiltered(user.userId.toString(), chatrooms.value)
-
-                            if (currentuser?.username.isNullOrEmpty()) navController.navigate(Screen.LoginScreen)
-                            if (!isLoadingChats) {
-                                if (chatRoomFiltered == null) {
-                                    navController.navigate(Screen.Chat(currentuser?.userId.toString()+user.userId, user2 = user.username.toString()))
-                                    viewModel.addChatroom(
-                                        user2 = user.username.toString(),
-                                        user = user,
-                                    )
-                                } else {
-                                    val chatUser2 = if (chatRoomFiltered.user1 != currentuser?.username) chatRoomFiltered.user1 else user.username
-                                    chatRoomFiltered.let {
-                                        navController.navigate(Screen.Chat(chatId = chatRoomFiltered.name, user2 = chatUser2.toString()))
-                                    }
-                                }
-                            }
-                        }
-                    ) {
-                        Column(
-                            modifier = Modifier
-                                .padding(8.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            ImageCoil(url = user.imageUrl.toString())
-                            Text(text = user.username.toString())
-                        }
-                    }*/
-                }
-            }
-        }
 
         Box(modifier = Modifier.fillMaxWidth()) {
             if (isLoadingChats) {
@@ -177,11 +100,6 @@ fun HomeView(
                 LazyRow {
                     items(parentChatrooms.value.filter { channels ->
                         val current = currentuser?.username.toString()
-                        /*friendList.any { friendData ->
-                            friendData.username == channels.value.user1 && current == channels.value.user2
-                                    || friendData.username == channels.value.user2 && current == channels.value.user1
-//                            filteredRoom(current, channels.value.user1, channels.value.user2)
-                        }*/
                         filteredRoom(current, channels.value.user1, channels.value.user2)
                     }) { channelItemParent ->
                         val chatName = chatRoomName(currentuser?.username.toString(), channelItemParent.value.user1, channelItemParent.value.user2)
@@ -196,23 +114,18 @@ fun HomeView(
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
 
-                                val image = friendList.map {
-                                    if (it.username == chatName) it.imageUrl
-                                }
-                                Log.d("ff", friendInstance.toString())
-                                Log.d("imageff", image.toString())
                                 ProfileCard(
                                     name = chatName,
                                     image = friendInstance?.imageUrl.toString(),
                                     onLongClick = {
+                                        isPressed = true
                                         viewModel.deleteChatroom(channelItemParent.key)
-                                        isPressed.value = true
                                     },
                                     alertTitle = "Delete Chatroom",
                                     alertButton = "Delete"
                                 ) {
                                     currentuser?.let {
-                                        viewModel.readMessage(channelItemParent.key, channelItemParent.value, it.username!!)
+                                        viewModel.readMessage(channelItemParent.key, channelItemParent.value, it.username)
                                         navController.navigate(
                                             Screen.Chat(
                                                 chatId = channelItemParent.value.name,

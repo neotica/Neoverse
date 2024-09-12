@@ -1,13 +1,12 @@
 package id.neotica.neoverse.presentation.screen.home
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import id.neotica.neoverse.data.local.entity.CurrentUserEntity
+import id.neotica.neoverse.data.remote.ApiResult
 import id.neotica.neoverse.data.remote.model.ChatRoom
 import id.neotica.neoverse.data.remote.model.ParentNeo
 import id.neotica.neoverse.data.remote.model.User
-import id.neotica.neoverse.data.remote.ApiResult
 import id.neotica.neoverse.domain.local.CurrentUserRepository
 import id.neotica.neoverse.domain.local.FriendDaoRepository
 import id.neotica.neoverse.domain.remote.ChatRepository
@@ -23,9 +22,6 @@ class HomeViewModel(
     private val friendDatabase: FriendDaoRepository
 ): ViewModel() {
 
-    private var _userList: MutableStateFlow<ApiResult<List<User>>> = MutableStateFlow(ApiResult.Loading())
-    val userList = _userList.asStateFlow()
-
     private var _user: MutableStateFlow<ApiResult<User?>> = MutableStateFlow(ApiResult.Loading())
 
     private var _userEntity: MutableStateFlow<ApiResult<CurrentUserEntity?>> = MutableStateFlow(ApiResult.Loading())
@@ -34,8 +30,8 @@ class HomeViewModel(
     private val _chatroom = MutableStateFlow<ApiResult<List<ParentNeo<ChatRoom>>>>(ApiResult.Loading())
     val chatroom = _chatroom.asStateFlow()
 
-    private fun currentUserId(): String = userRepo.getUserId()
-    private fun currentUserName(): String = _userEntity.value.data?.username ?: ""
+    private val _chatList = mutableListOf<ParentNeo<ChatRoom>>()
+    val chatList: List<ParentNeo<ChatRoom>> = _chatList
 
     init {
         getUser()
@@ -49,15 +45,11 @@ class HomeViewModel(
     fun isUserVerified() = userRepo.isUserVerified()
 
     private fun getUser() = viewModelScope.launch {
-        val user = userRepo.getUserDetail(userRepo.getUserId())
         val userData = userDatabase.getUser()
         if (isLoggedIn()) {
             userData.collect {
                 if (it.isEmpty()) {
-                    _user.value = user
-                    _user.value.data?.let { remoteUser ->
-                        userDatabase.saveUser(remoteUser)
-                    }
+                    getUserOnline()
                 } else {
                     _userEntity.value = ApiResult.Success(it[0])
                 }
@@ -65,44 +57,29 @@ class HomeViewModel(
         }
     }
 
-    private fun getUsers() = viewModelScope.launch {
-        val user = userRepo.getAllUsers()
-        _userList.value = ApiResult.Loading()
-        _userList.value = user
+    private fun getUserOnline() = viewModelScope.launch {
+        val user = userRepo.getUserDetail(userRepo.getUserId())
+        _user.value = user
+        _user.value.data?.let { remoteUser ->
+            userDatabase.saveUser(remoteUser)
+        }
     }
 
     private fun getChatroom() = viewModelScope.launch {
+        _chatList.clear()
         chatRepo.getChatroom().collect {
             _chatroom.value = it
+            it.data?.forEach { list ->
+                _chatList.add(list)
+            }
         }
     }
 
     fun getFriendsRoom() = friendDatabase.getFriends()
 
-    fun isRoomExist(user: String, chatroom: List<ChatRoom>): Boolean {
-        val name = currentUserName()
-        val find1 = chatroom.find {
-            it.user1 == name || it.user2 == name
-        }
-        val find2 = chatroom.find {
-            it.user1 == name
-        }
-        val user1 = find1?.user1
-        val check = if (user == name) true else false
-        Log.d("isUserExist", "check: $chatroom")
-        return check
-    }
-
-    fun getRoomFiltered(user: String, chatroom: List<ChatRoom>): ChatRoom? {
-        val find1 = chatroom.find {
-
-            currentUserId()+user == it.name || user+currentUserId() == it.name
-        }
-        Log.d("isUserExist", "find: $find1")
-        return find1
-    }
-
     fun readMessage(chatId: String, chatRoom: ChatRoom, currentUser: String) = viewModelScope.launch {
+        getChatroom()
+        getUser()
         if (currentUser != chatRoom.user2) {
             val chatRoomRead = ChatRoom(
                 id = chatId,
@@ -133,21 +110,8 @@ class HomeViewModel(
     }
 
     fun deleteChatroom(chatroom: String) = viewModelScope.launch {
-        chatRepo.deleteChatroom(chatroom)
         getChatroom()
-        getUsers()
-    }
-
-    fun addChatroom(user2: String, user: User) = viewModelScope.launch {
-        currentUserName().let { currentUser ->
-            val chatroomDetail = ChatRoom(
-                name = currentUserId()+user.userId.toString(),
-                user1 = currentUser,
-                user2 = user2,
-                user1id = currentUserId(),
-                user2id = user.userId.toString()
-            )
-            chatRepo.addChatroom(chatroomDetail)
-        }
+        getUser()
+        chatRepo.deleteChatroom(chatroom)
     }
 }
