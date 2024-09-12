@@ -43,15 +43,27 @@ class ChatRepositoryImpl: ChatRepository {
 
     override suspend fun addChatroom(name: ChatRoom) {
         val key = firebase.getReference("chatroom").push().key
-        val reference = firebase.getReference("chatroom").child(key!!).setValue(name)
+        val chatroom = ChatRoom(
+            id = key.toString(),
+            name = name.name,
+            user1 = name.user1,
+            user2 = name.user2,
+            user1id = name.user1id,
+            user2id = name.user2id,
+            user1Read = name.user1Read,
+            user2Read = name.user2Read
+        )
+        val reference = firebase.getReference("chatroom").child(key!!).setValue(chatroom)
         reference.await()
         if (reference.isSuccessful) getChatroom()
     }
 
-    override suspend fun deleteChatroom(name: String) {
-        val reference = firebase.getReference("chatroom").child(name).removeValue()
+    override suspend fun deleteChatroom(chatroom: ChatRoom) {
+        val reference = firebase.getReference("chatroom").child(chatroom.id).removeValue()
         reference.await()
-        if (reference.isSuccessful) getChatroom()
+        val messages = firebase.getReference("messages").child(chatroom.name).removeValue()
+        messages.await()
+        if (reference.isSuccessful && messages.isSuccessful) getChatroom()
     }
 
     override fun getMessages(chatId: String): Flow<List<Message>> = callbackFlow {

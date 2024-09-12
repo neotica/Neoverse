@@ -20,7 +20,7 @@ import id.neotica.neoverse.presentation.screen.auth.verify.VerifyEmailViewModel
 import id.neotica.neoverse.presentation.screen.chat.ChatViewModel
 import id.neotica.neoverse.presentation.screen.friend.FriendViewModel
 import id.neotica.neoverse.presentation.screen.game.GameViewModel
-import id.neotica.neoverse.presentation.screen.home.DumpViewModel
+import id.neotica.neoverse.presentation.screen.dump.DumpViewModel
 import id.neotica.neoverse.presentation.screen.home.HomeViewModel
 import id.neotica.neoverse.presentation.screen.profile.ProfileViewModel
 import org.koin.android.ext.koin.androidContext

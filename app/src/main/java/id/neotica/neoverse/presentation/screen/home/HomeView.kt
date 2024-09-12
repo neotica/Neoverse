@@ -1,6 +1,5 @@
 package id.neotica.neoverse.presentation.screen.home
 
-import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -27,6 +26,7 @@ import id.neotica.neoverse.data.remote.model.ChatRoom
 import id.neotica.neoverse.data.remote.model.ParentNeo
 import id.neotica.neoverse.presentation.navigation.Screen
 import id.neotica.neoverse.presentation.ui.components.BasicScaffold
+import id.neotica.neoverse.presentation.ui.components.NeoButton
 import id.neotica.neoverse.presentation.ui.components.ProfileCard
 import org.koin.androidx.compose.koinViewModel
 
@@ -114,13 +114,14 @@ fun HomeView(
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
 
+
                                 ProfileCard(
                                     name = chatName,
                                     image = friendInstance?.imageUrl.toString(),
                                     onLongClick = {
                                         isPressed = true
-                                        viewModel.deleteChatroom(channelItemParent.key)
-                                    },
+                                        viewModel.deleteChatroom(channelItemParent.value)
+                                        },
                                     alertTitle = "Delete Chatroom",
                                     alertButton = "Delete"
                                 ) {
@@ -129,9 +130,8 @@ fun HomeView(
                                         navController.navigate(
                                             Screen.Chat(
                                                 chatId = channelItemParent.value.name,
-                                                user2 = chatName,
+                                                user2 = chatName,)
                                             )
-                                        )
                                     }
                                 }
                             }

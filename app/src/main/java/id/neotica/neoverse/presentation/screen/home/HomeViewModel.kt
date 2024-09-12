@@ -109,7 +109,7 @@ class HomeViewModel(
         }
     }
 
-    fun deleteChatroom(chatroom: String) = viewModelScope.launch {
+    fun deleteChatroom(chatroom: ChatRoom) = viewModelScope.launch {
         getChatroom()
         getUser()
         chatRepo.deleteChatroom(chatroom)

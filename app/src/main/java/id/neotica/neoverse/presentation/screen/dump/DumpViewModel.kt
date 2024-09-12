@@ -1,4 +1,4 @@
-package id.neotica.neoverse.presentation.screen.home
+package id.neotica.neoverse.presentation.screen.dump
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -137,7 +137,7 @@ class DumpViewModel(
         }
     }
 
-    fun deleteChatroom(chatroom: String) = viewModelScope.launch {
+    fun deleteChatroom(chatroom: ChatRoom) = viewModelScope.launch {
         chatRepo.deleteChatroom(chatroom)
         getChatroom()
         getUser()

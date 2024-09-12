@@ -28,8 +28,6 @@ import id.neotica.neoverse.data.remote.model.ParentNeo
 import id.neotica.neoverse.data.remote.model.User
 import id.neotica.neoverse.data.remote.ApiResult
 import id.neotica.neoverse.presentation.navigation.Screen
-import id.neotica.neoverse.presentation.screen.home.DumpViewModel
-import id.neotica.neoverse.presentation.screen.home.HomeViewModel
 import id.neotica.neoverse.presentation.ui.components.BasicScaffold
 import id.neotica.neoverse.presentation.ui.components.ImageCoil
 import id.neotica.neoverse.presentation.ui.components.ProfileCard
@@ -211,7 +209,7 @@ fun DumpView(
                                     image = friendInstance?.imageUrl.toString(),
                                     onLongClick = {
                                         isPressed.value = true //!isPressed.value
-                                        viewModel.deleteChatroom(channelItemParent.key)
+                                        viewModel.deleteChatroom(channelItemParent.value)
                                     },
                                     alertTitle = "Delete Chatroom",
                                     alertButton = "Delete"
