@@ -22,3 +22,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "Neoverse"
 include(":app")
+include(":core")
