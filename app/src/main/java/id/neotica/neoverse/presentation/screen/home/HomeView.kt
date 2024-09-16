@@ -19,14 +19,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import id.neotica.domain.ApiResult
+import id.neotica.domain.model.ChatRoom
+import id.neotica.domain.model.ParentNeo
 import id.neotica.neoverse.data.local.entity.CurrentUserEntity
 import id.neotica.neoverse.data.local.entity.FriendEntity
-import id.neotica.neoverse.data.remote.ApiResult
-import id.neotica.neoverse.data.remote.model.ChatRoom
-import id.neotica.neoverse.data.remote.model.ParentNeo
 import id.neotica.neoverse.presentation.navigation.Screen
 import id.neotica.neoverse.presentation.ui.components.BasicScaffold
-import id.neotica.neoverse.presentation.ui.components.NeoButton
 import id.neotica.neoverse.presentation.ui.components.ProfileCard
 import org.koin.androidx.compose.koinViewModel
 

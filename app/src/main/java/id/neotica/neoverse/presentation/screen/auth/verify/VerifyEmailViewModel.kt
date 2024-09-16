@@ -3,8 +3,8 @@ package id.neotica.neoverse.presentation.screen.auth.verify
 import androidx.lifecycle.ViewModel
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
-import id.neotica.neoverse.domain.remote.AuthRepository
-import id.neotica.neoverse.domain.remote.UserRepository
+import id.neotica.domain.remote.AuthRepository
+import id.neotica.domain.remote.UserRepository
 
 class VerifyEmailViewModel(
     private val userRepo: UserRepository,

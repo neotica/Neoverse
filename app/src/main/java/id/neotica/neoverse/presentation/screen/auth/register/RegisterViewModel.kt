@@ -2,8 +2,8 @@ package id.neotica.neoverse.presentation.screen.auth.register
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import id.neotica.neoverse.data.remote.ApiResult
-import id.neotica.neoverse.domain.remote.AuthRepository
+import id.neotica.domain.ApiResult
+import id.neotica.domain.remote.AuthRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow

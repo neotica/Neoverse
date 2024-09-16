@@ -1,9 +1,9 @@
-package id.neotica.neoverse.domain.remote
+package id.neotica.domain.remote
 
-import id.neotica.neoverse.data.remote.model.ChatRoom
-import id.neotica.neoverse.data.remote.model.Message
-import id.neotica.neoverse.data.remote.model.ParentNeo
-import id.neotica.neoverse.data.remote.ApiResult
+import id.neotica.domain.ApiResult
+import id.neotica.domain.model.ChatRoom
+import id.neotica.domain.model.Message
+import id.neotica.domain.model.ParentNeo
 import kotlinx.coroutines.flow.Flow
 
 interface ChatRepository {

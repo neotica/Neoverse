@@ -5,11 +5,11 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
-import id.neotica.neoverse.data.remote.model.ChatRoom
-import id.neotica.neoverse.data.remote.model.Message
-import id.neotica.neoverse.data.remote.model.ParentNeo
-import id.neotica.neoverse.data.remote.ApiResult
-import id.neotica.neoverse.domain.remote.ChatRepository
+import id.neotica.domain.ApiResult
+import id.neotica.domain.model.ChatRoom
+import id.neotica.domain.model.Message
+import id.neotica.domain.model.ParentNeo
+import id.neotica.domain.remote.ChatRepository
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow

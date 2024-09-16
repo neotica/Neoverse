@@ -1,8 +1,8 @@
-package id.neotica.neoverse.domain.utils
+package id.neotica.neoverse.data.local
 
 import id.neotica.neoverse.data.local.entity.FriendEntity
 import id.neotica.neoverse.data.local.entity.CurrentUserEntity
-import id.neotica.neoverse.data.remote.model.User
+import id.neotica.domain.model.User
 
 object Mapper {
     fun friendsResponseToEntity(input: List<User>): List<FriendEntity> {

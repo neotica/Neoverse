@@ -1,7 +1,7 @@
-package id.neotica.neoverse.domain.remote
+package id.neotica.domain.remote
 
-import id.neotica.neoverse.data.remote.model.Games
-import id.neotica.neoverse.data.remote.ApiResult
+import id.neotica.domain.ApiResult
+import id.neotica.domain.model.Games
 
 interface GameRepository {
     suspend fun postAuras(aura: Int, userId: String)

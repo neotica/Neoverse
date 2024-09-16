@@ -3,10 +3,10 @@ package id.neotica.neoverse.presentation.screen.game
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import id.neotica.neoverse.data.remote.model.Games
-import id.neotica.neoverse.data.remote.ApiResult
-import id.neotica.neoverse.domain.remote.GameRepository
-import id.neotica.neoverse.domain.remote.UserRepository
+import id.neotica.domain.model.Games
+import id.neotica.domain.ApiResult
+import id.neotica.domain.remote.GameRepository
+import id.neotica.domain.remote.UserRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch

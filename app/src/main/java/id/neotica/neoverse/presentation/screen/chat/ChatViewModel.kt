@@ -7,10 +7,10 @@ import androidx.navigation.toRoute
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.google.firebase.database.database
-import id.neotica.neoverse.data.remote.model.Message
-import id.neotica.neoverse.data.remote.model.ParentNeo
-import id.neotica.neoverse.domain.remote.ChatRepository
-import id.neotica.neoverse.domain.remote.UserRepository
+import id.neotica.domain.model.Message
+import id.neotica.domain.model.ParentNeo
+import id.neotica.domain.remote.ChatRepository
+import id.neotica.domain.remote.UserRepository
 import id.neotica.neoverse.presentation.navigation.Screen
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted

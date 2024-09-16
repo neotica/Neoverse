@@ -2,9 +2,9 @@ package id.neotica.neoverse.data.local.repo
 
 import id.neotica.neoverse.data.local.dao.CurrentUserDao
 import id.neotica.neoverse.data.local.entity.CurrentUserEntity
-import id.neotica.neoverse.data.remote.model.User
-import id.neotica.neoverse.domain.local.CurrentUserRepository
-import id.neotica.neoverse.domain.utils.Mapper
+import id.neotica.domain.model.User
+import id.neotica.neoverse.data.local.domain.local.CurrentUserRepository
+import id.neotica.neoverse.data.local.Mapper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext

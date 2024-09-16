@@ -1,6 +1,6 @@
-package id.neotica.neoverse.domain.remote
+package id.neotica.domain.remote
 
-import id.neotica.neoverse.data.remote.ApiResult
+import id.neotica.domain.ApiResult
 
 interface AuthRepository {
     suspend fun login(email: String, password: String): ApiResult<String>

@@ -4,11 +4,11 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.database
 import com.google.firebase.firestore.FirebaseFirestore
-import id.neotica.neoverse.data.remote.model.ChatRoom
-import id.neotica.neoverse.data.remote.model.ParentNeo
-import id.neotica.neoverse.data.remote.model.User
-import id.neotica.neoverse.data.remote.ApiResult
-import id.neotica.neoverse.domain.remote.UserRepository
+import id.neotica.domain.ApiResult
+import id.neotica.domain.model.ChatRoom
+import id.neotica.domain.model.ParentNeo
+import id.neotica.domain.model.User
+import id.neotica.domain.remote.UserRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await

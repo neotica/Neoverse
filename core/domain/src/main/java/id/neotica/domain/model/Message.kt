@@ -1,4 +1,4 @@
-package id.neotica.neoverse.data.remote.model
+package id.neotica.domain.model
 
 data class Message(
     val id: String = "",

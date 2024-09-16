@@ -2,15 +2,15 @@ package id.neotica.neoverse.presentation.screen.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import id.neotica.domain.model.ChatRoom
+import id.neotica.domain.model.ParentNeo
+import id.neotica.domain.model.User
 import id.neotica.neoverse.data.local.entity.CurrentUserEntity
-import id.neotica.neoverse.data.remote.ApiResult
-import id.neotica.neoverse.data.remote.model.ChatRoom
-import id.neotica.neoverse.data.remote.model.ParentNeo
-import id.neotica.neoverse.data.remote.model.User
-import id.neotica.neoverse.domain.local.CurrentUserRepository
-import id.neotica.neoverse.domain.local.FriendDaoRepository
-import id.neotica.neoverse.domain.remote.ChatRepository
-import id.neotica.neoverse.domain.remote.UserRepository
+import id.neotica.domain.ApiResult
+import id.neotica.neoverse.data.local.domain.local.CurrentUserRepository
+import id.neotica.neoverse.data.local.domain.local.FriendDaoRepository
+import id.neotica.domain.remote.ChatRepository
+import id.neotica.domain.remote.UserRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -24,7 +24,8 @@ class HomeViewModel(
 
     private var _user: MutableStateFlow<ApiResult<User?>> = MutableStateFlow(ApiResult.Loading())
 
-    private var _userEntity: MutableStateFlow<ApiResult<CurrentUserEntity?>> = MutableStateFlow(ApiResult.Loading())
+    private var _userEntity: MutableStateFlow<ApiResult<CurrentUserEntity?>> = MutableStateFlow(
+        ApiResult.Loading())
     val user = _userEntity.asStateFlow()
 
     private val _chatroom = MutableStateFlow<ApiResult<List<ParentNeo<ChatRoom>>>>(ApiResult.Loading())

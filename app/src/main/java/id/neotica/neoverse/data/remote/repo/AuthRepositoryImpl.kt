@@ -5,9 +5,9 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.database
 import com.google.firebase.firestore.FirebaseFirestore
-import id.neotica.neoverse.data.remote.model.User
-import id.neotica.neoverse.data.remote.ApiResult
-import id.neotica.neoverse.domain.remote.AuthRepository
+import id.neotica.domain.ApiResult
+import id.neotica.domain.model.User
+import id.neotica.domain.remote.AuthRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

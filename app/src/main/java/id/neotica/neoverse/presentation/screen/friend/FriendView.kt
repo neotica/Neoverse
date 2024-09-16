@@ -18,10 +18,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import id.neotica.neoverse.data.local.entity.FriendEntity
-import id.neotica.neoverse.data.remote.model.ChatRoom
-import id.neotica.neoverse.data.remote.model.User
-import id.neotica.neoverse.data.remote.ApiResult
-import id.neotica.neoverse.domain.utils.Mapper
+import id.neotica.domain.model.ChatRoom
+import id.neotica.domain.model.User
+import id.neotica.domain.ApiResult
+import id.neotica.neoverse.data.local.Mapper
 import id.neotica.neoverse.presentation.navigation.RootScreen
 import id.neotica.neoverse.presentation.navigation.Screen
 import id.neotica.neoverse.presentation.ui.components.BasicScaffold
@@ -94,7 +94,7 @@ fun FriendView(
                 is ApiResult.Success -> {
                     isLoading = false
                     result.data?.let {
-                        friendList2 = result.data
+                        friendList2 = result.data!!
                         viewModel.addFriendList(friendList2)
                     }
                 }

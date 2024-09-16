@@ -1,7 +1,7 @@
-package id.neotica.neoverse.domain.remote
+package id.neotica.domain.remote
 
-import id.neotica.neoverse.data.remote.model.User
-import id.neotica.neoverse.data.remote.ApiResult
+import id.neotica.domain.ApiResult
+import id.neotica.domain.model.User
 import kotlinx.coroutines.flow.Flow
 
 interface UserRepository {

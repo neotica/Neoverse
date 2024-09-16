@@ -23,10 +23,10 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import id.neotica.neoverse.data.local.entity.CurrentUserEntity
 import id.neotica.neoverse.data.local.entity.FriendEntity
-import id.neotica.neoverse.data.remote.model.ChatRoom
-import id.neotica.neoverse.data.remote.model.ParentNeo
-import id.neotica.neoverse.data.remote.model.User
-import id.neotica.neoverse.data.remote.ApiResult
+import id.neotica.domain.model.ChatRoom
+import id.neotica.domain.model.ParentNeo
+import id.neotica.domain.model.User
+import id.neotica.domain.ApiResult
 import id.neotica.neoverse.presentation.navigation.Screen
 import id.neotica.neoverse.presentation.ui.components.BasicScaffold
 import id.neotica.neoverse.presentation.ui.components.ImageCoil
@@ -57,7 +57,7 @@ fun DumpView(
                 is ApiResult.Loading -> isLoading = true
                 is ApiResult.Success -> {
                     isLoading = false
-                    result.data?.let { userList = result.data }
+//                    result.data?.let { userList = result.data }
                     Log.d("neotica", result.data?.get(0)?.username.toString())
                 }
                 is ApiResult.Error -> {
@@ -104,7 +104,7 @@ fun DumpView(
                     val list = mutableListOf<ChatRoom>()
                     result.data?.forEach { chatResult ->
                         list.add(chatResult.value)
-                        parentChatrooms.value = result.data
+//                        parentChatrooms.value = result.data
                         chatrooms.value = list
                         viewModel.getFriendsRoom().collect {
                             friendList = it
