@@ -1,4 +1,4 @@
-package id.neotica.neoverse.data.remote.repo
+package id.neotica.network
 
 import com.google.firebase.Firebase
 import com.google.firebase.database.DataSnapshot

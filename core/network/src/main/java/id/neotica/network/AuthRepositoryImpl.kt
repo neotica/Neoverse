@@ -1,4 +1,4 @@
-package id.neotica.neoverse.data.remote.repo
+package id.neotica.network
 
 import android.util.Log
 import com.google.firebase.Firebase

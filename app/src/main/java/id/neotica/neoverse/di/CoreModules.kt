@@ -4,10 +4,10 @@ import androidx.room.Room
 import id.neotica.neoverse.data.local.MainDatabase
 import id.neotica.neoverse.data.local.repo.CurrentUserRepositoryImpl
 import id.neotica.neoverse.data.local.repo.FriendDaoRepositoryImpl
-import id.neotica.neoverse.data.remote.repo.AuthRepositoryImpl
-import id.neotica.neoverse.data.remote.repo.ChatRepositoryImpl
-import id.neotica.neoverse.data.remote.repo.GameRepositoryImpl
-import id.neotica.neoverse.data.remote.repo.UserRepositoryImpl
+import id.neotica.network.AuthRepositoryImpl
+import id.neotica.network.ChatRepositoryImpl
+import id.neotica.network.GameRepositoryImpl
+import id.neotica.network.UserRepositoryImpl
 import id.neotica.neoverse.data.local.domain.local.CurrentUserRepository
 import id.neotica.neoverse.data.local.domain.local.FriendDaoRepository
 import id.neotica.domain.remote.AuthRepository
