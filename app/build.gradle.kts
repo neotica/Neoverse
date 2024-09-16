@@ -61,7 +61,11 @@ android {
 }
 
 dependencies {
-    implementation(project(":core"))
+    implementation(project(":core:database"))
+    implementation(project(":core:domain"))
+//    implementation(project(":core:network"))
+//    implementation(project(":core:ui"))
+    implementation(project(":core:data"))
 
     // Testing
     testImplementation(libs.junit)
