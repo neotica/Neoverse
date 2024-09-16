@@ -1,4 +1,4 @@
-package id.neotica.neoverse.presentation.ui.components
+package id.neotica.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

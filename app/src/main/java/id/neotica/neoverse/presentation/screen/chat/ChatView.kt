@@ -41,8 +41,8 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import id.neotica.domain.model.Message
 import id.neotica.neoverse.presentation.navigation.Screen
-import id.neotica.neoverse.presentation.ui.components.BasicScaffold
-import id.neotica.neoverse.presentation.ui.theme.DarkPrimary
+import id.neotica.ui.components.BasicScaffold
+import id.neotica.ui.theme.DarkPrimary
 import id.neotica.neoverse.utils.convertLongToTime
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel

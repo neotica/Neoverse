@@ -1,4 +1,4 @@
-package id.neotica.neoverse.presentation.ui.theme
+package id.neotica.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

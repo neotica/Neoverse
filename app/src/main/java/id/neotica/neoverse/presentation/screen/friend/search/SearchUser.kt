@@ -26,9 +26,9 @@ import id.neotica.domain.model.User
 import id.neotica.domain.ApiResult
 import id.neotica.neoverse.presentation.navigation.RootScreen
 import id.neotica.neoverse.presentation.screen.friend.FriendViewModel
-import id.neotica.neoverse.presentation.ui.components.BasicScaffold
-import id.neotica.neoverse.presentation.ui.components.NeoButton
-import id.neotica.neoverse.presentation.ui.components.ProfileCard
+import id.neotica.ui.components.BasicScaffold
+import id.neotica.ui.components.NeoButton
+import id.neotica.ui.components.ProfileCard
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 

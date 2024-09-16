@@ -25,12 +25,12 @@ import id.neotica.neoverse.data.local.entity.CurrentUserEntity
 import id.neotica.domain.ApiResult
 import id.neotica.neoverse.presentation.navigation.RootScreen
 import id.neotica.neoverse.presentation.navigation.Screen
-import id.neotica.neoverse.presentation.ui.components.BasicScaffold
-import id.neotica.neoverse.presentation.ui.components.ImageCoil
-import id.neotica.neoverse.presentation.ui.components.LoadingIndicatorBool
-import id.neotica.neoverse.presentation.ui.components.NeoButton
-import id.neotica.neoverse.presentation.ui.components.SlideInto
-import id.neotica.neoverse.presentation.ui.theme.DarkPrimary
+import id.neotica.ui.components.BasicScaffold
+import id.neotica.ui.components.ImageCoil
+import id.neotica.ui.components.LoadingIndicatorBool
+import id.neotica.ui.components.NeoButton
+import id.neotica.ui.components.SlideInto
+import id.neotica.ui.theme.DarkPrimary
 import org.koin.androidx.compose.koinViewModel
 
 @Composable

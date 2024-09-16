@@ -26,7 +26,7 @@ import id.neotica.domain.ApiResult
 import id.neotica.neoverse.presentation.navigation.RootScreen
 import id.neotica.neoverse.presentation.navigation.Screen
 import id.neotica.neoverse.presentation.screen.game.components.SlotMachine
-import id.neotica.neoverse.presentation.ui.components.BasicScaffold
+import id.neotica.ui.components.BasicScaffold
 import org.koin.androidx.compose.koinViewModel
 import kotlin.random.Random
 

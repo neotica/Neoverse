@@ -1,4 +1,4 @@
-package id.neotica.neoverse.presentation.ui.components
+package id.neotica.ui.components
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
@@ -19,7 +19,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import id.neotica.droidcore.component.alert.NeoAlert
-import id.neotica.neoverse.presentation.ui.theme.DarkPrimaryTransparent
+import id.neotica.ui.theme.DarkPrimaryTransparent
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable

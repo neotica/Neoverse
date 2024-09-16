@@ -1,4 +1,4 @@
-package id.neotica.neoverse.presentation.ui.components
+package id.neotica.ui.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -20,7 +20,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavController
-import id.neotica.neoverse.R
+import id.neotica.ui.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

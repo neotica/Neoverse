@@ -28,9 +28,9 @@ import id.neotica.domain.model.ParentNeo
 import id.neotica.domain.model.User
 import id.neotica.domain.ApiResult
 import id.neotica.neoverse.presentation.navigation.Screen
-import id.neotica.neoverse.presentation.ui.components.BasicScaffold
-import id.neotica.neoverse.presentation.ui.components.ImageCoil
-import id.neotica.neoverse.presentation.ui.components.ProfileCard
+import id.neotica.ui.components.BasicScaffold
+import id.neotica.ui.components.ImageCoil
+import id.neotica.ui.components.ProfileCard
 import org.koin.androidx.compose.koinViewModel
 
 @Composable

@@ -15,6 +15,7 @@ import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.Icon
+import id.neotica.ui.R
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemColors
 import androidx.compose.material3.Scaffold
@@ -32,10 +33,10 @@ import id.neotica.neoverse.presentation.navigation.NavGraph
 import id.neotica.neoverse.presentation.navigation.NavigationItem
 import id.neotica.neoverse.presentation.navigation.RootScreen
 import id.neotica.neoverse.presentation.navigation.Screen
-import id.neotica.neoverse.presentation.ui.components.CustomNavBar
-import id.neotica.neoverse.presentation.ui.theme.DarkBackground
-import id.neotica.neoverse.presentation.ui.theme.DarkPrimary
-import id.neotica.neoverse.presentation.ui.theme.NeoverseTheme
+import id.neotica.ui.components.CustomNavBar
+import id.neotica.ui.theme.DarkBackground
+import id.neotica.ui.theme.DarkPrimary
+import id.neotica.ui.theme.NeoverseTheme
 
 class MainActivity: ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

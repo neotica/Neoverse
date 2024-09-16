@@ -12,9 +12,9 @@ import androidx.compose.ui.Alignment
 import id.neotica.domain.model.User
 import id.neotica.domain.ApiResult
 import id.neotica.neoverse.presentation.screen.friend.FriendViewModel
-import id.neotica.neoverse.presentation.ui.components.BasicScreen
-import id.neotica.neoverse.presentation.ui.components.ImageCoil
-import id.neotica.neoverse.presentation.ui.components.LoadingIndicatorBool
+import id.neotica.ui.components.BasicScreen
+import id.neotica.ui.components.ImageCoil
+import id.neotica.ui.components.LoadingIndicatorBool
 import org.koin.androidx.compose.koinViewModel
 
 @Composable

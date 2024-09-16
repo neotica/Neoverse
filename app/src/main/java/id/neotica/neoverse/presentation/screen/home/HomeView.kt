@@ -25,8 +25,8 @@ import id.neotica.domain.model.ParentNeo
 import id.neotica.neoverse.data.local.entity.CurrentUserEntity
 import id.neotica.neoverse.data.local.entity.FriendEntity
 import id.neotica.neoverse.presentation.navigation.Screen
-import id.neotica.neoverse.presentation.ui.components.BasicScaffold
-import id.neotica.neoverse.presentation.ui.components.ProfileCard
+import id.neotica.ui.components.BasicScaffold
+import id.neotica.ui.components.ProfileCard
 import org.koin.androidx.compose.koinViewModel
 
 @Composable

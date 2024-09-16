@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "id.neotica.ui"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 28
@@ -30,6 +30,12 @@ android {
             )
         }
     }
+    buildFeatures {
+        compose = true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.1"
+    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
@@ -51,6 +57,12 @@ dependencies {
     api(libs.androidx.material3)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    // Coil
+    api("io.coil-kt:coil-compose:2.7.0")
+
+    //DroidCore
+    api("com.github.laetuz:Droidcore:1.2.4")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

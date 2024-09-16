@@ -14,8 +14,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import id.neotica.droidcore.component.textfield.NeoTextField
 import id.neotica.neoverse.presentation.screen.profile.ProfileViewModel
-import id.neotica.neoverse.presentation.ui.components.BasicScaffold
-import id.neotica.neoverse.presentation.ui.components.NeoButton
+import id.neotica.ui.components.BasicScaffold
+import id.neotica.ui.components.NeoButton
 import org.koin.androidx.compose.koinViewModel
 
 @Composable

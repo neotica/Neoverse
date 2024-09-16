@@ -1,4 +1,4 @@
-package id.neotica.neoverse.presentation.ui.components
+package id.neotica.ui.components
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
@@ -17,7 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import id.neotica.neoverse.presentation.ui.theme.DarkPrimaryTransparent
+import id.neotica.ui.theme.DarkPrimaryTransparent
 
 @Composable
 fun CustomNavBar(

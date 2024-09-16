@@ -49,7 +49,7 @@ dependencies {
     api(libs.androidx.navigation.compose)
     api(libs.kotlinx.serialization.json)
 
-//    //Firebase
+    //Firebase
     api(platform("com.google.firebase:firebase-bom:33.1.2"))
     api("com.google.firebase:firebase-analytics")
     api("com.google.firebase:firebase-auth")
@@ -59,12 +59,6 @@ dependencies {
 
     // Koin
     api("io.insert-koin:koin-androidx-compose:3.5.6")
-
-    // Coil
-    api("io.coil-kt:coil-compose:2.7.0")
-
-    //DroidCore
-    api("com.github.laetuz:Droidcore:1.2.4")
 
     // Testing
     testImplementation(libs.junit)
