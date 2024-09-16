@@ -22,13 +22,13 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import id.neotica.droidcore.component.textfield.NeoTextField
-import id.neotica.neoverse.data.model.User
-import id.neotica.neoverse.data.remote.ApiResult
+import id.neotica.domain.model.User
+import id.neotica.domain.ApiResult
 import id.neotica.neoverse.presentation.navigation.RootScreen
 import id.neotica.neoverse.presentation.screen.friend.FriendViewModel
-import id.neotica.neoverse.presentation.ui.components.BasicScaffold
-import id.neotica.neoverse.presentation.ui.components.NeoButton
-import id.neotica.neoverse.presentation.ui.components.ProfileCard
+import id.neotica.ui.components.BasicScaffold
+import id.neotica.ui.components.NeoButton
+import id.neotica.ui.components.ProfileCard
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
@@ -48,7 +48,7 @@ fun SearchUser(
                 is ApiResult.Loading -> isLoading = true
                 is ApiResult.Success -> {
                     isLoading = false
-                    result.data?.let { userList = result.data }
+                    result.data?.let { userList = result.data!! }
                 }
                 is ApiResult.Error -> {
                     isLoading = false

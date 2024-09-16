@@ -4,21 +4,23 @@ import androidx.room.Room
 import id.neotica.neoverse.data.local.MainDatabase
 import id.neotica.neoverse.data.local.repo.CurrentUserRepositoryImpl
 import id.neotica.neoverse.data.local.repo.FriendDaoRepositoryImpl
-import id.neotica.neoverse.data.repo.AuthRepositoryImpl
-import id.neotica.neoverse.data.repo.ChatRepositoryImpl
-import id.neotica.neoverse.data.repo.GameRepositoryImpl
-import id.neotica.neoverse.data.repo.UserRepositoryImpl
-import id.neotica.neoverse.domain.remote.AuthRepository
-import id.neotica.neoverse.domain.remote.ChatRepository
-import id.neotica.neoverse.domain.remote.GameRepository
-import id.neotica.neoverse.domain.remote.UserRepository
-import id.neotica.neoverse.domain.local.FriendDaoRepository
+import id.neotica.network.AuthRepositoryImpl
+import id.neotica.network.ChatRepositoryImpl
+import id.neotica.network.GameRepositoryImpl
+import id.neotica.network.UserRepositoryImpl
+import id.neotica.neoverse.data.local.domain.local.CurrentUserRepository
+import id.neotica.neoverse.data.local.domain.local.FriendDaoRepository
+import id.neotica.domain.remote.AuthRepository
+import id.neotica.domain.remote.ChatRepository
+import id.neotica.domain.remote.GameRepository
+import id.neotica.domain.remote.UserRepository
 import id.neotica.neoverse.presentation.screen.auth.login.LoginViewModel
 import id.neotica.neoverse.presentation.screen.auth.register.RegisterViewModel
 import id.neotica.neoverse.presentation.screen.auth.verify.VerifyEmailViewModel
 import id.neotica.neoverse.presentation.screen.chat.ChatViewModel
 import id.neotica.neoverse.presentation.screen.friend.FriendViewModel
 import id.neotica.neoverse.presentation.screen.game.GameViewModel
+import id.neotica.neoverse.presentation.screen.dump.DumpViewModel
 import id.neotica.neoverse.presentation.screen.home.HomeViewModel
 import id.neotica.neoverse.presentation.screen.profile.ProfileViewModel
 import org.koin.android.ext.koin.androidContext
@@ -48,7 +50,7 @@ val repositoryModules = module {
     singleOf(::ChatRepositoryImpl) bind ChatRepository::class
     singleOf(::GameRepositoryImpl) bind GameRepository::class
     singleOf(::FriendDaoRepositoryImpl) bind FriendDaoRepository::class
-    singleOf(::CurrentUserRepositoryImpl)
+    singleOf(::CurrentUserRepositoryImpl) bind CurrentUserRepository::class
 }
 
 val viewModelModules = module {
@@ -60,6 +62,7 @@ val viewModelModules = module {
     viewModelOf(::FriendViewModel)
     viewModelOf(::GameViewModel)
     viewModelOf(::VerifyEmailViewModel)
+    viewModelOf(::DumpViewModel)
 }
 
 val domainModules = module {

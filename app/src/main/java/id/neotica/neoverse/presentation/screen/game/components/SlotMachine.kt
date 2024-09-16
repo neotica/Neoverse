@@ -25,9 +25,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import id.neotica.neoverse.presentation.screen.game.GameViewModel
 import id.neotica.neoverse.presentation.screen.game.utils.generateTranspose
-import id.neotica.neoverse.presentation.ui.components.NeoButton
-import id.neotica.neoverse.presentation.ui.components.SlideInto
-import id.neotica.neoverse.presentation.ui.theme.DarkPrimaryTransparent
+import id.neotica.ui.components.NeoButton
+import id.neotica.ui.components.SlideInto
+import id.neotica.ui.theme.DarkPrimaryTransparent
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel

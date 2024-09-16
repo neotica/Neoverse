@@ -17,17 +17,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import id.neotica.neoverse.data.local.friend.FriendEntity
-import id.neotica.neoverse.data.model.ChatRoom
-import id.neotica.neoverse.data.model.User
-import id.neotica.neoverse.data.remote.ApiResult
-import id.neotica.neoverse.domain.utils.Mapper
+import id.neotica.neoverse.data.local.entity.FriendEntity
+import id.neotica.domain.model.ChatRoom
+import id.neotica.domain.model.User
+import id.neotica.domain.ApiResult
+import id.neotica.neoverse.data.local.Mapper
 import id.neotica.neoverse.presentation.navigation.RootScreen
 import id.neotica.neoverse.presentation.navigation.Screen
-import id.neotica.neoverse.presentation.ui.components.BasicScaffold
-import id.neotica.neoverse.presentation.ui.components.LoadingIndicatorBool
-import id.neotica.neoverse.presentation.ui.components.NeoButton
-import id.neotica.neoverse.presentation.ui.components.ProfileCard
+import id.neotica.ui.components.BasicScaffold
+import id.neotica.ui.components.LoadingIndicatorBool
+import id.neotica.ui.components.NeoButton
+import id.neotica.ui.components.ProfileCard
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -42,7 +42,6 @@ fun FriendView(
     var friendList2 by remember { mutableStateOf<List<User>>(emptyList()) }
     var isLoading by remember { mutableStateOf(false) }
     var isLoadingChats by remember { mutableStateOf(false) }
-    var currentuser by remember { mutableStateOf<User?>(null) }
     var isFriendEmpty by remember { mutableStateOf(false) }
 
     LaunchedEffect(key1 = true) {
@@ -57,27 +56,10 @@ fun FriendView(
                     result.data?.forEach { chatResult ->
                         list.add(chatResult.value)
                     }
-
                     chatrooms.value = list
                 }
                 is ApiResult.Error -> {
                     isLoadingChats = false
-                }
-            }
-        }
-    }
-
-    LaunchedEffect(key1 = true) {
-        viewModel.getUser()
-        viewModel.user.collect { result ->
-            when(result) {
-                is ApiResult.Loading -> isLoading = true
-                is ApiResult.Success -> {
-                    isLoading = false
-                    currentuser = result.data
-                }
-                is ApiResult.Error -> {
-                    isLoading = false
                 }
             }
         }
@@ -104,7 +86,7 @@ fun FriendView(
         }
     }
 
-    LaunchedEffect(isFriendEmpty) {
+    LaunchedEffect(Unit) {
         viewModel.friendList.collect { result ->
             Log.d("friend", result.toString())
             when(result) {
@@ -112,7 +94,7 @@ fun FriendView(
                 is ApiResult.Success -> {
                     isLoading = false
                     result.data?.let {
-                        friendList2 = result.data
+                        friendList2 = result.data!!
                         viewModel.addFriendList(friendList2)
                     }
                 }

@@ -22,3 +22,9 @@ dependencyResolutionManagement {
 
 rootProject.name = "Neoverse"
 include(":app")
+include(":core")
+include(":core:database")
+include(":core:domain")
+include(":core:network")
+include(":core:ui")
+include(":core:data")

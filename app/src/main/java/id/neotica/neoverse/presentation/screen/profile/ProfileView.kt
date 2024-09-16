@@ -1,5 +1,6 @@
 package id.neotica.neoverse.presentation.screen.profile
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -19,19 +20,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
-import id.neotica.neoverse.data.local.user.CurrentUserEntity
-import id.neotica.neoverse.data.remote.ApiResult
+import id.neotica.neoverse.data.local.entity.CurrentUserEntity
+import id.neotica.domain.ApiResult
 import id.neotica.neoverse.presentation.navigation.RootScreen
 import id.neotica.neoverse.presentation.navigation.Screen
-import id.neotica.neoverse.presentation.ui.components.BasicScaffold
-import id.neotica.neoverse.presentation.ui.components.ImageCoil
-import id.neotica.neoverse.presentation.ui.components.LoadingIndicatorBool
-import id.neotica.neoverse.presentation.ui.components.NeoButton
-import id.neotica.neoverse.presentation.ui.components.SlideInto
-import id.neotica.neoverse.presentation.ui.theme.DarkPrimary
-import kotlinx.coroutines.launch
+import id.neotica.ui.components.BasicScaffold
+import id.neotica.ui.components.ImageCoil
+import id.neotica.ui.components.LoadingIndicatorBool
+import id.neotica.ui.components.NeoButton
+import id.neotica.ui.components.SlideInto
+import id.neotica.ui.theme.DarkPrimary
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -41,9 +40,8 @@ fun ProfileView(
     viewModel: ProfileViewModel = koinViewModel()
 ) {
     var user by remember { mutableStateOf<CurrentUserEntity?>(null) }
-    var isLoading by remember { mutableStateOf(false) }
+    val isLoading by remember { mutableStateOf(false) }
     var accountSettings by remember { mutableStateOf(false) }
-    var isUserEmpty by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         if (!viewModel.isLoggedIn()) navController.navigate(Screen.LoginScreen) {
@@ -52,33 +50,13 @@ fun ProfileView(
             }
             launchSingleTop
         } else {
-            viewModel.viewModelScope.launch {
-                val currentUser = viewModel.getUserRoom()
-                currentUser.collect {
-                    if (!it.isEmpty()) {
-                        user = it[0]
-                    } else {
-                        viewModel.getUser()
-                        isUserEmpty = true
-                    }
-                }
-            }
-        }
-    }
-
-    LaunchedEffect(isUserEmpty) {
-        if (isUserEmpty) {
-            viewModel.user.collect { result ->
-                when (result) {
-                    is ApiResult.Loading -> isLoading = true
-                    is ApiResult.Success -> {
-                        isLoading = false
-                        viewModel.saveUserRoom(result.data!!)
-                    }
-
-                    is ApiResult.Error -> {
-                        isLoading = false
-                    }
+            viewModel.currentUser.collect { result ->
+                Log.d("profileView", "result $result")
+                when(result) {
+                    is ApiResult.Loading -> { /*isUserEmpty = true*/ }
+                    is ApiResult.Success -> { user = result.data }
+                    is ApiResult.Error -> { /*isUserEmpty = true*/ }
+                    null -> { /*isUserEmpty = true*/ }
                 }
             }
         }

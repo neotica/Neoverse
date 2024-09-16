@@ -21,12 +21,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import id.neotica.droidcore.component.cards.deprecated.NeoCard
-import id.neotica.neoverse.data.model.Games
-import id.neotica.neoverse.data.remote.ApiResult
+import id.neotica.domain.model.Games
+import id.neotica.domain.ApiResult
 import id.neotica.neoverse.presentation.navigation.RootScreen
 import id.neotica.neoverse.presentation.navigation.Screen
 import id.neotica.neoverse.presentation.screen.game.components.SlotMachine
-import id.neotica.neoverse.presentation.ui.components.BasicScaffold
+import id.neotica.ui.components.BasicScaffold
 import org.koin.androidx.compose.koinViewModel
 import kotlin.random.Random
 

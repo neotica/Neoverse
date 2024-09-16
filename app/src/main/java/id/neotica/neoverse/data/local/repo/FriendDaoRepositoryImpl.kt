@@ -1,11 +1,11 @@
 package id.neotica.neoverse.data.local.repo
 
 import android.util.Log
-import id.neotica.neoverse.data.local.friend.FriendDao
-import id.neotica.neoverse.data.local.friend.FriendEntity
-import id.neotica.neoverse.data.model.User
-import id.neotica.neoverse.domain.local.FriendDaoRepository
-import id.neotica.neoverse.domain.utils.Mapper
+import id.neotica.neoverse.data.local.dao.FriendDao
+import id.neotica.neoverse.data.local.entity.FriendEntity
+import id.neotica.domain.model.User
+import id.neotica.neoverse.data.local.domain.local.FriendDaoRepository
+import id.neotica.neoverse.data.local.Mapper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext

@@ -26,12 +26,12 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import id.neotica.droidcore.component.textfield.NeoTextField
 import id.neotica.droidcore.component.textfield.PasswordTextField
-import id.neotica.neoverse.data.remote.ApiResult
+import id.neotica.domain.ApiResult
 import id.neotica.neoverse.presentation.navigation.RootScreen
 import id.neotica.neoverse.presentation.navigation.Screen
-import id.neotica.neoverse.presentation.ui.components.BasicScaffold
-import id.neotica.neoverse.presentation.ui.components.NeoButton
-import id.neotica.neoverse.presentation.ui.theme.DarkPrimary
+import id.neotica.ui.components.BasicScaffold
+import id.neotica.ui.components.NeoButton
+import id.neotica.ui.theme.DarkPrimary
 import org.koin.androidx.compose.koinViewModel
 
 @Composable

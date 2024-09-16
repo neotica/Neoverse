@@ -4,7 +4,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
-import id.neotica.neoverse.presentation.ui.components.BasicScaffold
+import id.neotica.ui.components.BasicScaffold
 
 @Composable
 fun TermsOfServiceView(navController: NavController,  paddingValues: PaddingValues, modifier: Modifier = Modifier) {

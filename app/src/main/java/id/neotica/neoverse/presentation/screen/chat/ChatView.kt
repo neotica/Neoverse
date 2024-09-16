@@ -39,10 +39,10 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
-import id.neotica.neoverse.data.model.Message
+import id.neotica.domain.model.Message
 import id.neotica.neoverse.presentation.navigation.Screen
-import id.neotica.neoverse.presentation.ui.components.BasicScaffold
-import id.neotica.neoverse.presentation.ui.theme.DarkPrimary
+import id.neotica.ui.components.BasicScaffold
+import id.neotica.ui.theme.DarkPrimary
 import id.neotica.neoverse.utils.convertLongToTime
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
@@ -120,9 +120,7 @@ fun ChatMessages(
                     Row(
                         modifier = Modifier
                             .background(DarkPrimary)
-//                            .padding(bottom = 14.dp)
                             .fillMaxWidth(),
-//                        .windowInsetsPadding(win),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         TextField(
