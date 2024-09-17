@@ -42,6 +42,7 @@ android {
 
 dependencies {
     implementation(project(":core:data"))
+    implementation(project(":core:domain"))
 
     //Room
     val room_version = "2.6.1"

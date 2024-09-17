@@ -1,10 +1,9 @@
-package id.neotica.neoverse.data.local.repo
+package id.neotica.database
 
-import id.neotica.neoverse.data.local.dao.CurrentUserDao
+import id.neotica.database.dao.CurrentUserDao
 import id.neotica.domain.model.User
-import id.neotica.neoverse.data.local.domain.local.CurrentUserRepository
-import id.neotica.neoverse.data.local.Mapper
-import id.neotica.neoverse.data.local.Mapper.toUser
+import id.neotica.domain.local.CurrentUserRepository
+import id.neotica.database.Mapper.toUser
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map

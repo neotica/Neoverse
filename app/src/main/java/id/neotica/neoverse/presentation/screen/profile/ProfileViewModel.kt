@@ -2,11 +2,10 @@ package id.neotica.neoverse.presentation.screen.profile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import id.neotica.neoverse.data.local.entity.CurrentUserEntity
 import id.neotica.domain.model.User
 import id.neotica.domain.ApiResult
-import id.neotica.neoverse.data.local.domain.local.CurrentUserRepository
-import id.neotica.neoverse.data.local.domain.local.FriendDaoRepository
+import id.neotica.domain.local.CurrentUserRepository
+import id.neotica.domain.local.FriendDaoRepository
 import id.neotica.domain.remote.AuthRepository
 import id.neotica.domain.remote.UserRepository
 import kotlinx.coroutines.flow.MutableStateFlow

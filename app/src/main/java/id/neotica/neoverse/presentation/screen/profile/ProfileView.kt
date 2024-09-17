@@ -21,7 +21,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import id.neotica.neoverse.data.local.entity.CurrentUserEntity
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.User
 import id.neotica.neoverse.presentation.navigation.RootScreen

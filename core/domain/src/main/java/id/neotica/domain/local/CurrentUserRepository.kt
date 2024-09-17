@@ -1,8 +1,6 @@
-package id.neotica.neoverse.data.local.domain.local
+package id.neotica.domain.local
 
-import id.neotica.neoverse.data.local.entity.CurrentUserEntity
 import id.neotica.domain.model.User
-import id.neotica.neoverse.data.local.Mapper
 import kotlinx.coroutines.flow.Flow
 
 interface CurrentUserRepository {

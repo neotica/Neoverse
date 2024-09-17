@@ -3,13 +3,12 @@ package id.neotica.neoverse.presentation.screen.friend
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import id.neotica.neoverse.data.local.entity.CurrentUserEntity
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.ChatRoom
 import id.neotica.domain.model.ParentNeo
 import id.neotica.domain.model.User
-import id.neotica.neoverse.data.local.domain.local.CurrentUserRepository
-import id.neotica.neoverse.data.local.domain.local.FriendDaoRepository
+import id.neotica.domain.local.CurrentUserRepository
+import id.neotica.domain.local.FriendDaoRepository
 import id.neotica.domain.remote.ChatRepository
 import id.neotica.domain.remote.UserRepository
 import kotlinx.coroutines.flow.MutableStateFlow

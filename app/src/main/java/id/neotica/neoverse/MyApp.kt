@@ -1,7 +1,7 @@
 package id.neotica.neoverse
 
 import android.app.Application
-import id.neotica.neoverse.di.databaseModule
+import id.neotica.database.databaseModule
 import id.neotica.neoverse.di.repositoryModules
 import id.neotica.neoverse.di.domainModules
 import id.neotica.neoverse.di.useCaseModules

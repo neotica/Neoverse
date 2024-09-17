@@ -1,11 +1,11 @@
-package id.neotica.neoverse.data.local
+package id.neotica.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import id.neotica.neoverse.data.local.dao.CurrentUserDao
-import id.neotica.neoverse.data.local.dao.FriendDao
-import id.neotica.neoverse.data.local.entity.FriendEntity
-import id.neotica.neoverse.data.local.entity.CurrentUserEntity
+import id.neotica.database.dao.CurrentUserDao
+import id.neotica.database.dao.FriendDao
+import id.neotica.database.entity.FriendEntity
+import id.neotica.database.entity.CurrentUserEntity
 
 @Database(
     entities = [FriendEntity::class, CurrentUserEntity::class],

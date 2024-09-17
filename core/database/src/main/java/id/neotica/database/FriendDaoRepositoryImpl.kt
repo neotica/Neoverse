@@ -1,19 +1,23 @@
-package id.neotica.neoverse.data.local.repo
+package id.neotica.database
 
 import android.util.Log
-import id.neotica.neoverse.data.local.dao.FriendDao
-import id.neotica.neoverse.data.local.entity.FriendEntity
+import id.neotica.database.dao.FriendDao
 import id.neotica.domain.model.User
-import id.neotica.neoverse.data.local.domain.local.FriendDaoRepository
-import id.neotica.neoverse.data.local.Mapper
+import id.neotica.domain.local.FriendDaoRepository
+import id.neotica.database.Mapper.toUser
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 
 class FriendDaoRepositoryImpl(
     private val dao: FriendDao,
 ) : FriendDaoRepository {
-    override fun getFriends(): Flow<List<FriendEntity>> = dao.getFriends()
+    override fun getFriends(): Flow<List<User>> = dao.getFriends().map {
+        it.map { friend ->
+            friend.toUser()
+        }
+    }
 
     override suspend fun addFriendList(friends: List<User>) = withContext(Dispatchers.IO) {
         val friendsEnt = Mapper.friendsResponseToEntity(friends)
@@ -24,7 +28,6 @@ class FriendDaoRepositoryImpl(
         Log.d("friendRepo", "fun addfriend")
         withContext(Dispatchers.IO) {
             val friendEnt = Mapper.friendResponseToEntity(friend)
-
             dao.addFriend(friendEnt)
         }
     }

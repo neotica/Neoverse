@@ -1,15 +1,13 @@
 package id.neotica.neoverse.di
 
-import androidx.room.Room
-import id.neotica.neoverse.data.local.MainDatabase
-import id.neotica.neoverse.data.local.repo.CurrentUserRepositoryImpl
-import id.neotica.neoverse.data.local.repo.FriendDaoRepositoryImpl
+import id.neotica.database.CurrentUserRepositoryImpl
+import id.neotica.database.FriendDaoRepositoryImpl
 import id.neotica.network.AuthRepositoryImpl
 import id.neotica.network.ChatRepositoryImpl
 import id.neotica.network.GameRepositoryImpl
 import id.neotica.network.UserRepositoryImpl
-import id.neotica.neoverse.data.local.domain.local.CurrentUserRepository
-import id.neotica.neoverse.data.local.domain.local.FriendDaoRepository
+import id.neotica.domain.local.CurrentUserRepository
+import id.neotica.domain.local.FriendDaoRepository
 import id.neotica.domain.remote.AuthRepository
 import id.neotica.domain.remote.ChatRepository
 import id.neotica.domain.remote.GameRepository
@@ -23,26 +21,11 @@ import id.neotica.neoverse.presentation.screen.game.GameViewModel
 import id.neotica.neoverse.presentation.screen.dump.DumpViewModel
 import id.neotica.neoverse.presentation.screen.home.HomeViewModel
 import id.neotica.neoverse.presentation.screen.profile.ProfileViewModel
-import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
-
-val databaseModule = module {
-    factory { get<MainDatabase>().friendDao() }
-    factory { get<MainDatabase>().currentUserDao() }
-    single {
-        Room.databaseBuilder(
-            context = androidContext(),
-            klass = MainDatabase::class.java,
-            name = "Friend.db"
-        )
-            .fallbackToDestructiveMigration()
-            .build()
-    }
-}
 
 val repositoryModules = module {
     singleOf(::AuthRepositoryImpl) { bind<AuthRepository>()}

@@ -44,8 +44,6 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
 
-
-
     api(libs.androidx.navigation.compose)
     api(libs.kotlinx.serialization.json)
 
