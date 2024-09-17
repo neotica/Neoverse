@@ -47,13 +47,7 @@ dependencies {
     api(libs.androidx.navigation.compose)
     api(libs.kotlinx.serialization.json)
 
-    //Firebase
-    api(platform("com.google.firebase:firebase-bom:33.1.2"))
-    api("com.google.firebase:firebase-analytics")
-    api("com.google.firebase:firebase-auth")
-    api("com.google.firebase:firebase-database")
-    api("com.google.firebase:firebase-storage")
-    api(libs.firebase.firestore.ktx)
+
 
     // Koin
     api("io.insert-koin:koin-androidx-compose:3.5.6")
