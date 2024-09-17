@@ -22,7 +22,7 @@ class ProfileViewModel(
 
     private var _user: MutableStateFlow<ApiResult<User?>> = MutableStateFlow(ApiResult.Loading())
 
-    private var _currentUser: MutableStateFlow<ApiResult<CurrentUserEntity>?> = MutableStateFlow(
+    private var _currentUser: MutableStateFlow<ApiResult<User>?> = MutableStateFlow(
         ApiResult.Loading())
     val currentUser = _currentUser.asStateFlow()
 

@@ -22,6 +22,7 @@ import androidx.navigation.NavController
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.ChatRoom
 import id.neotica.domain.model.ParentNeo
+import id.neotica.domain.model.User
 import id.neotica.neoverse.data.local.entity.CurrentUserEntity
 import id.neotica.neoverse.data.local.entity.FriendEntity
 import id.neotica.neoverse.presentation.navigation.Screen
@@ -43,7 +44,7 @@ fun HomeView(
 
     var isLoading by remember { mutableStateOf(false) }
     var isLoadingChats by remember { mutableStateOf(false) }
-    var currentuser by remember { mutableStateOf<CurrentUserEntity?>(null) }
+    var currentuser by remember { mutableStateOf<User?>(null) }
 
     LaunchedEffect(isPressed) {
         if (viewModel.isLoggedIn()) {

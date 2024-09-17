@@ -31,14 +31,14 @@ class FriendViewModel(
 
     private var _user: MutableStateFlow<ApiResult<User?>> = MutableStateFlow(ApiResult.Loading())
 
-    private var _userEntity: MutableStateFlow<ApiResult<CurrentUserEntity?>> = MutableStateFlow(
+    private var _userEntity: MutableStateFlow<ApiResult<User?>> = MutableStateFlow(
         ApiResult.Loading())
     val user = _userEntity.asStateFlow()
 
     private var _friendList: MutableStateFlow<ApiResult<List<User>>> = MutableStateFlow(ApiResult.Loading())
     val friendList = _friendList.asStateFlow()
 
-    fun currentUserId(): String = _userEntity.value.data?.id ?: ""
+    fun currentUserId(): String = _userEntity.value.data?.userId ?: ""
     fun currentUserName(): String = _userEntity.value.data?.username ?: ""
 
     init {

@@ -24,7 +24,7 @@ class HomeViewModel(
 
     private var _user: MutableStateFlow<ApiResult<User?>> = MutableStateFlow(ApiResult.Loading())
 
-    private var _userEntity: MutableStateFlow<ApiResult<CurrentUserEntity?>> = MutableStateFlow(
+    private var _userEntity: MutableStateFlow<ApiResult<User?>> = MutableStateFlow(
         ApiResult.Loading())
     val user = _userEntity.asStateFlow()
 

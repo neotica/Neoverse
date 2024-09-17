@@ -1,12 +1,13 @@
 package id.neotica.neoverse.data.local.repo
 
 import id.neotica.neoverse.data.local.dao.CurrentUserDao
-import id.neotica.neoverse.data.local.entity.CurrentUserEntity
 import id.neotica.domain.model.User
 import id.neotica.neoverse.data.local.domain.local.CurrentUserRepository
 import id.neotica.neoverse.data.local.Mapper
+import id.neotica.neoverse.data.local.Mapper.toUser
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 
 class CurrentUserRepositoryImpl(
@@ -21,6 +22,11 @@ class CurrentUserRepositoryImpl(
         dao.clearUser()
     }
 
-    override fun getUser(): Flow<List<CurrentUserEntity>> = dao.currentUser()
-
+    override fun getUser(): Flow<List<User>> {
+        return dao.currentUser().map { users ->
+            users.map { user ->
+                user.toUser()
+            }
+        }
+    }
 }

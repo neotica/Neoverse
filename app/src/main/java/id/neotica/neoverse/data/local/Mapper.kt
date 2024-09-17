@@ -44,6 +44,31 @@ object Mapper {
         imageUrl = input.imageUrl
     )
 
+    fun userResponseToEntity(input: List<User>): List<CurrentUserEntity> {
+        val userList = ArrayList<CurrentUserEntity>()
+        input.map {
+            val user = CurrentUserEntity(
+                id = it.userId,
+                username = it.username,
+                email = it.userEmail,
+                status = it.status,
+                imageUrl = it.imageUrl
+            )
+            userList.add(user)
+        }
+        return userList
+    }
+
+    fun CurrentUserEntity.toUser(): User {
+        return User(
+            userId = id,
+            username = username,
+            userEmail = email,
+            status = status,
+            imageUrl = imageUrl
+        )
+    }
+
     /*fun userEntityToResponse(input: CurrentUserEntity) = User(
         userId = input.id,
         username = input.username,

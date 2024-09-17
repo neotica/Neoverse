@@ -49,7 +49,7 @@ fun DumpView(
 
     var isLoading by remember { mutableStateOf(false) }
     var isLoadingChats by remember { mutableStateOf(false) }
-    var currentuser by remember { mutableStateOf<CurrentUserEntity?>(null) }
+    var currentuser by remember { mutableStateOf<User?>(null) }
 
     LaunchedEffect(isPressed.value) {
         viewModel.userList.collect { result ->
@@ -143,7 +143,7 @@ fun DumpView(
                             if (currentuser?.username.isNullOrEmpty()) navController.navigate(Screen.LoginScreen)
                             if (!isLoadingChats) {
                                 if (chatRoomFiltered == null) {
-                                    navController.navigate(Screen.Chat(currentuser?.id.toString()+user.userId, user2 = user.username.toString()))
+                                    navController.navigate(Screen.Chat(currentuser?.userId.toString()+user.userId, user2 = user.username.toString()))
                                     viewModel.addChatroom(
                                         user2 = user.username.toString(),
                                         user = user,
