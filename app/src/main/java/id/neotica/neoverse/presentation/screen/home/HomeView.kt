@@ -22,11 +22,10 @@ import androidx.navigation.NavController
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.ChatRoom
 import id.neotica.domain.model.ParentNeo
-import id.neotica.neoverse.data.local.entity.CurrentUserEntity
-import id.neotica.neoverse.data.local.entity.FriendEntity
-import id.neotica.neoverse.presentation.navigation.Screen
+import id.neotica.domain.model.User
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.ProfileCard
+import id.neotica.ui.navigation.Screen
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -38,12 +37,12 @@ fun HomeView(
     var isPressed by remember { mutableStateOf(false) }
     val parentChatrooms = remember { mutableStateOf<List<ParentNeo<ChatRoom>>>(emptyList()) }
 
-    var friendList by remember { mutableStateOf<List<FriendEntity>>(emptyList()) }
+    var friendList by remember { mutableStateOf<List<User>>(emptyList()) }
 
 
     var isLoading by remember { mutableStateOf(false) }
     var isLoadingChats by remember { mutableStateOf(false) }
-    var currentuser by remember { mutableStateOf<CurrentUserEntity?>(null) }
+    var currentuser by remember { mutableStateOf<User?>(null) }
 
     LaunchedEffect(isPressed) {
         if (viewModel.isLoggedIn()) {
@@ -112,8 +111,6 @@ fun HomeView(
                                 modifier = Modifier.padding(8.dp),
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
-
-
                                 ProfileCard(
                                     name = chatName,
                                     image = friendInstance?.imageUrl.toString(),

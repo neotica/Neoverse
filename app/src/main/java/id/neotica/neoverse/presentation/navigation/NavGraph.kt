@@ -9,6 +9,8 @@ import id.neotica.neoverse.presentation.screen.ChatFromHomeView
 import id.neotica.neoverse.presentation.screen.SettingView
 import id.neotica.neoverse.presentation.screen.SplashView
 import id.neotica.neoverse.presentation.screen.dump.DumpView
+import id.neotica.ui.navigation.Screen
+import id.neotica.world.navigation.gameNavGraph
 
 @Composable
 fun NavGraph(navController: NavHostController, paddingValues: PaddingValues) {

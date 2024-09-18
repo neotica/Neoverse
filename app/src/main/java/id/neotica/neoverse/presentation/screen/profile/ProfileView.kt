@@ -21,10 +21,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import id.neotica.neoverse.data.local.entity.CurrentUserEntity
 import id.neotica.domain.ApiResult
-import id.neotica.neoverse.presentation.navigation.RootScreen
-import id.neotica.neoverse.presentation.navigation.Screen
+import id.neotica.domain.model.User
+import id.neotica.ui.navigation.RootScreen
+import id.neotica.ui.navigation.Screen
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.ImageCoil
 import id.neotica.ui.components.LoadingIndicatorBool
@@ -39,7 +39,7 @@ fun ProfileView(
     paddingValues: PaddingValues,
     viewModel: ProfileViewModel = koinViewModel()
 ) {
-    var user by remember { mutableStateOf<CurrentUserEntity?>(null) }
+    var user by remember { mutableStateOf<User?>(null) }
     val isLoading by remember { mutableStateOf(false) }
     var accountSettings by remember { mutableStateOf(false) }
 
@@ -75,7 +75,7 @@ fun ProfileView(
                 user?.let {
                     ImageCoil(url = it.imageUrl)
                     Text(it.username)
-                    Text(it.email)
+                    Text(it.userEmail)
                 }
 
                 Spacer(

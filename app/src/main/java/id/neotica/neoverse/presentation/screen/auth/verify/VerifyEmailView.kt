@@ -19,7 +19,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import id.neotica.neoverse.presentation.navigation.RootScreen
+import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.NeoButton
 import id.neotica.ui.theme.DarkPrimary

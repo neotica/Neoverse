@@ -24,7 +24,7 @@ import androidx.navigation.NavController
 import id.neotica.droidcore.component.textfield.NeoTextField
 import id.neotica.domain.model.User
 import id.neotica.domain.ApiResult
-import id.neotica.neoverse.presentation.navigation.RootScreen
+import id.neotica.ui.navigation.RootScreen
 import id.neotica.neoverse.presentation.screen.friend.FriendViewModel
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.NeoButton

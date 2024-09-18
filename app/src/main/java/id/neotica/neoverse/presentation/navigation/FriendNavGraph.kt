@@ -9,6 +9,8 @@ import androidx.navigation.toRoute
 import id.neotica.neoverse.presentation.screen.friend.profile.FriendProfileView
 import id.neotica.neoverse.presentation.screen.friend.FriendView
 import id.neotica.neoverse.presentation.screen.friend.search.SearchUser
+import id.neotica.ui.navigation.RootScreen
+import id.neotica.ui.navigation.Screen
 
 fun NavGraphBuilder.friendNavGraph(
     navController: NavController,

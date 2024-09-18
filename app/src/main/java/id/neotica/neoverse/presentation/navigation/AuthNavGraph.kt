@@ -12,6 +12,8 @@ import id.neotica.neoverse.presentation.screen.profile.ProfileView
 import id.neotica.neoverse.presentation.screen.profile.deleteaccount.DeleteAccountView
 import id.neotica.neoverse.presentation.screen.profile.privacypolicy.PrivacyPolicyView
 import id.neotica.neoverse.presentation.screen.profile.termsofsercive.TermsOfServiceView
+import id.neotica.ui.navigation.RootScreen
+import id.neotica.ui.navigation.Screen
 
 fun NavGraphBuilder.authNavGraph(
     navController: NavController,

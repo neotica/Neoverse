@@ -40,7 +40,7 @@ import androidx.navigation.NavController
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import id.neotica.domain.model.Message
-import id.neotica.neoverse.presentation.navigation.Screen
+import id.neotica.ui.navigation.Screen
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.theme.DarkPrimary
 import id.neotica.neoverse.utils.convertLongToTime

@@ -21,13 +21,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import id.neotica.neoverse.data.local.entity.CurrentUserEntity
-import id.neotica.neoverse.data.local.entity.FriendEntity
+import id.neotica.domain.ApiResult
 import id.neotica.domain.model.ChatRoom
 import id.neotica.domain.model.ParentNeo
 import id.neotica.domain.model.User
-import id.neotica.domain.ApiResult
-import id.neotica.neoverse.presentation.navigation.Screen
+import id.neotica.ui.navigation.Screen
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.ImageCoil
 import id.neotica.ui.components.ProfileCard
@@ -44,12 +42,12 @@ fun DumpView(
     var userList by remember { mutableStateOf<List<User>>(emptyList()) }
     val chatrooms = remember { mutableStateOf<List<ChatRoom>>(emptyList()) }
     val parentChatrooms = remember { mutableStateOf<List<ParentNeo<ChatRoom>>>(emptyList()) }
-    var friendList by remember { mutableStateOf<List<FriendEntity>>(emptyList()) }
+    var friendList by remember { mutableStateOf<List<User>>(emptyList()) }
 
 
     var isLoading by remember { mutableStateOf(false) }
     var isLoadingChats by remember { mutableStateOf(false) }
-    var currentuser by remember { mutableStateOf<CurrentUserEntity?>(null) }
+    var currentuser by remember { mutableStateOf<User?>(null) }
 
     LaunchedEffect(isPressed.value) {
         viewModel.userList.collect { result ->
@@ -138,20 +136,20 @@ fun DumpView(
                     Card(
                         modifier = Modifier.padding(4.dp),
                         onClick = {
-                            val chatRoomFiltered = viewModel.getRoomFiltered(user.userId.toString(), chatrooms.value)
+                            val chatRoomFiltered = viewModel.getRoomFiltered(user.userId, chatrooms.value)
 
                             if (currentuser?.username.isNullOrEmpty()) navController.navigate(Screen.LoginScreen)
                             if (!isLoadingChats) {
                                 if (chatRoomFiltered == null) {
-                                    navController.navigate(Screen.Chat(currentuser?.id.toString()+user.userId, user2 = user.username.toString()))
+                                    navController.navigate(Screen.Chat(currentuser?.userId.toString()+user.userId, user2 = user.username))
                                     viewModel.addChatroom(
-                                        user2 = user.username.toString(),
+                                        user2 = user.username,
                                         user = user,
                                     )
                                 } else {
                                     val chatUser2 = if (chatRoomFiltered.user1 != currentuser?.username) chatRoomFiltered.user1 else user.username
                                     chatRoomFiltered.let {
-                                        navController.navigate(Screen.Chat(chatId = chatRoomFiltered.name, user2 = chatUser2.toString()))
+                                        navController.navigate(Screen.Chat(chatId = chatRoomFiltered.name, user2 = chatUser2))
                                     }
                                 }
                             }
@@ -162,8 +160,8 @@ fun DumpView(
                                 .padding(8.dp),
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            ImageCoil(url = user.imageUrl.toString())
-                            Text(text = user.username.toString())
+                            ImageCoil(url = user.imageUrl)
+                            Text(text = user.username)
                         }
                     }
                 }
