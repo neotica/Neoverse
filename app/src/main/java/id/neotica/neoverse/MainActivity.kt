@@ -30,9 +30,9 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import id.neotica.neoverse.presentation.navigation.NavGraph
-import id.neotica.neoverse.presentation.navigation.NavigationItem
-import id.neotica.neoverse.presentation.navigation.RootScreen
-import id.neotica.neoverse.presentation.navigation.Screen
+import id.neotica.ui.navigation.NavigationItem
+import id.neotica.ui.navigation.RootScreen
+import id.neotica.ui.navigation.Screen
 import id.neotica.ui.components.CustomNavBar
 import id.neotica.ui.theme.DarkBackground
 import id.neotica.ui.theme.DarkPrimary

@@ -23,9 +23,9 @@ import id.neotica.domain.ApiResult
 import id.neotica.domain.model.ChatRoom
 import id.neotica.domain.model.ParentNeo
 import id.neotica.domain.model.User
-import id.neotica.neoverse.presentation.navigation.Screen
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.ProfileCard
+import id.neotica.ui.navigation.Screen
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -111,8 +111,6 @@ fun HomeView(
                                 modifier = Modifier.padding(8.dp),
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
-
-
                                 ProfileCard(
                                     name = chatName,
                                     image = friendInstance?.imageUrl.toString(),

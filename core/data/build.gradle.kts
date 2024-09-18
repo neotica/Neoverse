@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "id.neotica.data"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 28
@@ -47,10 +47,11 @@ dependencies {
     api(libs.androidx.navigation.compose)
     api(libs.kotlinx.serialization.json)
 
-
-
     // Koin
     api("io.insert-koin:koin-androidx-compose:3.5.6")
+
+    //Crop
+//    implementation("io.github.rroohit:ImageCropView:3.0.1")
 
     // Testing
     testImplementation(libs.junit)

@@ -1,4 +1,4 @@
-package id.neotica.neoverse.presentation.navigation
+package id.neotica.ui.navigation
 
 import androidx.compose.ui.graphics.vector.ImageVector
 import kotlinx.serialization.Serializable
@@ -57,7 +57,6 @@ sealed class Screen {
 
 @Serializable
 sealed class RootScreen {
-
     @Serializable
     object AuthNav
     @Serializable

@@ -8,13 +8,10 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.google.firebase.database.database
 import id.neotica.domain.model.Message
-import id.neotica.domain.model.ParentNeo
 import id.neotica.domain.remote.ChatRepository
 import id.neotica.domain.remote.UserRepository
-import id.neotica.neoverse.presentation.navigation.Screen
-import kotlinx.coroutines.flow.MutableStateFlow
+import id.neotica.ui.navigation.Screen
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
 import java.util.UUID
 
@@ -25,8 +22,6 @@ class ChatViewModel(
 ): ViewModel() {
     private val args = savedStateHandle.toRoute<Screen.Chat>()
     val message = chatRepo.getMessages(args.chatId).stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
-    private val _parentMessage = MutableStateFlow<List<ParentNeo<Message>>>(emptyList())
-    val parentMessage = _parentMessage.asStateFlow()
     private val db = Firebase.database
 
     fun sendMessage(chatId: String, chat: String) {

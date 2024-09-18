@@ -14,7 +14,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
 import id.neotica.neoverse.R
-import id.neotica.neoverse.presentation.navigation.RootScreen
+import id.neotica.ui.navigation.RootScreen
 import kotlinx.coroutines.delay
 
 @Composable
