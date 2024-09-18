@@ -1,4 +1,4 @@
-package id.neotica.neoverse.presentation.navigation
+package id.neotica.world.navigation
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.navigation.NavController
