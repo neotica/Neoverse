@@ -1,4 +1,4 @@
-package id.neotica.neoverse.presentation.screen.game.utils
+package id.neotica.world.utils
 
 import java.security.SecureRandom
 import kotlin.random.asKotlinRandom

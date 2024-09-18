@@ -1,4 +1,4 @@
-package id.neotica.neoverse.presentation.screen.game.components
+package id.neotica.world.components
 
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -23,7 +23,6 @@ fun CircularList(
                 listState.animateScrollToItem(listState.firstVisibleItemIndex + num2)
             }
         }
-
     }
 
     LazyColumn(state = listState, modifier = modifier) {

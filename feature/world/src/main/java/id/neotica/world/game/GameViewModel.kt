@@ -1,4 +1,4 @@
-package id.neotica.neoverse.presentation.screen.game
+package id.neotica.world.game
 
 import android.util.Log
 import androidx.lifecycle.ViewModel

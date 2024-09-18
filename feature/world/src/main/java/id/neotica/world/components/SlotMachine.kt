@@ -1,4 +1,4 @@
-package id.neotica.neoverse.presentation.screen.game.components
+package id.neotica.world.components
 
 import android.annotation.SuppressLint
 import android.util.Log
@@ -23,8 +23,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import id.neotica.neoverse.presentation.screen.game.GameViewModel
-import id.neotica.neoverse.presentation.screen.game.utils.generateTranspose
+import id.neotica.world.game.GameViewModel
+import id.neotica.world.utils.generateTranspose
 import id.neotica.ui.components.NeoButton
 import id.neotica.ui.components.SlideInto
 import id.neotica.ui.theme.DarkPrimaryTransparent
@@ -95,7 +95,7 @@ fun SlotMachine(modifier: Modifier = Modifier, viewModel: GameViewModel = koinVi
             Text("<- Good luck!")
         }
 
-        val scope = rememberCoroutineScope() // Use a coroutine scope
+        val scope = rememberCoroutineScope()
 
         Row(Modifier.width(224.dp)) {
             NeoButton(

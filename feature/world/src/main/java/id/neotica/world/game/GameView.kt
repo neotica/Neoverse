@@ -1,4 +1,4 @@
-package id.neotica.neoverse.presentation.screen.game
+package id.neotica.world.game
 
 import android.util.Log
 import android.widget.Toast
@@ -25,7 +25,7 @@ import id.neotica.domain.model.Games
 import id.neotica.domain.ApiResult
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.Screen
-import id.neotica.neoverse.presentation.screen.game.components.SlotMachine
+import id.neotica.world.components.SlotMachine
 import id.neotica.ui.components.BasicScaffold
 import org.koin.androidx.compose.koinViewModel
 import kotlin.random.Random
@@ -86,12 +86,6 @@ fun HomeGameView(
                     Modifier
                         .fillMaxWidth()
                         .padding(30.dp))
-            }
-
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-            ) {
             }
         } else {
             NeoCard(
