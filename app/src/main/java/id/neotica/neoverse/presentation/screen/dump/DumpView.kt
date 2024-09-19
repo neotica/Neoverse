@@ -38,7 +38,6 @@ fun DumpView(
     viewModel: DumpViewModel = koinViewModel(),
 ) {
     val isPressed = remember { mutableStateOf(false) }
-    Log.d("ispressed", isPressed.value.toString())
     var userList by remember { mutableStateOf<List<User>>(emptyList()) }
     val chatrooms = remember { mutableStateOf<List<ChatRoom>>(emptyList()) }
     val parentChatrooms = remember { mutableStateOf<List<ParentNeo<ChatRoom>>>(emptyList()) }
@@ -213,7 +212,7 @@ fun DumpView(
                                     alertButton = "Delete"
                                 ) {
                                     currentuser?.let {
-                                        viewModel.readMessage(channelItemParent.key, channelItemParent.value, it.username!!)
+                                        viewModel.readMessage(channelItemParent.key, channelItemParent.value, it.username)
                                         navController.navigate(
                                             Screen.Chat(
                                                 chatId = channelItemParent.value.name,

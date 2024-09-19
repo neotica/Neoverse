@@ -18,10 +18,8 @@ fun CircularList(
     val listState = rememberLazyListState(Int.MAX_VALUE / num1)
 
     LaunchedEffect(scroll) {
-        if (scroll) {
-            while (scroll) {
-                listState.animateScrollToItem(listState.firstVisibleItemIndex + num2)
-            }
+        while (scroll) {
+            listState.animateScrollToItem(listState.firstVisibleItemIndex + num2)
         }
     }
 

@@ -2,7 +2,6 @@ package id.neotica.world.game
 
 import android.util.Log
 import android.widget.Toast
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,13 +19,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import id.neotica.droidcore.component.cards.deprecated.NeoCard
-import id.neotica.domain.model.Games
 import id.neotica.domain.ApiResult
+import id.neotica.domain.model.Games
+import id.neotica.droidcore.component.cards.deprecated.NeoCard
+import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.Screen
 import id.neotica.world.components.SlotMachine
-import id.neotica.ui.components.BasicScaffold
 import org.koin.androidx.compose.koinViewModel
 import kotlin.random.Random
 
