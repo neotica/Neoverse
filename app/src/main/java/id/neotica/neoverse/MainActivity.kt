@@ -1,5 +1,7 @@
 package id.neotica.neoverse
 
+import android.os.Build
+import android.os.Build.VERSION
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -41,7 +43,9 @@ import id.neotica.ui.theme.NeoverseTheme
 class MainActivity: ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+        if (VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            enableEdgeToEdge()
+        }
         setContent {
             NeoverseTheme {
                 val navController = rememberNavController()

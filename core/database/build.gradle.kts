@@ -9,7 +9,7 @@ android {
     compileSdk = 35
 
     defaultConfig {
-        minSdk = 28
+        minSdk = 27
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
@@ -45,13 +45,13 @@ dependencies {
     implementation(project(":core:domain"))
 
     //Room
-    val room_version = "2.6.1"
+    val roomVersion = "2.6.1"
 
-    implementation("androidx.room:room-runtime:$room_version")
+    implementation("androidx.room:room-runtime:$roomVersion")
     // To use Kotlin Symbol Processing (KSP)
-    ksp("androidx.room:room-compiler:$room_version")
+    ksp("androidx.room:room-compiler:$roomVersion")
     // optional - Kotlin Extensions and Coroutines support for Room
-    implementation("androidx.room:room-ktx:$room_version")
+    implementation("androidx.room:room-ktx:$roomVersion")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

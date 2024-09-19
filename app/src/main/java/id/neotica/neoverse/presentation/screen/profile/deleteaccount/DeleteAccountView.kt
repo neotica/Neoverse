@@ -42,9 +42,7 @@ fun DeleteAccountView(
             Spacer(Modifier.weight(1f))
             NeoTextField(confirm)
             Spacer(Modifier.padding(4.dp))
-            Row(
-//                Modifier.padding(horizontal = 22.dp)
-            ) {
+            Row {
                 NeoButton(
                     text = "Confirm",
                     true,

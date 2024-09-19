@@ -45,11 +45,9 @@ class FriendViewModel(
     }
 
     private fun getUser() = viewModelScope.launch {
-        val user = userRepo.getUserDetail(userRepo.getUserId())
         val userData = userDatabase.getUser()
         userData.collect {
             if (it.isEmpty()) {
-                _user.value = user
                 _user.value.data?.let { remoteUser ->
                 }
             } else {
@@ -71,7 +69,6 @@ class FriendViewModel(
     fun addFriend(friend: User) = viewModelScope.launch {
         userRepo.addFriend(friend)
         databaseRepo.addFriend(friend)
-        Log.d("friendvm", friend.toString())
     }
 
     fun unFriend(friend: User) = viewModelScope.launch {

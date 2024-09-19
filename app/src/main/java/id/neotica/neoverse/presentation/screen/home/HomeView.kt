@@ -25,6 +25,7 @@ import id.neotica.domain.model.ParentNeo
 import id.neotica.domain.model.User
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.ProfileCard
+import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.Screen
 import org.koin.androidx.compose.koinViewModel
 
@@ -46,7 +47,12 @@ fun HomeView(
 
     LaunchedEffect(isPressed) {
         if (viewModel.isLoggedIn()) {
-            if (!viewModel.isUserVerified()) navController.navigate(Screen.VerifyEmailScreen)
+            if (!viewModel.isUserVerified()) navController.navigate(Screen.VerifyEmailScreen) {
+                popUpTo(RootScreen.HomeNav) {
+                    inclusive = true
+                }
+                launchSingleTop
+            }
         }
         viewModel.user.collect { result ->
             when(result) {

@@ -22,7 +22,6 @@ class AuthRepositoryImpl: AuthRepository {
     override suspend fun login(email: String, password: String): ApiResult<String> {
         auth = FirebaseAuth.getInstance()
 
-        Log.d("repo", "Masuk loginbase")
         val loginResult = auth.signInWithEmailAndPassword(email, password)
         return try {
             loginResult.await()
@@ -78,7 +77,6 @@ class AuthRepositoryImpl: AuthRepository {
 
     fun loginFlow(email: String, password: String): Flow<ApiResult<String>> = flow {
         auth = FirebaseAuth.getInstance()
-        Log.d("repo", "Masuk loginbase")
         val loginResult = auth.signInWithEmailAndPassword(email, password)
         emit(ApiResult.Loading())
         try {

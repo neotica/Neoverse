@@ -5,8 +5,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.database
 import com.google.firebase.firestore.FirebaseFirestore
 import id.neotica.domain.ApiResult
-import id.neotica.domain.model.ChatRoom
-import id.neotica.domain.model.ParentNeo
 import id.neotica.domain.model.User
 import id.neotica.domain.remote.UserRepository
 import kotlinx.coroutines.flow.Flow
@@ -80,20 +78,6 @@ class UserRepositoryImpl: UserRepository {
         }
     }
 
-    suspend fun getFriends2(searchName: String): ApiResult<List<User>> {
-        firestore = FirebaseFirestore.getInstance()
-        return try {
-            val snapshot = firestore.collection("Users").get().await()
-            val userList = snapshot.documents.mapNotNull {
-                it.toObject(User::class.java)
-            }
-            val userFiltered = userList.filter { it.username == searchName }
-            ApiResult.Success(userFiltered)
-        } catch (e: Exception) {
-            ApiResult.Error(e.message)
-        }
-    }
-
     override suspend fun searchUser(search: String): ApiResult<List<User>> {
         firestore = FirebaseFirestore.getInstance()
         return try {
@@ -120,32 +104,6 @@ class UserRepositoryImpl: UserRepository {
             .child(getUserId()).child("friends")
             .child(friend.userId).removeValue()
         original.await()
-    }
-
-    suspend fun getChatroomFriend(): Flow<ApiResult<List<ParentNeo<ChatRoom>>>> = flow {
-        val list = mutableListOf<ParentNeo<ChatRoom>>()
-        emit(ApiResult.Loading())
-        try {
-            val reference = firebase.getReference("chatroom").get().await()
-            reference.children.forEach { data ->
-                val cr = data.getValue(ChatRoom::class.java)
-                val channel = ParentNeo(
-                    key = data.key!!,
-                    value = cr!!
-                )
-                list.add(channel)
-                if (data != null) {
-                    emit(ApiResult.Success(list.sortedByDescending {
-
-                        it.value.lastOpened }.filter { it == it
-                        }))
-                } else {
-                    emit(ApiResult.Error("data null"))
-                }
-            }
-        } catch (e: Exception) {
-            emit(ApiResult.Error("exception: ${e.message}"))
-        }
     }
 
 }

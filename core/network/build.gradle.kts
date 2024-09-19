@@ -5,10 +5,10 @@ plugins {
 
 android {
     namespace = "id.neotica.network"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
-        minSdk = 28
+        minSdk = 27
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
@@ -44,7 +44,7 @@ dependencies {
     implementation(project(":core:domain"))
 
     //Firebase
-    api(platform("com.google.firebase:firebase-bom:33.1.2"))
+    api(platform("com.google.firebase:firebase-bom:33.3.0"))
     api("com.google.firebase:firebase-analytics")
     api("com.google.firebase:firebase-auth")
     api("com.google.firebase:firebase-database")

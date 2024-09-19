@@ -131,7 +131,7 @@ fun SlotMachine(modifier: Modifier = Modifier, viewModel: GameViewModel = koinVi
                 }
             }
         }
-        Log.d("slot", "numb"+ numbComb)
+        Log.d("slot", "numb$numbComb")
         Box {
             SlideInto(delayedClick) {
                 Text("You received ${viewModel.auraPoints.value} auras")
