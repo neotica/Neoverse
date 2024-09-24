@@ -1,6 +1,7 @@
 package id.neotica.network
 
 import android.net.Uri
+import androidx.core.net.toUri
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.database
@@ -118,21 +119,21 @@ class UserRepositoryImpl: UserRepository {
     }
 
     @OptIn(InternalCoroutinesApi::class)
-    override suspend fun getUserProfilePic(): Uri = withContext(Dispatchers.IO) {
+    override suspend fun getUserProfilePic(): String = withContext(Dispatchers.IO) {
         val storageRef = FirebaseStorage.getInstance().reference
             .child("profilePicture/${getUserId()}")
 
         suspendCancellableCoroutine { cont ->
             storageRef.downloadUrl.addOnSuccessListener { uri ->
-                cont.resume(uri)
+                cont.resume(uri.toString())
             }.addOnFailureListener { exc ->
                 cont.tryResumeWithException(exc)
             }
         }
     }
 
-    override suspend fun changeProfilePicture(uri: Uri) {
+    override suspend fun changeProfilePicture(uri: String) {
         val storageRef = FirebaseStorage.getInstance().reference
-        storageRef.child("profilePicture/${getUserId()}").putFile(uri)
+        storageRef.child("profilePicture/${getUserId()}").putFile(uri.toUri())
     }
 }

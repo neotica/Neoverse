@@ -91,7 +91,7 @@ class MainActivity: ComponentActivity() {
                             if (navBackStackEntry?.destination?.route == null) true else
                             navBackStackEntry?.destination?.hasRoute(it::class) == true
                         }
-                        val includeRoute2 = navBackStackEntry?.destination?.route == "id.neotica.neoverse.presentation.navigation.Screen.Chat/{chatId}/{user2}"
+                        val includeRoute2 = navBackStackEntry?.destination?.route == "id.neotica.ui.navigation.Screen.Chat/{chatId}/{user2}"
                         Log.d("currentScreen", navBackStackEntry?.destination?.route.toString())
 
                         val includeRoute3 = if (includeRoute) {

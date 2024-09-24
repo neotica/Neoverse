@@ -64,7 +64,7 @@ class ProfileViewModel(
         }
     }
 
-    fun changeProfilePic(uri: Uri) = viewModelScope.launch {
+    fun changeProfilePic(uri: String) = viewModelScope.launch {
         getUser()
         userRepo.changeProfilePicture(uri)
         currentUserDatabase.getUser().collect {

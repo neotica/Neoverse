@@ -41,7 +41,7 @@ fun EditProfileView(
         onResult = { uri ->
             selectedImages = listOf(uri)
             if (uri != null) {
-                viewModel.changeProfilePic(uri)
+                viewModel.changeProfilePic(uri.toString())
                 navController.navigate(RootScreen.AuthNav)
             }
         }
