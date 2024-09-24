@@ -90,7 +90,7 @@ fun ProfileView(
                         .padding(horizontal = 48.dp)
                 ) {
                     NeoButton("Edit Profile", true) {
-//                        viewModel.deleteAccount()
+                        navController.navigate(Screen.EditProfileScreen(profPic = user?.imageUrl ?: ""))
                     }
                     NeoButton(
                         if (accountSettings)"Account Settings -"

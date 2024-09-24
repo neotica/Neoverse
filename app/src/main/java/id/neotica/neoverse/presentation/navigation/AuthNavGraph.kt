@@ -5,11 +5,13 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import androidx.navigation.toRoute
 import id.neotica.neoverse.presentation.screen.auth.login.LoginView
 import id.neotica.neoverse.presentation.screen.auth.register.RegisterView
 import id.neotica.neoverse.presentation.screen.auth.verify.VerifyEmailView
 import id.neotica.neoverse.presentation.screen.profile.ProfileView
 import id.neotica.neoverse.presentation.screen.profile.deleteaccount.DeleteAccountView
+import id.neotica.neoverse.presentation.screen.profile.editprofile.EditProfileView
 import id.neotica.neoverse.presentation.screen.profile.privacypolicy.PrivacyPolicyView
 import id.neotica.neoverse.presentation.screen.profile.termsofsercive.TermsOfServiceView
 import id.neotica.ui.navigation.RootScreen
@@ -40,6 +42,10 @@ fun NavGraphBuilder.authNavGraph(
         }
         composable<Screen.DeleteAccountScreen> {
             DeleteAccountView(navController, paddingValues)
+        }
+        composable<Screen.EditProfileScreen> {
+            val args = it.toRoute<Screen.EditProfileScreen>()
+            EditProfileView(navController, paddingValues, args = args)
         }
     }
 }

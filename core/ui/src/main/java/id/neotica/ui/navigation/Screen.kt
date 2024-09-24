@@ -32,6 +32,8 @@ sealed class Screen {
     @Serializable
     data object ProfileScreen: Screen()
     @Serializable
+    data class EditProfileScreen(val profPic: String)
+    @Serializable
     data object VerifyEmailScreen: Screen()
     @Serializable
     data object PrivacyPolicyScreen: Screen()
