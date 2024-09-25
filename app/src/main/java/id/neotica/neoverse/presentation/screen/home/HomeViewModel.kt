@@ -2,12 +2,12 @@ package id.neotica.neoverse.presentation.screen.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import id.neotica.domain.model.ChatRoom
-import id.neotica.domain.model.ParentNeo
-import id.neotica.domain.model.User
 import id.neotica.domain.ApiResult
 import id.neotica.domain.local.CurrentUserRepository
 import id.neotica.domain.local.FriendDaoRepository
+import id.neotica.domain.model.ChatRoom
+import id.neotica.domain.model.ParentNeo
+import id.neotica.domain.model.User
 import id.neotica.domain.remote.ChatRepository
 import id.neotica.domain.remote.UserRepository
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -27,7 +27,7 @@ class HomeViewModel(
         ApiResult.Loading())
     val user = _userEntity.asStateFlow()
 
-    private val _chatroom = MutableStateFlow<ApiResult<List<ParentNeo<ChatRoom>>>>(ApiResult.Loading())
+    private val _chatroom: MutableStateFlow<ApiResult<List<ParentNeo<ChatRoom>>>> = MutableStateFlow(ApiResult.Loading())
     val chatroom = _chatroom.asStateFlow()
 
     private val _chatList = mutableListOf<ParentNeo<ChatRoom>>()
@@ -65,7 +65,7 @@ class HomeViewModel(
         }
     }
 
-    private fun getChatroom() = viewModelScope.launch {
+    fun getChatroom() = viewModelScope.launch {
         _chatList.clear()
         chatRepo.getChatroom().collect {
             _chatroom.value = it

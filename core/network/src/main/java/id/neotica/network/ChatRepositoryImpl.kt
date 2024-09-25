@@ -21,6 +21,8 @@ class ChatRepositoryImpl: ChatRepository {
 
     override suspend fun getChatroom(): Flow<ApiResult<List<ParentNeo<ChatRoom>>>> = flow {
         val list = mutableListOf<ParentNeo<ChatRoom>>()
+        list.clear()
+        emit(ApiResult.Loading())
         try {
             val reference = firebase.getReference("chatroom").get().await()
             reference.children.forEach { data ->

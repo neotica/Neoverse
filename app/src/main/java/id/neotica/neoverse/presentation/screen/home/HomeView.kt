@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
@@ -24,6 +25,7 @@ import id.neotica.domain.model.ChatRoom
 import id.neotica.domain.model.ParentNeo
 import id.neotica.domain.model.User
 import id.neotica.ui.components.BasicScaffold
+import id.neotica.ui.components.NeoButton
 import id.neotica.ui.components.ProfileCard
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.Screen
@@ -44,8 +46,10 @@ fun HomeView(
     var isLoading by remember { mutableStateOf(false) }
     var isLoadingChats by remember { mutableStateOf(false) }
     var currentuser by remember { mutableStateOf<User?>(null) }
+    val lazyState = rememberLazyListState()
 
     LaunchedEffect(isPressed) {
+        isPressed = false
         if (viewModel.isLoggedIn()) {
             if (!viewModel.isUserVerified()) navController.navigate(Screen.VerifyEmailScreen) {
                 popUpTo(RootScreen.HomeNav) {
@@ -69,7 +73,6 @@ fun HomeView(
     }
 
     LaunchedEffect(isPressed) {
-
         viewModel.chatroom.collect { result ->
             when(result) {
                 is ApiResult.Loading -> {
@@ -77,6 +80,7 @@ fun HomeView(
                 }
                 is ApiResult.Success -> {
                     isLoadingChats = false
+                    isPressed = false
 
                     viewModel.chatList.forEach { _ ->
                         parentChatrooms.value = result.data!!
@@ -86,6 +90,7 @@ fun HomeView(
                     }
                 }
                 is ApiResult.Error -> {
+                    isPressed = false
                     isLoadingChats = false
                 }
             }
@@ -94,6 +99,11 @@ fun HomeView(
 
     BasicScaffold(topBarTitle = "Home") {
 
+        NeoButton("Refresh") {
+            isPressed = true
+            viewModel.getChatroom()
+        }
+
         Box(modifier = Modifier.fillMaxWidth()) {
             if (isLoadingChats) {
                 CircularProgressIndicator(
@@ -101,7 +111,9 @@ fun HomeView(
                         .align(Alignment.Center)
                 )
             } else {
-                LazyRow {
+                LazyRow(
+                    state = lazyState
+                ) {
                     items(parentChatrooms.value.filter { channels ->
                         val current = currentuser?.username.toString()
                         filteredRoom(current, channels.value.user1, channels.value.user2)
