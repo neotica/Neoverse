@@ -132,53 +132,42 @@ fun FriendView(
                     .fillMaxSize()
             ) {
                 Box {
-                    LazyVerticalGrid(
-                        columns = GridCells.Fixed(3)
-                    ) {
-                        items(friendList) { friends ->
-                            val chatRoomFiltered =
-                                viewModel.getRoomFiltered(friends.userId, chatrooms.value)
-                            val currentId = viewModel.currentUserId()
-                            ProfileCard(
-                                name = friends.username,
-                                image = friends.imageUrl,
-                                paddingValues = PaddingValues(4.dp),
-                                alertTitle = "Delete ${friends.username}?",
-                                alertButton = "Delete",
-                                onLongClick = {
-                                    viewModel.unFriend(friends)
-                                }
-                            ) {
-                                if (!isLoadingChats) {
-                                    Log.d("friendchat", chatRoomFiltered.toString())
-                                    if (chatRoomFiltered.toString() == "null") {
-                                        Log.d("friendchat", "null")
+                    if (!isLoadingChats) {
+                        LazyVerticalGrid(
+                            columns = GridCells.Fixed(3)
+                        ) {
+                            items(friendList) { friends ->
+                                val chatRoomFiltered =
+                                    viewModel.getRoomFiltered(friends.userId, chatrooms.value)
+                                val currentId = viewModel.currentUserId()
+                                ProfileCard(
+                                    name = friends.username,
+                                    image = friends.imageUrl,
+                                    paddingValues = PaddingValues(4.dp),
+                                    alertTitle = "Delete ${friends.username}?",
+                                    alertButton = "Delete",
+                                    onLongClick = {
+                                        viewModel.unFriend(friends)
+                                    }
+                                ) {
+                                    if (!isLoadingChats) {
+                                        Log.d("friendchat", chatRoomFiltered.toString())
+                                        if (chatRoomFiltered.toString() == "null") {
+                                            Log.d("friendchat", "null")
 
-                                        navController.navigate(
-                                            Screen.Chat(
-                                                currentId + friends.userId,
-                                                user2 = friends.username
-                                            )
-                                        )
-                                        val addUser = User(
-                                            userId = friends.userId,
-                                            username = friends.username
-                                        )
-                                        viewModel.addChatroom(
-                                            user2 = friends.username,
-                                            user = addUser,
-                                        )
-                                    } else {
-                                        Log.d("friendchat", "not null")
-
-                                        val chatUser2 =
-                                            if (chatRoomFiltered?.user1 != viewModel.currentUserName()) chatRoomFiltered?.user1 else friends.username
-                                        chatRoomFiltered.let {
                                             navController.navigate(
                                                 Screen.Chat(
-                                                    chatId = chatRoomFiltered?.name.toString(),
+                                                    currentId + friends.userId,
                                                     user2 = friends.username
                                                 )
+                                            )
+                                            val addUser = User(
+                                                userId = friends.userId,
+                                                username = friends.username
+                                            )
+                                            viewModel.addChatroom(
+                                                user2 = friends.username,
+                                                user = addUser,
                                             )
                                         }
                                     }
