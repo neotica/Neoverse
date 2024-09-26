@@ -1,6 +1,5 @@
 package id.neotica.neoverse.presentation.screen.profile
 
-import android.net.Uri
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -47,7 +46,7 @@ class ProfileViewModel(
         currentUserDatabase.clearCurrent()
     }
 
-    private fun getUser() = viewModelScope.launch {
+    fun getUser() = viewModelScope.launch {
         val user = userRepo.getUserDetail(userRepo.getUserId())
         _user.value = ApiResult.Loading()
         _user.value = user
@@ -74,9 +73,11 @@ class ProfileViewModel(
                 username = db.username,
                 userEmail = db.userEmail,
                 status = db.status,
-                imageUrl = userRepo.getUserProfilePic().toString()
+                imageUrl = userRepo.getUserProfilePic()
             )
             userRepo.changeUserProfile(tempUser)
+            currentUserDatabase.saveUser(tempUser)//.let { getUser() }
+            getUser()
         }
     }
 
