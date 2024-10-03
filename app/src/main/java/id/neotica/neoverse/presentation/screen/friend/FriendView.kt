@@ -20,7 +20,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import id.neotica.domain.ApiResult
-import id.neotica.domain.model.ChatRoom
 import id.neotica.domain.model.User
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.Screen
@@ -37,38 +36,12 @@ fun FriendView(
     viewModel: FriendViewModel = koinViewModel()
 ) {
 
-    val chatrooms = remember { mutableStateOf<List<ChatRoom>>(emptyList()) }
     var friendList by remember { mutableStateOf<List<User>>(emptyList()) }
     var friendList2 by remember { mutableStateOf<List<User>>(emptyList()) }
     var isLoading by remember { mutableStateOf(false) }
     var isLoadingChats by remember { mutableStateOf(false) }
     var isFriendEmpty by remember { mutableStateOf(false) }
     var isPressed by remember { mutableStateOf(false) }
-
-    LaunchedEffect(isPressed) {
-        viewModel.getChatroom()
-        viewModel.chatroom.collect { result ->
-            Log.d("chatroomcollect", result.data .toString())
-            when(result) {
-                is ApiResult.Loading -> {
-                    isLoadingChats = true
-                }
-                is ApiResult.Success -> {
-                    isPressed = false
-                    isLoadingChats = false
-                    val list = mutableListOf<ChatRoom>()
-                    result.data?.forEach { chatResult ->
-                        list.add(chatResult.value)
-                    }
-                    chatrooms.value = list
-                }
-                is ApiResult.Error -> {
-                    isPressed = false
-                    isLoadingChats = false
-                }
-            }
-        }
-    }
 
     LaunchedEffect(Unit) {
         if (!viewModel.isLoggedIn()) navController.navigate(Screen.LoginScreen) {
@@ -123,7 +96,6 @@ fun FriendView(
         "Friends",
         paddingValues = paddingValues
     ) {
-        //Todo: add user profile and refresh the profile picture from there
         Box {
             NeoButton("Add Friend") {
                 navController.navigate(Screen.SearchUserScreen)
@@ -145,9 +117,6 @@ fun FriendView(
                             columns = GridCells.Fixed(3)
                         ) {
                             items(friendList) { friends ->
-                                val chatRoomFiltered =
-                                    viewModel.getRoomFiltered(friends.userId, chatrooms.value)
-                                val currentId = viewModel.currentUserId()
                                 ProfileCard(
                                     name = friends.username,
                                     image = friends.imageUrl,
@@ -158,35 +127,9 @@ fun FriendView(
                                         viewModel.unFriend(friends)
                                     }
                                 ) {
-                                    Log.d("friendchat", chatRoomFiltered.toString())
-                                    if (chatRoomFiltered.toString() == "null") {
-                                        Log.d("friendchat", "null")
-
-                                        navController.navigate(
-                                            Screen.Chat(
-                                                currentId + friends.userId,
-                                                user2 = friends.username
-                                            )
-                                        )
-                                        val addUser = User(
-                                            userId = friends.userId,
-                                            username = friends.username
-                                        )
-                                        viewModel.addChatroom(
-                                            user2 = friends.username,
-                                            user = addUser,
-                                        )
-                                    } else {
-                                        Log.d("friendchat", "not null")
-                                        chatRoomFiltered.let {
-                                            navController.navigate(
-                                                Screen.Chat(
-                                                    chatId = chatRoomFiltered?.name.toString(),
-                                                    user2 = friends.username
-                                                )
-                                            )
-                                        }
-                                    }
+                                    navController.navigate(Screen.FriendProfileScreen(
+                                        userId = friends.userId
+                                    ))
                                 }
                             }
                         }
