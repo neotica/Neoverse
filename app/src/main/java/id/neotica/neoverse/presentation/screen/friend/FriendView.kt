@@ -70,33 +70,39 @@ fun FriendView(
         }
     }
 
-    LaunchedEffect(key1 = true) {
+    LaunchedEffect(Unit) {
         if (!viewModel.isLoggedIn()) navController.navigate(Screen.LoginScreen) {
             popUpTo(RootScreen.HomeNav) {
                 inclusive = true
             }
             launchSingleTop
         }
-        viewModel.getFriendsRoom().collect {
-            if (it.isNotEmpty()) {
-                friendList = it
-                Log.d("friend", "didnt collect")
+        if (!isPressed) {
+            viewModel.getFriendsRoom().collect {
+                if (it.isNotEmpty()) {
+                    friendList = it
+                    Log.d("friend", "didnt collect")
+                    isPressed = false
 
-            } else {
-                isFriendEmpty = true
-                viewModel.getFriends()
-                Log.d("friend", "else")
+                } else {
+                    isFriendEmpty = true
+                    isPressed = false
+                    viewModel.getFriends()
+                    Log.d("friend", "else")
 
+                }
             }
         }
     }
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(isPressed) {
+
         viewModel.friendList.collect { result ->
-            Log.d("friend", result.toString())
+            Log.d("friendList", result.toString())
             when(result) {
                 is ApiResult.Loading -> isLoading = true
                 is ApiResult.Success -> {
+                    isPressed = false
                     isLoading = false
                     result.data?.let {
                         friendList2 = result.data!!
@@ -104,6 +110,7 @@ fun FriendView(
                     }
                 }
                 is ApiResult.Error -> {
+                    isPressed = false
                     isLoading = false
                     Log.d("neotica", result.errorMessage.toString())
                 }
@@ -116,6 +123,7 @@ fun FriendView(
         "Friends",
         paddingValues = paddingValues
     ) {
+        //Todo: add user profile and refresh the profile picture from there
         Box {
             NeoButton("Add Friend") {
                 navController.navigate(Screen.SearchUserScreen)
@@ -124,7 +132,7 @@ fun FriendView(
         PullToRefreshBox(
             isRefreshing = isLoadingChats,
             onRefresh = {
-                viewModel.getChatroom()
+                isPressed = true
             }
         ) {
             Column(
@@ -144,30 +152,38 @@ fun FriendView(
                                     name = friends.username,
                                     image = friends.imageUrl,
                                     paddingValues = PaddingValues(4.dp),
-                                    alertTitle = "Delete ${friends.username}?",
-                                    alertButton = "Delete",
+                                    alertTitle = "Unfriend ${friends.username}?",
+                                    alertButton = "Unfriend",
                                     onLongClick = {
                                         viewModel.unFriend(friends)
                                     }
                                 ) {
-                                    if (!isLoadingChats) {
-                                        Log.d("friendchat", chatRoomFiltered.toString())
-                                        if (chatRoomFiltered.toString() == "null") {
-                                            Log.d("friendchat", "null")
+                                    Log.d("friendchat", chatRoomFiltered.toString())
+                                    if (chatRoomFiltered.toString() == "null") {
+                                        Log.d("friendchat", "null")
 
+                                        navController.navigate(
+                                            Screen.Chat(
+                                                currentId + friends.userId,
+                                                user2 = friends.username
+                                            )
+                                        )
+                                        val addUser = User(
+                                            userId = friends.userId,
+                                            username = friends.username
+                                        )
+                                        viewModel.addChatroom(
+                                            user2 = friends.username,
+                                            user = addUser,
+                                        )
+                                    } else {
+                                        Log.d("friendchat", "not null")
+                                        chatRoomFiltered.let {
                                             navController.navigate(
                                                 Screen.Chat(
-                                                    currentId + friends.userId,
+                                                    chatId = chatRoomFiltered?.name.toString(),
                                                     user2 = friends.username
                                                 )
-                                            )
-                                            val addUser = User(
-                                                userId = friends.userId,
-                                                username = friends.username
-                                            )
-                                            viewModel.addChatroom(
-                                                user2 = friends.username,
-                                                user = addUser,
                                             )
                                         }
                                     }

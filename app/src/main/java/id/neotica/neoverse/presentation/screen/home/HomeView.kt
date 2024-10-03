@@ -138,8 +138,8 @@ fun HomeView(
                                                 isPressed = true
                                                 viewModel.deleteChatroom(channelItemParent.value)
                                             },
-                                            alertTitle = "Delete Chatroom",
-                                            alertButton = "Delete"
+                                            alertTitle = "Clear Chat with $chatName?",
+                                            alertButton = "Clear"
                                         ) {
                                             currentuser?.let {
                                                 viewModel.readMessage(channelItemParent.key, channelItemParent.value, it.username)

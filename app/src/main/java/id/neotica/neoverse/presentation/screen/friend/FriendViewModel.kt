@@ -83,9 +83,15 @@ class FriendViewModel(
     }
 
     fun getFriends() = viewModelScope.launch {
+        _friendList.value = ApiResult.Loading()
         userRepo.getFriends().collect {
             _friendList.value = it
         }
+    }
+
+    fun refresh() = viewModelScope.launch {
+        Log.d("ViewModel", "refresh called")
+        databaseRepo.clearFriends()
     }
 
     fun getChatroom() = viewModelScope.launch {

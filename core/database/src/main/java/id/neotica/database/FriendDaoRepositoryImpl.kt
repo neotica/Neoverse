@@ -36,6 +36,7 @@ class FriendDaoRepositoryImpl(
     }
 
     override suspend fun clearFriends() = withContext(Dispatchers.IO) {
+        Log.d("DAO", "clearFriend() called")
         dao.clearFriend()
     }
 }

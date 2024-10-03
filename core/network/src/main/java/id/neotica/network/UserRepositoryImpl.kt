@@ -1,6 +1,5 @@
 package id.neotica.network
 
-import android.net.Uri
 import androidx.core.net.toUri
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
@@ -68,6 +67,7 @@ class UserRepositoryImpl: UserRepository {
 
     override fun getFriends(): Flow<ApiResult<List<User>>> = flow {
         val list = mutableListOf<User>()
+        list.clear()
         emit(ApiResult.Loading())
         try {
             val reference = firebase.getReference("userdata").child(getUserId()).child("friends").get().await()
