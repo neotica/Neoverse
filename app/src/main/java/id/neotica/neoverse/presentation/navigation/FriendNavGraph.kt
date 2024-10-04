@@ -24,7 +24,11 @@ fun NavGraphBuilder.friendNavGraph(
         }
         composable<Screen.FriendProfileScreen> {
             val args = it.toRoute<Screen.FriendProfileScreen>()
-            FriendProfileView(paddingValues = paddingValues, args.userId)
+            FriendProfileView(
+                navController,
+                paddingValues = paddingValues,
+                userId = args.userId
+            )
         }
     }
 }

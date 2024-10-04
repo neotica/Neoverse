@@ -14,4 +14,7 @@ interface UserRepository {
     suspend fun addFriend(friend: User)
     fun isUserVerified(): Boolean
     suspend fun unfriend(friend: User)
+    suspend fun changeProfilePicture(uri: String)
+    suspend fun changeUserProfile(user: User)
+    suspend fun getUserProfilePic(): String
 }

@@ -113,6 +113,7 @@ fun SearchUser(
                                                         viewModel.viewModelScope.launch {
                                                             viewModel.addFriend(friends)
                                                         }
+                                                        navController.navigateUp()
                                                     } else {
                                                         navController.navigate(RootScreen.AuthNav)
                                                     }

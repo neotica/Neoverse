@@ -4,11 +4,11 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import id.neotica.domain.ApiResult
+import id.neotica.domain.local.CurrentUserRepository
+import id.neotica.domain.local.FriendDaoRepository
 import id.neotica.domain.model.ChatRoom
 import id.neotica.domain.model.ParentNeo
 import id.neotica.domain.model.User
-import id.neotica.domain.local.CurrentUserRepository
-import id.neotica.domain.local.FriendDaoRepository
 import id.neotica.domain.remote.ChatRepository
 import id.neotica.domain.remote.UserRepository
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,7 +19,7 @@ class FriendViewModel(
     private val userRepo: UserRepository,
     private val chatRepo: ChatRepository,
     private val databaseRepo: FriendDaoRepository,
-    private val userDatabase: CurrentUserRepository
+    private val userDatabase: CurrentUserRepository,
 ): ViewModel() {
 
     private var _userList: MutableStateFlow<ApiResult<List<User>>> = MutableStateFlow(ApiResult.Loading())
@@ -36,6 +36,9 @@ class FriendViewModel(
 
     private var _friendList: MutableStateFlow<ApiResult<List<User>>> = MutableStateFlow(ApiResult.Loading())
     val friendList = _friendList.asStateFlow()
+
+    private var _friendProfile: MutableStateFlow<ApiResult<User?>> = MutableStateFlow(ApiResult.Loading())
+    val friendProfile = _friendProfile.asStateFlow()
 
     fun currentUserId(): String = _userEntity.value.data?.userId ?: ""
     fun currentUserName(): String = _userEntity.value.data?.username ?: ""
@@ -71,6 +74,12 @@ class FriendViewModel(
         databaseRepo.addFriend(friend)
     }
 
+    fun getFriendProfile(userId: String) = viewModelScope.launch {
+        val user = userRepo.getUserDetail(userId)
+        _friendProfile.value = ApiResult.Loading()
+        _friendProfile.value = user
+    }
+
     fun unFriend(friend: User) = viewModelScope.launch {
         userRepo.unfriend(friend)
         databaseRepo.unfriend(friend.username)
@@ -83,9 +92,15 @@ class FriendViewModel(
     }
 
     fun getFriends() = viewModelScope.launch {
+        _friendList.value = ApiResult.Loading()
         userRepo.getFriends().collect {
             _friendList.value = it
         }
+    }
+
+    fun refresh() = viewModelScope.launch {
+        Log.d("ViewModel", "refresh called")
+        databaseRepo.clearFriends()
     }
 
     fun getChatroom() = viewModelScope.launch {

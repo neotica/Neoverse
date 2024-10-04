@@ -1,15 +1,22 @@
 package id.neotica.network
 
+import androidx.core.net.toUri
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.database
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.User
 import id.neotica.domain.remote.UserRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
+import kotlin.coroutines.resume
 
 class UserRepositoryImpl: UserRepository {
     private lateinit var firestore: FirebaseFirestore
@@ -60,6 +67,7 @@ class UserRepositoryImpl: UserRepository {
 
     override fun getFriends(): Flow<ApiResult<List<User>>> = flow {
         val list = mutableListOf<User>()
+        list.clear()
         emit(ApiResult.Loading())
         try {
             val reference = firebase.getReference("userdata").child(getUserId()).child("friends").get().await()
@@ -106,4 +114,26 @@ class UserRepositoryImpl: UserRepository {
         original.await()
     }
 
+    override suspend fun changeUserProfile(user: User) {
+        firestore.collection("Users").document(getUserId()).set(user)
+    }
+
+    @OptIn(InternalCoroutinesApi::class)
+    override suspend fun getUserProfilePic(): String = withContext(Dispatchers.IO) {
+        val storageRef = FirebaseStorage.getInstance().reference
+            .child("profilePicture/${getUserId()}")
+
+        suspendCancellableCoroutine { cont ->
+            storageRef.downloadUrl.addOnSuccessListener { uri ->
+                cont.resume(uri.toString())
+            }.addOnFailureListener { exc ->
+                cont.tryResumeWithException(exc)
+            }
+        }
+    }
+
+    override suspend fun changeProfilePicture(uri: String) {
+        val storageRef = FirebaseStorage.getInstance().reference
+        storageRef.child("profilePicture/${getUserId()}").putFile(uri.toUri())
+    }
 }
