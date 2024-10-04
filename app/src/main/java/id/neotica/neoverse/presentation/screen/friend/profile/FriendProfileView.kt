@@ -105,7 +105,9 @@ fun FriendProfileView(
 
     BasicScaffold(
         "Profile",
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
+        enableActionBar = true,
+        navController = navController
     ) {
         PullToRefreshBox(
             modifier = Modifier.fillMaxWidth(),
@@ -133,7 +135,6 @@ fun FriendProfileView(
 
                                 val chatRoomFiltered =
                                     viewModel.getRoomFiltered(friend?.userId.toString(), chatrooms.value)
-                                val currentId = viewModel.currentUserId()
                                 if (chatRoomFiltered.toString() == "null") {
                                     Log.d("friendchat", "null")
 
@@ -164,7 +165,7 @@ fun FriendProfileView(
                                 }
                             }
 
-                            NeoButton("Delete Friend") {
+                            NeoButton("Unfriend", negative = true) {
                                 friend?.let { viewModel.unFriend(it) }
                                 navController.navigateUp()
                             }
