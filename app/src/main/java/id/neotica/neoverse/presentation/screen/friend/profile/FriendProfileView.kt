@@ -5,9 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
-import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -18,17 +16,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavController
-import id.neotica.domain.model.User
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.ChatRoom
+import id.neotica.domain.model.User
 import id.neotica.neoverse.presentation.screen.friend.FriendViewModel
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.ImageCoil
+import id.neotica.ui.components.LoadingIndicatorBool
 import id.neotica.ui.components.NeoButton
 import id.neotica.ui.navigation.Screen
 import org.koin.androidx.compose.koinViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FriendProfileView(
     navController: NavController,
@@ -109,13 +107,7 @@ fun FriendProfileView(
         enableActionBar = true,
         navController = navController
     ) {
-        PullToRefreshBox(
-            modifier = Modifier.fillMaxWidth(),
-            isRefreshing = isLoading,
-            onRefresh = {
-                isPressed = true
-            }
-        ) {
+        LoadingIndicatorBool(isLoading) {
             LazyColumn {
                 item {
                     friend?.let {
@@ -125,10 +117,6 @@ fun FriendProfileView(
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             Text(modifier = Modifier.fillMaxWidth(), text = it.username, textAlign = TextAlign.Center)
-                            NeoButton("refresh") {
-                                viewModel.getFriendProfile(userId)
-                                isPressed = true
-                            }
                             NeoButton("Chat") {
                                 val friendUsername = friend?.username.toString()
                                 val friendId = friend?.userId.toString()
