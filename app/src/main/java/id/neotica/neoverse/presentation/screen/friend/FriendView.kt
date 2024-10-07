@@ -116,9 +116,6 @@ fun FriendView(
                                     paddingValues = PaddingValues(4.dp),
                                     alertTitle = "Unfriend ${friends.username}?",
                                     alertButton = "Unfriend",
-                                    onLongClick = {
-                                        viewModel.unFriend(friends)
-                                    }
                                 ) {
                                     navController.navigate(Screen.FriendProfileScreen(
                                         userId = friends.userId

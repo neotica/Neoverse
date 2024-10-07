@@ -32,6 +32,7 @@ fun ProfileCard(
     content: @Composable () -> Unit = {},
     alertTitle: String = "",
     alertButton: String = "",
+    enableLongClick: Boolean = false,
     onLongClick: () -> Unit = {},
     onClick: () -> Unit = {}
 ) {
@@ -43,6 +44,12 @@ fun ProfileCard(
         disabledContentColor = DarkPrimaryTransparent,
         disabledContainerColor = DarkPrimaryTransparent
     )
+
+    val longClick: (() -> Unit)? = if (enableLongClick) {
+        { openDialog.value = true }
+    } else {
+        null
+    }
 
     if (openDialog.value) {
         NeoAlert(
@@ -63,9 +70,7 @@ fun ProfileCard(
         modifier = Modifier
             .combinedClickable(
                 onClick = { onClick() },
-                onLongClick = {
-                    openDialog.value = true
-                },
+                onLongClick = longClick,
             )
             .padding(paddingValues),
     ) {
@@ -84,6 +89,5 @@ fun ProfileCard(
             )
             content()
         }
-
     }
 }

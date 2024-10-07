@@ -134,6 +134,7 @@ fun HomeView(
                                         ProfileCard(
                                             name = chatName,
                                             image = friendInstance?.imageUrl.toString(),
+                                            enableLongClick = true,
                                             onLongClick = {
                                                 isPressed = true
                                                 viewModel.deleteChatroom(channelItemParent.value)

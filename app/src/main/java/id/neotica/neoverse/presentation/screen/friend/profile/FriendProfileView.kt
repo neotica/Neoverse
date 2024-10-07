@@ -19,6 +19,7 @@ import androidx.navigation.NavController
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.ChatRoom
 import id.neotica.domain.model.User
+import id.neotica.droidcore.component.alert.NeoAlert
 import id.neotica.neoverse.presentation.screen.friend.FriendViewModel
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.ImageCoil
@@ -41,7 +42,7 @@ fun FriendProfileView(
     var friend by remember { mutableStateOf<User?>(null) }
     var isPressed by remember { mutableStateOf(false) }
 
-
+    val openDialog = remember { mutableStateOf(false) }
 
     LaunchedEffect(isPressed) {
 
@@ -101,6 +102,23 @@ fun FriendProfileView(
         }
     }
 
+    if (openDialog.value) {
+        NeoAlert(
+            openDialog = openDialog,
+            title = "Unfriend ${friend?.username.toString()}?",
+            backButton = "Cancel",
+            confirmButton = {
+                NeoButton("Unfriend", negative = true) {
+                    friend?.let {
+                        viewModel.unFriend(it)
+                    }
+                    navController.navigateUp()
+                    openDialog.value = false
+                }
+            }
+        )
+    }
+
     BasicScaffold(
         "Profile",
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -154,8 +172,7 @@ fun FriendProfileView(
                             }
 
                             NeoButton("Unfriend", negative = true) {
-                                friend?.let { viewModel.unFriend(it) }
-                                navController.navigateUp()
+                                openDialog.value = true
                             }
                         }
                     }
