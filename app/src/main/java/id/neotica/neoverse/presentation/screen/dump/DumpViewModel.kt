@@ -77,7 +77,7 @@ class DumpViewModel(
     }
 
     private fun getChatroom() = viewModelScope.launch {
-        chatRepo.getChatroom().collect {
+        chatRepo.getAllChatrooms().collect {
             _chatroom.value = it
         }
     }
@@ -120,7 +120,7 @@ class DumpViewModel(
                 user2Read = false,
                 createdAt = chatRoom.createdAt
             )
-            chatRepo.readMessage(chatId, chatRoomRead)
+            chatRepo.updateChatroom(chatId, chatRoomRead)
         } else {
             val chatRoomRead = ChatRoom(
                 id = chatId,
@@ -133,7 +133,7 @@ class DumpViewModel(
                 user2Read = true,
                 createdAt = chatRoom.createdAt
             )
-            chatRepo.readMessage(chatId, chatRoomRead)
+            chatRepo.updateChatroom(chatId, chatRoomRead)
         }
     }
 

@@ -67,7 +67,7 @@ class HomeViewModel(
 
     fun getChatroom() = viewModelScope.launch {
         _chatList.clear()
-        chatRepo.getChatroom().collect {
+        chatRepo.getAllChatrooms().collect {
             _chatroom.value = it
             it.data?.forEach { list ->
                 _chatList.add(list)
@@ -76,38 +76,6 @@ class HomeViewModel(
     }
 
     fun getFriendsRoom() = friendDatabase.getFriends()
-
-    fun readMessage(chatId: String, chatRoom: ChatRoom, currentUser: String) = viewModelScope.launch {
-        getChatroom()
-        getUser()
-        if (currentUser != chatRoom.user2) {
-            val chatRoomRead = ChatRoom(
-                id = chatId,
-                name = chatRoom.name,
-                user1 = chatRoom.user1,
-                user1id = chatRoom.user1id,
-                user1Read = true,
-                user2 = chatRoom.user2,
-                user2id = chatRoom.user2id,
-                user2Read = false,
-                createdAt = chatRoom.createdAt
-            )
-            chatRepo.readMessage(chatId, chatRoomRead)
-        } else {
-            val chatRoomRead = ChatRoom(
-                id = chatId,
-                name = chatRoom.name,
-                user1 = chatRoom.user1,
-                user1id = chatRoom.user1id,
-                user1Read = false,
-                user2 = chatRoom.user2,
-                user2id = chatRoom.user2id,
-                user2Read = true,
-                createdAt = chatRoom.createdAt
-            )
-            chatRepo.readMessage(chatId, chatRoomRead)
-        }
-    }
 
     fun deleteChatroom(chatroom: ChatRoom) = viewModelScope.launch {
         getChatroom()

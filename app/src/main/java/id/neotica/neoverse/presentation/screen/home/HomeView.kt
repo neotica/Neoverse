@@ -4,12 +4,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -17,18 +18,23 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.ChatRoom
 import id.neotica.domain.model.ParentNeo
 import id.neotica.domain.model.User
+import id.neotica.domain.utils.filteredRoom
+import id.neotica.domain.utils.returnFriendName
 import id.neotica.ui.components.BasicScaffold
-import id.neotica.ui.components.ProfileCard
+import id.neotica.ui.components.ChatListItem
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.Screen
 import org.koin.androidx.compose.koinViewModel
@@ -103,7 +109,9 @@ fun HomeView(
 
     BasicScaffold(topBarTitle = "Home") {
         PullToRefreshBox(
-            modifier = Modifier.fillMaxSize().nestedScroll(nestedState),
+            modifier = Modifier
+                .fillMaxSize()
+                .nestedScroll(nestedState),
             isRefreshing = isLoadingChats,
             onRefresh = {
                 isPressed = true
@@ -111,46 +119,67 @@ fun HomeView(
             }
         ) {
             LazyColumn {
-                item {
-                    if (!isLoadingChats) {
-                        LazyRow(
-                            state = lazyState
+                if(!isLoadingChats) {
+                    items(parentChatrooms.value.filter { channels ->
+                        val current = currentuser?.username.toString()
+                        filteredRoom(current, channels.value.user1, channels.value.user2)
+                    }) { channelItemParent ->
+                        val chatName = returnFriendName(
+                            currentuser?.username.toString(),
+                            channelItemParent.value.user1,
+                            channelItemParent.value.user2
+                        )
+                        val friendInstance = friendList.firstOrNull {
+                            it.username == chatName
+                        }
+                        Card(
+                            modifier = Modifier.padding(4.dp),
                         ) {
-                            items(parentChatrooms.value.filter { channels ->
-                                val current = currentuser?.username.toString()
-                                filteredRoom(current, channels.value.user1, channels.value.user2)
-                            }) { channelItemParent ->
-                                val chatName = chatRoomName(currentuser?.username.toString(), channelItemParent.value.user1, channelItemParent.value.user2)
-                                val friendInstance = friendList.firstOrNull {
-                                    it.username == chatName
-                                }
-                                Card(
-                                    modifier = Modifier.padding(4.dp),
-                                ) {
-                                    Column(
-                                        modifier = Modifier.padding(8.dp),
-                                        horizontalAlignment = Alignment.CenterHorizontally
-                                    ) {
-                                        ProfileCard(
-                                            name = chatName,
-                                            image = friendInstance?.imageUrl.toString(),
-                                            enableLongClick = true,
-                                            onLongClick = {
-                                                isPressed = true
-                                                viewModel.deleteChatroom(channelItemParent.value)
-                                            },
-                                            alertTitle = "Clear Chat with $chatName?",
-                                            alertButton = "Clear"
-                                        ) {
-                                            currentuser?.let {
-                                                viewModel.readMessage(channelItemParent.key, channelItemParent.value, it.username)
-                                                navController.navigate(
-                                                    Screen.Chat(
-                                                        chatId = channelItemParent.value.name,
-                                                        user2 = chatName,)
+                            Column(
+                                modifier = Modifier.padding(8.dp),
+//                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                ChatListItem(
+                                    name = chatName,
+                                    image = friendInstance?.imageUrl.toString(),
+                                    enableLongClick = true,
+                                    onLongClick = {
+                                        isPressed = true
+                                        viewModel.deleteChatroom(channelItemParent.value)
+                                    },
+                                    alertTitle = "Clear Chat with $chatName?",
+                                    alertButton = "Clear",
+                                    content = {
+                                        channelItemParent.value.let {
+                                            Text(
+                                                text = chatName,
+                                                textAlign = TextAlign.Center,
+                                                fontWeight = FontWeight.Bold
+                                            )
+                                            if (it.lastMessage.isNotEmpty()) {
+                                                Text(
+                                                    text = channelItemParent.value.lastMessage,
+                                                    maxLines = 1,
+                                                    overflow = TextOverflow.Ellipsis,
+                                                    modifier = Modifier.widthIn(max = 300.dp)
+                                                )
+                                            } else {
+                                                Text(
+                                                    text = "No message has been sent.",
+                                                    fontStyle = FontStyle.Italic
                                                 )
                                             }
                                         }
+                                    }
+                                ) {
+                                    currentuser?.let {
+                                        navController.navigate(
+                                            Screen.Chat(
+                                                chatroomId = channelItemParent.value.id,
+                                                chatId = channelItemParent.value.name,
+                                                user2 = chatName
+                                            )
+                                        )
                                     }
                                 }
                             }
@@ -162,15 +191,3 @@ fun HomeView(
     }
 }
 
-fun filteredRoom(current: String, user1: String, user2: String): Boolean {
-    return userCheck(current, user1, true) ||
-            userCheck(current, user2, true)
-}
-
-fun chatRoomName(current: String, user2: String, user3: String = ""): String {
-    return if (userCheck(current, user2)) user2 else user3
-}
-
-fun userCheck(current: String, user2: String, equal: Boolean = false): Boolean {
-    return if (!equal) current != user2 else current == user2
-}

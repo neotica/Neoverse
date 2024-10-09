@@ -146,7 +146,7 @@ fun FriendProfileView(
 
                                     navController.navigate(
                                         Screen.Chat(
-                                            currentId + friend?.userId,
+                                            chatId = currentId + friend?.userId,
                                             user2 = friendUsername
                                         )
                                     )

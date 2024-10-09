@@ -57,7 +57,10 @@ fun ProfileCard(
             title = alertTitle,
             backButton = "Cancel",
             confirmButton = {
-                NeoButton(alertButton) {
+                NeoButton(
+                    alertButton,
+                    negative = true
+                ) {
                     onLongClick()
                     openDialog.value = false
                 }

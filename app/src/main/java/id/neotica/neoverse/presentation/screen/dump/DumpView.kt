@@ -129,6 +129,63 @@ fun DumpView(
     }
 
     BasicScaffold(topBarTitle = "Home") {
+        /*LazyColumn {
+               item {
+                   if (!isLoadingChats) {
+                       LazyRow(
+                           state = lazyState
+                       ) {
+                           items(parentChatrooms.value.filter { channels ->
+                               val current = currentuser?.username.toString()
+                               filteredRoom(current, channels.value.user1, channels.value.user2)
+                           }) { channelItemParent ->
+                               val chatName = returnFriendName(currentuser?.username.toString(), channelItemParent.value.user1, channelItemParent.value.user2)
+                               val friendInstance = friendList.firstOrNull {
+                                   it.username == chatName
+                               }
+                               Card(
+                                   modifier = Modifier.padding(4.dp),
+                               ) {
+                                   Column(
+                                       modifier = Modifier.padding(8.dp),
+                                       horizontalAlignment = Alignment.CenterHorizontally
+                                   ) {
+                                       ProfileCard(
+                                           name = chatName,
+                                           image = friendInstance?.imageUrl.toString(),
+                                           enableLongClick = true,
+                                           onLongClick = {
+                                               isPressed = true
+                                               viewModel.deleteChatroom(channelItemParent.value)
+                                           },
+                                           alertTitle = "Clear Chat with $chatName?",
+                                           alertButton = "Clear"
+                                       ) {
+                                           currentuser?.let {
+                                               navController.navigate(
+                                                   Screen.Chat(
+                                                       chatroomId = channelItemParent.value.id,
+                                                       chatId = channelItemParent.value.name,
+                                                       user2 = chatName)
+                                               )
+                                           }
+                                       }
+                                       if (channelItemParent.value.lastMessage.isNotEmpty()) {
+                                           Text(
+                                               text = channelItemParent.value.lastMessage,
+                                               maxLines = 1,
+                                               overflow = TextOverflow.Ellipsis,
+                                               modifier = Modifier.widthIn(max = 100.dp)
+                                           )
+                                       }
+                                   }
+                               }
+                           }
+                       }
+                   }
+               }
+           }*/
+//            ends here
         LazyRow {
             item {
                 userList.forEach { user ->
@@ -140,7 +197,7 @@ fun DumpView(
                             if (currentuser?.username.isNullOrEmpty()) navController.navigate(Screen.LoginScreen)
                             if (!isLoadingChats) {
                                 if (chatRoomFiltered == null) {
-                                    navController.navigate(Screen.Chat(currentuser?.userId.toString()+user.userId, user2 = user.username))
+//                                    navController.navigate(Screen.Chat(currentuser?.userId.toString()+user.userId, user2 = user.username))
                                     viewModel.addChatroom(
                                         user2 = user.username,
                                         user = user,
@@ -148,7 +205,7 @@ fun DumpView(
                                 } else {
                                     val chatUser2 = if (chatRoomFiltered.user1 != currentuser?.username) chatRoomFiltered.user1 else user.username
                                     chatRoomFiltered.let {
-                                        navController.navigate(Screen.Chat(chatId = chatRoomFiltered.name, user2 = chatUser2))
+//                                        navController.navigate(Screen.Chat(chatId = chatRoomFiltered.name, user2 = chatUser2))
                                     }
                                 }
                             }
@@ -213,12 +270,12 @@ fun DumpView(
                                 ) {
                                     currentuser?.let {
                                         viewModel.readMessage(channelItemParent.key, channelItemParent.value, it.username)
-                                        navController.navigate(
-                                            Screen.Chat(
+                                        /*navController.navigate(
+                                            *//*Screen.Chat(
                                                 chatId = channelItemParent.value.name,
                                                 user2 = chatName,
-                                            )
-                                        )
+                                            )*//*
+                                        )*/
                                     }
                                 }
                             }
