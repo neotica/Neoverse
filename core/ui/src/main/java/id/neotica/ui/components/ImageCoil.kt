@@ -22,13 +22,21 @@ fun ImageCoil(
     size: Dp = 100.dp,
     customModifier: Boolean = false,
     modifier: Modifier = Modifier,
-    context: Context = LocalContext.current
+    fillMaxWidth: Boolean = true,
+    context: Context = LocalContext.current,
+    contentAlignment: Alignment = Alignment.Center
 ) {
     val coroutineScope = rememberCoroutineScope()
 
+    val maxWidth = if (fillMaxWidth) {
+        Modifier.fillMaxWidth()
+    } else {
+        Modifier
+    }
+
     Box(
-        Modifier.fillMaxWidth(),
-        contentAlignment = Alignment.Center
+        maxWidth,
+        contentAlignment = contentAlignment
     ) {
         SubcomposeAsyncImage(
             model = ImageRequest.Builder(context)

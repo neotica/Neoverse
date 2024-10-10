@@ -8,8 +8,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -21,14 +19,14 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.User
-import id.neotica.ui.navigation.RootScreen
-import id.neotica.ui.navigation.Screen
 import id.neotica.ui.components.BasicScaffold
+import id.neotica.ui.components.LoadingIndicatorBool
 import id.neotica.ui.components.NeoButton
 import id.neotica.ui.components.ProfileCard
+import id.neotica.ui.navigation.RootScreen
+import id.neotica.ui.navigation.Screen
 import org.koin.androidx.compose.koinViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FriendView(
     navController: NavController,
@@ -101,12 +99,7 @@ fun FriendView(
                 navController.navigate(Screen.SearchUserScreen)
             }
         }
-        PullToRefreshBox(
-            isRefreshing = isLoadingChats,
-            onRefresh = {
-                isPressed = true
-            }
-        ) {
+        LoadingIndicatorBool(isLoadingChats) {
             Column(
                 Modifier
                     .fillMaxSize()
@@ -123,9 +116,6 @@ fun FriendView(
                                     paddingValues = PaddingValues(4.dp),
                                     alertTitle = "Unfriend ${friends.username}?",
                                     alertButton = "Unfriend",
-                                    onLongClick = {
-                                        viewModel.unFriend(friends)
-                                    }
                                 ) {
                                     navController.navigate(Screen.FriendProfileScreen(
                                         userId = friends.userId

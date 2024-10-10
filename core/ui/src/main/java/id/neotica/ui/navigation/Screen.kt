@@ -16,6 +16,7 @@ sealed class Screen {
     data class Chat(
         val chatId: String,
         val user2: String,
+        val chatroomId: String ?= ""
         )
     @Serializable
     data object Setting: Screen()

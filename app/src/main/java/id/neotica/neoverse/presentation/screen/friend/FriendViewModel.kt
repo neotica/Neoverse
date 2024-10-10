@@ -104,7 +104,7 @@ class FriendViewModel(
     }
 
     fun getChatroom() = viewModelScope.launch {
-        chatRepo.getChatroom().collect {
+        chatRepo.getAllChatrooms().collect {
             _chatroom.value = it
         }
     }

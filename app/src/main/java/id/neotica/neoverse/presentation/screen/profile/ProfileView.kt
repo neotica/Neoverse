@@ -111,7 +111,8 @@ fun ProfileView(
                     }
                     NeoButton(
                         "Logout",
-                        true
+                        true,
+                        negative = true
                     ) {
                         viewModel.logout()
                         navController.navigate(RootScreen.HomeNav) {

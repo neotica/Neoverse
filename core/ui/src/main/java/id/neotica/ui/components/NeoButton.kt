@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import id.neotica.ui.theme.DarkPrimary
+import id.neotica.ui.theme.NegativePrimary
 
 @Composable
 fun NeoButton(
@@ -18,19 +19,29 @@ fun NeoButton(
     maxWidth: Boolean = false,
     width: Dp = Dp.Unspecified,
     enabled: Boolean = true,
+    negative: Boolean = false,
     onClick: () -> Unit = {}
 ) {
     val defaultModifier = Modifier.width(width)
     val maxWidthModifier = Modifier.fillMaxWidth()
+    val buttonColors = if (negative) {
+        ButtonDefaults.buttonColors(
+            containerColor = NegativePrimary,
+            contentColor = Color.White,
+        )
+    } else {
+        ButtonDefaults.buttonColors(
+            containerColor = DarkPrimary,
+            contentColor = Color.White,
+        )
+    }
+
     Button(
         modifier = if (maxWidth) maxWidthModifier else defaultModifier
         ,
         onClick = onClick,
         enabled = enabled,
-        colors = ButtonDefaults.buttonColors(
-            containerColor = DarkPrimary,
-            contentColor = Color.White,
-        ),
+        colors = buttonColors,
         shape = RoundedCornerShape(20)
     ) {
         Text(text)

@@ -19,7 +19,7 @@ import kotlinx.coroutines.tasks.await
 class ChatRepositoryImpl: ChatRepository {
     private val firebase = Firebase.database
 
-    override suspend fun getChatroom(): Flow<ApiResult<List<ParentNeo<ChatRoom>>>> = flow {
+    override suspend fun getAllChatrooms(): Flow<ApiResult<List<ParentNeo<ChatRoom>>>> = flow {
         val list = mutableListOf<ParentNeo<ChatRoom>>()
         list.clear()
         emit(ApiResult.Loading())
@@ -43,6 +43,17 @@ class ChatRepositoryImpl: ChatRepository {
         }
     }
 
+    override suspend fun getChatroom(id: String): ApiResult<ChatRoom> {
+        val reference = firebase.getReference("chatroom").child(id).get().await()
+        return try {
+            val value = reference.getValue(ChatRoom::class.java)
+            ApiResult.Success(value!!)
+        } catch (e: NullPointerException) {
+            ApiResult.Error("exception: ${e.message}")
+        }
+    }
+
+
     override suspend fun addChatroom(name: ChatRoom) {
         val key = firebase.getReference("chatroom").push().key
         val chatroom = ChatRoom(
@@ -57,7 +68,7 @@ class ChatRepositoryImpl: ChatRepository {
         )
         val reference = firebase.getReference("chatroom").child(key!!).setValue(chatroom)
         reference.await()
-        if (reference.isSuccessful) getChatroom()
+        if (reference.isSuccessful) getAllChatrooms()
     }
 
     override suspend fun deleteChatroom(chatroom: ChatRoom) {
@@ -65,7 +76,7 @@ class ChatRepositoryImpl: ChatRepository {
         reference.await()
         val messages = firebase.getReference("messages").child(chatroom.name).removeValue()
         messages.await()
-        if (reference.isSuccessful && messages.isSuccessful) getChatroom()
+        if (reference.isSuccessful && messages.isSuccessful) getAllChatrooms()
     }
 
     override fun getMessages(chatId: String): Flow<List<Message>> = callbackFlow {
@@ -94,7 +105,7 @@ class ChatRepositoryImpl: ChatRepository {
         firebase.getReference("messages").child(chatId).push().setValue(message)
     }
 
-    override suspend fun readMessage(chatId: String, chatRoom: ChatRoom) {
+    override suspend fun updateChatroom(chatId: String, chatRoom: ChatRoom) {
         val key = firebase.getReference("chatroom").child(chatId).setValue(chatRoom)
         key.await()
     }

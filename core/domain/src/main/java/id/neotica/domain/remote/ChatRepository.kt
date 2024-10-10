@@ -7,10 +7,11 @@ import id.neotica.domain.model.ParentNeo
 import kotlinx.coroutines.flow.Flow
 
 interface ChatRepository {
-    suspend fun getChatroom(): Flow<ApiResult<List<ParentNeo<ChatRoom>>>>
+    suspend fun getAllChatrooms(): Flow<ApiResult<List<ParentNeo<ChatRoom>>>>
+    suspend fun getChatroom(id: String): ApiResult<ChatRoom>
     suspend fun addChatroom(name: ChatRoom)
     fun getMessages(chatId: String): Flow<List<Message>>
     fun sendMessage(chatId: String, message: Message)
-    suspend fun readMessage(chatId: String, chatRoom: ChatRoom)
+    suspend fun updateChatroom(chatId: String, chatRoom: ChatRoom)
     suspend fun deleteChatroom(chatroom: ChatRoom)
 }

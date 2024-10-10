@@ -20,9 +20,6 @@ class GameViewModel(
     private val _randomNum = MutableStateFlow("")
     val randomNum = _randomNum.asStateFlow()
 
-    private val _value = MutableStateFlow("")
-    val value = _value.asStateFlow()
-
     private val _auraPoints = MutableStateFlow(0)
     val auraPoints = _auraPoints.asStateFlow()
 

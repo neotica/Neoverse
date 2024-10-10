@@ -1,11 +1,26 @@
 package id.neotica.neoverse.presentation.screen.profile.termsofsercive
 
+import android.annotation.SuppressLint
+import android.graphics.Bitmap
+import android.net.http.SslError
+import android.webkit.SslErrorHandler
+import android.webkit.WebResourceRequest
+import android.webkit.WebView
+import android.webkit.WebViewClient
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavController
 import id.neotica.ui.components.BasicScaffold
+import id.neotica.ui.components.LoadingIndicator
 
+@SuppressLint("SetJavaScriptEnabled")
 @Composable
 fun TermsOfServiceView(navController: NavController,  paddingValues: PaddingValues, modifier: Modifier = Modifier) {
     BasicScaffold(
@@ -13,5 +28,53 @@ fun TermsOfServiceView(navController: NavController,  paddingValues: PaddingValu
         true,
         navController = navController,
         paddingValues = paddingValues
-    ) { }
+    ) {
+        var isLoading by remember { mutableStateOf(false) }
+
+        Box {
+            AndroidView(
+                factory = {
+                    WebView(it).apply {
+                        settings.javaScriptEnabled = true
+                        settings.loadWithOverviewMode = true
+                        settings.useWideViewPort = true
+                        webViewClient = object : WebViewClient() {
+                            @SuppressLint("WebViewClientOnReceivedSslError")
+                            override fun onReceivedSslError(
+                                view: WebView?,
+                                handler: SslErrorHandler?,
+                                error: SslError?
+                            ) {
+                                handler?.proceed()
+                            }
+
+                            override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
+                                super.onPageStarted(view, url, favicon)
+                                isLoading = true
+                            }
+
+                            override fun onPageCommitVisible(view: WebView?, url: String?) {
+                                super.onPageCommitVisible(view, url)
+                                isLoading = false
+                            }
+
+                            override fun shouldOverrideUrlLoading(
+                                view: WebView?,
+                                request: WebResourceRequest?
+                            ): Boolean {
+                                return super.shouldOverrideUrlLoading(view, request)
+                            }
+                        }
+                    }
+                },
+                update = {
+                    it.loadUrl("https://neotica.id/terms-of-services.html")
+                }
+            )
+            if (isLoading) {
+                LoadingIndicator()
+            }
+        }
+
+    }
 }
