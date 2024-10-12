@@ -65,9 +65,9 @@ class MainActivity: ComponentActivity() {
                         screen = RootScreen.FriendNav
                     ),
                     NavigationItem(
-                        title = "Games",
+                        title = "World",
                         icon = ImageVector.vectorResource(R.drawable.ic_aura),
-                        screen = RootScreen.GameNav
+                        screen = RootScreen.WorldNav
                     ),
                     NavigationItem(
                         title = "Profile",

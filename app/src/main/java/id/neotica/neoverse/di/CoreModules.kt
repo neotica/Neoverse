@@ -17,7 +17,7 @@ import id.neotica.neoverse.presentation.screen.auth.register.RegisterViewModel
 import id.neotica.neoverse.presentation.screen.auth.verify.VerifyEmailViewModel
 import id.neotica.neoverse.presentation.screen.chat.ChatViewModel
 import id.neotica.neoverse.presentation.screen.friend.FriendViewModel
-import id.neotica.world.game.GameViewModel
+import id.neotica.world.feat.game.GameViewModel
 import id.neotica.neoverse.presentation.screen.dump.DumpViewModel
 import id.neotica.neoverse.presentation.screen.home.HomeViewModel
 import id.neotica.neoverse.presentation.screen.profile.ProfileViewModel

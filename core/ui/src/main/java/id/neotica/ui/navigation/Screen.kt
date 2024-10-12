@@ -69,8 +69,6 @@ sealed class RootScreen {
     @Serializable
     object WorldNav
     @Serializable
-    object GameNav
-    @Serializable
     object FriendNav
 }
 
