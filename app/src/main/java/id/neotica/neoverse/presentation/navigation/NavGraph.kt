@@ -10,7 +10,7 @@ import id.neotica.neoverse.presentation.screen.SettingView
 import id.neotica.neoverse.presentation.screen.SplashView
 import id.neotica.neoverse.presentation.screen.dump.DumpView
 import id.neotica.ui.navigation.Screen
-import id.neotica.world.navigation.gameNavGraph
+import id.neotica.world.worldNavGraph
 
 @Composable
 fun NavGraph(navController: NavHostController, paddingValues: PaddingValues) {
@@ -22,7 +22,7 @@ fun NavGraph(navController: NavHostController, paddingValues: PaddingValues) {
 
         homeNavGraph(navController, paddingValues)
         authNavGraph(navController, paddingValues)
-        gameNavGraph(navController, paddingValues)
+        worldNavGraph(navController, paddingValues)
         friendNavGraph(navController, paddingValues)
     }
 }

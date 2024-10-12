@@ -1,4 +1,4 @@
-package id.neotica.world.components
+package id.neotica.world.game.components
 
 import android.annotation.SuppressLint
 import android.util.Log

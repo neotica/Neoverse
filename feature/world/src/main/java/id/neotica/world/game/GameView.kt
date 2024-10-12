@@ -25,12 +25,12 @@ import id.neotica.droidcore.component.cards.deprecated.NeoCard
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.Screen
-import id.neotica.world.components.SlotMachine
+import id.neotica.world.game.components.SlotMachine
 import org.koin.androidx.compose.koinViewModel
 import kotlin.random.Random
 
 @Composable
-fun HomeGameView(
+fun GameView(
     navController: NavController,
     paddingValues: PaddingValues,
     viewModel: GameViewModel = koinViewModel()
