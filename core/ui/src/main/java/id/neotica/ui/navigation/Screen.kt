@@ -48,6 +48,8 @@ sealed class Screen {
     data object WorldScreen: Screen()
     @Serializable
     data object GameScreen: Screen()
+    @Serializable
+    data object KanyeScreen: Screen()
 
     //Friend Navigation
     @Serializable

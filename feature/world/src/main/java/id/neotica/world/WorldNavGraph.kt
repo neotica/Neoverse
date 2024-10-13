@@ -8,6 +8,7 @@ import androidx.navigation.navigation
 import id.neotica.world.feat.game.GameView
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.Screen
+import id.neotica.world.feat.kanye.KanyeView
 import id.neotica.world.feat.world.WorldView
 
 fun NavGraphBuilder.worldNavGraph(
@@ -25,6 +26,11 @@ fun NavGraphBuilder.worldNavGraph(
         }
         composable<Screen.GameScreen> {
             GameView(
+                navController, paddingValues
+            )
+        }
+        composable<Screen.KanyeScreen> {
+            KanyeView(
                 navController, paddingValues
             )
         }
