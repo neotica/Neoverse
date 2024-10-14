@@ -10,6 +10,7 @@ import id.neotica.neoverse.presentation.screen.auth.login.LoginView
 import id.neotica.neoverse.presentation.screen.auth.register.RegisterView
 import id.neotica.neoverse.presentation.screen.auth.verify.VerifyEmailView
 import id.neotica.neoverse.presentation.screen.profile.ProfileView
+import id.neotica.neoverse.presentation.screen.profile.accountsettings.AccountSettingView
 import id.neotica.neoverse.presentation.screen.profile.deleteaccount.DeleteAccountView
 import id.neotica.neoverse.presentation.screen.profile.editprofile.EditProfileView
 import id.neotica.neoverse.presentation.screen.profile.privacypolicy.PrivacyPolicyView
@@ -39,6 +40,9 @@ fun NavGraphBuilder.authNavGraph(
         }
         composable<Screen.TermsOfServiceScreen> {
             TermsOfServiceView(navController, paddingValues)
+        }
+        composable<Screen.AccountSettingScreen> {
+            AccountSettingView(navController, paddingValues)
         }
         composable<Screen.DeleteAccountScreen> {
             DeleteAccountView(navController, paddingValues)

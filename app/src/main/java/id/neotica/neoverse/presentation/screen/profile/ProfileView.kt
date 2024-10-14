@@ -27,7 +27,6 @@ import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.ImageCoil
 import id.neotica.ui.components.LoadingIndicatorBool
 import id.neotica.ui.components.NeoButton
-import id.neotica.ui.components.SlideInto
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.Screen
 import id.neotica.ui.theme.DarkPrimary
@@ -41,7 +40,6 @@ fun ProfileView(
 ) {
     var user by remember { mutableStateOf<User?>(null) }
     val isLoading by remember { mutableStateOf(false) }
-    var accountSettings by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         if (!viewModel.isLoggedIn()) navController.navigate(Screen.LoginScreen) {
@@ -93,21 +91,9 @@ fun ProfileView(
                         navController.navigate(Screen.EditProfileScreen(profPic = user?.imageUrl ?: ""))
                     }
                     NeoButton(
-                        if (accountSettings)"Account Settings -"
-                        else "Account Settings +"
-                        , true
+                        "Account Settings", true
                     ) {
-                        accountSettings = !accountSettings
-                    }
-                    SlideInto(accountSettings) {
-                        Column(Modifier.padding(horizontal = 8.dp)) {
-                            NeoButton("Delete Account", true) {
-                                navController.navigate(Screen.DeleteAccountScreen)
-                            }
-                            NeoButton("Change Password", true) {
-//                                viewModel.deleteAccount()
-                            }
-                        }
+                        navController.navigate(Screen.AccountSettingScreen)
                     }
                     NeoButton(
                         "Logout",
