@@ -1,4 +1,4 @@
-package id.neotica.world.components
+package id.neotica.world.feat.game.components
 
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState

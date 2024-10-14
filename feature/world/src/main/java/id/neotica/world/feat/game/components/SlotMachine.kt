@@ -1,4 +1,4 @@
-package id.neotica.world.components
+package id.neotica.world.feat.game.components
 
 import android.annotation.SuppressLint
 import android.util.Log
@@ -23,7 +23,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import id.neotica.world.game.GameViewModel
+import id.neotica.world.feat.game.GameViewModel
 import id.neotica.world.utils.generateTranspose
 import id.neotica.ui.components.NeoButton
 import id.neotica.ui.components.SlideInto

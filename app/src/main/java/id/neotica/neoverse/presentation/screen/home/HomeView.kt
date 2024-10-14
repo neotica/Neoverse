@@ -1,14 +1,13 @@
 package id.neotica.neoverse.presentation.screen.home
 
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
@@ -26,6 +25,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.ChatRoom
@@ -33,6 +33,7 @@ import id.neotica.domain.model.ParentNeo
 import id.neotica.domain.model.User
 import id.neotica.domain.utils.filteredRoom
 import id.neotica.domain.utils.returnFriendName
+import id.neotica.neoverse.utils.convertLongToHour
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.ChatListItem
 import id.neotica.ui.navigation.RootScreen
@@ -55,7 +56,6 @@ fun HomeView(
     var isLoading by remember { mutableStateOf(false) }
     var isLoadingChats by remember { mutableStateOf(false) }
     var currentuser by remember { mutableStateOf<User?>(null) }
-    val lazyState = rememberLazyListState()
     val nestedState = rememberNestedScrollInteropConnection()
 
     LaunchedEffect(isPressed) {
@@ -107,7 +107,7 @@ fun HomeView(
         }
     }
 
-    BasicScaffold(topBarTitle = "Home") {
+    BasicScaffold(topBarTitle = "Home", enableEye = true) {
         PullToRefreshBox(
             modifier = Modifier
                 .fillMaxSize()
@@ -132,56 +132,57 @@ fun HomeView(
                         val friendInstance = friendList.firstOrNull {
                             it.username == chatName
                         }
-                        Card(
-                            modifier = Modifier.padding(4.dp),
-                        ) {
-                            Column(
-                                modifier = Modifier.padding(8.dp),
-//                                horizontalAlignment = Alignment.CenterHorizontally
-                            ) {
-                                ChatListItem(
-                                    name = chatName,
-                                    image = friendInstance?.imageUrl.toString(),
-                                    enableLongClick = true,
-                                    onLongClick = {
-                                        isPressed = true
-                                        viewModel.deleteChatroom(channelItemParent.value)
-                                    },
-                                    alertTitle = "Clear Chat with $chatName?",
-                                    alertButton = "Clear",
-                                    content = {
-                                        channelItemParent.value.let {
+                        ChatListItem(
+                            name = chatName,
+                            image = friendInstance?.imageUrl.toString(),
+                            enableLongClick = true,
+                            onLongClick = {
+                                isPressed = true
+                                viewModel.deleteChatroom(channelItemParent.value)
+                            },
+                            alertTitle = "Clear Chat with $chatName?",
+                            alertButton = "Clear",
+                            content = {
+                                channelItemParent.value.let {
+                                    Text(
+                                        text = chatName,
+                                        textAlign = TextAlign.Center,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                    if (it.lastMessage.isNotEmpty()) {
+                                        Row(
+                                            modifier = Modifier.fillMaxWidth(),
+                                            horizontalArrangement = Arrangement.SpaceBetween
+                                        ) {
                                             Text(
-                                                text = chatName,
-                                                textAlign = TextAlign.Center,
-                                                fontWeight = FontWeight.Bold
+                                                text = channelItemParent.value.lastMessage,
+                                                maxLines = 1,
+                                                overflow = TextOverflow.Ellipsis,
+                                                modifier = Modifier.widthIn(max = 274.dp)
                                             )
-                                            if (it.lastMessage.isNotEmpty()) {
-                                                Text(
-                                                    text = channelItemParent.value.lastMessage,
-                                                    maxLines = 1,
-                                                    overflow = TextOverflow.Ellipsis,
-                                                    modifier = Modifier.widthIn(max = 300.dp)
-                                                )
-                                            } else {
-                                                Text(
-                                                    text = "No message has been sent.",
-                                                    fontStyle = FontStyle.Italic
-                                                )
-                                            }
+                                            Text(
+                                                text = convertLongToHour(it.lastOpened),
+                                                maxLines = 1,
+                                                fontSize = 12.sp
+                                            )
                                         }
-                                    }
-                                ) {
-                                    currentuser?.let {
-                                        navController.navigate(
-                                            Screen.Chat(
-                                                chatroomId = channelItemParent.value.id,
-                                                chatId = channelItemParent.value.name,
-                                                user2 = chatName
-                                            )
+                                    } else {
+                                        Text(
+                                            text = "No message has been sent.",
+                                            fontStyle = FontStyle.Italic
                                         )
                                     }
                                 }
+                            }
+                        ) {
+                            currentuser?.let {
+                                navController.navigate(
+                                    Screen.Chat(
+                                        chatroomId = channelItemParent.value.id,
+                                        chatId = channelItemParent.value.name,
+                                        user2 = chatName
+                                    )
+                                )
                             }
                         }
                     }

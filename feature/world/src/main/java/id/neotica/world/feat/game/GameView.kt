@@ -1,4 +1,4 @@
-package id.neotica.world.game
+package id.neotica.world.feat.game
 
 import android.util.Log
 import android.widget.Toast
@@ -25,12 +25,12 @@ import id.neotica.droidcore.component.cards.deprecated.NeoCard
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.Screen
-import id.neotica.world.components.SlotMachine
+import id.neotica.world.feat.game.components.SlotMachine
 import org.koin.androidx.compose.koinViewModel
 import kotlin.random.Random
 
 @Composable
-fun HomeGameView(
+fun GameView(
     navController: NavController,
     paddingValues: PaddingValues,
     viewModel: GameViewModel = koinViewModel()
@@ -73,9 +73,10 @@ fun HomeGameView(
 
     BasicScaffold(
         topBarTitle = "Game",
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
+        navController = navController,
+        enableActionBar = true
     ) {
-
         if (!auraInit) {
             Text("Your Aura:" + currentAuras?.aura.toString())
 
@@ -95,7 +96,7 @@ fun HomeGameView(
                 Toast.makeText(context, "Congratulations, you've got $random aura!", Toast.LENGTH_SHORT).show()
                 viewModel.sendInitialAura(random)
                 navController.navigate(Screen.GameScreen) {
-                    popUpTo(RootScreen.GameNav) {
+                    popUpTo(RootScreen.WorldNav) {
                         inclusive = true
                     }
                 }

@@ -43,9 +43,13 @@ sealed class Screen {
     @Serializable
     data object DeleteAccountScreen: Screen()
 
-    // Games Navigation
+    // World Navigation
+    @Serializable
+    data object WorldScreen: Screen()
     @Serializable
     data object GameScreen: Screen()
+    @Serializable
+    data object KanyeScreen: Screen()
 
     //Friend Navigation
     @Serializable
@@ -65,7 +69,7 @@ sealed class RootScreen {
     @Serializable
     object HomeNav
     @Serializable
-    object GameNav
+    object WorldNav
     @Serializable
     object FriendNav
 }

@@ -13,3 +13,13 @@ fun convertLongToTime(time: Long, minutesOnly: Boolean = false): String {
         format.format(date)
     }
 }
+
+fun convertLongToHour(time: Long, minutesOnly: Boolean = false): String {
+    val date = Date(time)
+    val format = SimpleDateFormat("HH:mm", Locale.US)
+    return if (minutesOnly) {
+        SimpleDateFormat("HH:mm", Locale.US).format(date)
+    } else {
+        format.format(date)
+    }
+}

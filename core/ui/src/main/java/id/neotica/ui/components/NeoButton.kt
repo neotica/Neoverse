@@ -20,7 +20,7 @@ fun NeoButton(
     width: Dp = Dp.Unspecified,
     enabled: Boolean = true,
     negative: Boolean = false,
-    onClick: () -> Unit = {}
+    onClick: () -> Unit = {},
 ) {
     val defaultModifier = Modifier.width(width)
     val maxWidthModifier = Modifier.fillMaxWidth()

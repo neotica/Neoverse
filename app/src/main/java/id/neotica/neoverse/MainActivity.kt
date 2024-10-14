@@ -65,9 +65,9 @@ class MainActivity: ComponentActivity() {
                         screen = RootScreen.FriendNav
                     ),
                     NavigationItem(
-                        title = "Games",
+                        title = "World",
                         icon = ImageVector.vectorResource(R.drawable.ic_aura),
-                        screen = RootScreen.GameNav
+                        screen = RootScreen.WorldNav
                     ),
                     NavigationItem(
                         title = "Profile",
@@ -93,7 +93,7 @@ class MainActivity: ComponentActivity() {
                             if (navBackStackEntry?.destination?.route == null) true else
                             navBackStackEntry?.destination?.hasRoute(it::class) == true
                         }
-                        val includeRoute2 = navBackStackEntry?.destination?.route == "id.neotica.ui.navigation.Screen.Chat/{chatId}/{user2}"
+                        val includeRoute2 = navBackStackEntry?.destination?.route == "id.neotica.ui.navigation.Screen.Chat/{chatId}/{user2}?chatroomId={chatroomId}"
                         Log.d("currentScreen", navBackStackEntry?.destination?.route.toString())
 
                         val includeRoute3 = if (includeRoute) {

@@ -67,6 +67,7 @@ dependencies {
     implementation(project(":core:ui"))
     implementation(project(":core:data"))
     implementation(project(":feature:world"))
+    implementation(project(":core:retrofit"))
 
     // Testing
     testImplementation(libs.junit)

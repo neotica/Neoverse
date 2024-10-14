@@ -16,18 +16,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import id.neotica.droidcore.component.alert.NeoAlert
 import id.neotica.ui.theme.DarkPrimaryTransparent
+import id.neotica.ui.theme.Transparent
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ChatListItem(
     name: String,
     image: String,
-    modifier: Modifier = Modifier,
-    size: Dp = 100.dp,
     paddingValues: PaddingValues = PaddingValues(),
     content: @Composable () -> Unit = {},
     alertTitle: String = "",
@@ -43,6 +41,13 @@ fun ChatListItem(
         contentColor = Color.White,
         disabledContentColor = DarkPrimaryTransparent,
         disabledContainerColor = DarkPrimaryTransparent
+    )
+
+    val cardColorsTransparent = CardColors(
+        containerColor = Transparent,
+        contentColor = Color.White,
+        disabledContentColor = Transparent,
+        disabledContainerColor = Transparent
     )
 
     val longClick: (() -> Unit)? = if (enableLongClick) {
@@ -69,7 +74,7 @@ fun ChatListItem(
     }
 
     Card(
-        colors = cardColorsPrime,
+        colors = cardColorsTransparent,
         modifier = Modifier
             .fillMaxWidth()
             .combinedClickable(
@@ -91,11 +96,9 @@ fun ChatListItem(
             }
             Column(
                 Modifier.padding(8.dp),
-//                verticalArrangement = Arrangement.Center
             ) {
                 content()
             }
         }
-
     }
 }
