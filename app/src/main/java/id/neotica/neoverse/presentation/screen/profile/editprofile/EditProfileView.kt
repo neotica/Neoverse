@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
 import id.neotica.neoverse.presentation.screen.profile.ProfileViewModel
+import id.neotica.neoverse.utils.compressUri
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.ImageCoil
 import id.neotica.ui.components.NeoButton
@@ -36,12 +37,15 @@ fun EditProfileView(
         mutableStateOf<List<Uri?>>(emptyList())
     }
 
+    val context = LocalContext.current
+
     val singlePhotoPickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia(),
         onResult = { uri ->
-            selectedImages = listOf(uri)
             if (uri != null) {
-                viewModel.changeProfilePic(uri.toString())
+                val compressedImageUri = compressUri(uri, context)
+                selectedImages = listOf(compressedImageUri)
+                viewModel.changeProfilePic(compressedImageUri.toString())
                 navController.navigate(RootScreen.AuthNav)
             }
         }
@@ -74,7 +78,6 @@ fun EditProfileView(
             cameraPermissionResultLauncher.launch(Manifest.permission.CAMERA)
             launchPhotoPicker()
         }
-
     }
 }
 
