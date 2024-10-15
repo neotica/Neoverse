@@ -71,7 +71,7 @@ fun ProfileView(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 user?.let {
-                    ImageCoil(url = it.imageUrl)
+                    ImageCoil(url = it.imageUrl, round = true)
                     Text(it.username)
                     Text(it.userEmail)
                 }
