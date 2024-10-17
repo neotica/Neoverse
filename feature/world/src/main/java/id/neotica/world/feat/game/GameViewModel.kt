@@ -5,8 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import id.neotica.domain.model.Games
 import id.neotica.domain.ApiResult
-import id.neotica.domain.remote.GameRepository
-import id.neotica.domain.remote.UserRepository
+import id.neotica.domain.remote.AuraRepository
+import id.neotica.domain.usecase.GetUserIdUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -14,8 +14,8 @@ import java.security.SecureRandom
 import kotlin.random.asKotlinRandom
 
 class GameViewModel(
-    private val userRepo: UserRepository,
-    private val gameRepo: GameRepository
+    private val gameRepo: AuraRepository,
+    private val getIdUseCase: GetUserIdUseCase
 ): ViewModel() {
     private val _randomNum = MutableStateFlow("")
     val randomNum = _randomNum.asStateFlow()
@@ -26,10 +26,10 @@ class GameViewModel(
     private val _totalAuras: MutableStateFlow<ApiResult<Games?>> = MutableStateFlow(ApiResult.Loading())
     val totalAuras = _totalAuras.asStateFlow()
 
-    private fun currentUserId(): String = userRepo.getUserId()
+    private fun currentUserId(): String = getIdUseCase.invoke()
 
     fun isLoggedIn(): Boolean {
-        return userRepo.isLoggedIn()
+        return getIdUseCase.invoke() != ""
     }
 
     init {

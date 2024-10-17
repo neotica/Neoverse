@@ -52,6 +52,8 @@ sealed class Screen {
     data object GameScreen: Screen()
     @Serializable
     data object KanyeScreen: Screen()
+    @Serializable
+    data object MarketScreen: Screen()
 
     //Friend Navigation
     @Serializable

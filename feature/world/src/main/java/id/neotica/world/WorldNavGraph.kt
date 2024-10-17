@@ -9,6 +9,7 @@ import id.neotica.world.feat.game.GameView
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.Screen
 import id.neotica.world.feat.kanye.KanyeView
+import id.neotica.world.feat.market.MarketView
 import id.neotica.world.feat.world.WorldView
 
 fun NavGraphBuilder.worldNavGraph(
@@ -31,6 +32,11 @@ fun NavGraphBuilder.worldNavGraph(
         }
         composable<Screen.KanyeScreen> {
             KanyeView(
+                navController, paddingValues
+            )
+        }
+        composable<Screen.MarketScreen> {
+            MarketView(
                 navController, paddingValues
             )
         }
