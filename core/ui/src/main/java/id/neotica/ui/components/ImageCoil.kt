@@ -49,7 +49,7 @@ fun ImageCoil(
                     .clip(RoundedCornerShape(if(round) 120.dp else 12.dp))
             } else modifier,
             loading = { LoadingIndicator() },
-            contentScale = if(round) ContentScale.FillBounds else ContentScale.Fit
+            contentScale = if(round) ContentScale.Crop else ContentScale.Fit
         )
     }
 }
