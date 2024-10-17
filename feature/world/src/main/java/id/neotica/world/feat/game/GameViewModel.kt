@@ -46,10 +46,11 @@ class GameViewModel(
         if (tot != null) {
             gameRepo.postAuras(tot + aura, currentUserId())
         }
+        fetchAuras()
         Log.d("aura", aura.toString())
     }
 
-    fun fetchAuras() = viewModelScope.launch {
+    private fun fetchAuras() = viewModelScope.launch {
         val auraFromRepo = gameRepo.getAuras(currentUserId())
         _totalAuras.value = auraFromRepo
     }

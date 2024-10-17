@@ -106,8 +106,6 @@ fun SlotMachine(modifier: Modifier = Modifier, viewModel: GameViewModel = koinVi
                 delayedClick = false
                 giveAura = true
                 stopEnabled = true
-                viewModel.fetchAuras()
-                viewModel.sendAuraPoints(-10)
                 randomStrings.forEachIndexed { index, _ ->
                     randomStrings[index] = generateTranspose(SecureRandom())
                 }
@@ -121,7 +119,6 @@ fun SlotMachine(modifier: Modifier = Modifier, viewModel: GameViewModel = koinVi
                 ) {
                     viewModel.getAuraPoints(numbComb)
                     viewModel.sendAuraPoints(viewModel.auraPoints.value)
-                    viewModel.fetchAuras()
                     stopEnabled = false
                     scope.launch {
                         delay(500)
