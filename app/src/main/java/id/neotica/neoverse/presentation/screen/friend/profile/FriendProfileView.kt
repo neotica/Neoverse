@@ -129,7 +129,7 @@ fun FriendProfileView(
             LazyColumn {
                 item {
                     friend?.let {
-                        ImageCoil(it.imageUrl)
+                        ImageCoil(it.imageUrl, round = true)
                         Column(
                             Modifier.fillMaxWidth(),
                             horizontalAlignment = Alignment.CenterHorizontally

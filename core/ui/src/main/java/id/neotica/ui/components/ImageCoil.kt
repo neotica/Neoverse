@@ -6,10 +6,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -24,9 +24,9 @@ fun ImageCoil(
     modifier: Modifier = Modifier,
     fillMaxWidth: Boolean = true,
     context: Context = LocalContext.current,
-    contentAlignment: Alignment = Alignment.Center
+    round: Boolean = false,
+    contentAlignment: Alignment = Alignment.Center,
 ) {
-    val coroutineScope = rememberCoroutineScope()
 
     val maxWidth = if (fillMaxWidth) {
         Modifier.fillMaxWidth()
@@ -46,9 +46,10 @@ fun ImageCoil(
             modifier = if (!customModifier) {
                 Modifier
                     .size(size)
-                    .clip(RoundedCornerShape(12.dp))
+                    .clip(RoundedCornerShape(if(round) 120.dp else 12.dp))
             } else modifier,
             loading = { LoadingIndicator() },
+            contentScale = if(round) ContentScale.Crop else ContentScale.Fit
         )
     }
 }

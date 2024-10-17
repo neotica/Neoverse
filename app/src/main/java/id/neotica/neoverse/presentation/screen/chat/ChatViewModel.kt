@@ -72,21 +72,23 @@ class ChatViewModel(
 
     private fun updateLastMessage(message: String) = viewModelScope.launch {
 
-        currentUserDatabase.getUser().collect { currentUser ->
-            _chatroom.value.data?.let {
-                val chat = ChatRoom(
-                    id = it.id,
-                    name = it.name,
-                    user1 = it.user1,
-                    user2 = it.user2,
-                    user1Read =  it.user1Read,
-                    user2Read = it.user2Read,
-                    user1id = it.user1id,
-                    user2id = it.user2id,
-                    createdAt = it.createdAt,
-                    lastMessage = "${currentUser[0].username}: $message",
-                )
-                chatRepo.updateChatroom(it.id, chat)
+        _chatroom.value.data?.let {
+            if (it.id != "") {
+                currentUserDatabase.getUser().collect { currentUser ->
+                    val chat = ChatRoom(
+                        id = it.id,
+                        name = it.name,
+                        user1 = it.user1,
+                        user2 = it.user2,
+                        user1Read = it.user1Read,
+                        user2Read = it.user2Read,
+                        user1id = it.user1id,
+                        user2id = it.user2id,
+                        createdAt = it.createdAt,
+                        lastMessage = "${currentUser[0].username}: $message",
+                    )
+                    chatRepo.updateChatroom(it.id, chat)
+                }
             }
         }
     }
