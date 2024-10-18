@@ -38,6 +38,16 @@ class MarketRepositoryImpl: MarketRepository {
         }
     }
 
+    override suspend fun getItem(id: String): ApiResult<ItemModel> {
+        val reference = firebase.getReference("market").child(id).get().await()
+        return try {
+            val value = reference.getValue(ItemModel::class.java)
+            ApiResult.Success(value!!)
+        } catch (e: NullPointerException) {
+            ApiResult.Error("exception: ${e.message}")
+        }
+    }
+
     override suspend fun addItem(itemModel: ItemModel) {
         val reference = firebase.getReference("market").child(itemModel.id).setValue(itemModel)
         reference.await()
