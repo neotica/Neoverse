@@ -16,6 +16,7 @@ import id.neotica.ui.theme.NegativePrimary
 @Composable
 fun NeoButton(
     text: String,
+    modifier: Modifier = Modifier,
     maxWidth: Boolean = false,
     width: Dp = Dp.Unspecified,
     enabled: Boolean = true,
@@ -37,8 +38,7 @@ fun NeoButton(
     }
 
     Button(
-        modifier = if (maxWidth) maxWidthModifier else defaultModifier
-        ,
+        modifier = modifier.then(if (maxWidth) maxWidthModifier else defaultModifier),
         onClick = onClick,
         enabled = enabled,
         colors = buttonColors,

@@ -87,17 +87,17 @@ fun ProfileView(
                         .fillMaxWidth()
                         .padding(horizontal = 48.dp)
                 ) {
-                    NeoButton("Edit Profile", true) {
+                    NeoButton("Edit Profile", maxWidth = true) {
                         navController.navigate(Screen.EditProfileScreen(profPic = user?.imageUrl ?: ""))
                     }
                     NeoButton(
-                        "Account Settings", true
+                        "Account Settings", maxWidth = true
                     ) {
                         navController.navigate(Screen.AccountSettingScreen)
                     }
                     NeoButton(
                         "Logout",
-                        true,
+                        maxWidth = true,
                         negative = true
                     ) {
                         viewModel.logout()

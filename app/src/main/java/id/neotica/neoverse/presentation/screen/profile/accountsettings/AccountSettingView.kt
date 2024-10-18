@@ -20,9 +20,9 @@ fun AccountSettingView(
         navController = navController,
         enableActionBar = true
     ) {
-        NeoButton("Change Password", true) {
+        NeoButton("Change Password", maxWidth = true) {
         }
-        NeoButton("Delete Account", true, negative = true) {
+        NeoButton("Delete Account", maxWidth = true, negative = true) {
             navController.navigate(Screen.DeleteAccountScreen)
         }
     }

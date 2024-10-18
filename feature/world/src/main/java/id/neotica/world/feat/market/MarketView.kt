@@ -77,7 +77,7 @@ fun MarketView(
         navController = navController,
         enableActionBar = true
     ) {
-        Text(currentAuras.toString())
+        Text("Your Aura: ${currentAuras?.aura ?: ""}")
         NeoButton("Add Item") {
             viewModel.addItem()
         }
@@ -103,7 +103,6 @@ fun MarketView(
                         Text("卐${item.price}")
                     }
                 }
-
             }
         }
     }
