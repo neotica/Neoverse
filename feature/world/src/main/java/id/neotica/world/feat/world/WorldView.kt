@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -16,6 +17,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.navigation.NavController
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.Games
@@ -38,12 +42,13 @@ fun WorldView(
     var onClick by remember { mutableStateOf(false) }
     val random = Random.nextInt(2000)
     val context = LocalContext.current
+    val lifecycleOwner = LocalLifecycleOwner.current
 
     LaunchedEffect(onClick) {
         Log.d("auraInit", auraInit.toString())
 
         viewModel.totalAuras.collect { result ->
-            Log.d("auraInit", result.errorMessage. toString())
+            Log.d("auraCurrent", currentAuras.toString())
 
             when(result) {
                 is ApiResult.Loading -> {
@@ -60,6 +65,18 @@ fun WorldView(
         }
     }
 
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME) {
+                viewModel.fetchAuras()
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    }
+
     LaunchedEffect(Unit) {
         if (!viewModel.isLoggedIn()) navController.navigate(Screen.LoginScreen) {
             popUpTo(RootScreen.HomeNav) {
@@ -68,11 +85,13 @@ fun WorldView(
             launchSingleTop
         }
     }
+
     BasicScaffold(
         topBarTitle = "World",
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         if (!auraInit) {
+            Text("Your Aura: ${currentAuras?.aura ?: ""}")
             NeoButton("To Bar") {
                 navController.navigate(Screen.GameScreen)
             }

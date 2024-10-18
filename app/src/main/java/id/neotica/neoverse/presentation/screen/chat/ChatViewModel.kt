@@ -10,8 +10,8 @@ import com.google.firebase.auth.auth
 import com.google.firebase.database.database
 import id.neotica.domain.ApiResult
 import id.neotica.domain.local.CurrentUserRepository
-import id.neotica.domain.model.ChatRoom
-import id.neotica.domain.model.Message
+import id.neotica.domain.model.chat.ChatRoom
+import id.neotica.domain.model.chat.Message
 import id.neotica.domain.model.User
 import id.neotica.domain.remote.ChatRepository
 import id.neotica.domain.remote.UserRepository

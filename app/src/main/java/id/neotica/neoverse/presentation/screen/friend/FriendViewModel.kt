@@ -6,12 +6,13 @@ import androidx.lifecycle.viewModelScope
 import id.neotica.domain.ApiResult
 import id.neotica.domain.local.CurrentUserRepository
 import id.neotica.domain.local.FriendDaoRepository
-import id.neotica.domain.model.ChatRoom
-import id.neotica.domain.model.ParentNeo
+import id.neotica.domain.model.chat.ChatRoom
+import id.neotica.domain.model.chat.ParentNeo
 import id.neotica.domain.model.User
 import id.neotica.domain.remote.ChatRepository
 import id.neotica.domain.remote.UserRepository
 import id.neotica.domain.usecase.GetUserIdUseCase
+import id.neotica.domain.utils.randomUUID
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -109,6 +110,7 @@ class FriendViewModel(
     fun addChatroom(user2: String, user: User) = viewModelScope.launch {
         currentUserName().let {
             val chatroomDetail = ChatRoom(
+                id = randomUUID(),
                 name = currentUserId()+ user.userId,
                 user1 = it,
                 user2 = user2,

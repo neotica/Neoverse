@@ -22,8 +22,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import id.neotica.domain.ApiResult
-import id.neotica.domain.model.ChatRoom
-import id.neotica.domain.model.ParentNeo
+import id.neotica.domain.model.chat.ChatRoom
+import id.neotica.domain.model.chat.ParentNeo
 import id.neotica.domain.model.User
 import id.neotica.ui.navigation.Screen
 import id.neotica.ui.components.BasicScaffold
