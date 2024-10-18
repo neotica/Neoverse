@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 
 class WorldViewModel(
     private val gameRepo: AuraRepository,
-    private val getIdUseCase: GetUserIdUseCase
+    private val getIdUseCase: GetUserIdUseCase,
 ): ViewModel() {
     private val _totalAuras: MutableStateFlow<ApiResult<Games?>> = MutableStateFlow(ApiResult.Loading())
     val totalAuras = _totalAuras.asStateFlow()

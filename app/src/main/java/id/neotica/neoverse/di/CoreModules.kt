@@ -10,6 +10,7 @@ import id.neotica.domain.local.FriendDaoRepository
 import id.neotica.domain.remote.AuthRepository
 import id.neotica.domain.remote.ChatRepository
 import id.neotica.domain.remote.AuraRepository
+import id.neotica.domain.remote.MarketRepository
 import id.neotica.domain.remote.UserRepository
 import id.neotica.domain.usecase.GetUserIdUseCase
 import id.neotica.neoverse.presentation.screen.auth.login.LoginViewModel
@@ -21,6 +22,7 @@ import id.neotica.neoverse.presentation.screen.dump.DumpViewModel
 import id.neotica.neoverse.presentation.screen.home.HomeViewModel
 import id.neotica.neoverse.presentation.screen.profile.ProfileViewModel
 import id.neotica.network.AuraRepositoryImpl
+import id.neotica.network.MarketRepositoryImpl
 import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.singleOf
@@ -34,6 +36,7 @@ val repositoryModules = module {
     singleOf(::AuraRepositoryImpl) bind AuraRepository::class
     singleOf(::FriendDaoRepositoryImpl) bind FriendDaoRepository::class
     singleOf(::CurrentUserRepositoryImpl) bind CurrentUserRepository::class
+    singleOf(::MarketRepositoryImpl) bind MarketRepository::class
 }
 
 val viewModelModules = module {
