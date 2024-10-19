@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.compose.compiler)
 }
 
 android {
@@ -60,10 +61,10 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
 
     // Coil
-    api("io.coil-kt:coil-compose:2.7.0")
+    api(libs.coil)
 
     //DroidCore
-    api("com.github.laetuz:Droidcore:1.2.4")
+    api(libs.droidcore)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
