@@ -4,11 +4,12 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.wear.compose.navigation.SwipeDismissableNavHost
 import androidx.wear.compose.navigation.composable
-import id.neotica.neoversewear.presentation.screen.auth.WearLoginView
+import id.neotica.neoversewear.presentation.screen.auth.WLoginView
 import id.neotica.neoversewear.presentation.screen.chat.WChatView
 import id.neotica.neoversewear.presentation.screen.home.WearHomeNavView
 import id.neotica.neoversewear.presentation.screen.home.WearHomeScreen
 import id.neotica.neoversewear.presentation.screen.profile.WProfileView
+import id.neotica.neoversewear.presentation.screen.world.WBarView
 
 @Composable
 fun WearNavGraph(navController: NavHostController) {
@@ -19,7 +20,7 @@ fun WearNavGraph(navController: NavHostController) {
         composable(WearScreen.HomeScreen.toString()) {
             WearHomeScreen(navController)
         }
-        composable(WearScreen.LoginScreen.toString()) { WearLoginView(navController) }
+        composable(WearScreen.LoginScreen.toString()) { WLoginView(navController) }
         composable(WearScreen.ProfileScreen.toString()) {
             WProfileView(navController)
         }
@@ -30,5 +31,6 @@ fun WearNavGraph(navController: NavHostController) {
             val args = WearScreen.ChatScreen(chatId!!, user2!!, chatroomId)
             WChatView(navController, args)
         }
+        composable(WearScreen.BarScreen.toString()) { WBarView(navController) }
     }
 }

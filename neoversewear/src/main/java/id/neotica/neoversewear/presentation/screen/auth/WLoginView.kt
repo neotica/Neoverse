@@ -23,7 +23,7 @@ import id.neotica.ui.components.NeoButton
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun WearLoginView(navController: NavController, modifier: Modifier = Modifier, viewModel: WLoginViewModel = koinViewModel()) {
+fun WLoginView(navController: NavController, modifier: Modifier = Modifier, viewModel: WLoginViewModel = koinViewModel()) {
     var isButtonPressed by remember { mutableStateOf(false) }
     val emailValue = rememberSaveable { mutableStateOf("") }
     val passwordValue = rememberSaveable { mutableStateOf("") }

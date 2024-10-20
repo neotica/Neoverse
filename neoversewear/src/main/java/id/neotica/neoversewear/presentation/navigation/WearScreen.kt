@@ -23,4 +23,8 @@ sealed class WearScreen {
         val user2: String,
         val chatroomId: String? = ""
     )
+
+    //World
+    @Serializable
+    data object BarScreen: WearScreen()
 }

@@ -30,9 +30,16 @@ fun WearHomeNavView(navController: NavController, modifier: Modifier = Modifier,
         }
         item { SpacerItem() }
         item {
+            Chip(label = { Text("Bar") }, onClick = {
+                navController.navigate(WearScreen.BarScreen.toString())
+            })
+        }
+        item { SpacerItem() }
+        item {
             Chip(label = { Text("Profile") }, onClick = {
                 navController.navigate(WearScreen.ProfileScreen.toString())
             })
         }
+
     }
 }
