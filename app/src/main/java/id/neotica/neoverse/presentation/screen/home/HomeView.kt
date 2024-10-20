@@ -1,7 +1,6 @@
 package id.neotica.neoverse.presentation.screen.home
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -28,12 +27,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import id.neotica.domain.ApiResult
+import id.neotica.domain.model.User
 import id.neotica.domain.model.chat.ChatRoom
 import id.neotica.domain.model.chat.ParentNeo
-import id.neotica.domain.model.User
+import id.neotica.domain.utils.convertLongToHour
 import id.neotica.domain.utils.filteredRoom
 import id.neotica.domain.utils.returnFriendName
-import id.neotica.neoverse.utils.convertLongToHour
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.ChatListItem
 import id.neotica.ui.navigation.RootScreen
@@ -44,7 +43,6 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun HomeView(
     navController: NavController,
-    paddingValues: PaddingValues,
     viewModel: HomeViewModel = koinViewModel(),
 ) {
     var isPressed by remember { mutableStateOf(false) }

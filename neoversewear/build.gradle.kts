@@ -1,8 +1,9 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
-    alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.google.services)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.compose.compiler)
 }
 
 android {
@@ -10,7 +11,7 @@ android {
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "id.neotica.neoversewear"
+        applicationId = "id.neotica.neoverse"
         minSdk = 30
         targetSdk = 34
         versionCode = 1

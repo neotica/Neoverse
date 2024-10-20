@@ -1,4 +1,4 @@
-package id.neotica.neoversewear.presentation.presentation.navigation
+package id.neotica.neoversewear.presentation.navigation
 
 import kotlinx.serialization.Serializable
 
@@ -12,4 +12,15 @@ sealed class WearScreen {
     // Auth
     @Serializable
     data object LoginScreen: WearScreen()
+
+    @Serializable
+    data object ProfileScreen: WearScreen()
+
+    //Chat
+    @Serializable
+    data class ChatScreen(
+        val chatId: String,
+        val user2: String,
+        val chatroomId: String? = ""
+    )
 }
