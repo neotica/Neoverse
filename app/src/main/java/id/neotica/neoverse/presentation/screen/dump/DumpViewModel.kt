@@ -3,8 +3,8 @@ package id.neotica.neoverse.presentation.screen.dump
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import id.neotica.domain.model.ChatRoom
-import id.neotica.domain.model.ParentNeo
+import id.neotica.domain.model.chat.ChatRoom
+import id.neotica.domain.model.chat.ParentNeo
 import id.neotica.domain.model.User
 import id.neotica.domain.ApiResult
 import id.neotica.domain.local.CurrentUserRepository

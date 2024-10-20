@@ -6,11 +6,13 @@ import androidx.lifecycle.viewModelScope
 import id.neotica.domain.ApiResult
 import id.neotica.domain.local.CurrentUserRepository
 import id.neotica.domain.local.FriendDaoRepository
-import id.neotica.domain.model.ChatRoom
-import id.neotica.domain.model.ParentNeo
+import id.neotica.domain.model.chat.ChatRoom
+import id.neotica.domain.model.chat.ParentNeo
 import id.neotica.domain.model.User
 import id.neotica.domain.remote.ChatRepository
 import id.neotica.domain.remote.UserRepository
+import id.neotica.domain.usecase.GetUserIdUseCase
+import id.neotica.domain.utils.randomUUID
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -20,6 +22,7 @@ class FriendViewModel(
     private val chatRepo: ChatRepository,
     private val databaseRepo: FriendDaoRepository,
     private val userDatabase: CurrentUserRepository,
+    private val getUserIdUseCase: GetUserIdUseCase
 ): ViewModel() {
 
     private var _userList: MutableStateFlow<ApiResult<List<User>>> = MutableStateFlow(ApiResult.Loading())
@@ -41,7 +44,7 @@ class FriendViewModel(
     val friendProfile = _friendProfile.asStateFlow()
 
     fun currentUserId(): String = _userEntity.value.data?.userId ?: ""
-    fun currentUserName(): String = _userEntity.value.data?.username ?: ""
+    private fun currentUserName(): String = _userEntity.value.data?.username ?: ""
 
     init {
         getUser()
@@ -60,7 +63,7 @@ class FriendViewModel(
     }
 
     fun isLoggedIn(): Boolean {
-        return userRepo.isLoggedIn()
+        return getUserIdUseCase.invoke().isNotEmpty()
     }
 
     fun getFriendsRoom() = databaseRepo.getFriends()
@@ -98,11 +101,6 @@ class FriendViewModel(
         }
     }
 
-    fun refresh() = viewModelScope.launch {
-        Log.d("ViewModel", "refresh called")
-        databaseRepo.clearFriends()
-    }
-
     fun getChatroom() = viewModelScope.launch {
         chatRepo.getAllChatrooms().collect {
             _chatroom.value = it
@@ -112,6 +110,7 @@ class FriendViewModel(
     fun addChatroom(user2: String, user: User) = viewModelScope.launch {
         currentUserName().let {
             val chatroomDetail = ChatRoom(
+                id = randomUUID(),
                 name = currentUserId()+ user.userId,
                 user1 = it,
                 user2 = user2,

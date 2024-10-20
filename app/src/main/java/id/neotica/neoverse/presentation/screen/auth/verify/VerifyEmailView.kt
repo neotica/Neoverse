@@ -61,7 +61,7 @@ fun VerifyEmailView(
                 ) {
                     NeoButton(
                         "My Email is verified",
-                        true
+                        maxWidth = true
                     ) {
                         viewModel.logout()
                         navController.navigate(RootScreen.AuthNav)

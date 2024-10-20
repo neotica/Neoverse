@@ -45,7 +45,7 @@ fun DeleteAccountView(
             Row {
                 NeoButton(
                     text = "Confirm",
-                    true,
+                    maxWidth = true,
                     enabled = confirm.value == confirmText,
                 ) {
                     viewModel.deleteAccount()

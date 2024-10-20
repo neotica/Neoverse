@@ -1,4 +1,4 @@
-package id.neotica.domain.model
+package id.neotica.domain.model.chat
 
 data class ChatRoom(
     val id: String = "",

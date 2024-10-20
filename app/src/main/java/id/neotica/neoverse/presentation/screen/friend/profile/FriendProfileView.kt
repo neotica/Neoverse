@@ -17,7 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavController
 import id.neotica.domain.ApiResult
-import id.neotica.domain.model.ChatRoom
+import id.neotica.domain.model.chat.ChatRoom
 import id.neotica.domain.model.User
 import id.neotica.droidcore.component.alert.NeoAlert
 import id.neotica.neoverse.presentation.screen.friend.FriendViewModel

@@ -23,6 +23,7 @@ import id.neotica.domain.ApiResult
 import id.neotica.domain.model.Games
 import id.neotica.droidcore.component.cards.deprecated.NeoCard
 import id.neotica.ui.components.BasicScaffold
+import id.neotica.ui.components.NeoButton
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.Screen
 import id.neotica.world.feat.game.components.SlotMachine
@@ -72,7 +73,7 @@ fun GameView(
     }
 
     BasicScaffold(
-        topBarTitle = "Game",
+        topBarTitle = "The Bar",
         horizontalAlignment = Alignment.CenterHorizontally,
         navController = navController,
         enableActionBar = true
@@ -86,6 +87,10 @@ fun GameView(
                     Modifier
                         .fillMaxWidth()
                         .padding(30.dp))
+            }
+            Spacer(Modifier.padding(20.dp))
+            NeoButton("Drink Beer!") {
+                viewModel.sendAuraPoints(-5)
             }
         } else {
             NeoCard(

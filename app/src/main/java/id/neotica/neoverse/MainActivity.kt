@@ -75,7 +75,7 @@ class MainActivity: ComponentActivity() {
                         screen = RootScreen.AuthNav
                     )
                 )
-                val bottomBarExcludedRoutes = listOf(
+                val bottomBarExcludedRoutes = setOf(
                     Screen.Splash,
                     Screen.LoginScreen,
                     Screen.RegisterScreen,
@@ -93,12 +93,14 @@ class MainActivity: ComponentActivity() {
                             if (navBackStackEntry?.destination?.route == null) true else
                             navBackStackEntry?.destination?.hasRoute(it::class) == true
                         }
-                        val includeRoute2 = navBackStackEntry?.destination?.route == "id.neotica.ui.navigation.Screen.Chat/{chatId}/{user2}?chatroomId={chatroomId}"
+                        val specificRoutes = setOf(
+                            "id.neotica.ui.navigation.Screen.Chat/{chatId}/{user2}?chatroomId={chatroomId}",
+                            "id.neotica.ui.navigation.Screen.ItemDetailScreen/{id}"
+                        )
+                        val currentRoute = navBackStackEntry?.destination?.route
                         Log.d("currentScreen", navBackStackEntry?.destination?.route.toString())
 
-                        val includeRoute3 = if (includeRoute) {
-                            !includeRoute2
-                        } else false
+                        val includeRoute3 = includeRoute && currentRoute !in specificRoutes
 
                         AnimatedVisibility (
                             visible = includeRoute3,

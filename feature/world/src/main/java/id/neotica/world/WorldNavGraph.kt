@@ -5,10 +5,13 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import androidx.navigation.toRoute
 import id.neotica.world.feat.game.GameView
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.Screen
 import id.neotica.world.feat.kanye.KanyeView
+import id.neotica.world.feat.market.MarketView
+import id.neotica.world.feat.market.itemdetail.ItemDetailView
 import id.neotica.world.feat.world.WorldView
 
 fun NavGraphBuilder.worldNavGraph(
@@ -31,6 +34,17 @@ fun NavGraphBuilder.worldNavGraph(
         }
         composable<Screen.KanyeScreen> {
             KanyeView(
+                navController, paddingValues
+            )
+        }
+        composable<Screen.MarketScreen> {
+            MarketView(
+                navController, paddingValues
+            )
+        }
+        composable<Screen.ItemDetailScreen> {
+            val args = it.toRoute<Screen.ItemDetailScreen>()
+            ItemDetailView(
                 navController, paddingValues
             )
         }

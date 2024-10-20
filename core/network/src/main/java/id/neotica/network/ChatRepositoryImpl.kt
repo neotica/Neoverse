@@ -6,9 +6,9 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
 import id.neotica.domain.ApiResult
-import id.neotica.domain.model.ChatRoom
-import id.neotica.domain.model.Message
-import id.neotica.domain.model.ParentNeo
+import id.neotica.domain.model.chat.ChatRoom
+import id.neotica.domain.model.chat.Message
+import id.neotica.domain.model.chat.ParentNeo
 import id.neotica.domain.remote.ChatRepository
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -54,19 +54,8 @@ class ChatRepositoryImpl: ChatRepository {
     }
 
 
-    override suspend fun addChatroom(name: ChatRoom) {
-        val key = firebase.getReference("chatroom").push().key
-        val chatroom = ChatRoom(
-            id = key.toString(),
-            name = name.name,
-            user1 = name.user1,
-            user2 = name.user2,
-            user1id = name.user1id,
-            user2id = name.user2id,
-            user1Read = name.user1Read,
-            user2Read = name.user2Read
-        )
-        val reference = firebase.getReference("chatroom").child(key!!).setValue(chatroom)
+    override suspend fun addChatroom(chatRoom: ChatRoom) {
+        val reference = firebase.getReference("chatroom").child(chatRoom.id).setValue(chatRoom)
         reference.await()
         if (reference.isSuccessful) getAllChatrooms()
     }

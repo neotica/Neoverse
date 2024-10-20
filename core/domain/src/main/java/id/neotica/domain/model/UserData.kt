@@ -1,5 +1,7 @@
 package id.neotica.domain.model
 
+import id.neotica.domain.model.chat.ParentNeo
+
 data class UserData(
     val id: String = "",
     val friends: ParentNeo<Friends>,
