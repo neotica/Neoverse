@@ -17,6 +17,10 @@ room = "2.6.1"
 ksp = "2.0.20-1.0.24"
 coil = "2.7.0"
 droidcore = "1.2.4"
+playServicesWearable = "18.2.0"
+wearToolingPreview = "1.0.0"
+coreSplashscreen = "1.0.1"
+androidx-wear-compose = "1.4.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -52,6 +56,13 @@ room-compiler = { group = "androidx.room", name = "room-compiler", version.ref =
 coil = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 #droidCore
 droidcore = { group = "com.github.laetuz", name = "Droidcore", version.ref = "droidcore" }
+#wear
+play-services-wearable = { group = "com.google.android.gms", name = "play-services-wearable", version.ref = "playServicesWearable" }
+androidx-compose-material = { group = "androidx.wear.compose", name = "compose-material", version.ref = "androidx-wear-compose" }
+androidx-compose-foundation = { group = "androidx.wear.compose", name = "compose-foundation", version.ref = "androidx-wear-compose" }
+androidx-wear-tooling-preview = { group = "androidx.wear", name = "wear-tooling-preview", version.ref = "wearToolingPreview" }
+androidx-core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "coreSplashscreen" }
+wear-compose-navigation = { module = "androidx.wear.compose:compose-navigation", version.ref = "androidx-wear-compose" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
