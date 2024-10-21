@@ -9,11 +9,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
-import androidx.wear.compose.material.Chip
 import androidx.wear.compose.material.Text
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.User
 import id.neotica.neoversewear.presentation.components.BasicWearScreen
+import id.neotica.neoversewear.presentation.components.NeoWChip
 import id.neotica.neoversewear.presentation.navigation.SpacerItem
 import id.neotica.neoversewear.presentation.navigation.WearScreen
 import id.neotica.ui.components.ImageCoil
@@ -53,14 +53,16 @@ fun WProfileView(navController: NavController, modifier: Modifier = Modifier, vi
             item { Text(it.userEmail) }
         }
         item { SpacerItem() }
-        item { Chip(label = { Text("Logout") }, onClick = {
-            viewModel.logout()
-            navController.navigate(WearScreen.LoginScreen.toString()) {
-                popUpTo(WearScreen.HomeNavScreen.toString()) {
-                    inclusive = true
+        item {
+            NeoWChip("Logout") {
+                viewModel.logout()
+                navController.navigate(WearScreen.LoginScreen.toString()) {
+                    popUpTo(WearScreen.HomeNavScreen.toString()) {
+                        inclusive = true
+                    }
+                    launchSingleTop
                 }
-                launchSingleTop
             }
-        }) }
+        }
     }
 }
