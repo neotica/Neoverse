@@ -6,7 +6,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import id.neotica.neoversewear.presentation.components.BasicWearScreen
 import id.neotica.neoversewear.presentation.components.NeoWChip
-import id.neotica.neoversewear.presentation.navigation.SpacerItem
+import id.neotica.neoversewear.presentation.components.SpacerItem
 import id.neotica.neoversewear.presentation.navigation.WearScreen
 import org.koin.androidx.compose.koinViewModel
 

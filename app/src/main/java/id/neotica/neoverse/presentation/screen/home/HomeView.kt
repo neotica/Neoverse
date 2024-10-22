@@ -1,6 +1,7 @@
 package id.neotica.neoverse.presentation.screen.home
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -43,6 +44,7 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun HomeView(
     navController: NavController,
+    paddingValues: PaddingValues,
     viewModel: HomeViewModel = koinViewModel(),
 ) {
     var isPressed by remember { mutableStateOf(false) }

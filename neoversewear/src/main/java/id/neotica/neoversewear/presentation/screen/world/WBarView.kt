@@ -1,5 +1,9 @@
 package id.neotica.neoversewear.presentation.screen.world
 
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import android.os.BatteryManager
 import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -16,13 +20,11 @@ import id.neotica.neoversewear.presentation.components.BasicWearScreen
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.Screen
 import org.koin.androidx.compose.koinViewModel
-import kotlin.random.Random
 
 @Composable
 fun WBarView(navController: NavController, viewModel: WBarViewModel = koinViewModel()) {
     var currentAuras by remember { mutableStateOf<Games?>(null) }
     var auraInit by remember { mutableStateOf(false) }
-    val random = Random.nextInt(2000)
     val context = LocalContext.current
 
     LaunchedEffect(Unit) {
@@ -56,8 +58,22 @@ fun WBarView(navController: NavController, viewModel: WBarViewModel = koinViewMo
     }
 
     BasicWearScreen {
-//        item { SpacerItem() }
-        item { Text("Your Aura:" + currentAuras?.aura.toString()) }
+        item {
+            Text("卐${currentAuras?.aura.toString()}")
+        }
         item { WSlotMachine() }
+        item { Text("Battery: ${batteryPercentage(context)}") }
     }
+}
+
+private fun batteryPercentage(context: Context): String {
+    val intentFilter = IntentFilter(Intent.ACTION_BATTERY_CHANGED)
+    val batteryStatus = context.registerReceiver(null, intentFilter)
+
+    val level = batteryStatus?.getIntExtra(BatteryManager.EXTRA_LEVEL, -1) ?: -1
+    val scale = batteryStatus?.getIntExtra(BatteryManager.EXTRA_SCALE, -1) ?: -1
+
+    val batteryPercent = level * 100 / scale.toFloat()
+
+    return  "$batteryPercent"
 }

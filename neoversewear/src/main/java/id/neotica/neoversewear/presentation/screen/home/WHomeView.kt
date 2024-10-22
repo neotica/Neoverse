@@ -1,27 +1,39 @@
 package id.neotica.neoversewear.presentation.screen.home
 
-import android.util.Log
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.wear.compose.foundation.lazy.ScalingLazyColumn
+import androidx.wear.compose.foundation.lazy.items
 import androidx.wear.compose.material.Text
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.User
 import id.neotica.domain.model.chat.ChatRoom
 import id.neotica.domain.model.chat.ParentNeo
+import id.neotica.domain.utils.convertLongToHour
 import id.neotica.domain.utils.filteredRoom
 import id.neotica.domain.utils.returnFriendName
 import id.neotica.neoversewear.presentation.components.WChatListItem
+import id.neotica.neoversewear.presentation.components.SpacerItem
 import id.neotica.neoversewear.presentation.navigation.WearScreen
+import id.neotica.ui.components.ImageCoil
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.Screen
 import org.koin.androidx.compose.koinViewModel
@@ -69,14 +81,12 @@ fun WearHomeScreen(navController: NavController, viewModel: WHomeViewModel = koi
             viewModel.getFriendsRoom().collect {
                 if (it.isNotEmpty()) {
                     friendList = it
-                    Log.d("friend", "didnt collect")
                     isPressed = false
 
                 } else {
                     isFriendEmpty = true
                     isPressed = false
                     viewModel.getFriends()
-                    Log.d("friend", "else")
 
                 }
             }
@@ -111,7 +121,6 @@ fun WearHomeScreen(navController: NavController, viewModel: WHomeViewModel = koi
     LaunchedEffect(isPressed) {
 
         viewModel.friendList.collect { result ->
-            Log.d("friendList", result.toString())
             when(result) {
                 is ApiResult.Loading -> isLoading = true
                 is ApiResult.Success -> {
@@ -125,58 +134,92 @@ fun WearHomeScreen(navController: NavController, viewModel: WHomeViewModel = koi
                 is ApiResult.Error -> {
                     isPressed = false
                     isLoading = false
-                    Log.d("neotica", result.errorMessage.toString())
                 }
             }
         }
     }
 
     ScalingLazyColumn {
-        item {
-            LazyRow {
-                items(parentChatrooms.value.filter { channels ->
-                    val current = currentuser?.username.toString()
-                    filteredRoom(current, channels.value.user1, channels.value.user2)
-                }){
-                        channelItemParent ->
-                    val chatName = returnFriendName(
-                        currentuser?.username.toString(),
-                        channelItemParent.value.user1,
-                        channelItemParent.value.user2
-                    )
-                    val friendInstance = friendList.firstOrNull {
-                        it.username == chatName
-                    }
-                    WChatListItem(
-                        name = chatName,
-                        image = friendInstance?.imageUrl.toString(),
-                        enableLongClick = true,
-                        onLongClick = {
-                            isPressed = true
-                            viewModel.deleteChatroom(channelItemParent.value)
-                        },
-                        alertTitle = "Clear Chat with $chatName?",
-                        alertButton = "Clear",
-                        content = {
+        item { SpacerItem() }
+        items(parentChatrooms.value.filter { channels ->
+            val current = currentuser?.username.toString()
+            filteredRoom(current, channels.value.user1, channels.value.user2)
+        }){
+                channelItemParent ->
+            val chatName = returnFriendName(
+                currentuser?.username.toString(),
+                channelItemParent.value.user1,
+                channelItemParent.value.user2
+            )
+            val friendInstance = friendList.firstOrNull {
+                it.username == chatName
+            }
+            WChatListItem(
+                name = chatName,
+                image = friendInstance?.imageUrl.toString(),
+                enableLongClick = true,
+                onLongClick = {
+                    isPressed = true
+                    viewModel.deleteChatroom(channelItemParent.value)
+                },
+                alertTitle = "Clear Chat with $chatName?",
+                alertButton = "Clear",
+                content = {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        ImageCoil(
+                            url = friendInstance?.imageUrl.toString(),
+                            fillMaxWidth = false,
+                            size = 32.dp,
+                            contentAlignment = Alignment.CenterStart
+                        )
+                        SpacerItem(4.dp)
+                        Column {
                             Text(
                                 text = chatName,
                                 textAlign = TextAlign.Center,
                                 fontWeight = FontWeight.Bold
                             )
-                        }
-                    ) {
-                        currentuser?.let {
-                            val wear = WearScreen.ChatScreen(
-                                chatroomId = channelItemParent.value.id,
-                                chatId = channelItemParent.value.name,
-                                user2 = chatName
-                            )
-                            navController.navigate(
-                                "WearScreen.ChatScreen/${wear.chatId}/${wear.user2}/${wear.chatroomId}"
-                            )
+                            channelItemParent.value.let {
+                                if (it.lastMessage.isNotEmpty()) {
+                                    Text(
+                                        text = channelItemParent.value.lastMessage,
+                                        fontWeight = FontWeight.Light,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis,
+                                        modifier = Modifier.widthIn(max = 200.dp)
+                                    )
+                                    Text(
+                                        text = convertLongToHour(it.lastOpened),
+                                        fontWeight = FontWeight.Light,
+                                        maxLines = 1,
+                                        fontSize = 8.sp,
+                                        textAlign = TextAlign.End,
+                                        modifier = Modifier.fillMaxWidth()
+                                    )
+                                } else {
+                                    Text(
+                                        text = "No message has been sent.",
+                                        fontStyle = FontStyle.Italic
+                                    )
+                                }
+                            }
+
                         }
                     }
-
+                }
+            ) {
+                currentuser?.let {
+                    val wear = WearScreen.ChatScreen(
+                        chatroomId = channelItemParent.value.id,
+                        chatId = channelItemParent.value.name,
+                        user2 = chatName
+                    )
+                    navController.navigate(
+                        "WearScreen.ChatScreen/${wear.chatId}/${wear.user2}/${wear.chatroomId}"
+                    )
                 }
             }
         }

@@ -1,7 +1,6 @@
 package id.neotica.neoversewear.presentation.screen.world
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,7 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.wear.compose.material.Text
 import id.neotica.neoversewear.presentation.components.CircularListWear
 import id.neotica.neoversewear.presentation.components.NeoWButton
-import id.neotica.neoversewear.presentation.navigation.SpacerItem
+import id.neotica.neoversewear.presentation.components.SpacerItem
 import id.neotica.ui.components.SlideInto
 import id.neotica.ui.theme.DarkPrimaryTransparent
 import id.neotica.world.utils.generateTranspose
@@ -132,7 +131,6 @@ fun WSlotMachine(modifier: Modifier = Modifier, viewModel: WBarViewModel = koinV
                 }
             }
         }
-        Log.d("slot", "numb$numbComb")
         Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
             val auraPoint = viewModel.auraPoints.value.toString()
             if (delayedClick) {

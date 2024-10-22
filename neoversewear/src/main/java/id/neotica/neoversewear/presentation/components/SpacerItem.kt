@@ -1,4 +1,4 @@
-package id.neotica.neoversewear.presentation.navigation
+package id.neotica.neoversewear.presentation.components
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding

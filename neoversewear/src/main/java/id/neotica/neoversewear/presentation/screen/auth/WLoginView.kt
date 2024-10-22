@@ -1,6 +1,5 @@
 package id.neotica.neoversewear.presentation.screen.auth
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -17,7 +16,7 @@ import id.neotica.domain.ApiResult
 import id.neotica.droidcore.component.textfield.NeoTextField
 import id.neotica.droidcore.component.textfield.PasswordTextField
 import id.neotica.neoversewear.presentation.components.BasicWearScreen
-import id.neotica.neoversewear.presentation.navigation.SpacerItem
+import id.neotica.neoversewear.presentation.components.SpacerItem
 import id.neotica.neoversewear.presentation.navigation.WearScreen
 import id.neotica.ui.components.NeoButton
 import org.koin.androidx.compose.koinViewModel
@@ -34,11 +33,9 @@ fun WLoginView(navController: NavController, modifier: Modifier = Modifier, view
             viewModel.loginCred.collect { result ->
                 when(result) {
                     is ApiResult.Loading -> {
-                        Log.d("neotica", "loading")
                         Toast.makeText(context, "Loading...", Toast.LENGTH_SHORT).show()
                     }
                     is ApiResult.Success -> {
-                        Log.d("neotica", "success ${result.data}")
                         Toast.makeText(context, result.data, Toast.LENGTH_SHORT).show()
                         navController.navigate(WearScreen.HomeNavScreen.toString()) {
                             popUpTo(WearScreen.HomeNavScreen.toString()) {
@@ -48,7 +45,6 @@ fun WLoginView(navController: NavController, modifier: Modifier = Modifier, view
                         }
                     }
                     is ApiResult.Error -> {
-                        Log.d("neotica", "error: ${result.errorMessage} data: ${result.data}")
                         Toast.makeText(context, result.errorMessage, Toast.LENGTH_SHORT).show()
                     }
                 }

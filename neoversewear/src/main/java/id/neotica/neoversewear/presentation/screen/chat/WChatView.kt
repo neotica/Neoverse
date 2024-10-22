@@ -40,7 +40,7 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import id.neotica.domain.model.chat.Message
 import id.neotica.domain.utils.convertLongToTime
-import id.neotica.neoversewear.presentation.navigation.SpacerItem
+import id.neotica.neoversewear.presentation.components.SpacerItem
 import id.neotica.neoversewear.presentation.navigation.WearScreen
 import id.neotica.ui.theme.DarkPrimary
 import kotlinx.coroutines.launch

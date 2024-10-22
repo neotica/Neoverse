@@ -1,6 +1,5 @@
 package id.neotica.neoversewear.presentation.screen.profile
 
-import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -14,7 +13,7 @@ import id.neotica.domain.ApiResult
 import id.neotica.domain.model.User
 import id.neotica.neoversewear.presentation.components.BasicWearScreen
 import id.neotica.neoversewear.presentation.components.NeoWChip
-import id.neotica.neoversewear.presentation.navigation.SpacerItem
+import id.neotica.neoversewear.presentation.components.SpacerItem
 import id.neotica.neoversewear.presentation.navigation.WearScreen
 import id.neotica.ui.components.ImageCoil
 import org.koin.androidx.compose.koinViewModel
@@ -32,7 +31,6 @@ fun WProfileView(navController: NavController, modifier: Modifier = Modifier, vi
             launchSingleTop
         } else {
             viewModel.currentUser.collect { result ->
-                Log.d("profileView", "result $result")
                 when(result) {
                     is ApiResult.Loading -> { /*isUserEmpty = true*/ }
                     is ApiResult.Success -> { user = result.data }
