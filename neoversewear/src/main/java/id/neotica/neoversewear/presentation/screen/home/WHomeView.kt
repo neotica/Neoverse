@@ -30,8 +30,9 @@ import id.neotica.domain.model.chat.ParentNeo
 import id.neotica.domain.utils.convertLongToHour
 import id.neotica.domain.utils.filteredRoom
 import id.neotica.domain.utils.returnFriendName
-import id.neotica.neoversewear.presentation.components.WChatListItem
 import id.neotica.neoversewear.presentation.components.SpacerItem
+import id.neotica.neoversewear.presentation.components.WChatListItem
+import id.neotica.neoversewear.presentation.components.WLoadingIndicator
 import id.neotica.neoversewear.presentation.navigation.WearScreen
 import id.neotica.ui.components.ImageCoil
 import id.neotica.ui.navigation.RootScreen
@@ -141,6 +142,7 @@ fun WearHomeScreen(navController: NavController, viewModel: WHomeViewModel = koi
 
     ScalingLazyColumn {
         item { SpacerItem() }
+        if (isLoadingChats) item { WLoadingIndicator() }
         items(parentChatrooms.value.filter { channels ->
             val current = currentuser?.username.toString()
             filteredRoom(current, channels.value.user1, channels.value.user2)
