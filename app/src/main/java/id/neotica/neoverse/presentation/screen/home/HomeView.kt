@@ -28,12 +28,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import id.neotica.domain.ApiResult
+import id.neotica.domain.model.User
 import id.neotica.domain.model.chat.ChatRoom
 import id.neotica.domain.model.chat.ParentNeo
-import id.neotica.domain.model.User
+import id.neotica.domain.utils.convertLongToHour
 import id.neotica.domain.utils.filteredRoom
 import id.neotica.domain.utils.returnFriendName
-import id.neotica.neoverse.utils.convertLongToHour
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.ChatListItem
 import id.neotica.ui.navigation.RootScreen

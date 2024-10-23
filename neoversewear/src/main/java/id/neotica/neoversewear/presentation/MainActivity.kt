@@ -17,8 +17,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.Scaffold
+import androidx.wear.compose.material.TimeText
 import androidx.wear.compose.navigation.rememberSwipeDismissableNavController
-import id.neotica.neoversewear.presentation.presentation.navigation.WearNavGraph
+import id.neotica.neoversewear.presentation.navigation.WearNavGraph
 import id.neotica.neoversewear.presentation.theme.NeoverseTheme
 
 class MainActivity : ComponentActivity() {
@@ -46,11 +47,9 @@ fun WearApp() {
                 .background(MaterialTheme.colors.background),
             contentAlignment = Alignment.Center
         ) {
-            Scaffold {
+            Scaffold(timeText = { TimeText() }) {
                 WearNavGraph(navController)
             }
-
-
         }
     }
 }

@@ -40,10 +40,10 @@ import androidx.navigation.NavController
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import id.neotica.domain.model.chat.Message
+import id.neotica.domain.utils.convertLongToTime
 import id.neotica.ui.navigation.Screen
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.theme.DarkPrimary
-import id.neotica.neoverse.utils.convertLongToTime
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
