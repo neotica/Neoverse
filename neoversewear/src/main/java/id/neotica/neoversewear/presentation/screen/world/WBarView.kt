@@ -62,7 +62,7 @@ fun WBarView(navController: NavController, viewModel: WBarViewModel = koinViewMo
             Text("卐${currentAuras?.aura.toString()}")
         }
         item { WSlotMachine() }
-        item { Text("Battery: ${batteryPercentage(context)}") }
+        item { Text("Battery: ${batteryPercentage(context).substringBefore(".")}%") }
     }
 }
 
