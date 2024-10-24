@@ -28,6 +28,7 @@ import id.neotica.ui.components.CustomPocket
 import id.neotica.ui.components.NeoButton
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.Screen
+import id.neotica.ui.navigation.WorldScreen
 import org.koin.androidx.compose.koinViewModel
 import kotlin.random.Random
 
@@ -93,10 +94,10 @@ fun WorldView(
         if (!auraInit) {
             Text("Your Aura: ${currentAuras?.aura ?: ""}")
             NeoButton("To Bar") {
-                navController.navigate(Screen.GameScreen)
+                navController.navigate(WorldScreen.GameScreen)
             }
             NeoButton("To Market") {
-                navController.navigate(Screen.MarketScreen)
+                navController.navigate(WorldScreen.MarketScreen)
             }
         } else {
             CustomPocket(
@@ -111,7 +112,7 @@ fun WorldView(
                             Toast.makeText(context, "Congratulations, you've got $random aura!", Toast.LENGTH_SHORT).show()
                             viewModel.sendInitialAura(random)
                             onClick = !onClick
-                            navController.navigate(Screen.WorldScreen) {
+                            navController.navigate(WorldScreen.HomeScreen) {
                                 popUpTo(RootScreen.WorldNav) {
                                     inclusive = true
                                 }

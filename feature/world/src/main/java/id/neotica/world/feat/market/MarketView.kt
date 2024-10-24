@@ -27,7 +27,7 @@ import id.neotica.domain.model.market.Hero
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.ImageCoil
 import id.neotica.ui.components.NeoButton
-import id.neotica.ui.navigation.Screen
+import id.neotica.ui.navigation.WorldScreen
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -78,8 +78,8 @@ fun MarketView(
         enableActionBar = true
     ) {
         Text("Your Aura: ${currentAuras?.aura ?: ""}")
-        NeoButton("Add Item") {
-            viewModel.addItem()
+        NeoButton("Merchant") {
+            navController.navigate(WorldScreen.MerchantScreen)
         }
         Row(
             Modifier.fillMaxWidth(),
@@ -93,7 +93,7 @@ fun MarketView(
         ) {
             items(marketItems) { item ->
                 Card(
-                    Modifier.clickable { navController.navigate(Screen.ItemDetailScreen(id = item.id)) }
+                    Modifier.clickable { navController.navigate(WorldScreen.ItemDetailScreen(id = item.id)) }
                 ) {
                     Column {
                         ImageCoil(item.imageUrl)

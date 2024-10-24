@@ -45,18 +45,6 @@ sealed class Screen {
     @Serializable
     data object DeleteAccountScreen: Screen()
 
-    // World Navigation
-    @Serializable
-    data object WorldScreen: Screen()
-    @Serializable
-    data object GameScreen: Screen()
-    @Serializable
-    data object KanyeScreen: Screen()
-    @Serializable
-    data object MarketScreen: Screen()
-    @Serializable
-    data class ItemDetailScreen(val id: String)
-
     //Friend Navigation
     @Serializable
     data object FriendScreen: Screen()
@@ -78,6 +66,22 @@ sealed class RootScreen {
     object WorldNav
     @Serializable
     object FriendNav
+}
+
+@Serializable
+sealed class WorldScreen {
+    @Serializable
+    data object HomeScreen: Screen()
+    @Serializable
+    data object GameScreen: Screen()
+    @Serializable
+    data object KanyeScreen: Screen()
+    @Serializable
+    data object MarketScreen: Screen()
+    @Serializable
+    data class ItemDetailScreen(val id: String)
+    @Serializable
+    data object MerchantScreen: Screen()
 }
 
 data class NavigationItem(

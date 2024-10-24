@@ -7,7 +7,8 @@ data class Hero (
     val price: Int = 0,
     val owner: OwnerInfo = OwnerInfo(),
     val background: HeroBackground? = HeroBackground(),
-    val imageUrl: String = ""
+    val imageUrl: String = "",
+    val createdAt: Long = System.currentTimeMillis()
 )
 
 data class OwnerInfo(

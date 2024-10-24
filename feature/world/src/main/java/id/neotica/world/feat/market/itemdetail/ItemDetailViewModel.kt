@@ -10,7 +10,7 @@ import id.neotica.domain.model.market.Hero
 import id.neotica.domain.remote.AuraRepository
 import id.neotica.domain.remote.MarketRepository
 import id.neotica.domain.usecase.GetUserIdUseCase
-import id.neotica.ui.navigation.Screen
+import id.neotica.ui.navigation.WorldScreen
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -24,7 +24,7 @@ class ItemDetailViewModel(
     private val _totalAuras: MutableStateFlow<ApiResult<Games?>> = MutableStateFlow(ApiResult.Loading())
     val totalAuras = _totalAuras.asStateFlow()
 
-    private val args = savedStateHandle.toRoute<Screen.ItemDetailScreen>()
+    private val args = savedStateHandle.toRoute<WorldScreen.ItemDetailScreen>()
 
     private val _hero: MutableStateFlow<ApiResult<Hero>> = MutableStateFlow(ApiResult.Loading())
     val itemModel = _hero.asStateFlow()

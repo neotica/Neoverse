@@ -26,6 +26,7 @@ import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.NeoButton
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.Screen
+import id.neotica.ui.navigation.WorldScreen
 import id.neotica.world.feat.game.components.SlotMachine
 import org.koin.androidx.compose.koinViewModel
 import kotlin.random.Random
@@ -100,7 +101,7 @@ fun GameView(
             ) {
                 Toast.makeText(context, "Congratulations, you've got $random aura!", Toast.LENGTH_SHORT).show()
                 viewModel.sendInitialAura(random)
-                navController.navigate(Screen.GameScreen) {
+                navController.navigate(WorldScreen.GameScreen) {
                     popUpTo(RootScreen.WorldNav) {
                         inclusive = true
                     }

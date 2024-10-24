@@ -28,7 +28,7 @@ class MarketRepositoryImpl: MarketRepository {
                 )
                 list.add(channel.value)
                 if (data.value != null) {
-                    emit(ApiResult.Success(list))
+                    emit(ApiResult.Success(list.sortedByDescending { it.createdAt }))
                 } else {
                     emit(ApiResult.Error("data null"))
                 }
@@ -48,9 +48,12 @@ class MarketRepositoryImpl: MarketRepository {
         }
     }
 
-    override suspend fun addItem(hero: Hero) {
+    override suspend fun addItem(hero: Hero): ApiResult<String> {
         val reference = firebase.getReference("market").child(hero.id).setValue(hero)
         reference.await()
+        return if (reference.isSuccessful) {
+            ApiResult.Success( "Is successful")
+        } else ApiResult.Error("Error")
     }
 
     suspend fun deleteItem() {}
