@@ -95,9 +95,6 @@ fun WorldView(
             NeoButton("To Bar") {
                 navController.navigate(Screen.GameScreen)
             }
-            NeoButton("To Kanye") {
-                navController.navigate(Screen.KanyeScreen)
-            }
             NeoButton("To Market") {
                 navController.navigate(Screen.MarketScreen)
             }

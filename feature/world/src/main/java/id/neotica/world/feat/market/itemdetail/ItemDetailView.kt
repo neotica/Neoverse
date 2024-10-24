@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.Games
-import id.neotica.domain.model.market.ItemModel
+import id.neotica.domain.model.market.Hero
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.ImageCoil
 import id.neotica.ui.components.LoadingIndicatorBool
@@ -36,8 +36,8 @@ fun ItemDetailView(
     var currentAuras by remember { mutableStateOf<Games?>(null) }
     var onClick by remember { mutableStateOf(false) }
     var loading by remember { mutableStateOf(false) }
-    var marketItems by remember { mutableStateOf<List<ItemModel>>(emptyList()) }
-    var itemModel by remember { mutableStateOf<ItemModel?>(null) }
+    var marketItems by remember { mutableStateOf<List<Hero>>(emptyList()) }
+    var hero by remember { mutableStateOf<Hero?>(null) }
 
     LaunchedEffect(onClick) {
         viewModel.totalAuras.collect { result ->
@@ -61,7 +61,7 @@ fun ItemDetailView(
             when(result) {
                 is ApiResult.Loading -> {}
                 is ApiResult.Success -> {
-                    itemModel = result.data
+                    hero = result.data
                 }
                 is ApiResult.Error -> {}
             }
@@ -77,10 +77,10 @@ fun ItemDetailView(
         Column {
             Text("Your Aura: ${currentAuras?.aura ?: ""}")
             LoadingIndicatorBool(loading) {
-                itemModel?.let {
+                hero?.let {
                     ImageCoil(it.imageUrl)
                     Text("Name: ${it.name}")
-                    Text("Owner: ${it.ownerName}")
+                    Text("Owner: ${it.owner.name}")
                     Text("Power: ${it.power}")
                     Text("Price: 卐${it.price}")
                 }

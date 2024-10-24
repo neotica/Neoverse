@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.Games
-import id.neotica.domain.model.market.ItemModel
+import id.neotica.domain.model.market.Hero
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.ImageCoil
 import id.neotica.ui.components.NeoButton
@@ -38,7 +38,7 @@ fun MarketView(
 ) {
     var currentAuras by remember { mutableStateOf<Games?>(null) }
     var onClick by remember { mutableStateOf(false) }
-    var marketItems by remember { mutableStateOf<List<ItemModel>>(emptyList()) }
+    var marketItems by remember { mutableStateOf<List<Hero>>(emptyList()) }
 
     LaunchedEffect(onClick) {
         viewModel.totalAuras.collect { result ->
@@ -98,7 +98,7 @@ fun MarketView(
                     Column {
                         ImageCoil(item.imageUrl)
                         Text("Name: " + item.name)
-                        Text("Owner: " + item.ownerName)
+                        Text("Owner: " + item.owner.name)
                         Text("Power: " + item.power)
                         Text("卐${item.price}")
                     }
