@@ -35,7 +35,7 @@ fun NumberField(
     OutlinedTextField(
         value = if (textFieldValue != 0) textFieldValue.toString() else "",
         onValueChange =  {
-            textFieldValue = it.toInt()
+            textFieldValue = if (it == "") 0 else it.toInt()
             onValueChange?.invoke(it)
         },
         leadingIcon = icon,

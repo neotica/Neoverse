@@ -99,6 +99,9 @@ fun WorldView(
             NeoButton("To Market") {
                 navController.navigate(WorldScreen.MarketScreen)
             }
+            NeoButton("To Merchant") {
+                navController.navigate(WorldScreen.MerchantScreen)
+            }
         } else {
             CustomPocket(
                 title = "Welcome to the Portal!",

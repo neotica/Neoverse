@@ -29,7 +29,13 @@ class MerchantViewModel(
     private val _merchant: MutableStateFlow<ApiResult<String>> = MutableStateFlow(ApiResult.Loading())
     val merchant = _merchant.asStateFlow()
 
+    private val _uploadState: MutableStateFlow<ApiResult<String>> = MutableStateFlow(ApiResult.Loading())
+    val uploadState = _uploadState.asStateFlow()
+
+
     private fun currentUserId(): String = getUserIdUseCase.invoke()
+
+    private val random = randomUUID()
 
     init {
         fetchAuras()
@@ -49,7 +55,7 @@ class MerchantViewModel(
     fun addItem(heroInput: Hero) = viewModelScope.launch {
         _merchant.value = ApiResult.Loading()
         val dummyItem = Hero(
-            id = randomUUID(),
+            id = random,
             name = heroInput.name,
             price = heroInput.price,
             power = heroInput.power,
@@ -62,10 +68,16 @@ class MerchantViewModel(
                 origin = heroInput.background?.origin,
                 pantheon = heroInput.background?.pantheon
             ),
-            imageUrl = "https://firebasestorage.googleapis.com/v0/b/neoverse-neotica.appspot.com/o/profilePicture%2Ficon.png?alt=media&token=c6e5b358-78c6-41c1-9c0c-a314e4cd258c"
+            imageUrl = marketRepo.getHeroPicture("${heroInput.name}-$random")
         )
         val send = marketRepo.addItem(dummyItem)
         _merchant.value = send
+    }
+
+    fun uploadHeroPic(name: String, uri: String) = viewModelScope.launch {
+        marketRepo.uploadHeroPicture("$name-$random", uri).collect {
+            _uploadState.value = it
+        }
     }
 
     fun fetchItem() = viewModelScope.launch {

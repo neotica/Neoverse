@@ -1,7 +1,13 @@
 package id.neotica.world.feat.market.merchant
 
+import android.net.Uri
 import android.util.Log
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -11,6 +17,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.Games
@@ -18,9 +25,9 @@ import id.neotica.domain.model.market.Hero
 import id.neotica.domain.model.market.HeroBackground
 import id.neotica.droidcore.component.textfield.NeoTextField
 import id.neotica.ui.components.BasicScaffold
-import id.neotica.ui.components.LoadingIndicatorBool
 import id.neotica.ui.components.NeoButton
 import id.neotica.ui.components.NumberField
+import id.neotica.world.utils.compressUri
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -30,7 +37,7 @@ fun MerchantView(
     viewModel: MerchantViewModel = koinViewModel()
 ) {
     var currentAuras by remember { mutableStateOf<Games?>(null) }
-    val onClick by remember { mutableStateOf(false) }
+    var onClick by remember { mutableStateOf(false) }
 
     var marketItems by remember { mutableStateOf<List<Hero>>(emptyList()) }
     val name = remember { mutableStateOf("") }
@@ -42,9 +49,29 @@ fun MerchantView(
 
     var buttonDisabled by remember { mutableStateOf(false) }
     var isLoading by remember { mutableStateOf(false) }
+    var uploadLoading by remember { mutableStateOf(false) }
     var sendResult by remember { mutableStateOf("") }
 
-    LaunchedEffect(onClick) {
+    var uriCurrent by remember { mutableStateOf("") }
+
+    var selectedImages by remember {
+        mutableStateOf<List<Uri?>>(emptyList())
+    }
+    val context = LocalContext.current
+    val singlePhotoPickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickVisualMedia(),
+        onResult = { uri ->
+            if (uri != null) {
+                val compressedImageUri = compressUri(uri, context)
+                selectedImages = listOf(compressedImageUri)
+                uriCurrent = compressedImageUri.toString()
+                viewModel.uploadHeroPic(name.value, compressedImageUri.toString())
+                onClick = true
+            }
+        }
+    )
+
+    LaunchedEffect(Unit) {
         viewModel.totalAuras.collect { result ->
             Log.d("auraCurrent", currentAuras.toString())
 
@@ -79,35 +106,74 @@ fun MerchantView(
         }
     }
 
+    LaunchedEffect(onClick) {
+        viewModel.uploadState.collect { result ->
+            Log.d("merhcant", result.toString())
+            when(result) {
+                is ApiResult.Loading -> {
+                    onClick = false
+                    uploadLoading = true
+                    Toast.makeText(context, "Loading", Toast.LENGTH_SHORT).show()
+                }
+                is ApiResult.Success -> {
+                    onClick = false
+                    uploadLoading = false
+                    Toast.makeText(context, result.data, Toast.LENGTH_SHORT).show()
+                    val heroInput = Hero(
+                        name = name.value,
+                        power = power.intValue,
+                        price = price.intValue,
+                        background = HeroBackground(
+                            story = story.value,
+                            origin = origin.value,
+                            pantheon = pantheon.value,
+                        ),
+                        imageUrl = ""
+                    )
+                    viewModel.addItem(heroInput)
+                }
+                is ApiResult.Error -> {
+                    onClick = false
+                    Toast.makeText(context, "error", Toast.LENGTH_SHORT).show()
+                    uploadLoading = false
+                }
+            }
+        }
+    }
+
+    fun launchPhotoPicker() {
+        singlePhotoPickerLauncher.launch(
+            PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+        )
+    }
+
     BasicScaffold(
         topBarTitle = "Market",
         horizontalAlignment = Alignment.CenterHorizontally,
         navController = navController,
         enableActionBar = true,
+        paddingValues = paddingValues,
     ) {
-        LoadingIndicatorBool(!isLoading) {
-            Text("Your Aura: ${currentAuras?.aura ?: ""}")
-            NeoTextField(name, label = "Name")
-            NumberField(power, label = "Power")
-            NumberField(price, label = "Price")
-            NeoTextField(story, label = "Hero Story")
-            NeoTextField(origin, label = "Hero Origin")
-            NeoTextField(pantheon, label = "Hero Pantheon")
-            val heroInput = Hero(
-                name = name.value,
-                power = power.intValue,
-                price = price.intValue,
-                background = HeroBackground(
-                    story = story.value,
-                    origin = origin.value,
-                    pantheon = pantheon.value,
-                ),
-                imageUrl = ""
-            )
-            NeoButton("Add Item") {
-                viewModel.addItem(heroInput)
+        LazyColumn(contentPadding = paddingValues) {
+            item {
+                Text("Your Aura: ${currentAuras?.aura ?: ""}")
+                Text("Main")
+                NeoTextField(name, label = "Name")
+                NumberField(power, label = "Power")
+                NumberField(price, label = "Price")
+                Text("Origin")
+                NeoTextField(story, label = "Hero Story")
+                NeoTextField(origin, label = "Hero Origin")
+                NeoTextField(pantheon, label = "Hero Pantheon")
+
+                val enabledState = name.value.isNotEmpty() && power.intValue != 0 && price.intValue != 0
+
+                NeoButton("Add Item", enabled = enabledState) {
+                    launchPhotoPicker()
+                }
             }
         }
+
 
     }
 }

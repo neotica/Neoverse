@@ -8,4 +8,6 @@ interface MarketRepository {
     suspend fun addItem(hero: Hero): ApiResult<String>
     suspend fun getItems(): Flow<ApiResult<List<Hero>>>
     suspend fun getItem(id: String): ApiResult<Hero>
+    suspend fun uploadHeroPicture(heroId: String, uri: String): Flow<ApiResult<String>>
+    suspend fun getHeroPicture(id: String): String
 }
