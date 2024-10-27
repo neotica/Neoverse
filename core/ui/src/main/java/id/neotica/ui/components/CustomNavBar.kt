@@ -17,7 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import id.neotica.ui.theme.DarkPrimaryTransparent
+import id.neotica.ui.theme.DarkPrimaryTransparent2
 
 @Composable
 fun CustomNavBar(
@@ -29,7 +29,7 @@ fun CustomNavBar(
     content: @Composable RowScope.() -> Unit
 ) {
     Surface(
-        color = DarkPrimaryTransparent,
+        color = DarkPrimaryTransparent2,
         contentColor = contentColor,
         tonalElevation = tonalElevation,
         modifier = modifier
@@ -47,5 +47,3 @@ fun CustomNavBar(
         )
     }
 }
-
-//private val NavigationBarHeight: Dp = NavigationBarTokens.ContainerHeight

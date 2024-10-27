@@ -12,9 +12,11 @@ val Pink40 = Color(0xFF7D5260)
 
 val DarkPrimary = Color(0xFF5D6EE0)
 val Transparent = Color(0x00232850)
-val DarkPrimaryTransparent = Color(0x7C6879EE)
+val DarkTransparent = Color(0x25151A3B)
+val DarkPrimaryTransparent = Color(0xB76879EE)
+
+val DarkPrimaryTransparent2 = Color(0xE4424D98)
+val DarkPrimaryCard = Color(0xFF3A4486)
 val DarkBackground = Color(0xFF151A3B)
-
-
 
 val NegativePrimary = Color(0xFFE05D5D)

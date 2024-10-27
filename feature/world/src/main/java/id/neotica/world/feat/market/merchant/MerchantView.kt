@@ -7,6 +7,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -16,7 +17,6 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
 import id.neotica.domain.ApiResult
@@ -34,12 +34,12 @@ import org.koin.androidx.compose.koinViewModel
 fun MerchantView(
     navController: NavController,
     paddingValues: PaddingValues,
+    contentInsets: WindowInsets,
     viewModel: MerchantViewModel = koinViewModel()
 ) {
     var currentAuras by remember { mutableStateOf<Games?>(null) }
     var onClick by remember { mutableStateOf(false) }
 
-    var marketItems by remember { mutableStateOf<List<Hero>>(emptyList()) }
     val name = remember { mutableStateOf("") }
     val power = remember { mutableIntStateOf(0) }
     val price = remember { mutableIntStateOf(0) }
@@ -47,7 +47,6 @@ fun MerchantView(
     val origin = remember { mutableStateOf("") }
     val pantheon = remember { mutableStateOf("") }
 
-    var buttonDisabled by remember { mutableStateOf(false) }
     var isLoading by remember { mutableStateOf(false) }
     var uploadLoading by remember { mutableStateOf(false) }
     var sendResult by remember { mutableStateOf("") }
@@ -147,14 +146,8 @@ fun MerchantView(
         )
     }
 
-    BasicScaffold(
-        topBarTitle = "Market",
-        horizontalAlignment = Alignment.CenterHorizontally,
-        navController = navController,
-        enableActionBar = true,
-        paddingValues = paddingValues,
-    ) {
-        LazyColumn(contentPadding = paddingValues) {
+    BasicScaffold("Merchant", contentInset = contentInsets) {
+        LazyColumn(contentPadding = PaddingValues(bottom = paddingValues.calculateBottomPadding())) {
             item {
                 Text("Your Aura: ${currentAuras?.aura ?: ""}")
                 Text("Main")
@@ -173,7 +166,5 @@ fun MerchantView(
                 }
             }
         }
-
-
     }
 }

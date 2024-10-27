@@ -1,6 +1,7 @@
 package id.neotica.world
 
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -16,6 +17,7 @@ import id.neotica.world.feat.world.WorldView
 
 fun NavGraphBuilder.worldNavGraph(
     navController: NavController,
+    contentInsets: WindowInsets,
     paddingValues: PaddingValues
 ) {
     navigation<RootScreen.WorldNav>(
@@ -39,7 +41,7 @@ fun NavGraphBuilder.worldNavGraph(
         }
         composable<WorldScreen.MarketScreen> {
             MarketView(
-                navController, paddingValues
+                navController, paddingValues, contentInsets
             )
         }
         composable<WorldScreen.ItemDetailScreen> {
@@ -49,7 +51,7 @@ fun NavGraphBuilder.worldNavGraph(
         }
         composable<WorldScreen.MerchantScreen> {
             MerchantView(
-                navController, paddingValues
+                navController, paddingValues, contentInsets
             )
         }
     }
