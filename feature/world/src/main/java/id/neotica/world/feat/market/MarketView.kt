@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -170,7 +171,7 @@ fun MarketView(
                         Card(
                             Modifier
                                 .clickable { navController.navigate(WorldScreen.ItemDetailScreen(id = item.id)) }
-                                .size(width = 124.dp, height = 208.dp)
+                                .wrapContentHeight()
                                 .padding(2.dp),
                             colors = CardDefaults.cardColors().copy(
                                 containerColor = DarkPrimaryTransparent2,
