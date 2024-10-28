@@ -44,8 +44,8 @@ import androidx.navigation.NavController
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.Games
 import id.neotica.domain.model.market.Hero
+import id.neotica.droidcore.component.carousel.CarouselCard
 import id.neotica.ui.components.BasicScaffold
-import id.neotica.ui.components.CarouselCard
 import id.neotica.ui.components.ImageCoil
 import id.neotica.ui.navigation.WorldScreen
 import id.neotica.ui.theme.DarkPrimaryCard

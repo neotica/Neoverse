@@ -24,9 +24,9 @@ import id.neotica.domain.model.Games
 import id.neotica.domain.model.market.Hero
 import id.neotica.domain.model.market.HeroBackground
 import id.neotica.droidcore.component.textfield.NeoTextField
+import id.neotica.droidcore.component.textfield.NumberField
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.NeoButton
-import id.neotica.ui.components.NumberField
 import id.neotica.world.utils.compressUri
 import org.koin.androidx.compose.koinViewModel
 

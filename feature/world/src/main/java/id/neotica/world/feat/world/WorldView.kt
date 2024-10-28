@@ -4,6 +4,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,8 +24,8 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.navigation.NavController
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.Games
+import id.neotica.droidcore.component.cards.Pocket
 import id.neotica.ui.components.BasicScaffold
-import id.neotica.ui.components.CustomPocket
 import id.neotica.ui.components.NeoButton
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.Screen
@@ -103,27 +104,27 @@ fun WorldView(
                 navController.navigate(WorldScreen.MerchantScreen)
             }
         } else {
-            CustomPocket(
-                title = "Welcome to the Portal!",
-                body = {
-                    Text("Welcome to the World Section! Ready to step into a realm of wonder? \uD83C\uDFF0 Venture through the mystical portal into Peking Town, a charming village brimming with secrets and adventure. \uD83D\uDDFA\uFE0F Your epic quest begins here. Tap the button below to unlock the portal and claim your aura!")
-                    Box(Modifier.padding(horizontal = 8.dp)) {
-                        NeoButton(
-                            text = "Get Aura!",
-                            maxWidth = true,
-                        ) {
-                            Toast.makeText(context, "Congratulations, you've got $random aura!", Toast.LENGTH_SHORT).show()
-                            viewModel.sendInitialAura(random)
-                            onClick = !onClick
-                            navController.navigate(WorldScreen.HomeScreen) {
-                                popUpTo(RootScreen.WorldNav) {
-                                    inclusive = true
-                                }
+            Pocket(
+                title = "Welcome to the Portal!"
+            ) {
+                Text("Welcome to the World Section! Ready to step into a realm of wonder? \uD83C\uDFF0 Venture through the mystical portal into Peking Town, a charming village brimming with secrets and adventure. \uD83D\uDDFA\uFE0F Your epic quest begins here. Tap the button below to unlock the portal and claim your aura!")
+                Spacer(Modifier.padding(9.dp))
+                Box(Modifier.padding(horizontal = 8.dp)) {
+                    NeoButton(
+                        text = "Get Aura!",
+                        maxWidth = true,
+                    ) {
+                        Toast.makeText(context, "Congratulations, you've got $random aura!", Toast.LENGTH_SHORT).show()
+                        viewModel.sendInitialAura(random)
+                        onClick = !onClick
+                        navController.navigate(WorldScreen.HomeScreen) {
+                            popUpTo(RootScreen.WorldNav) {
+                                inclusive = true
                             }
                         }
                     }
                 }
-            )
+            }
         }
     }
 }
