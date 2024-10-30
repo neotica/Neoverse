@@ -1,6 +1,5 @@
 package id.neotica.world.feat.world
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -47,10 +46,8 @@ fun WorldView(
     val lifecycleOwner = LocalLifecycleOwner.current
 
     LaunchedEffect(onClick) {
-        Log.d("auraInit", auraInit.toString())
 
         viewModel.totalAuras.collect { result ->
-            Log.d("auraCurrent", currentAuras.toString())
 
             when(result) {
                 is ApiResult.Loading -> {
@@ -102,6 +99,9 @@ fun WorldView(
             }
             NeoButton("To Merchant") {
                 navController.navigate(WorldScreen.MerchantScreen)
+            }
+            NeoButton("To Inventory") {
+                navController.navigate(WorldScreen.InventoryScreen)
             }
         } else {
             Pocket(

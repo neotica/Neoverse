@@ -79,9 +79,11 @@ sealed class WorldScreen {
     @Serializable
     data object MarketScreen: Screen()
     @Serializable
-    data class ItemDetailScreen(val id: String)
+    data class ItemDetailScreen(val id: String, val type: String)
     @Serializable
     data object MerchantScreen: Screen()
+    @Serializable
+    data object InventoryScreen: Screen()
 }
 
 data class NavigationItem(

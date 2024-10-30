@@ -23,7 +23,7 @@ class MarketViewModel(
     private val _hero: MutableStateFlow<ApiResult<List<Hero>>> = MutableStateFlow(ApiResult.Loading())
     val itemModel = _hero.asStateFlow()
 
-    private fun currentUserId(): String = getUserIdUseCase.invoke()
+    fun currentUserId(): String = getUserIdUseCase.invoke()
 
     init {
         fetchAuras()

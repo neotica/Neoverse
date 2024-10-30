@@ -25,7 +25,32 @@ class MarketRepositoryImpl: MarketRepository {
         val list = mutableListOf<Hero>()
         list.clear()
         try {
-            val reference = firebase.getReference("market").get().await()
+            val reference = firebase.getReference("market").child("heroes").get().await()
+            reference.children.forEach { data ->
+                Log.d("marketrepo", data.toString())
+                val cr = data.getValue(Hero::class.java)
+                val channel = ParentNeo(
+                    key = data.key!!,
+                    value = cr!!
+                )
+                list.add(channel.value)
+                if (data.value != null) {
+                    emit(ApiResult.Success(list.sortedByDescending { it.createdAt }))
+                } else {
+                    emit(ApiResult.Error("data null"))
+                }
+            }
+        } catch (e: NullPointerException) {
+            emit(ApiResult.Error("exception: ${e.message}"))
+        }
+    }
+
+    override suspend fun getUserHeroes(userId: String): Flow<ApiResult<List<Hero>>> = flow {
+        val list = mutableListOf<Hero>()
+        list.clear()
+        try {
+            val reference = firebase.getReference("userdata").child(userId)
+                .child("world").child("heroes").get().await()
             reference.children.forEach { data ->
                 Log.d("marketrepo", data.toString())
                 val cr = data.getValue(Hero::class.java)
@@ -46,7 +71,18 @@ class MarketRepositoryImpl: MarketRepository {
     }
 
     override suspend fun getItem(id: String): ApiResult<Hero> {
-        val reference = firebase.getReference("market").child(id).get().await()
+        val reference = firebase.getReference("market").child("heroes").child(id).get().await()
+        return try {
+            val value = reference.getValue(Hero::class.java)
+            ApiResult.Success(value!!)
+        } catch (e: NullPointerException) {
+            ApiResult.Error("exception: ${e.message}")
+        }
+    }
+
+    override suspend fun getUserHero(heroId: String, userId: String): ApiResult<Hero> {
+        val reference = firebase.getReference("userdata").child(userId).child("world")
+            .child("heroes").child(heroId).get().await()
         return try {
             val value = reference.getValue(Hero::class.java)
             ApiResult.Success(value!!)
@@ -56,15 +92,44 @@ class MarketRepositoryImpl: MarketRepository {
     }
 
     override suspend fun addItem(hero: Hero): ApiResult<String> {
-        val reference = firebase.getReference("market").child(hero.id).setValue(hero)
+        val reference = firebase.getReference("market").child("heroes").child(hero.id).setValue(hero)
         reference.await()
         return if (reference.isSuccessful) {
             ApiResult.Success( "Is successful")
         } else ApiResult.Error("Error")
     }
 
-    override suspend fun uploadHeroPicture(heroId: String, uri: String): Flow<ApiResult<String>> = flow {
+    override suspend fun buyHero(hero: Hero, userId: String): ApiResult<String> {
+        val reference = firebase.getReference("market").child("heroes").child(hero.id) .removeValue()
+        reference.await()
 
+        val buyReference = firebase.getReference("userdata").child(userId)
+            .child("world")
+            .child("heroes")
+            .child(hero.id).setValue(hero)
+        buyReference.await()
+        return if (buyReference.isSuccessful) {
+            ApiResult.Success( "Is successful")
+        } else ApiResult.Error("Error")
+    }
+
+    override suspend fun pawnHero(hero: Hero, userId: String): ApiResult<String> {
+        val reference = firebase.getReference("userdata").child(userId)
+            .child("world")
+            .child("heroes")
+            .child(hero.id) .removeValue()
+        reference.await()
+
+        val buyReference = firebase.getReference("market")
+            .child("heroes")
+            .child(hero.id).setValue(hero)
+        buyReference.await()
+        return if (buyReference.isSuccessful) {
+            ApiResult.Success( "Is successful")
+        } else ApiResult.Error("Error")
+    }
+
+    override suspend fun uploadHeroPicture(heroId: String, uri: String): Flow<ApiResult<String>> = flow {
         emit(ApiResult.Loading())
         val storageRef = FirebaseStorage.getInstance().reference
         val upload = storageRef.child("heroPicture/${heroId}").putFile(uri.toUri())

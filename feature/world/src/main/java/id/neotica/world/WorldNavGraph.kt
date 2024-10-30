@@ -9,6 +9,7 @@ import androidx.navigation.navigation
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.WorldScreen
 import id.neotica.world.feat.game.GameView
+import id.neotica.world.feat.inventory.InventoryView
 import id.neotica.world.feat.kanye.KanyeView
 import id.neotica.world.feat.market.MarketView
 import id.neotica.world.feat.market.itemdetail.ItemDetailView
@@ -51,6 +52,11 @@ fun NavGraphBuilder.worldNavGraph(
         }
         composable<WorldScreen.MerchantScreen> {
             MerchantView(
+                navController, paddingValues, contentInsets
+            )
+        }
+        composable<WorldScreen.InventoryScreen> {
+            InventoryView(
                 navController, paddingValues, contentInsets
             )
         }

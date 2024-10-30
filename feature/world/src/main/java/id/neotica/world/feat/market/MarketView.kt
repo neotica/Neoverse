@@ -27,6 +27,7 @@ import androidx.compose.material3.carousel.CarouselDefaults
 import androidx.compose.material3.carousel.CarouselState
 import androidx.compose.material3.carousel.HorizontalUncontainedCarousel
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -40,6 +41,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.navigation.NavController
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.Games
@@ -48,6 +52,7 @@ import id.neotica.droidcore.component.carousel.CarouselCard
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.ImageCoil
 import id.neotica.ui.navigation.WorldScreen
+import id.neotica.ui.state.ScreenState
 import id.neotica.ui.theme.DarkPrimaryCard
 import id.neotica.ui.theme.DarkPrimaryTransparent2
 import id.neotica.ui.theme.DarkTransparent
@@ -67,7 +72,7 @@ fun MarketView(
     var marketItems by remember { mutableStateOf<List<Hero>>(emptyList()) }
     val carouselState = CarouselState(itemCount = { marketItems.count() })
     val lazyState = rememberLazyListState()
-
+    val lifecycleOwner = LocalLifecycleOwner.current
 
     LaunchedEffect(onClick) {
         viewModel.totalAuras.collect { result ->
@@ -98,6 +103,18 @@ fun MarketView(
         }
     }
 
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME) {
+                viewModel.fetchItem()
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    }
+
     BasicScaffold(
         topBarTitle = "Market",
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -114,8 +131,14 @@ fun MarketView(
                     /*.filter { it.power > 1000 }.take(5).sortedByDescending { it.power },*/
                     currentPageState = currentPage
                 ) { item ->
+                    val state = if (viewModel.currentUserId() == item.owner.id) ScreenState.User.toString() else ScreenState.Global.toString()
+                    Log.d("state", state)
+                    Log.d("stateid", "${item.owner.id} current: ${viewModel.currentUserId()}")
                     Card(
-                        Modifier.clickable { navController.navigate(WorldScreen.ItemDetailScreen(id = item.id)) }
+                        Modifier.clickable {
+                            Log.d("state clicked", state)
+                            navController.navigate(WorldScreen.ItemDetailScreen(id = item.id, state))
+                        }
                     ) {
                         Box {
                             ImageCoil(
@@ -168,9 +191,17 @@ fun MarketView(
                     state = lazyState
                 ) {
                     items(marketItems.take(8)) { item ->
+                        val state = if (viewModel.currentUserId() == item.owner.id) ScreenState.User.toString() else ScreenState.Global.toString()
                         Card(
                             Modifier
-                                .clickable { navController.navigate(WorldScreen.ItemDetailScreen(id = item.id)) }
+                                .clickable {
+                                    navController.navigate(
+                                        WorldScreen.ItemDetailScreen(
+                                            id = item.id,
+                                            state
+                                        )
+                                    )
+                                }
                                 .wrapContentHeight()
                                 .padding(2.dp),
                             colors = CardDefaults.cardColors().copy(
@@ -215,8 +246,9 @@ fun MarketView(
                     flingBehavior = CarouselDefaults.singleAdvanceFlingBehavior(carouselState),
                 ) { index ->
                     val value = marketItems[index]
+                    val state = if (viewModel.currentUserId() == value.owner.id) ScreenState.User.toString() else ScreenState.Global.toString()
                     Card(
-                        Modifier.clickable { navController.navigate(WorldScreen.ItemDetailScreen(id = value.id)) },
+                        Modifier.clickable { navController.navigate(WorldScreen.ItemDetailScreen(id = value.id, state)) },
                         colors = CardDefaults.cardColors().copy(
                             containerColor = DarkPrimaryCard,
                             contentColor = Color.White)

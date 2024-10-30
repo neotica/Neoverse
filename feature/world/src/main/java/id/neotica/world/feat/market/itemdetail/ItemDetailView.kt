@@ -1,5 +1,6 @@
 package id.neotica.world.feat.market.itemdetail
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -14,12 +15,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.intl.Locale
@@ -28,10 +31,13 @@ import androidx.navigation.NavController
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.Games
 import id.neotica.domain.model.market.Hero
+import id.neotica.droidcore.component.alert.AlertDialogCustomDesc
+import id.neotica.droidcore.component.textfield.NumberField
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.ImageCoil
 import id.neotica.ui.components.LoadingIndicatorBool
 import id.neotica.ui.components.NeoButton
+import id.neotica.ui.state.ScreenState
 import id.neotica.ui.theme.FontSize
 import org.koin.androidx.compose.koinViewModel
 
@@ -45,6 +51,37 @@ fun ItemDetailView(
     val onClick by remember { mutableStateOf(false) }
     var loading by remember { mutableStateOf(false) }
     var hero by remember { mutableStateOf<Hero?>(null) }
+    val context = LocalContext.current
+
+    var openDialog by remember { mutableStateOf(false) }
+    val auraCustom = remember { mutableIntStateOf(0) }
+
+    if (openDialog) {
+        AlertDialogCustomDesc(
+            openDialog = { openDialog = false },
+            title = "Set the pawn's aura value.",
+            desc = {
+                NumberField(
+                    auraCustom,
+                    placeHolder = hero?.price.toString()
+                )
+            },
+            confirmButton = {
+                NeoButton("Okay") {
+                    if (hero != null) {
+                        viewModel.pawn(auraCustom.intValue)
+                        navController.navigateUp()
+                        navController.navigateUp()
+                    } else Toast.makeText(
+                        context,
+                        "there is no auras!",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            },
+            backButton = "Cancel"
+        )
+    }
 
     LaunchedEffect(onClick) {
         viewModel.totalAuras.collect { result ->
@@ -126,9 +163,9 @@ fun ItemDetailView(
                                 Spacer(Modifier.padding(8.dp))
                                 Text("Origin: ${it.background?.origin}")
                             }
-                            if (it.background?.story != "") Text("Origin: ${it.background?.story}")
+                            if (it.background?.story != "") Text("Story: ${it.background?.story}")
                             if (it.background?.pantheon != "")
-                                Text("Origin: ${it.background?.pantheon}")
+                                Text("Pantheon: ${it.background?.pantheon}")
                             Spacer(Modifier.padding(8.dp))
                         }
                     }
@@ -144,13 +181,63 @@ fun ItemDetailView(
                                 .padding(4.dp),
                             horizontalArrangement = Arrangement.SpaceBetween,
                         ) {
-                            NeoButton("Chat", modifier = Modifier
-                                .weight(1f)
-                                .fillMaxWidth())
+                            NeoButton(
+                                "Chat",
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .fillMaxWidth(),
+                                enabled = false
+                            )
                             Spacer(Modifier.padding(4.dp))
-                            NeoButton("Buy", modifier = Modifier
-                                .weight(1f)
-                                .fillMaxWidth())
+                            when (viewModel.screenState()) {
+                                ScreenState.Global.toString() -> {
+                                    NeoButton(
+                                        "Buy",
+                                        modifier = Modifier
+                                            .weight(1f)
+                                            .fillMaxWidth(),
+                                        enabled = hero?.price != null
+                                    ) {
+                                        if (hero != null) {
+                                            viewModel.buy(hero?.price!!)
+                                            navController.navigateUp()
+                                        } else Toast.makeText(
+                                            context,
+                                            "there is no auras!",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
+                                }
+                                ScreenState.UserInventory.toString() -> {
+                                    NeoButton(
+                                        "Pawn",
+                                        modifier = Modifier
+                                            .weight(1f)
+                                            .fillMaxWidth(),
+                                        enabled = hero?.price != null
+                                    ) {
+                                        openDialog = true
+                                    }
+                                }
+                                ScreenState.User.toString() -> {
+                                    NeoButton(
+                                        "Store",
+                                        modifier = Modifier
+                                            .weight(1f)
+                                            .fillMaxWidth(),
+                                        enabled = hero?.price != null
+                                    ) {
+                                        if (hero != null) {
+                                            viewModel.buy(hero?.price!!)
+                                            navController.navigateUp()
+                                        } else Toast.makeText(
+                                            context,
+                                            "there is no auras!",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
+                                }
+                            }
                         }
                     }
                 }
