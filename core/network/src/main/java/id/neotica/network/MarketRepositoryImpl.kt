@@ -70,24 +70,24 @@ class MarketRepositoryImpl: MarketRepository {
         }
     }
 
-    override suspend fun getItem(id: String): ApiResult<Hero> {
+    override suspend fun getHero(id: String): Flow<ApiResult<Hero>> = flow {
         val reference = firebase.getReference("market").child("heroes").child(id).get().await()
-        return try {
+        try {
             val value = reference.getValue(Hero::class.java)
-            ApiResult.Success(value!!)
+            emit(ApiResult.Success(value!!))
         } catch (e: NullPointerException) {
-            ApiResult.Error("exception: ${e.message}")
+            emit(ApiResult.Error("exception: ${e.message}"))
         }
     }
 
-    override suspend fun getUserHero(heroId: String, userId: String): ApiResult<Hero> {
+    override suspend fun getUserHero(heroId: String, userId: String): Flow<ApiResult<Hero>> = flow {
         val reference = firebase.getReference("userdata").child(userId).child("world")
             .child("heroes").child(heroId).get().await()
-        return try {
+        try {
             val value = reference.getValue(Hero::class.java)
-            ApiResult.Success(value!!)
+            emit(ApiResult.Success(value!!))
         } catch (e: NullPointerException) {
-            ApiResult.Error("exception: ${e.message}")
+            emit(ApiResult.Error("exception: ${e.message}"))
         }
     }
 
@@ -100,7 +100,7 @@ class MarketRepositoryImpl: MarketRepository {
     }
 
     override suspend fun buyHero(hero: Hero, userId: String): ApiResult<String> {
-        val reference = firebase.getReference("market").child("heroes").child(hero.id) .removeValue()
+        val reference = firebase.getReference("market").child("heroes").child(hero.id).removeValue()
         reference.await()
 
         val buyReference = firebase.getReference("userdata").child(userId)
@@ -117,7 +117,7 @@ class MarketRepositoryImpl: MarketRepository {
         val reference = firebase.getReference("userdata").child(userId)
             .child("world")
             .child("heroes")
-            .child(hero.id) .removeValue()
+            .child(hero.id).removeValue()
         reference.await()
 
         val buyReference = firebase.getReference("market")
@@ -153,6 +153,4 @@ class MarketRepositoryImpl: MarketRepository {
             }
         }
     }
-
-    suspend fun deleteItem() {}
 }

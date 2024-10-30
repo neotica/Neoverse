@@ -9,10 +9,13 @@ import id.neotica.domain.model.Games
 import id.neotica.domain.model.market.Hero
 import id.neotica.domain.remote.AuraRepository
 import id.neotica.domain.remote.MarketRepository
+import id.neotica.domain.usecase.BuyHeroUseCase
 import id.neotica.domain.usecase.GetUserIdUseCase
 import id.neotica.domain.usecase.GetUserNameUseCase
 import id.neotica.ui.navigation.WorldScreen
 import id.neotica.ui.state.ScreenState
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -22,11 +25,14 @@ class ItemDetailViewModel(
     private val marketRepo: MarketRepository,
     private val getUserIdUseCase: GetUserIdUseCase,
     private val getUserNameUseCase: GetUserNameUseCase,
+    private val buyHeroUseCase: BuyHeroUseCase,
     savedStateHandle: SavedStateHandle
 ): ViewModel() {
     private val _totalAuras: MutableStateFlow<ApiResult<Games?>> = MutableStateFlow(ApiResult.Loading())
     val totalAuras = _totalAuras.asStateFlow()
 
+    private val _sellerAuras: MutableStateFlow<ApiResult<Games?>> = MutableStateFlow(ApiResult.Loading())
+    private val _bankAuras: MutableStateFlow<ApiResult<Games?>> = MutableStateFlow(ApiResult.Loading())
 
     private val args = savedStateHandle.toRoute<WorldScreen.ItemDetailScreen>()
 
@@ -38,6 +44,7 @@ class ItemDetailViewModel(
 
     init {
         fetchAuras()
+        fetchBankAuras()
         when(screenState()) {
             ScreenState.Global.toString() -> getDetail()
             ScreenState.UserInventory.toString() -> getDetailUser()
@@ -57,33 +64,26 @@ class ItemDetailViewModel(
         _totalAuras.value = auraFromRepo
     }
 
-    private fun getDetail() = viewModelScope.launch {
-        val get = marketRepo.getItem(args.id)
-        _hero.value = get
-    }
-
-    fun sendAura(aura: Int) = viewModelScope.launch {
-        auraRepo.postAuras(aura, currentUserId())
-        fetchAuras()
-    }
-
-    fun buy(aura: Int) = viewModelScope.launch {
-        _hero.value.data?.let {
-            val heroValue = it.copy(
-                owner = it.owner.copy(
-                    id = currentUserId(),
-                    name = currentUsername()
-                )
-            )
-            _totalAuras.value.data?.let { auraValue ->
-                val total = auraValue.aura.minus(aura)
-                auraRepo.postAuras(total, currentUserId())
-                marketRepo.buyHero(hero = heroValue, currentUserId())
-            }
-
+    private fun fetchBankAuras() = viewModelScope.launch {
+        auraRepo.getBankAura(currentUserId()).collect {
+            _bankAuras.value = it
         }
-        fetchAuras()
     }
+
+    fun fetchSellerAuras(id: String) = viewModelScope.launch {
+        val auraFromRepo = auraRepo.getAuras(id)
+        _sellerAuras.value = auraFromRepo
+    }
+
+    private fun getDetail() = viewModelScope.launch {
+        marketRepo.getHero(args.id).collect {
+            _hero.value = it
+        }
+//        val get = marketRepo.getItem(args.id)
+//        _hero.value = get
+    }
+
+    fun buy(hero: Hero) = CoroutineScope(Dispatchers.IO).launch { buyHeroUseCase.main(hero) }
 
     fun pawn(aura: Int) = viewModelScope.launch {
         _hero.value.data?.let {
@@ -94,9 +94,9 @@ class ItemDetailViewModel(
                     name = currentUsername()
                 )
             )
-            _totalAuras.value.data?.let { auraValue ->
+            _bankAuras.value.data?.let { auraValue ->
                 val total = auraValue.aura.plus(aura)
-                auraRepo.postAuras(total, currentUserId())
+                auraRepo.postAurasToBank(total, currentUserId())
                 marketRepo.pawnHero(hero = heroValue, currentUserId())
             }
         }
@@ -111,29 +111,18 @@ class ItemDetailViewModel(
                     name = currentUsername()
                 )
             )
-            auraRepo.getAurasFromBank(currentUserId())
-            marketRepo.buyHero(hero = heroValue, currentUserId())
-        }
-        fetchAuras()
-    }
-
-    fun displayHero(aura: Int) = viewModelScope.launch {
-        _hero.value.data?.let {
-            val heroValue = it.copy(
-                owner = it.owner.copy(
-                    id = currentUserId(),
-                    name = currentUsername()
-                )
-            )
-            auraRepo.postAuras(aura, currentUserId())
-            marketRepo.buyHero(hero = heroValue, currentUserId())
+            _bankAuras.value.data?.let { auraValue ->
+                val total = auraValue.aura.minus(aura)
+                auraRepo.postAurasToBank(total, currentUserId())
+                marketRepo.buyHero(hero = heroValue, currentUserId())
+            }
         }
         fetchAuras()
     }
 
     private fun getDetailUser() = viewModelScope.launch {
-        val get = marketRepo.getUserHero(args.id, currentUserId())
-        _hero.value = get
+        marketRepo.getUserHero(args.id, currentUserId()).collect {
+            _hero.value = it
+        }
     }
-
 }

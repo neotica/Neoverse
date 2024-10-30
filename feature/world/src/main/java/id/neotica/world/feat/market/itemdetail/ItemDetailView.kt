@@ -100,8 +100,8 @@ fun ItemDetailView(
     }
 
     LaunchedEffect(Unit) {
+        hero?.owner?.let { viewModel.fetchSellerAuras(it.id) }
         viewModel.itemModel.collect { result ->
-
             when(result) {
                 is ApiResult.Loading -> {}
                 is ApiResult.Success -> {
@@ -191,6 +191,13 @@ fun ItemDetailView(
                             Spacer(Modifier.padding(4.dp))
                             when (viewModel.screenState()) {
                                 ScreenState.Global.toString() -> {
+                                    var onBuy by remember { mutableStateOf(false) }
+                                    LaunchedEffect(onBuy) {
+                                        if (onBuy) {
+                                            onBuy = false
+                                            viewModel.buy(hero!!)
+                                        }
+                                    }
                                     NeoButton(
                                         "Buy",
                                         modifier = Modifier
@@ -199,8 +206,10 @@ fun ItemDetailView(
                                         enabled = hero?.price != null
                                     ) {
                                         if (hero != null) {
-                                            viewModel.buy(hero?.price!!)
+                                            onBuy = true
                                             navController.navigateUp()
+//                                            viewModel.testAura(hero!!)
+//                                            viewModel.buy(hero?.price!!)
                                         } else Toast.makeText(
                                             context,
                                             "there is no auras!",
@@ -228,7 +237,7 @@ fun ItemDetailView(
                                         enabled = hero?.price != null
                                     ) {
                                         if (hero != null) {
-                                            viewModel.buy(hero?.price!!)
+                                            viewModel.store(hero?.price!!)
                                             navController.navigateUp()
                                         } else Toast.makeText(
                                             context,
