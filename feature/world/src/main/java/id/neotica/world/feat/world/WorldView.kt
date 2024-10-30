@@ -1,9 +1,12 @@
 package id.neotica.world.feat.world
 
 import android.widget.Toast
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -91,18 +94,27 @@ fun WorldView(
     ) {
         if (!auraInit) {
             Text("Your Aura: ${currentAuras?.aura ?: ""}")
+            Spacer(Modifier.padding(4.dp))
             NeoButton("To Bar") {
                 navController.navigate(WorldScreen.GameScreen)
             }
-            NeoButton("To Market") {
-                navController.navigate(WorldScreen.MarketScreen)
+            Spacer(Modifier.padding(4.dp))
+            Row(
+                Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                NeoButton("To Market") {
+                    navController.navigate(WorldScreen.MarketScreen)
+                }
+                NeoButton("To Inventory") {
+                    navController.navigate(WorldScreen.InventoryScreen)
+                }
             }
+            Spacer(Modifier.padding(4.dp))
             NeoButton("To Merchant") {
                 navController.navigate(WorldScreen.MerchantScreen)
             }
-            NeoButton("To Inventory") {
-                navController.navigate(WorldScreen.InventoryScreen)
-            }
+
         } else {
             Pocket(
                 title = "Welcome to the Portal!"
