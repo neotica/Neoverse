@@ -152,7 +152,7 @@ fun ChatBubble(message: Message) {
     val bubbleColor = if (isCurrentUser) {
         Color.Blue
     } else {
-        Color.Green
+        Color.Red
     }
     Box(
         modifier = Modifier

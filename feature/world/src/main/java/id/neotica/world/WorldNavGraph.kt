@@ -1,51 +1,63 @@
 package id.neotica.world
 
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import androidx.navigation.toRoute
-import id.neotica.world.feat.game.GameView
 import id.neotica.ui.navigation.RootScreen
-import id.neotica.ui.navigation.Screen
+import id.neotica.ui.navigation.WorldScreen
+import id.neotica.world.feat.game.GameView
+import id.neotica.world.feat.inventory.InventoryView
 import id.neotica.world.feat.kanye.KanyeView
 import id.neotica.world.feat.market.MarketView
 import id.neotica.world.feat.market.itemdetail.ItemDetailView
+import id.neotica.world.feat.market.merchant.MerchantView
 import id.neotica.world.feat.world.WorldView
 
 fun NavGraphBuilder.worldNavGraph(
     navController: NavController,
+    contentInsets: WindowInsets,
     paddingValues: PaddingValues
 ) {
     navigation<RootScreen.WorldNav>(
-        startDestination = Screen.WorldScreen
+        startDestination = WorldScreen.HomeScreen
     ) {
-        composable<Screen.WorldScreen> {
+        composable<WorldScreen.HomeScreen> {
             WorldView(
                 navController,
                 paddingValues
             )
         }
-        composable<Screen.GameScreen> {
+        composable<WorldScreen.GameScreen> {
             GameView(
                 navController, paddingValues
             )
         }
-        composable<Screen.KanyeScreen> {
+        composable<WorldScreen.KanyeScreen> {
             KanyeView(
                 navController, paddingValues
             )
         }
-        composable<Screen.MarketScreen> {
+        composable<WorldScreen.MarketScreen> {
             MarketView(
+                navController, paddingValues, contentInsets
+            )
+        }
+        composable<WorldScreen.ItemDetailScreen> {
+            ItemDetailView(
                 navController, paddingValues
             )
         }
-        composable<Screen.ItemDetailScreen> {
-            val args = it.toRoute<Screen.ItemDetailScreen>()
-            ItemDetailView(
-                navController, paddingValues
+        composable<WorldScreen.MerchantScreen> {
+            MerchantView(
+                navController, paddingValues, contentInsets
+            )
+        }
+        composable<WorldScreen.InventoryScreen> {
+            InventoryView(
+                navController, paddingValues, contentInsets
             )
         }
     }

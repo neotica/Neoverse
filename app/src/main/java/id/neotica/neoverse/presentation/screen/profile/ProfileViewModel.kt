@@ -76,7 +76,7 @@ class ProfileViewModel(
                 imageUrl = userRepo.getUserProfilePic()
             )
             userRepo.changeUserProfile(tempUser)
-            currentUserDatabase.saveUser(tempUser)//.let { getUser() }
+            currentUserDatabase.saveUser(tempUser)
             getUser()
         }
     }

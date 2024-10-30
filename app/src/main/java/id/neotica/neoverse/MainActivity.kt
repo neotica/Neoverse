@@ -17,10 +17,10 @@ import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.Icon
-import id.neotica.ui.R
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemColors
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.ScaffoldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -32,10 +32,11 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import id.neotica.neoverse.presentation.navigation.NavGraph
+import id.neotica.ui.R
+import id.neotica.ui.components.CustomNavBar
 import id.neotica.ui.navigation.NavigationItem
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.Screen
-import id.neotica.ui.components.CustomNavBar
 import id.neotica.ui.theme.DarkBackground
 import id.neotica.ui.theme.DarkPrimary
 import id.neotica.ui.theme.NeoverseTheme
@@ -95,7 +96,7 @@ class MainActivity: ComponentActivity() {
                         }
                         val specificRoutes = setOf(
                             "id.neotica.ui.navigation.Screen.Chat/{chatId}/{user2}?chatroomId={chatroomId}",
-                            "id.neotica.ui.navigation.Screen.ItemDetailScreen/{id}"
+                            "id.neotica.ui.navigation.WorldScreen.ItemDetailScreen/{id}/{type}"
                         )
                         val currentRoute = navBackStackEntry?.destination?.route
                         Log.d("currentScreen", navBackStackEntry?.destination?.route.toString())
@@ -145,7 +146,7 @@ class MainActivity: ComponentActivity() {
                         }
                     }
                 ) { innerPadding ->
-                    NavGraph(navController = navController, paddingValues = innerPadding)
+                    NavGraph(navController = navController, paddingValues = innerPadding, contentInsets = ScaffoldDefaults.contentWindowInsets)
                 }
             }
         }

@@ -3,12 +3,14 @@ package id.neotica.ui.components
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.ScaffoldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -19,7 +21,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.Transparent
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -42,10 +43,12 @@ fun BasicScaffold(
     fullScreen: Boolean = false,
     enableEye: Boolean = false,
     horizontalAlignment: Alignment.Horizontal = Alignment.Start,
+    contentInset: WindowInsets = ScaffoldDefaults.contentWindowInsets,
     content: @Composable () -> Unit
 ) {
     Scaffold(
         modifier = Modifier.padding(),
+        contentWindowInsets = contentInset,
         topBar = {
             TopAppBar(
                 title = {
@@ -54,7 +57,7 @@ fun BasicScaffold(
                 modifier = Modifier,
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = Transparent,
-                    titleContentColor = Color.White,
+                    titleContentColor = White,
                 ),
                 navigationIcon = {
                     if (!enableActionBar) {
@@ -152,10 +155,10 @@ fun BasicScaffold(
     }
 }
 
-val NavController.canGoBack: Boolean
+private val NavController.canGoBack: Boolean
     get() = currentBackStackEntry?.lifecycle?.currentState == Lifecycle.State.RESUMED
 
-fun NavController.navigateBack() {
+private fun NavController.navigateBack() {
     if (canGoBack) {
         popBackStack()
     }

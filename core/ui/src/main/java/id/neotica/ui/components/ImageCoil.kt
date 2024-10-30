@@ -25,6 +25,8 @@ fun ImageCoil(
     fillMaxWidth: Boolean = true,
     context: Context = LocalContext.current,
     round: Boolean = false,
+    scaleCustom: Boolean = false,
+    contentScale: ContentScale = ContentScale.Fit,
     contentAlignment: Alignment = Alignment.Center,
 ) {
 
@@ -46,10 +48,16 @@ fun ImageCoil(
             modifier = if (!customModifier) {
                 Modifier
                     .size(size)
-                    .clip(RoundedCornerShape(if(round) 120.dp else 12.dp))
+                    .clip(RoundedCornerShape(if (round) 120.dp else 12.dp))
             } else modifier,
             loading = { LoadingIndicator() },
-            contentScale = if(round) ContentScale.Crop else ContentScale.Fit
+            contentScale = if(round) ContentScale.Crop else {
+                if (!scaleCustom) {
+                    ContentScale.Fit
+                } else {
+                    contentScale
+                }
+            }
         )
     }
 }
