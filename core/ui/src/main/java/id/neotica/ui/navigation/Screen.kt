@@ -84,6 +84,8 @@ sealed class WorldScreen {
     data object MerchantScreen: Screen()
     @Serializable
     data object InventoryScreen: Screen()
+    @Serializable
+    data object MiningScreen: Screen()
 }
 
 data class NavigationItem(

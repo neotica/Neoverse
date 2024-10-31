@@ -30,9 +30,10 @@ class InventoryViewModel(
         fetchItem()
     }
 
-    fun fetchAuras() = viewModelScope.launch {
-        val auraFromRepo = auraRepo.getAuras(getUserIdUseCase.invoke())
-        _totalAuras.value = auraFromRepo
+    private fun fetchAuras() = viewModelScope.launch {
+        auraRepo.getAuras(currentUserId()).collect {
+            _totalAuras.value = it
+        }
     }
 
     fun fetchItem() = viewModelScope.launch {

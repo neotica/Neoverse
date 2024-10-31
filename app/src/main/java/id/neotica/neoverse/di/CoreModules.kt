@@ -13,6 +13,7 @@ import id.neotica.domain.remote.AuraRepository
 import id.neotica.domain.remote.MarketRepository
 import id.neotica.domain.remote.UserRepository
 import id.neotica.domain.usecase.BuyHeroUseCase
+import id.neotica.domain.usecase.GetAuraUseCase
 import id.neotica.domain.usecase.GetUserIdUseCase
 import id.neotica.domain.usecase.GetUserNameUseCase
 import id.neotica.neoverse.presentation.screen.auth.login.LoginViewModel
@@ -56,6 +57,7 @@ val useCaseModules = module {
     singleOf(::GetUserIdUseCase)
     singleOf(::GetUserNameUseCase)
     singleOf(::BuyHeroUseCase)
+    singleOf(::GetAuraUseCase)
 }
 
 val domainModules = module {

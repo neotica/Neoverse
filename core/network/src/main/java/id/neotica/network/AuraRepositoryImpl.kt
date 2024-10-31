@@ -12,18 +12,7 @@ import kotlinx.coroutines.tasks.await
 class AuraRepositoryImpl: AuraRepository {
     private val firebase = Firebase.database
 
-     override suspend fun getAuras(userId: String): ApiResult<Games?> {
-         val ref = firebase.getReference("userdata")
-             .child(userId).child("world").get().await()
-         return try {
-             val value = ref.getValue(Games::class.java)
-             ApiResult.Success(value!!)
-         } catch (e: Exception) {
-             ApiResult.Error(e.message)
-         }
-     }
-
-    override suspend fun getAurasFlow(userId: String): Flow<ApiResult<Games?>> = flow {
+    override suspend fun getAuras(userId: String): Flow<ApiResult<Games?>> = flow {
         val ref = firebase.getReference("userdata")
             .child(userId).child("world").get().await()
         try {

@@ -14,6 +14,7 @@ import id.neotica.world.feat.kanye.KanyeView
 import id.neotica.world.feat.market.MarketView
 import id.neotica.world.feat.market.itemdetail.ItemDetailView
 import id.neotica.world.feat.market.merchant.MerchantView
+import id.neotica.world.feat.mining.MiningView
 import id.neotica.world.feat.world.WorldView
 
 fun NavGraphBuilder.worldNavGraph(
@@ -57,6 +58,11 @@ fun NavGraphBuilder.worldNavGraph(
         }
         composable<WorldScreen.InventoryScreen> {
             InventoryView(
+                navController, paddingValues, contentInsets
+            )
+        }
+        composable<WorldScreen.MiningScreen> {
+            MiningView(
                 navController, paddingValues, contentInsets
             )
         }

@@ -51,8 +51,9 @@ class GameViewModel(
     }
 
     private fun fetchAuras() = viewModelScope.launch {
-        val auraFromRepo = gameRepo.getAuras(currentUserId())
-        _totalAuras.value = auraFromRepo
+        gameRepo.getAuras(currentUserId()).collect {
+            _totalAuras.value = it
+        }
     }
 
     private fun generateTranspose() = viewModelScope.launch {

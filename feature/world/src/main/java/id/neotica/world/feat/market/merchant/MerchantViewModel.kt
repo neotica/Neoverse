@@ -23,9 +23,6 @@ class MerchantViewModel(
     private val _totalAuras: MutableStateFlow<ApiResult<Games?>> = MutableStateFlow(ApiResult.Loading())
     val totalAuras = _totalAuras.asStateFlow()
 
-    private val _hero: MutableStateFlow<ApiResult<List<Hero>>> = MutableStateFlow(ApiResult.Loading())
-    val hero = _hero.asStateFlow()
-
     private val _merchant: MutableStateFlow<ApiResult<String>> = MutableStateFlow(ApiResult.Loading())
     val merchant = _merchant.asStateFlow()
 
@@ -39,17 +36,12 @@ class MerchantViewModel(
 
     init {
         fetchAuras()
-        fetchItem()
     }
 
-    fun fetchAuras() = viewModelScope.launch {
-        val auraFromRepo = auraRepo.getAuras(getUserIdUseCase.invoke())
-        _totalAuras.value = auraFromRepo
-    }
-
-    fun sendAura(aura: Int) = viewModelScope.launch {
-        auraRepo.postAuras(aura, currentUserId())
-        fetchAuras()
+    private fun fetchAuras() = viewModelScope.launch {
+        auraRepo.getAuras(currentUserId()).collect {
+            _totalAuras.value = it
+        }
     }
 
     fun addItem(heroInput: Hero) = viewModelScope.launch {
@@ -77,12 +69,6 @@ class MerchantViewModel(
     fun uploadHeroPic(name: String, uri: String) = viewModelScope.launch {
         marketRepo.uploadHeroPicture("$name-$random", uri).collect {
             _uploadState.value = it
-        }
-    }
-
-    fun fetchItem() = viewModelScope.launch {
-        marketRepo.getItems().collect {
-            _hero.value = it
         }
     }
 }

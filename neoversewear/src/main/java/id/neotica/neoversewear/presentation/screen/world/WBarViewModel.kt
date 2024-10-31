@@ -1,6 +1,5 @@
 package id.neotica.neoversewear.presentation.screen.world
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import id.neotica.domain.ApiResult
@@ -47,12 +46,12 @@ class WBarViewModel(
             gameRepo.postAuras(tot + aura, currentUserId())
         }
         fetchAuras()
-        Log.d("aura", aura.toString())
     }
 
     private fun fetchAuras() = viewModelScope.launch {
-        val auraFromRepo = gameRepo.getAuras(currentUserId())
-        _totalAuras.value = auraFromRepo
+        gameRepo.getAuras(currentUserId()).collect {
+            _totalAuras.value = it
+        }
     }
 
     private fun generateTranspose() = viewModelScope.launch {

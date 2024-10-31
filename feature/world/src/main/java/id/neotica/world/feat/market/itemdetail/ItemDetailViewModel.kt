@@ -60,8 +60,9 @@ class ItemDetailViewModel(
     }
 
     private fun fetchAuras() = viewModelScope.launch {
-        val auraFromRepo = auraRepo.getAuras(getUserIdUseCase.invoke())
-        _totalAuras.value = auraFromRepo
+        auraRepo.getAuras(currentUserId()).collect {
+            _totalAuras.value = it
+        }
     }
 
     private fun fetchBankAuras() = viewModelScope.launch {
@@ -71,19 +72,18 @@ class ItemDetailViewModel(
     }
 
     fun fetchSellerAuras(id: String) = viewModelScope.launch {
-        val auraFromRepo = auraRepo.getAuras(id)
-        _sellerAuras.value = auraFromRepo
+        auraRepo.getAuras(id).collect {
+            _sellerAuras.value = it
+        }
     }
 
     private fun getDetail() = viewModelScope.launch {
         marketRepo.getHero(args.id).collect {
             _hero.value = it
         }
-//        val get = marketRepo.getItem(args.id)
-//        _hero.value = get
     }
 
-    fun buy(hero: Hero) = CoroutineScope(Dispatchers.IO).launch { buyHeroUseCase.main(hero) }
+    fun buy(hero: Hero) = CoroutineScope(Dispatchers.IO).launch { buyHeroUseCase.invoke(hero) }
 
     fun pawn(aura: Int) = viewModelScope.launch {
         _hero.value.data?.let {
