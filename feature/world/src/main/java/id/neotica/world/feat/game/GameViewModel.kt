@@ -19,6 +19,10 @@ class GameViewModel(
 ): ViewModel() {
     private val _randomNum = MutableStateFlow("")
     val randomNum = _randomNum.asStateFlow()
+    private val _randomNum2 = MutableStateFlow("")
+    val randomNum2 = _randomNum2.asStateFlow()
+    private val _randomNum3 = MutableStateFlow("")
+    val randomNum3 = _randomNum3.asStateFlow()
 
     private val _auraPoints = MutableStateFlow(0)
     val auraPoints = _auraPoints.asStateFlow()
@@ -34,6 +38,8 @@ class GameViewModel(
 
     init {
         generateTranspose()
+        generateTranspose2()
+        generateTranspose3()
         fetchAuras()
     }
 
@@ -59,6 +65,24 @@ class GameViewModel(
     private fun generateTranspose() = viewModelScope.launch {
         val randomValue = SecureRandom().asKotlinRandom(). nextInt(1,80)
         _randomNum.value = when (randomValue) {
+            in 1..15 -> "7\uFE0F"
+            in 21..40 -> "\uD83D\uDE0A"
+            in 41..60 -> "⭐\uFE0F"
+            else -> "\uD83E\uDD88"
+        }
+    }
+    private fun generateTranspose2() = viewModelScope.launch {
+        val randomValue = SecureRandom().asKotlinRandom(). nextInt(1,80)
+        _randomNum2.value = when (randomValue) {
+            in 1..15 -> "7\uFE0F"
+            in 21..40 -> "\uD83D\uDE0A"
+            in 41..60 -> "⭐\uFE0F"
+            else -> "\uD83E\uDD88"
+        }
+    }
+    private fun generateTranspose3() = viewModelScope.launch {
+        val randomValue = SecureRandom().asKotlinRandom(). nextInt(1,80)
+        _randomNum3.value = when (randomValue) {
             in 1..15 -> "7\uFE0F"
             in 21..40 -> "\uD83D\uDE0A"
             in 41..60 -> "⭐\uFE0F"

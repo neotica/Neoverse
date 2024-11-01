@@ -57,8 +57,13 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     api(libs.androidx.material3)
-//    api(libs.androidx.material3.adaptive.navigation)
+
+    //Adaptive
     api(libs.androidx.material3.adaptive.navigation.suite)
+    api(libs.androidx.adaptive)
+    api(libs.androidx.adaptive.layout)
+    api(libs.androidx.adaptive.navigation)
+
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
