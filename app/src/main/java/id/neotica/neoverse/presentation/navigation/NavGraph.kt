@@ -14,7 +14,11 @@ import id.neotica.ui.navigation.Screen
 import id.neotica.world.worldNavGraph
 
 @Composable
-fun NavGraph(navController: NavHostController, paddingValues: PaddingValues, contentInsets: WindowInsets) {
+fun NavGraph(
+    navController: NavHostController,
+    paddingValues: PaddingValues,
+    contentInsets: WindowInsets
+) {
     NavHost(navController, startDestination = Screen.Splash) {
         composable<Screen.Splash> { SplashView(navController = navController) }
         composable<Screen.Setting> { SettingView(paddingValues) }

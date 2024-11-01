@@ -123,7 +123,7 @@ fun MarketView(
         contentInset = contentInsets
     ) {
         marketItems .let {  }
-        LazyColumn(contentPadding = PaddingValues(bottom = paddingValues.calculateBottomPadding())) {
+        LazyColumn(contentPadding = paddingValues) {
             item {
                 val currentPage = rememberSaveable { mutableIntStateOf(0) }
                 CarouselCard(

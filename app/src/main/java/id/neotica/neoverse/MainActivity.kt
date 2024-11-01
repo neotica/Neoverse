@@ -11,6 +11,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
@@ -22,6 +23,9 @@ import androidx.compose.material3.NavigationBarItemColors
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.ScaffoldDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
+import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldDefaults
+import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -31,9 +35,11 @@ import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.window.core.layout.WindowWidthSizeClass
 import id.neotica.neoverse.presentation.navigation.NavGraph
 import id.neotica.ui.R
 import id.neotica.ui.components.CustomNavBar
+import id.neotica.ui.components.CustomNavigationSuiteScaffold
 import id.neotica.ui.navigation.NavigationItem
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.Screen
@@ -85,68 +91,133 @@ class MainActivity: ComponentActivity() {
                     Screen.TermsOfServiceScreen
                 )
 
-                Scaffold(
-                    modifier = Modifier
-                        .background(DarkBackground)
-                        .fillMaxSize(),
-                    bottomBar = {
-                        val includeRoute = bottomBarExcludedRoutes.none {
-                            if (navBackStackEntry?.destination?.route == null) true else
+                val adaptiveInfo = currentWindowAdaptiveInfo()
+                val customNavSuiteType = with(adaptiveInfo) {
+                    if (windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.EXPANDED) {
+                        NavigationSuiteType.NavigationRail
+                    } else {
+                        NavigationSuiteScaffoldDefaults.calculateFromAdaptiveInfo(adaptiveInfo)
+                    }
+                }
+
+                if(adaptiveInfo.windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.EXPANDED) {
+                    val includeRoute = bottomBarExcludedRoutes.none {
+                        if (navBackStackEntry?.destination?.route == null) true else
                             navBackStackEntry?.destination?.hasRoute(it::class) == true
-                        }
-                        val specificRoutes = setOf(
-                            "id.neotica.ui.navigation.Screen.Chat/{chatId}/{user2}?chatroomId={chatroomId}",
-                            "id.neotica.ui.navigation.WorldScreen.ItemDetailScreen/{id}/{type}"
-                        )
-                        val currentRoute = navBackStackEntry?.destination?.route
-                        Log.d("currentScreen", navBackStackEntry?.destination?.route.toString())
+                    }
+                    val specificRoutes = setOf(
+                        "id.neotica.ui.navigation.Screen.Chat/{chatId}/{user2}?chatroomId={chatroomId}",
+                        "id.neotica.ui.navigation.WorldScreen.ItemDetailScreen/{id}/{type}"
+                    )
+                    val currentRoute = navBackStackEntry?.destination?.route
+                    Log.d("currentScreen", navBackStackEntry?.destination?.route.toString())
 
-                        val includeRoute3 = includeRoute && currentRoute !in specificRoutes
+                    val includeRoute3 = includeRoute && currentRoute !in specificRoutes
 
-                        AnimatedVisibility (
-                            visible = includeRoute3,
-                            enter = slideInVertically(initialOffsetY = { it }),
-                            exit = slideOutVertically(targetOffsetY = { it }),
-                        ) {
-                            CustomNavBar (
-                                modifier = Modifier
-                            ) {
-                                navItems.map {
-                                    NavigationBarItem(
-                                        colors = NavigationBarItemColors(
-                                            selectedIconColor = Color.White,
-                                            selectedTextColor = Color.White,
-                                            selectedIndicatorColor = DarkPrimary,
-                                            unselectedIconColor = Color.White,
-                                            unselectedTextColor = Color.White,
-                                            disabledIconColor = Color.Gray,
-                                            disabledTextColor = Color.Gray
-                                        ),
-                                        selected = currentDestination?.hierarchy?.any { current ->
-                                            current.hasRoute(it.screen::class)
-                                        } == true,
-                                        onClick = {
-                                            navController.navigate(it.screen) {
-                                                navController.graph.startDestinationRoute?.let { route ->
-                                                    popUpTo(route) {
-                                                        saveState = true
-                                                    }
+
+
+                    CustomNavigationSuiteScaffold(
+                        layoutType = customNavSuiteType,
+                        navigationVisibility = includeRoute3,
+                        navigationSuiteItems = {
+                            navItems.map { navMap ->
+                                item(
+                                    selected = currentDestination?.hierarchy?.any { current ->
+                                        current.hasRoute(navMap.screen::class)
+                                    } == true,
+                                    onClick = {
+                                        navController.navigate(navMap.screen) {
+                                            navController.graph.startDestinationRoute?.let { route ->
+                                                popUpTo(route) {
+                                                    saveState = true
                                                 }
-                                                launchSingleTop = true
-                                                restoreState = true
                                             }
-                                        },
-                                        icon = {
-                                            Icon(imageVector = it.icon, contentDescription = it.title)
-                                        },
-                                        label = { Text(it.title) },
-                                    )
+                                            launchSingleTop = true
+                                            restoreState = true
+                                        }
+                                    },
+                                    icon = {
+                                        Icon(imageVector = navMap.icon, contentDescription = navMap.title)
+                                    },
+                                    label = {
+                                        Text(navMap.title)
+                                    }
+                                )
+                            }
+                        }
+                    ) {
+                        NavGraph(navController = navController, paddingValues = PaddingValues(), contentInsets = ScaffoldDefaults.contentWindowInsets)
+                    }
+                } else {
+                    Scaffold(
+                        modifier = Modifier
+                            .background(DarkBackground)
+                            .fillMaxSize(),
+                        bottomBar = {
+                            val includeRoute = bottomBarExcludedRoutes.none {
+                                if (navBackStackEntry?.destination?.route == null) true else
+                                    navBackStackEntry?.destination?.hasRoute(it::class) == true
+                            }
+                            val specificRoutes = setOf(
+                                "id.neotica.ui.navigation.Screen.Chat/{chatId}/{user2}?chatroomId={chatroomId}",
+                                "id.neotica.ui.navigation.WorldScreen.ItemDetailScreen/{id}/{type}"
+                            )
+                            val currentRoute = navBackStackEntry?.destination?.route
+                            Log.d("currentScreen", navBackStackEntry?.destination?.route.toString())
+
+                            val includeRoute3 = includeRoute && currentRoute !in specificRoutes
+
+                            AnimatedVisibility (
+                                visible = includeRoute3,
+                                enter = slideInVertically(initialOffsetY = { it }),
+                                exit = slideOutVertically(targetOffsetY = { it }),
+                            ) {
+
+                                CustomNavBar (
+                                    modifier = Modifier
+                                ) {
+                                    navItems.map {
+                                        NavigationBarItem(
+                                            colors = NavigationBarItemColors(
+                                                selectedIconColor = Color.White,
+                                                selectedTextColor = Color.White,
+                                                selectedIndicatorColor = DarkPrimary,
+                                                unselectedIconColor = Color.White,
+                                                unselectedTextColor = Color.White,
+                                                disabledIconColor = Color.Gray,
+                                                disabledTextColor = Color.Gray
+                                            ),
+                                            selected = currentDestination?.hierarchy?.any { current ->
+                                                current.hasRoute(it.screen::class)
+                                            } == true,
+                                            onClick = {
+                                                navController.navigate(it.screen) {
+                                                    navController.graph.startDestinationRoute?.let { route ->
+                                                        popUpTo(route) {
+                                                            saveState = true
+                                                        }
+                                                    }
+                                                    launchSingleTop = true
+                                                    restoreState = true
+                                                }
+                                            },
+                                            icon = {
+                                                Icon(imageVector = it.icon, contentDescription = it.title)
+                                            },
+                                            label = { Text(it.title) },
+                                        )
+                                    }
                                 }
                             }
                         }
+                    ) { innerPadding ->
+
+                        NavGraph(
+                            navController = navController,
+                            paddingValues = innerPadding,
+                            contentInsets = ScaffoldDefaults.contentWindowInsets
+                        )
                     }
-                ) { innerPadding ->
-                    NavGraph(navController = navController, paddingValues = innerPadding, contentInsets = ScaffoldDefaults.contentWindowInsets)
                 }
             }
         }
