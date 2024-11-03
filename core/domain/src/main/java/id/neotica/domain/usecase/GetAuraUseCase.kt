@@ -20,13 +20,6 @@ class GetAuraUseCase(
         CoroutineScope(Dispatchers.IO).launch { main() }
     }
 
-    /*suspend operator fun invoke() {
-
-        auraRepo.getAurasFlow(currentUserId()).collect {
-            val auraValue = it.data?.aura
-        }
-    }*/
-
     private suspend fun main() = withContext(Dispatchers.IO) {
         auraRepo.getAuras(currentUserId()).collect {
             it.data?.aura.let { auraVal ->
