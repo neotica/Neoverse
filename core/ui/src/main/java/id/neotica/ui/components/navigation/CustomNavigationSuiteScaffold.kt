@@ -88,8 +88,15 @@ fun CustomNavigationSuiteScaffold(
     containerColor: Color = NavigationSuiteScaffoldDefaults.containerColor,
     contentColor: Color = NavigationSuiteScaffoldDefaults.contentColor,
     navigationVisibility: Boolean = true,
-    content: @Composable () -> Unit = {},
+    content: @Composable (insets: WindowInsets) -> Unit = {},
 ) {
+    val insets = when (layoutType) {
+        NavigationSuiteType.NavigationBar -> NavigationBarDefaults.windowInsets
+        NavigationSuiteType.NavigationRail -> NavigationRailDefaults.windowInsets.only(WindowInsetsSides.Start)
+        NavigationSuiteType.NavigationDrawer -> DrawerDefaults.windowInsets.only(WindowInsetsSides.Start)
+        else -> NoWindowInsets
+    }
+
     Surface(modifier = modifier, color = containerColor, contentColor = contentColor) {
         NavigationSuiteScaffoldLayout(
             navigationSuite = {
@@ -108,19 +115,9 @@ fun CustomNavigationSuiteScaffold(
             layoutType = layoutType,
             content = {
                 Box(
-                    Modifier.consumeWindowInsets(
-                        when (layoutType) {
-                            NavigationSuiteType.NavigationBar ->
-                                NavigationBarDefaults.windowInsets.only(WindowInsetsSides.Bottom)
-                            NavigationSuiteType.NavigationRail ->
-                                NavigationRailDefaults.windowInsets.only(WindowInsetsSides.Start)
-                            NavigationSuiteType.NavigationDrawer ->
-                                DrawerDefaults.windowInsets.only(WindowInsetsSides.Start)
-                            else -> NoWindowInsets
-                        }
-                    )
+                    Modifier.consumeWindowInsets(insets)
                 ) {
-                    content()
+                    content(insets)
                 }
             }
         )
@@ -283,28 +280,6 @@ fun NavigationSuite(
                     }
                 }
             }
-
-            /*NavigationRail(
-                modifier = modifier,
-                containerColor = colors.navigationRailContainerColor,
-                contentColor = colors.navigationRailContentColor
-            ) {
-                scope.itemList.forEach {
-                    NavigationRailItem(
-                        modifier = it.modifier,
-                        selected = it.selected,
-                        onClick = it.onClick,
-                        icon = { NavigationItemIcon(icon = it.icon, badge = it.badge) },
-                        enabled = it.enabled,
-                        label = it.label,
-                        alwaysShowLabel = it.alwaysShowLabel,
-                        colors =
-                        it.colors?.navigationRailItemColors
-                            ?: defaultItemColors.navigationRailItemColors,
-                        interactionSource = it.interactionSource
-                    )
-                }
-            }*/
         }
         NavigationSuiteType.NavigationDrawer -> {
             PermanentDrawerSheet(

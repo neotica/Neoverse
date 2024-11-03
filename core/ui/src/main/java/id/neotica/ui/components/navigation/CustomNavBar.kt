@@ -43,7 +43,8 @@ fun CustomNavBar(
                 .fillMaxWidth()
                 .selectableGroup(),
             verticalAlignment = Alignment.CenterVertically,
-            content = content
-        )
+        ) {
+            content()
+        }
     }
 }
