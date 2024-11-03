@@ -1,6 +1,7 @@
 package id.neotica.ui.components
 
 import android.content.Context
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
@@ -28,6 +29,7 @@ fun ImageCoil(
     scaleCustom: Boolean = false,
     contentScale: ContentScale = ContentScale.Fit,
     contentAlignment: Alignment = Alignment.Center,
+    onClick: (() -> Unit)? = null,
 ) {
 
     val maxWidth = if (fillMaxWidth) {
@@ -46,9 +48,16 @@ fun ImageCoil(
                 .build(),
             contentDescription =  "",
             modifier = if (!customModifier) {
-                Modifier
-                    .size(size)
-                    .clip(RoundedCornerShape(if (round) 120.dp else 12.dp))
+                if (onClick != null) {
+                    Modifier
+                        .size(size)
+                        .clip(RoundedCornerShape(if (round) 120.dp else 12.dp))
+                        .clickable { onClick() }
+                } else {
+                    Modifier
+                        .size(size)
+                        .clip(RoundedCornerShape(if (round) 120.dp else 12.dp))
+                }
             } else modifier,
             loading = { LoadingIndicator() },
             contentScale = if(round) ContentScale.Crop else {

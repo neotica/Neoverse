@@ -1,7 +1,5 @@
 package id.neotica.world.feat.mining
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.material3.Text
@@ -13,7 +11,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import id.neotica.domain.ApiResult
@@ -33,43 +30,58 @@ fun MiningView(
 ) {
     var coal by remember { mutableIntStateOf(0) }
     var currentAuras by remember { mutableStateOf<Games?>(null) }
-    val onClick by remember { mutableStateOf(false) }
+    var isLoading by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         viewModel.totalAuras.collect { result ->
             when(result) {
-                is ApiResult.Loading -> {}
+                is ApiResult.Loading -> isLoading = true
                 is ApiResult.Success -> {
+                    isLoading = false
                     currentAuras = result.data
                 }
-                is ApiResult.Error -> {}
+                is ApiResult.Error -> isLoading = false
             }
         }
     }
 
     BasicScaffold(
-        topBarTitle = "Mining",
+        topBarTitle = "Mining ⛏\uFE0F",
         horizontalAlignment = Alignment.CenterHorizontally,
         navController = navController,
         enableActionBar = true
     ) {
-        Text(currentAuras?.aura.toString())
-        Box(
-            Modifier.clickable {
-                coal += 1
-            }
+        Text("Your Aura: ${currentAuras?.aura ?: ""}")
+        ImageCoil(
+            url = rockPicture,
+            size = 200.dp
         ) {
-            ImageCoil(
-                url = rockPicture,
-                size = 200.dp
-            )
+            coal += 1
         }
         Text("Coal Mined: $coal")
-        NeoButton("Exchange 100 Coals for 1 Aura") {
-            if (coal >= 100) {
-                coal -= 100
-                viewModel.postAura(1)
+        if (coal >= 100) {
+            if (coal < 200) {
+                NeoButton(
+                    text = "Exchange 100 Coals for 1 Aura",
+                ) {
+                    if (coal >= 100 && !isLoading) {
+                        coal -= 100
+                        viewModel.postAura(1)
+                    }
+                }
+            } else {
+                val hundredsSum = coal / 100
+                val coalSum = hundredsSum * 100
+
+                NeoButton("Exchange $coalSum Coals for $hundredsSum Aura") {
+                    if (coal >= 100 && !isLoading) {
+                        coal -= coalSum
+                        viewModel.postAura(hundredsSum)
+                    }
+                }
             }
+        } else {
+            Text("Tap the rock to mine the coal. The current rate for 1 aura is 100 coals.")
         }
     }
 }

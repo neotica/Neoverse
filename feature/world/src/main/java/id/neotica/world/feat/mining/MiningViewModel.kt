@@ -24,6 +24,7 @@ class MiningViewModel(
     }
 
     private fun fetchAuras() = viewModelScope.launch {
+        _totalAuras.value = ApiResult.Loading()
         auraRepo.getAuras(currentUserId).collect {
             _totalAuras.value = it
         }
