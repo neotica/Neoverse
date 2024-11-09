@@ -29,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -50,6 +51,7 @@ import id.neotica.ui.theme.NeoverseTheme
 class MainActivity: ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        installSplashScreen()
         if (VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             enableEdgeToEdge()
         }
@@ -141,7 +143,7 @@ class MainActivity: ComponentActivity() {
                                                 } == true,
                                                 onClick = {
                                                     navController.navigate(it.screen) {
-                                                        navController.graph.startDestinationRoute?.let { route ->
+                                                        currentRoute?.let { route ->
                                                             popUpTo(route) {
                                                                 saveState = true
                                                             }

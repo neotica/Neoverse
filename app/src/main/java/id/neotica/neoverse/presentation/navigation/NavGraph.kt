@@ -10,6 +10,7 @@ import id.neotica.neoverse.presentation.screen.ChatFromHomeView
 import id.neotica.neoverse.presentation.screen.SettingView
 import id.neotica.neoverse.presentation.screen.SplashView
 import id.neotica.neoverse.presentation.screen.dump.DumpView
+import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.Screen
 import id.neotica.world.worldNavGraph
 
@@ -19,7 +20,7 @@ fun NavGraph(
     paddingValues: PaddingValues,
     contentInsets: WindowInsets
 ) {
-    NavHost(navController, startDestination = Screen.Splash) {
+    NavHost(navController, startDestination = RootScreen.HomeNav) {
         composable<Screen.Splash> { SplashView(navController = navController) }
         composable<Screen.Setting> { SettingView(paddingValues) }
         composable<Screen.ChatFromHome> { ChatFromHomeView(paddingValues = paddingValues) }

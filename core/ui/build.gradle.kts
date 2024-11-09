@@ -64,6 +64,9 @@ dependencies {
     api(libs.androidx.adaptive.layout)
     api(libs.androidx.adaptive.navigation)
 
+    //SplashScreen API
+    api(libs.androidx.core.splashscreen)
+
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
