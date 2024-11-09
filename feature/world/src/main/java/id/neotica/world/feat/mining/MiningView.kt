@@ -11,12 +11,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.Games
 import id.neotica.ui.components.BasicScaffold
-import id.neotica.ui.components.ImageCoil
+import id.neotica.ui.components.ImagePermanentCache
 import id.neotica.ui.components.NeoButton
 import id.neotica.world.utils.rockPicture
 import org.koin.androidx.compose.koinViewModel
@@ -52,12 +52,13 @@ fun MiningView(
         enableActionBar = true
     ) {
         Text("Your Aura: ${currentAuras?.aura ?: ""}")
-        ImageCoil(
+
+        ImagePermanentCache(
+            context = LocalContext.current,
+            fileName = "rockkkk",
             url = rockPicture,
-            size = 200.dp
-        ) {
-            coal += 1
-        }
+        ) { coal += 1 }
+
         Text("Coal Mined: $coal")
         if (coal >= 100) {
             if (coal < 200) {
