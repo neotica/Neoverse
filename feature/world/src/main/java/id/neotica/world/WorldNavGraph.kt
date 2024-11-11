@@ -14,6 +14,8 @@ import id.neotica.world.feat.kanye.KanyeView
 import id.neotica.world.feat.market.MarketView
 import id.neotica.world.feat.market.itemdetail.ItemDetailView
 import id.neotica.world.feat.market.merchant.MerchantView
+import id.neotica.world.feat.market.merchant.hero.HeroMakerView
+import id.neotica.world.feat.market.merchant.item.ItemMakerView
 import id.neotica.world.feat.mining.MiningView
 import id.neotica.world.feat.world.WorldView
 
@@ -63,6 +65,16 @@ fun NavGraphBuilder.worldNavGraph(
         }
         composable<WorldScreen.MiningScreen> {
             MiningView(
+                navController, paddingValues, contentInsets
+            )
+        }
+        composable<WorldScreen.HeroMakerScreen> {
+            HeroMakerView(
+                navController, paddingValues, contentInsets
+            )
+        }
+        composable<WorldScreen.ItemMakerScreen> {
+            ItemMakerView(
                 navController, paddingValues, contentInsets
             )
         }
