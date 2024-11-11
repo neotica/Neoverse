@@ -143,9 +143,10 @@ class MainActivity: ComponentActivity() {
                                                 } == true,
                                                 onClick = {
                                                     navController.navigate(it.screen) {
-                                                        currentRoute?.let { route ->
+                                                        navController.graph.startDestinationId.let { route ->
                                                             popUpTo(route) {
                                                                 saveState = true
+                                                                inclusive = false
                                                             }
                                                         }
                                                         launchSingleTop = true

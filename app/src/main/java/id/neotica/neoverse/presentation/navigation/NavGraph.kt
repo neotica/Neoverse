@@ -3,14 +3,13 @@ package id.neotica.neoverse.presentation.navigation
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.runtime.Composable
-import androidx.navigation.compose.NavHost
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import id.neotica.neoverse.presentation.screen.ChatFromHomeView
 import id.neotica.neoverse.presentation.screen.SettingView
 import id.neotica.neoverse.presentation.screen.SplashView
 import id.neotica.neoverse.presentation.screen.dump.DumpView
-import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.Screen
 import id.neotica.world.worldNavGraph
 
@@ -20,7 +19,7 @@ fun NavGraph(
     paddingValues: PaddingValues,
     contentInsets: WindowInsets
 ) {
-    NavHost(navController, startDestination = RootScreen.HomeNav) {
+    NavHost(navController, startDestination = Screen.Splash) {
         composable<Screen.Splash> { SplashView(navController = navController) }
         composable<Screen.Setting> { SettingView(paddingValues) }
         composable<Screen.ChatFromHome> { ChatFromHomeView(paddingValues = paddingValues) }

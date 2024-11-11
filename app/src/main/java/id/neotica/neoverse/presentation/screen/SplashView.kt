@@ -15,7 +15,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
 import id.neotica.neoverse.R
 import id.neotica.ui.navigation.RootScreen
-import kotlinx.coroutines.delay
 
 @Composable
 fun SplashView(navController: NavController) {
@@ -42,7 +41,6 @@ fun SplashView(navController: NavController) {
     }
 
     LaunchedEffect(Unit) {
-        delay(200)
         navController.navigate(RootScreen.HomeNav) {
             popUpTo(navController.graph.startDestinationId) {
                 inclusive = true
