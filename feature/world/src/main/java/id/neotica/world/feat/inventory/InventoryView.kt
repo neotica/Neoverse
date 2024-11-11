@@ -25,7 +25,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -101,7 +100,6 @@ fun InventoryView(
 
     BasicScaffold(
         topBarTitle = "Inventory",
-        horizontalAlignment = Alignment.CenterHorizontally,
         navController = navController,
         enableActionBar = true,
         contentInset = contentInsets
@@ -109,7 +107,7 @@ fun InventoryView(
         LazyColumn {
             item {
                 Text("Your Aura: ${currentAuras?.aura ?: ""}")
-
+                Text("Hero")
                 LazyRow(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     state = lazyState
@@ -154,6 +152,7 @@ fun InventoryView(
                         }
                     }
                 }
+                Text("Items")
             }
         }
     }

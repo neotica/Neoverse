@@ -1,6 +1,7 @@
 package id.neotica.neoverse.presentation.screen
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,6 +11,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.paint
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
@@ -20,14 +22,15 @@ import id.neotica.ui.navigation.RootScreen
 fun SplashView(navController: NavController) {
     Box(
         modifier = Modifier
-            .paint(
+            /*.paint(
                 painter = painterResource(id = R.drawable.splash_screen),
                 contentScale = ContentScale.Crop
-            )
+            )*/
+            .background(Color.Black)
             .fillMaxSize(),
         contentAlignment = Alignment.Center,
     ) {
-        Image(
+        /*Image(
             modifier = Modifier
                 .fillMaxSize(),
             painter = painterResource(
@@ -37,7 +40,7 @@ fun SplashView(navController: NavController) {
         Column {
             Text("This is splash screen.")
             Text("💀\uD83D\uDC80\uD83D\uDC80")
-        }
+        }*/
     }
 
     LaunchedEffect(Unit) {
