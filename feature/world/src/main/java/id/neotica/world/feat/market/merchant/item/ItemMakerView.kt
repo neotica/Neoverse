@@ -43,7 +43,8 @@ fun ItemMakerView(
 
     val name = remember { mutableStateOf("") }
     val power = remember { mutableIntStateOf(0) }
-    val price = remember { mutableIntStateOf(0) }
+    val auraPrice = remember { mutableIntStateOf(0) }
+    val coalPrice = remember { mutableIntStateOf(0) }
     val story = remember { mutableStateOf("") }
     val origin = remember { mutableStateOf("") }
     val pantheon = remember { mutableStateOf("") }
@@ -122,7 +123,7 @@ fun ItemMakerView(
                     val heroInput = Hero(
                         name = name.value,
                         power = power.intValue,
-                        price = price.intValue,
+                        price = auraPrice.intValue,
                         background = HeroBackground(
                             story = story.value,
                             origin = origin.value,
@@ -154,13 +155,14 @@ fun ItemMakerView(
                 Text("Main")
                 NeoTextField(name, label = "Name")
                 NumberField(power, label = "Power")
-                NumberField(price, label = "Price")
+                NumberField(auraPrice, label = "Aura Price")
+                NumberField(coalPrice, label = "Coal Price")
                 Text("Origin")
                 NeoTextField(story, label = "Hero Story")
                 NeoTextField(origin, label = "Hero Origin")
                 NeoTextField(pantheon, label = "Hero Pantheon")
 
-                val enabledState = name.value.isNotEmpty() && power.intValue != 0 && price.intValue != 0
+                val enabledState = name.value.isNotEmpty() && power.intValue != 0 && auraPrice.intValue != 0
 
                 NeoButton("Add Item", enabled = enabledState) {
                     launchPhotoPicker()
