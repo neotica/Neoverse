@@ -7,6 +7,7 @@ import androidx.navigation.toRoute
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.Games
 import id.neotica.domain.model.market.Hero
+import id.neotica.domain.model.market.Item
 import id.neotica.domain.remote.AuraRepository
 import id.neotica.domain.remote.MarketRepository
 import id.neotica.domain.usecase.BuyHeroUseCase
@@ -37,7 +38,10 @@ class ItemDetailViewModel(
     private val args = savedStateHandle.toRoute<WorldScreen.ItemDetailScreen>()
 
     private val _hero: MutableStateFlow<ApiResult<Hero>> = MutableStateFlow(ApiResult.Loading())
-    val itemModel = _hero.asStateFlow()
+    val hero = _hero.asStateFlow()
+
+    private val _item: MutableStateFlow<ApiResult<Item>> = MutableStateFlow(ApiResult.Loading())
+    val item = _item.asStateFlow()
 
     private fun currentUserId(): String = getUserIdUseCase.invoke()
     private fun currentUsername(): String = getUserNameUseCase.invoke()
@@ -46,7 +50,10 @@ class ItemDetailViewModel(
         fetchAuras()
         fetchBankAuras()
         when(screenState()) {
-            ScreenState.Global.toString() -> getDetail()
+            ScreenState.Global.toString() -> {
+                getDetail()
+                getItemDetail()
+            }
             ScreenState.UserInventory.toString() -> getDetailUser()
             ScreenState.User.toString() -> getDetail()
         }
@@ -80,6 +87,12 @@ class ItemDetailViewModel(
     private fun getDetail() = viewModelScope.launch {
         marketRepo.getHero(args.id).collect {
             _hero.value = it
+        }
+    }
+
+    private fun getItemDetail() = viewModelScope.launch {
+        marketRepo.getItem(args.id).collect {
+            _item.value = it
         }
     }
 

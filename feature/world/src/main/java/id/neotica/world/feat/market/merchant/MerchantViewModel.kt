@@ -70,18 +70,15 @@ class MerchantViewModel(
 
     fun addItem(itemInput: Item) = viewModelScope.launch {
         _merchant.value = ApiResult.Loading()
-        val dummyPrice = ItemPrice(
-            aura = 0,
-            coal = 100
-        )
-        val dummyItem = Item(
+        val actualItem = itemInput.copy(
             id = random,
-            name = itemInput.name,
-            price = dummyPrice,
-            power = itemInput.power,
+            price = ItemPrice(
+                aura = 0,
+                coal = 100
+            ),
             imageUrl = merchantRepo.getHeroPicture("${itemInput.name}-$random")
         )
-        val send = merchantRepo.addItem(dummyItem)
+        val send = merchantRepo.addItem(actualItem)
         _merchant.value = send
     }
 }

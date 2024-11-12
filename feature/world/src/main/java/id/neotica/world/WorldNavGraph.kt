@@ -2,6 +2,7 @@ package id.neotica.world
 
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.navigation.NavController
@@ -49,7 +50,7 @@ fun NavGraphBuilder.worldNavGraph(
             )
         }
         composable<WorldScreen.MarketScreen>(
-            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start, tween(100)) },
+            enterTransition = { fadeIn(tween(100)) },
             exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End, tween(100)) }
         ) {
             MarketView(
@@ -65,7 +66,7 @@ fun NavGraphBuilder.worldNavGraph(
             )
         }
         composable<WorldScreen.MerchantScreen>(
-            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start, tween(100)) },
+            enterTransition = { fadeIn(tween(100)) },
             exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End, tween(100)) }
         ) {
             MerchantView(
@@ -73,7 +74,7 @@ fun NavGraphBuilder.worldNavGraph(
             )
         }
         composable<WorldScreen.InventoryScreen>(
-            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start, tween(100)) },
+            enterTransition = { fadeIn(tween(100)) },
             exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End, tween(100)) }
         ) {
             InventoryView(

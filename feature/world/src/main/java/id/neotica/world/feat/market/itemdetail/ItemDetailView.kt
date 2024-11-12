@@ -31,6 +31,7 @@ import androidx.navigation.NavController
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.Games
 import id.neotica.domain.model.market.Hero
+import id.neotica.domain.model.market.Item
 import id.neotica.droidcore.component.alert.AlertDialogCustomDesc
 import id.neotica.droidcore.component.textfield.NumberField
 import id.neotica.ui.components.BasicScaffold
@@ -51,6 +52,7 @@ fun ItemDetailView(
     val onClick by remember { mutableStateOf(false) }
     var loading by remember { mutableStateOf(false) }
     var hero by remember { mutableStateOf<Hero?>(null) }
+    var item by remember { mutableStateOf<Item?>(null) }
     val context = LocalContext.current
 
     var openDialog by remember { mutableStateOf(false) }
@@ -101,11 +103,23 @@ fun ItemDetailView(
 
     LaunchedEffect(Unit) {
         hero?.owner?.let { viewModel.fetchSellerAuras(it.id) }
-        viewModel.itemModel.collect { result ->
+        viewModel.hero.collect { result ->
             when(result) {
                 is ApiResult.Loading -> {}
                 is ApiResult.Success -> {
                     hero = result.data
+                }
+                is ApiResult.Error -> {}
+            }
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.item.collect { result ->
+            when(result) {
+                is ApiResult.Loading -> {}
+                is ApiResult.Success -> {
+                    item = result.data
                 }
                 is ApiResult.Error -> {}
             }
@@ -175,6 +189,45 @@ fun ItemDetailView(
                         }
                     }
                 }
+                item?.let {
+                    LazyColumn(
+                        Modifier
+                            .fillMaxWidth(),
+                        contentPadding = PaddingValues(bottom = 30.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                    ) {
+                        item {
+                            Text(
+                                it.name.capitalize(Locale.current),
+                                fontWeight = FontWeight.Bold,
+                                fontSize = FontSize.Medium
+                            )
+                            Box(
+                                modifier = Modifier.size(200.dp)
+                            ) {
+                                ImageCoil(
+                                    it.imageUrl,
+                                    scaleCustom = true,
+                                    contentScale = ContentScale.Inside,
+                                    fillMaxWidth = true,
+                                    customModifier = true,
+                                    modifier = Modifier.fillMaxWidth()
+                                )
+                            }
+
+                            Spacer(Modifier.padding(4.dp))
+                            Row(
+                                Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceEvenly
+                            ) {
+                                Text("⚔ ${it.power}")
+                                Text("卐${it.price.aura}")
+                                Text("\uD83E\uDEA8${it.price.coal}")
+                            }
+                            Spacer(Modifier.padding(8.dp))
+                        }
+                    }
+                }
                 LazyColumn(
                     modifier = Modifier.align(Alignment.BottomCenter),
                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -208,7 +261,7 @@ fun ItemDetailView(
                                         modifier = Modifier
                                             .weight(1f)
                                             .fillMaxWidth(),
-                                        enabled = hero?.price != null
+                                        enabled = hero?.price != null || item != null
                                     ) {
                                         if (hero != null) {
                                             onBuy = true

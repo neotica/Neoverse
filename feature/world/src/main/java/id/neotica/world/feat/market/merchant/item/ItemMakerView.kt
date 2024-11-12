@@ -43,6 +43,7 @@ fun ItemMakerView(
 
     val name = remember { mutableStateOf("") }
     val power = remember { mutableIntStateOf(0) }
+    val description = remember { mutableStateOf("") }
     val auraPrice = remember { mutableIntStateOf(0) }
     val coalPrice = remember { mutableIntStateOf(0) }
 
@@ -124,6 +125,7 @@ fun ItemMakerView(
                             aura = auraPrice.intValue,
                             coal = coalPrice.intValue
                         ),
+                        description = description.value,
                         imageUrl = ""
                     )
                     viewModel.addItem(heroInput)

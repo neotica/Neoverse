@@ -112,4 +112,14 @@ class MarketRepositoryImpl: MarketRepository {
             emit(ApiResult.Error("exception: ${e.message}"))
         }
     }
+
+    override suspend fun getItem(id: String): Flow<ApiResult<Item>> = flow {
+        val reference = firebase.getReference("market").child("items").child(id).get().await()
+        try {
+            val value = reference.getValue(Item::class.java)
+            emit(ApiResult.Success(value!!))
+        } catch (e: NullPointerException) {
+            emit(ApiResult.Error("exception: ${e.message}"))
+        }
+    }
 }

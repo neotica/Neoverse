@@ -2,6 +2,7 @@ package id.neotica.neoverse.presentation.navigation
 
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -22,13 +23,13 @@ fun NavGraphBuilder.friendNavGraph(
         composable<Screen.FriendScreen> {
             FriendView(navController, paddingValues) }
         composable<Screen.SearchUserScreen>(
-            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start, tween(100)) },
+            enterTransition = { fadeIn(tween(100)) },
             exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End, tween(100)) }
         ) {
             SearchUser(navController = navController, paddingValues = paddingValues)
         }
         composable<Screen.FriendProfileScreen>(
-            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start, tween(100)) },
+            enterTransition = { fadeIn(tween(100)) },
             exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End, tween(100)) }
         ) {
             val args = it.toRoute<Screen.FriendProfileScreen>()
