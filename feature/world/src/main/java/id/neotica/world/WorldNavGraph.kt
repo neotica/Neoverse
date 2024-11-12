@@ -1,5 +1,7 @@
 package id.neotica.world
 
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.navigation.NavController
@@ -33,7 +35,10 @@ fun NavGraphBuilder.worldNavGraph(
                 paddingValues
             )
         }
-        composable<WorldScreen.GameScreen> {
+        composable<WorldScreen.GameScreen>(
+            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start, tween(100)) },
+            exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End, tween(100)) }
+        ) {
             GameView(
                 navController, paddingValues
             )
@@ -43,37 +48,58 @@ fun NavGraphBuilder.worldNavGraph(
                 navController, paddingValues
             )
         }
-        composable<WorldScreen.MarketScreen> {
+        composable<WorldScreen.MarketScreen>(
+            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start, tween(100)) },
+            exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End, tween(100)) }
+        ) {
             MarketView(
                 navController, paddingValues, contentInsets
             )
         }
-        composable<WorldScreen.ItemDetailScreen> {
+        composable<WorldScreen.ItemDetailScreen>(
+            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start, tween(100)) },
+            exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End, tween(100)) }
+        ) {
             ItemDetailView(
                 navController, paddingValues
             )
         }
-        composable<WorldScreen.MerchantScreen> {
+        composable<WorldScreen.MerchantScreen>(
+            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start, tween(100)) },
+            exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End, tween(100)) }
+        ) {
             MerchantView(
                 navController, paddingValues, contentInsets
             )
         }
-        composable<WorldScreen.InventoryScreen> {
+        composable<WorldScreen.InventoryScreen>(
+            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start, tween(100)) },
+            exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End, tween(100)) }
+        ) {
             InventoryView(
                 navController, paddingValues, contentInsets
             )
         }
-        composable<WorldScreen.MiningScreen> {
+        composable<WorldScreen.MiningScreen>(
+            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start, tween(100)) },
+            exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End, tween(100)) }
+        ) {
             MiningView(
                 navController, paddingValues, contentInsets
             )
         }
-        composable<WorldScreen.HeroMakerScreen> {
+        composable<WorldScreen.HeroMakerScreen>(
+            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start, tween(100)) },
+            exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End, tween(100)) }
+        ) {
             HeroMakerView(
                 navController, paddingValues, contentInsets
             )
         }
-        composable<WorldScreen.ItemMakerScreen> {
+        composable<WorldScreen.ItemMakerScreen>(
+            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start, tween(100)) },
+            exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End, tween(100)) }
+        ) {
             ItemMakerView(
                 navController, paddingValues, contentInsets
             )

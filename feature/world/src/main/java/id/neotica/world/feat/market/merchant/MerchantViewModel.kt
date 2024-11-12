@@ -5,7 +5,8 @@ import androidx.lifecycle.viewModelScope
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.Games
 import id.neotica.domain.model.market.Hero
-import id.neotica.domain.model.market.HeroBackground
+import id.neotica.domain.model.market.Item
+import id.neotica.domain.model.market.ItemPrice
 import id.neotica.domain.model.market.OwnerInfo
 import id.neotica.domain.remote.AuraRepository
 import id.neotica.domain.remote.MerchantRepository
@@ -47,25 +48,17 @@ class MerchantViewModel(
         }
     }
 
-    fun addItem(heroInput: Hero) = viewModelScope.launch {
+    fun addHero(heroInput: Hero) = viewModelScope.launch {
         _merchant.value = ApiResult.Loading()
-        val dummyItem = Hero(
+        val actualItem = heroInput.copy(
             id = random,
-            name = heroInput.name,
-            price = heroInput.price,
-            power = heroInput.power,
             owner = OwnerInfo(
                 id = currentUserId(),
                 name = currentUsername()
             ),
-            background = HeroBackground(
-                story = heroInput.background?.story,
-                origin = heroInput.background?.origin,
-                pantheon = heroInput.background?.pantheon
-            ),
             imageUrl = merchantRepo.getHeroPicture("${heroInput.name}-$random")
         )
-        val send = merchantRepo.addHero(dummyItem)
+        val send = merchantRepo.addHero(actualItem)
         _merchant.value = send
     }
 
@@ -73,5 +66,22 @@ class MerchantViewModel(
         merchantRepo.uploadHeroPicture("$name-$random", uri).collect {
             _uploadState.value = it
         }
+    }
+
+    fun addItem(itemInput: Item) = viewModelScope.launch {
+        _merchant.value = ApiResult.Loading()
+        val dummyPrice = ItemPrice(
+            aura = 0,
+            coal = 100
+        )
+        val dummyItem = Item(
+            id = random,
+            name = itemInput.name,
+            price = dummyPrice,
+            power = itemInput.power,
+            imageUrl = merchantRepo.getHeroPicture("${itemInput.name}-$random")
+        )
+        val send = merchantRepo.addItem(dummyItem)
+        _merchant.value = send
     }
 }

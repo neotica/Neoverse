@@ -130,7 +130,7 @@ fun HeroMakerView(
                         ),
                         imageUrl = ""
                     )
-                    viewModel.addItem(heroInput)
+                    viewModel.addHero(heroInput)
                 }
                 is ApiResult.Error -> {
                     onClick = false

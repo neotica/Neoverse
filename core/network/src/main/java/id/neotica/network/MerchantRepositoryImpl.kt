@@ -6,6 +6,7 @@ import com.google.firebase.database.database
 import com.google.firebase.storage.FirebaseStorage
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.market.Hero
+import id.neotica.domain.model.market.Item
 import id.neotica.domain.remote.MerchantRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.InternalCoroutinesApi
@@ -51,5 +52,13 @@ class MerchantRepositoryImpl: MerchantRepository {
                 cont.tryResumeWithException(exc)
             }
         }
+    }
+
+    override suspend fun addItem(item: Item): ApiResult<String> {
+        val reference = firebase.getReference("market").child("items").child(item.id).setValue(item)
+        reference.await()
+        return if (reference.isSuccessful) {
+            ApiResult.Success( "Is successful")
+        } else ApiResult.Error("Error")
     }
 }

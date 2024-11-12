@@ -202,7 +202,11 @@ class MainActivity: ComponentActivity() {
                                 }
                             }
                         ) {
-                            NavGraph(navController = navController, paddingValues = PaddingValues(), contentInsets = it)
+                            NavGraph(
+                                navController = navController,
+                                paddingValues = PaddingValues(),
+                                contentInsets = it
+                            )
                         }
                     }
                 }

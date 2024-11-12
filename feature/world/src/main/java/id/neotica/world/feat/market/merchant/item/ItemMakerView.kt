@@ -21,8 +21,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.Games
-import id.neotica.domain.model.market.Hero
-import id.neotica.domain.model.market.HeroBackground
+import id.neotica.domain.model.market.Item
+import id.neotica.domain.model.market.ItemPrice
 import id.neotica.droidcore.component.textfield.NeoTextField
 import id.neotica.droidcore.component.textfield.NumberField
 import id.neotica.ui.components.BasicScaffold
@@ -45,9 +45,6 @@ fun ItemMakerView(
     val power = remember { mutableIntStateOf(0) }
     val auraPrice = remember { mutableIntStateOf(0) }
     val coalPrice = remember { mutableIntStateOf(0) }
-    val story = remember { mutableStateOf("") }
-    val origin = remember { mutableStateOf("") }
-    val pantheon = remember { mutableStateOf("") }
 
     var isLoading by remember { mutableStateOf(false) }
     var uploadLoading by remember { mutableStateOf(false) }
@@ -120,14 +117,12 @@ fun ItemMakerView(
                     onClick = false
                     uploadLoading = false
                     Toast.makeText(context, result.data, Toast.LENGTH_SHORT).show()
-                    val heroInput = Hero(
+                    val heroInput = Item(
                         name = name.value,
                         power = power.intValue,
-                        price = auraPrice.intValue,
-                        background = HeroBackground(
-                            story = story.value,
-                            origin = origin.value,
-                            pantheon = pantheon.value,
+                        price = ItemPrice(
+                            aura = auraPrice.intValue,
+                            coal = coalPrice.intValue
                         ),
                         imageUrl = ""
                     )
@@ -157,12 +152,8 @@ fun ItemMakerView(
                 NumberField(power, label = "Power")
                 NumberField(auraPrice, label = "Aura Price")
                 NumberField(coalPrice, label = "Coal Price")
-                Text("Origin")
-                NeoTextField(story, label = "Hero Story")
-                NeoTextField(origin, label = "Hero Origin")
-                NeoTextField(pantheon, label = "Hero Pantheon")
 
-                val enabledState = name.value.isNotEmpty() && power.intValue != 0 && auraPrice.intValue != 0
+                val enabledState = name.value.isNotEmpty() && power.intValue != 0 //&& auraPrice.intValue != 0
 
                 NeoButton("Add Item", enabled = enabledState) {
                     launchPhotoPicker()

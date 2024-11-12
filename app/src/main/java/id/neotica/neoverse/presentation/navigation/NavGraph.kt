@@ -1,5 +1,10 @@
 package id.neotica.neoverse.presentation.navigation
 
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.runtime.Composable
@@ -17,9 +22,16 @@ import id.neotica.world.worldNavGraph
 fun NavGraph(
     navController: NavHostController,
     paddingValues: PaddingValues,
-    contentInsets: WindowInsets
+    contentInsets: WindowInsets,
 ) {
-    NavHost(navController, startDestination = Screen.Splash) {
+    NavHost(
+        navController,
+        startDestination = Screen.Splash,
+        enterTransition = { fadeIn(tween(100)) },
+        popEnterTransition = { EnterTransition.None },
+        exitTransition = { fadeOut(tween(100)) },
+        popExitTransition = { ExitTransition.None }
+    ) {
         composable<Screen.Splash> { SplashView(navController = navController) }
         composable<Screen.Setting> { SettingView(paddingValues) }
         composable<Screen.ChatFromHome> { ChatFromHomeView(paddingValues = paddingValues) }
