@@ -51,7 +51,6 @@ fun WorldView(
     LaunchedEffect(onClick) {
 
         viewModel.totalAuras.collect { result ->
-
             when(result) {
                 is ApiResult.Loading -> {
                     auraInit = false
@@ -113,6 +112,10 @@ fun WorldView(
             Spacer(Modifier.padding(4.dp))
             NeoButton("To Merchant") {
                 navController.navigate(WorldScreen.MerchantScreen)
+            }
+            Spacer(Modifier.padding(4.dp))
+            NeoButton("To Mining Field") {
+                navController.navigate(WorldScreen.MiningScreen)
             }
 
         } else {

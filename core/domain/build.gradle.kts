@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
+    id("de.mannodermaus.android-junit5") version "1.11.2.0"
 }
 
 android {
@@ -42,7 +43,8 @@ android {
 dependencies {
     implementation(project(":core:data"))
 
-    testImplementation(libs.junit)
+    testImplementation(libs.junit.jupiter)
+    testImplementation(libs.mockito.core)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 }

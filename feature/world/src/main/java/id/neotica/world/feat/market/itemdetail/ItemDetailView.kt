@@ -112,8 +112,13 @@ fun ItemDetailView(
         }
     }
 
+    val scaffoldTitle = when(viewModel.screenState()) {
+        ScreenState.UserInventory.toString() -> "Inventory"
+        else -> "Market"
+    }
+
     BasicScaffold(
-        topBarTitle = "Market",
+        topBarTitle = scaffoldTitle,
         horizontalAlignment = Alignment.CenterHorizontally,
         navController = navController,
         enableActionBar = true

@@ -6,7 +6,7 @@ import id.neotica.domain.ApiResult
 import id.neotica.domain.model.Games
 import id.neotica.domain.model.market.Hero
 import id.neotica.domain.remote.AuraRepository
-import id.neotica.domain.remote.MarketRepository
+import id.neotica.domain.remote.InventoryRepository
 import id.neotica.domain.usecase.GetUserIdUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 
 class InventoryViewModel(
     private val auraRepo: AuraRepository,
-    private val marketRepo: MarketRepository,
+    private val inventoryRepo: InventoryRepository,
     private val getUserIdUseCase: GetUserIdUseCase,
 ): ViewModel() {
     private val _totalAuras: MutableStateFlow<ApiResult<Games?>> = MutableStateFlow(ApiResult.Loading())
@@ -30,13 +30,14 @@ class InventoryViewModel(
         fetchItem()
     }
 
-    fun fetchAuras() = viewModelScope.launch {
-        val auraFromRepo = auraRepo.getAuras(getUserIdUseCase.invoke())
-        _totalAuras.value = auraFromRepo
+    private fun fetchAuras() = viewModelScope.launch {
+        auraRepo.getAuras(currentUserId()).collect {
+            _totalAuras.value = it
+        }
     }
 
     fun fetchItem() = viewModelScope.launch {
-        marketRepo.getUserHeroes(currentUserId()).collect {
+        inventoryRepo.getHeroes(currentUserId()).collect {
             _hero.value = it
         }
     }

@@ -1,6 +1,5 @@
 package id.neotica.world.feat.market
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -92,7 +91,6 @@ fun MarketView(
             when(result) {
                 is ApiResult.Loading -> {}
                 is ApiResult.Success -> {
-                    Log.d("marketdata", result.data.toString())
                     result.data?.let {
                         marketItems = it
                     }
@@ -132,11 +130,8 @@ fun MarketView(
                     currentPageState = currentPage
                 ) { item ->
                     val state = if (viewModel.currentUserId() == item.owner.id) ScreenState.User.toString() else ScreenState.Global.toString()
-                    Log.d("state", state)
-                    Log.d("stateid", "${item.owner.id} current: ${viewModel.currentUserId()}")
                     Card(
                         Modifier.clickable {
-                            Log.d("state clicked", state)
                             navController.navigate(WorldScreen.ItemDetailScreen(id = item.id, state))
                         }
                     ) {

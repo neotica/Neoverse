@@ -24,8 +24,9 @@ class WorldViewModel(
     }
 
     fun fetchAuras() = viewModelScope.launch {
-        val auraFromRepo = gameRepo.getAuras(currentUserId())
-        _totalAuras.value = auraFromRepo
+        gameRepo.getAuras(currentUserId()).collect {
+            _totalAuras.value = it
+        }
     }
 
     fun sendInitialAura(aura: Int) = viewModelScope.launch {

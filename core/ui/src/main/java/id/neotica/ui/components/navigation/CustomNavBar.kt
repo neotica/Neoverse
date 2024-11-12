@@ -1,4 +1,4 @@
-package id.neotica.ui.components
+package id.neotica.ui.components.navigation
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
@@ -43,7 +43,8 @@ fun CustomNavBar(
                 .fillMaxWidth()
                 .selectableGroup(),
             verticalAlignment = Alignment.CenterVertically,
-            content = content
-        )
+        ) {
+            content()
+        }
     }
 }

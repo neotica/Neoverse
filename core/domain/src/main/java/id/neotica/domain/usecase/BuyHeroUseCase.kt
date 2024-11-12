@@ -12,15 +12,17 @@ class BuyHeroUseCase(
     private val getUserIdUseCase: GetUserIdUseCase,
     private val getUserNameUseCase: GetUserNameUseCase,
 ) {
+    suspend operator fun invoke(hero: Hero) = main(hero)
+
     private fun currentUserId(): String = getUserIdUseCase.invoke()
     private fun currentUsername(): String = getUserNameUseCase.invoke()
 
-    suspend fun main(heroParent: Hero) = withContext(Dispatchers.IO) {
+    private suspend fun main(heroParent: Hero) = withContext(Dispatchers.IO) {
         val aura = heroParent.price
 
         marketRepository.getHero(heroParent.id).collect { hero ->
-            auraRepo.getAurasFlow(currentUserId()).collect { currentUserAura ->
-                auraRepo.getAurasFlow(hero.data?.owner?.id.toString()).collect { sellerAura ->
+            auraRepo.getAuras(currentUserId()).collect { currentUserAura ->
+                auraRepo.getAuras(hero.data?.owner?.id.toString()).collect { sellerAura ->
                     auraRepo.getBankAura(currentUserId()).collect { bankAura ->
                         val heroValue = heroParent.copy(
                             owner = heroParent.owner.copy(

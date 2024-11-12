@@ -19,6 +19,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -38,19 +39,21 @@ import java.security.SecureRandom
 fun SlotMachine(modifier: Modifier = Modifier, viewModel: GameViewModel = koinViewModel()) {
     Column(Modifier.padding(20.dp)) {
         val randomNum = viewModel.randomNum.collectAsState()
+        val randomNum2 = viewModel.randomNum2.collectAsState()
+        val randomNum3 = viewModel.randomNum3.collectAsState()
         val randomStrings = remember {
             mutableStateListOf(
                 randomNum.value,
-                randomNum.value,
-                randomNum.value
+                randomNum2.value,
+                randomNum3.value
             )
         }
 
-        var onClick by remember { mutableStateOf(false) }
-        var delayedClick by remember { mutableStateOf(true) }
-        var stopEnabled by remember { mutableStateOf(true) }
+        var onClick by rememberSaveable { mutableStateOf(false) }
+        var delayedClick by rememberSaveable { mutableStateOf(true) }
+        var stopEnabled by rememberSaveable { mutableStateOf(true) }
 
-        var giveAura by remember { mutableStateOf(false) }
+        var giveAura by rememberSaveable { mutableStateOf(false) }
 
         val numbComb = "${randomStrings[0]}${randomStrings[1]}${randomStrings[2]}"
 

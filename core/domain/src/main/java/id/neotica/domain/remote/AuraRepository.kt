@@ -6,8 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface AuraRepository {
     suspend fun postAuras(aura: Int, userId: String)
-    suspend fun getAuras(userId: String): ApiResult<Games?>
-    suspend fun getAurasFlow(userId: String): Flow<ApiResult<Games?>>
+    suspend fun getAuras(userId: String): Flow<ApiResult<Games?>>
     suspend fun postAurasToBank(aura: Int, userId: String)
     suspend fun getBankAura(userId: String): Flow<ApiResult<Games?>>
 }

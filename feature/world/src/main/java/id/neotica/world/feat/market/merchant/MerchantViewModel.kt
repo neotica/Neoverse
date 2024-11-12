@@ -8,8 +8,9 @@ import id.neotica.domain.model.market.Hero
 import id.neotica.domain.model.market.HeroBackground
 import id.neotica.domain.model.market.OwnerInfo
 import id.neotica.domain.remote.AuraRepository
-import id.neotica.domain.remote.MarketRepository
+import id.neotica.domain.remote.MerchantRepository
 import id.neotica.domain.usecase.GetUserIdUseCase
+import id.neotica.domain.usecase.GetUserNameUseCase
 import id.neotica.domain.utils.randomUUID
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -17,14 +18,12 @@ import kotlinx.coroutines.launch
 
 class MerchantViewModel(
     private val auraRepo: AuraRepository,
-    private val marketRepo: MarketRepository,
+    private val merchantRepo: MerchantRepository,
     private val getUserIdUseCase: GetUserIdUseCase,
+    private val getUserNameUseCase: GetUserNameUseCase
 ): ViewModel() {
     private val _totalAuras: MutableStateFlow<ApiResult<Games?>> = MutableStateFlow(ApiResult.Loading())
     val totalAuras = _totalAuras.asStateFlow()
-
-    private val _hero: MutableStateFlow<ApiResult<List<Hero>>> = MutableStateFlow(ApiResult.Loading())
-    val hero = _hero.asStateFlow()
 
     private val _merchant: MutableStateFlow<ApiResult<String>> = MutableStateFlow(ApiResult.Loading())
     val merchant = _merchant.asStateFlow()
@@ -34,22 +33,18 @@ class MerchantViewModel(
 
 
     private fun currentUserId(): String = getUserIdUseCase.invoke()
+    private fun currentUsername(): String = getUserNameUseCase.invoke()
 
     private val random = randomUUID()
 
     init {
         fetchAuras()
-        fetchItem()
     }
 
-    fun fetchAuras() = viewModelScope.launch {
-        val auraFromRepo = auraRepo.getAuras(getUserIdUseCase.invoke())
-        _totalAuras.value = auraFromRepo
-    }
-
-    fun sendAura(aura: Int) = viewModelScope.launch {
-        auraRepo.postAuras(aura, currentUserId())
-        fetchAuras()
+    private fun fetchAuras() = viewModelScope.launch {
+        auraRepo.getAuras(currentUserId()).collect {
+            _totalAuras.value = it
+        }
     }
 
     fun addItem(heroInput: Hero) = viewModelScope.launch {
@@ -61,28 +56,22 @@ class MerchantViewModel(
             power = heroInput.power,
             owner = OwnerInfo(
                 id = currentUserId(),
-                name = "laetuz"
+                name = currentUsername()
             ),
             background = HeroBackground(
                 story = heroInput.background?.story,
                 origin = heroInput.background?.origin,
                 pantheon = heroInput.background?.pantheon
             ),
-            imageUrl = marketRepo.getHeroPicture("${heroInput.name}-$random")
+            imageUrl = merchantRepo.getHeroPicture("${heroInput.name}-$random")
         )
-        val send = marketRepo.addItem(dummyItem)
+        val send = merchantRepo.addHero(dummyItem)
         _merchant.value = send
     }
 
     fun uploadHeroPic(name: String, uri: String) = viewModelScope.launch {
-        marketRepo.uploadHeroPicture("$name-$random", uri).collect {
+        merchantRepo.uploadHeroPicture("$name-$random", uri).collect {
             _uploadState.value = it
-        }
-    }
-
-    fun fetchItem() = viewModelScope.launch {
-        marketRepo.getItems().collect {
-            _hero.value = it
         }
     }
 }
