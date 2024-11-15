@@ -122,4 +122,15 @@ class MarketRepositoryImpl: MarketRepository {
             emit(ApiResult.Error("exception: ${e.message}"))
         }
     }
+
+    override suspend fun buyItem(item: Item, userId: String): ApiResult<String> {
+        val buyReference = firebase.getReference("userdata").child(userId)
+            .child("world")
+            .child("items")
+            .child(item.id).setValue(item)
+        buyReference.await()
+        return if (buyReference.isSuccessful) {
+            ApiResult.Success( "Is successful")
+        } else ApiResult.Error("Error")
+    }
 }

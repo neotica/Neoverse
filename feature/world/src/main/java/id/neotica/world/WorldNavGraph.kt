@@ -51,14 +51,14 @@ fun NavGraphBuilder.worldNavGraph(
         }
         composable<WorldScreen.MarketScreen>(
             enterTransition = { fadeIn(tween(100)) },
-            exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End, tween(100)) }
+            popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End, tween(100)) },
         ) {
             MarketView(
                 navController, paddingValues, contentInsets
             )
         }
         composable<WorldScreen.ItemDetailScreen>(
-            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start, tween(100)) },
+            enterTransition = { fadeIn(tween(100)) },
             exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End, tween(100)) }
         ) {
             ItemDetailView(

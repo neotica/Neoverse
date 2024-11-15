@@ -45,7 +45,7 @@ class InventoryRepositoryImpl: InventoryRepository {
         list.clear()
         try {
             val reference = firebase.getReference("userdata").child(userId)
-                .child("world").child("heroes").get().await()
+                .child("world").child("items").get().await()
             reference.children.forEach { data ->
                 Log.d("marketrepo", data.toString())
                 val cr = data.getValue(Item::class.java)

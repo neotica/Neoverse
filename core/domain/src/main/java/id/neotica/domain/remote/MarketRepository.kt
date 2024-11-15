@@ -13,4 +13,5 @@ interface MarketRepository {
     suspend fun pawnHero(hero: Hero, userId: String): ApiResult<String>
     suspend fun getItems(): Flow<ApiResult<List<Item>>>
     suspend fun getItem(id: String): Flow<ApiResult<Item>>
+    suspend fun buyItem(item: Item, userId: String): ApiResult<String>
 }

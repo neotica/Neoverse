@@ -11,6 +11,7 @@ import id.neotica.domain.model.market.Item
 import id.neotica.domain.remote.AuraRepository
 import id.neotica.domain.remote.MarketRepository
 import id.neotica.domain.usecase.BuyHeroUseCase
+import id.neotica.domain.usecase.BuyItemUseCase
 import id.neotica.domain.usecase.GetUserIdUseCase
 import id.neotica.domain.usecase.GetUserNameUseCase
 import id.neotica.ui.navigation.WorldScreen
@@ -27,6 +28,7 @@ class ItemDetailViewModel(
     private val getUserIdUseCase: GetUserIdUseCase,
     private val getUserNameUseCase: GetUserNameUseCase,
     private val buyHeroUseCase: BuyHeroUseCase,
+    private val buyItemUseCase: BuyItemUseCase,
     savedStateHandle: SavedStateHandle
 ): ViewModel() {
     private val _totalAuras: MutableStateFlow<ApiResult<Games?>> = MutableStateFlow(ApiResult.Loading())
@@ -97,6 +99,8 @@ class ItemDetailViewModel(
     }
 
     fun buy(hero: Hero) = CoroutineScope(Dispatchers.IO).launch { buyHeroUseCase.invoke(hero) }
+
+    fun buyItem(item: Item) = CoroutineScope(Dispatchers.IO).launch { buyItemUseCase.invoke(item) }
 
     fun pawn(aura: Int) = viewModelScope.launch {
         _hero.value.data?.let {

@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.Games
 import id.neotica.domain.model.market.Hero
+import id.neotica.domain.model.market.Item
 import id.neotica.domain.remote.AuraRepository
 import id.neotica.domain.remote.InventoryRepository
 import id.neotica.domain.usecase.GetUserIdUseCase
@@ -21,13 +22,17 @@ class InventoryViewModel(
     val totalAuras = _totalAuras.asStateFlow()
 
     private val _hero: MutableStateFlow<ApiResult<List<Hero>>> = MutableStateFlow(ApiResult.Loading())
-    val itemModel = _hero.asStateFlow()
+    val hero = _hero.asStateFlow()
+
+    private val _items: MutableStateFlow<ApiResult<List<Item>>> = MutableStateFlow(ApiResult.Loading())
+    val items = _items.asStateFlow()
 
     private fun currentUserId(): String = getUserIdUseCase.invoke()
 
     init {
         fetchAuras()
-        fetchItem()
+        fetchHeroes()
+        fetchItems()
     }
 
     private fun fetchAuras() = viewModelScope.launch {
@@ -36,9 +41,15 @@ class InventoryViewModel(
         }
     }
 
-    fun fetchItem() = viewModelScope.launch {
+    fun fetchHeroes() = viewModelScope.launch {
         inventoryRepo.getHeroes(currentUserId()).collect {
             _hero.value = it
+        }
+    }
+
+    fun fetchItems() = viewModelScope.launch {
+        inventoryRepo.getItems(currentUserId()).collect {
+            _items.value = it
         }
     }
 }

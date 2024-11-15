@@ -253,7 +253,9 @@ fun ItemDetailView(
                                     LaunchedEffect(onBuy) {
                                         if (onBuy) {
                                             onBuy = false
-                                            viewModel.buy(hero!!)
+                                            if (hero != null) {
+                                                viewModel.buy(hero!!)
+                                            } else if (item != null) viewModel.buyItem(item!!)
                                         }
                                     }
                                     NeoButton(
@@ -263,11 +265,9 @@ fun ItemDetailView(
                                             .fillMaxWidth(),
                                         enabled = hero?.price != null || item != null
                                     ) {
-                                        if (hero != null) {
+                                        if (hero != null || item != null) {
                                             onBuy = true
                                             navController.navigateUp()
-//                                            viewModel.testAura(hero!!)
-//                                            viewModel.buy(hero?.price!!)
                                         } else Toast.makeText(
                                             context,
                                             "there is no auras!",

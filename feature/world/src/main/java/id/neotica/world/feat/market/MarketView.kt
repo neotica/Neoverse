@@ -11,8 +11,9 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -40,6 +41,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
@@ -224,9 +226,9 @@ fun MarketView(
                                 contentColor = Color.White
                             )
                         ) {
-                            Column {
+                            Column(Modifier.width(144.dp)) {
                                 Box(
-                                    Modifier.size(124.dp)
+                                    Modifier.height(124.dp)
                                 ) {
                                     ImageCoil(
                                         item.imageUrl,
@@ -238,15 +240,23 @@ fun MarketView(
                                     )
                                 }
                                 Column(Modifier.padding(4.dp)) {
-                                    Text(item.name)
+                                    Text(
+                                        item.name,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis
+                                    )
                                     Text(
                                         "⚔${item.power}",
-                                        fontSize = FontSize.Small
+                                        fontSize = FontSize.Small,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis
                                     )
                                     Text(
                                         "卐${item.price}",
                                         fontWeight = FontWeight.Bold,
-                                        fontSize = FontSize.Normal
+                                        fontSize = FontSize.Normal,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis
                                     )
                                 }
                             }
@@ -260,7 +270,7 @@ fun MarketView(
                     Text(
                         "Items!",
                         fontWeight = FontWeight.Bold,
-                        fontSize = FontSize.Normal
+                        fontSize = FontSize.Normal,
                     )
                     Text(
                         text = "More Items.. >>>",
@@ -292,9 +302,9 @@ fun MarketView(
                                 contentColor = Color.White
                             )
                         ) {
-                            Column {
+                            Column(Modifier.width(144.dp)) {
                                 Box(
-                                    Modifier.size(124.dp)
+                                    Modifier.height(124.dp)
                                 ) {
                                     ImageCoil(
                                         item.imageUrl,
@@ -305,17 +315,40 @@ fun MarketView(
                                         modifier = Modifier.fillMaxWidth()
                                     )
                                 }
-                                Column(Modifier.padding(4.dp)) {
-                                    Text(item.name)
+                                Column(
+                                    Modifier
+                                        .padding(4.dp)
+                                ) {
+                                    Text(
+                                        item.name,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis
+
+                                    )
                                     Text(
                                         "⚔${item.power}",
-                                        fontSize = FontSize.Small
+                                        fontSize = FontSize.Small,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis
                                     )
-                                    Text(
-                                        "卐${item.price}",
-                                        fontWeight = FontWeight.Bold,
-                                        fontSize = FontSize.Normal
-                                    )
+                                    if (item.price.coal != 0) {
+                                        Text(
+                                            "\uD83E\uDEA8${item.price.coal}",
+                                            fontWeight = FontWeight.Bold,
+                                            fontSize = FontSize.Normal,
+                                            maxLines = 1,
+                                            overflow = TextOverflow.Ellipsis
+                                        )
+                                    }
+                                    if (item.price.aura != 0) {
+                                        Text(
+                                            "卐${item.price.aura}",
+                                            fontWeight = FontWeight.Bold,
+                                            fontSize = FontSize.Normal,
+                                            maxLines = 1,
+                                            overflow = TextOverflow.Ellipsis
+                                        )
+                                    }
                                 }
                             }
                         }
