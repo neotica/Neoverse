@@ -6,7 +6,7 @@ data class Item(
     val power: Int = 0,
     val imageUrl: String = "",
     val description: String = "",
-    val stock: String = "",
+    val stock: Int = 0,
     val price: ItemPrice = ItemPrice(),
     val createdAt: Long = System.currentTimeMillis()
 )

@@ -9,6 +9,7 @@ import id.neotica.domain.model.Games
 import id.neotica.domain.model.market.Hero
 import id.neotica.domain.model.market.Item
 import id.neotica.domain.remote.AuraRepository
+import id.neotica.domain.remote.InventoryRepository
 import id.neotica.domain.remote.MarketRepository
 import id.neotica.domain.usecase.BuyHeroUseCase
 import id.neotica.domain.usecase.BuyItemUseCase
@@ -25,6 +26,7 @@ import kotlinx.coroutines.launch
 class ItemDetailViewModel(
     private val auraRepo: AuraRepository,
     private val marketRepo: MarketRepository,
+    private val inventoryRepository: InventoryRepository,
     private val getUserIdUseCase: GetUserIdUseCase,
     private val getUserNameUseCase: GetUserNameUseCase,
     private val buyHeroUseCase: BuyHeroUseCase,
@@ -138,7 +140,7 @@ class ItemDetailViewModel(
     }
 
     private fun getDetailUser() = viewModelScope.launch {
-        marketRepo.getUserHero(args.id, currentUserId()).collect {
+        inventoryRepository.getHero(args.id, currentUserId()).collect {
             _hero.value = it
         }
     }

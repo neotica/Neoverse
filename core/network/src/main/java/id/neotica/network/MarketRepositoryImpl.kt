@@ -48,17 +48,6 @@ class MarketRepositoryImpl: MarketRepository {
         }
     }
 
-    override suspend fun getUserHero(heroId: String, userId: String): Flow<ApiResult<Hero>> = flow {
-        val reference = firebase.getReference("userdata").child(userId).child("world")
-            .child("heroes").child(heroId).get().await()
-        try {
-            val value = reference.getValue(Hero::class.java)
-            emit(ApiResult.Success(value!!))
-        } catch (e: NullPointerException) {
-            emit(ApiResult.Error("exception: ${e.message}"))
-        }
-    }
-
     override suspend fun buyHero(hero: Hero, userId: String): ApiResult<String> {
         val reference = firebase.getReference("market").child("heroes").child(hero.id).removeValue()
         reference.await()
