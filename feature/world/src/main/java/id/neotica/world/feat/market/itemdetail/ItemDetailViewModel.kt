@@ -54,19 +54,18 @@ class ItemDetailViewModel(
         fetchAuras()
         fetchBankAuras()
         when(screenState()) {
-            ScreenState.Global.toString() -> {
-                getDetail()
-                getItemDetail()
-            }
+            ScreenState.Global.toString() -> getDetail()
             ScreenState.UserInventory.toString() -> getDetailUser()
             ScreenState.User.toString() -> getDetail()
+            ScreenState.GlobalItem.toString() -> getItemDetail()
         }
     }
 
     fun screenState(): String = when (args.type) {
         ScreenState.Global.toString(),
         ScreenState.User.toString(),
-        ScreenState.UserInventory.toString() -> args.type
+        ScreenState.UserInventory.toString(),
+        ScreenState.GlobalItem.toString() -> args.type
         else -> ""
     }
 
@@ -107,7 +106,7 @@ class ItemDetailViewModel(
     fun pawn(aura: Int) = viewModelScope.launch {
         _hero.value.data?.let {
             val heroValue = it.copy(
-                price = aura,
+                price = aura.toLong(),
                 owner = it.owner.copy(
                     id = currentUserId(),
                     name = currentUsername()
@@ -115,7 +114,7 @@ class ItemDetailViewModel(
             )
             _bankAuras.value.data?.let { auraValue ->
                 val total = auraValue.aura.plus(aura)
-                auraRepo.postAurasToBank(total, currentUserId())
+                auraRepo.postAurasToBank(total.toInt(), currentUserId())
                 marketRepo.pawnHero(hero = heroValue, currentUserId())
             }
         }
@@ -132,7 +131,7 @@ class ItemDetailViewModel(
             )
             _bankAuras.value.data?.let { auraValue ->
                 val total = auraValue.aura.minus(aura)
-                auraRepo.postAurasToBank(total, currentUserId())
+                auraRepo.postAurasToBank(total.toInt(), currentUserId())
                 marketRepo.buyHero(hero = heroValue, currentUserId())
             }
         }

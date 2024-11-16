@@ -142,7 +142,6 @@ fun MarketView(
         enableActionBar = true,
         contentInset = contentInsets
     ) {
-        heroes .let {  }
         LazyColumn(contentPadding = PaddingValues(bottom = paddingValues.calculateBottomPadding())) {
             item {
                 val currentPage = rememberSaveable { mutableIntStateOf(0) }
@@ -284,7 +283,7 @@ fun MarketView(
                     state = rememberLazyListState()
                 ) {
                     items(items.take(8)) { item ->
-                        val state = ScreenState.Global.toString()
+                        val state = ScreenState.GlobalItem.toString()
                         Card(
                             Modifier
                                 .clickable {
@@ -364,7 +363,9 @@ fun MarketView(
                     val value = heroes[index]
                     val state = if (viewModel.currentUserId() == value.owner.id) ScreenState.User.toString() else ScreenState.Global.toString()
                     Card(
-                        Modifier.clickable { navController.navigate(WorldScreen.ItemDetailScreen(id = value.id, state)) },
+                        Modifier.clickable {
+                            navController.navigate(WorldScreen.ItemDetailScreen(id = value.id, state))
+                        },
                         colors = CardDefaults.cardColors().copy(
                             containerColor = DarkPrimaryCard,
                             contentColor = Color.White)

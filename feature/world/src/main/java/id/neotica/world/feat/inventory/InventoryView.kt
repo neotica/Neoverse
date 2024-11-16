@@ -137,7 +137,14 @@ fun InventoryView(
                     items(marketHeroes.take(8)) { heroItem ->
                         Card(
                             Modifier
-                                .clickable { navController.navigate(WorldScreen.ItemDetailScreen(id = heroItem.id, ScreenState.UserInventory.toString())) }
+                                .clickable {
+                                    navController.navigate(
+                                        WorldScreen.ItemDetailScreen(
+                                            id = heroItem.id,
+                                            ScreenState.UserInventory.toString(),
+                                        )
+                                    )
+                                }
                                 .wrapContentHeight()
                                 .padding(2.dp),
                             colors = CardDefaults.cardColors().copy(
@@ -182,7 +189,14 @@ fun InventoryView(
                     items(items.take(8)) { item ->
                         Card(
                             Modifier
-                                .clickable { navController.navigate(WorldScreen.ItemDetailScreen(id = item.id, ScreenState.UserInventory.toString())) }
+                                .clickable {
+                                    navController.navigate(
+                                        WorldScreen.ItemDetailScreen(
+                                            id = item.id,
+                                            ScreenState.UserInventory.toString(),
+                                        )
+                                    )
+                                }
                                 .wrapContentHeight()
                                 .padding(2.dp),
                             colors = CardDefaults.cardColors().copy(

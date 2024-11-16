@@ -9,4 +9,8 @@ sealed class ScreenState {
     data object Global: ScreenState()
     @Serializable
     data object UserInventory: ScreenState()
+    @Serializable
+    data object GlobalItem: ScreenState()
+    @Serializable
+    data object InventoryItem: ScreenState()
 }

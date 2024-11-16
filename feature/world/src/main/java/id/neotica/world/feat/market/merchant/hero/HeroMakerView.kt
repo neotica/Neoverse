@@ -122,7 +122,7 @@ fun HeroMakerView(
                     val heroInput = Hero(
                         name = name.value,
                         power = power.intValue,
-                        price = price.intValue,
+                        price = price.intValue.toLong(),
                         background = HeroBackground(
                             story = story.value,
                             origin = origin.value,

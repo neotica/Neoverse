@@ -15,5 +15,5 @@ data class Friends(
 )
 
 data class Games(
-    var aura: Int = 0
+    var aura: Long = 0
 )
