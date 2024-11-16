@@ -1,7 +1,6 @@
 package id.neotica.world.feat.market.merchant.item
 
 import android.net.Uri
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
@@ -13,7 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -42,10 +41,10 @@ fun ItemMakerView(
     var onClick by remember { mutableStateOf(false) }
 
     val name = remember { mutableStateOf("") }
-    val power = remember { mutableIntStateOf(0) }
+    val power = remember { mutableLongStateOf(0) }
     val description = remember { mutableStateOf("") }
-    val auraPrice = remember { mutableIntStateOf(0) }
-    val coalPrice = remember { mutableIntStateOf(0) }
+    val auraPrice = remember { mutableLongStateOf(0) }
+    val coalPrice = remember { mutableLongStateOf(0) }
 
     var isLoading by remember { mutableStateOf(false) }
     var uploadLoading by remember { mutableStateOf(false) }
@@ -72,8 +71,6 @@ fun ItemMakerView(
 
     LaunchedEffect(Unit) {
         viewModel.totalAuras.collect { result ->
-            Log.d("auraCurrent", currentAuras.toString())
-
             when(result) {
                 is ApiResult.Loading -> {}
                 is ApiResult.Success -> {
@@ -91,7 +88,6 @@ fun ItemMakerView(
                     isLoading = true
                 }
                 is ApiResult.Success -> {
-                    Log.d("marketdata", result.data.toString())
                     isLoading = false
                     result.data?.let {
                         sendResult = it
@@ -107,7 +103,6 @@ fun ItemMakerView(
 
     LaunchedEffect(onClick) {
         viewModel.uploadState.collect { result ->
-            Log.d("merhcant", result.toString())
             when(result) {
                 is ApiResult.Loading -> {
                     onClick = false
@@ -120,10 +115,10 @@ fun ItemMakerView(
                     Toast.makeText(context, result.data, Toast.LENGTH_SHORT).show()
                     val heroInput = Item(
                         name = name.value,
-                        power = power.intValue,
+                        power = power.longValue,
                         price = ItemPrice(
-                            aura = auraPrice.intValue,
-                            coal = coalPrice.intValue
+                            aura = auraPrice.longValue,
+                            coal = coalPrice.longValue
                         ),
                         description = description.value,
                         imageUrl = ""
@@ -155,7 +150,7 @@ fun ItemMakerView(
                 NumberField(auraPrice, label = "Aura Price")
                 NumberField(coalPrice, label = "Coal Price")
 
-                val enabledState = name.value.isNotEmpty() && power.intValue != 0 //&& auraPrice.intValue != 0
+                val enabledState = name.value.isNotEmpty() && power.longValue.toInt() != 0 //&& auraPrice.intValue != 0
 
                 NeoButton("Add Item", enabled = enabledState) {
                     launchPhotoPicker()

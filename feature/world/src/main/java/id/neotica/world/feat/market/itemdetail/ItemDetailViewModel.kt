@@ -103,10 +103,10 @@ class ItemDetailViewModel(
 
     fun buyItem(item: Item) = CoroutineScope(Dispatchers.IO).launch { buyItemUseCase.invoke(item) }
 
-    fun pawn(aura: Int) = viewModelScope.launch {
+    fun pawn(aura: Long) = viewModelScope.launch {
         _hero.value.data?.let {
             val heroValue = it.copy(
-                price = aura.toLong(),
+                price = aura,
                 owner = it.owner.copy(
                     id = currentUserId(),
                     name = currentUsername()

@@ -1,6 +1,5 @@
 package id.neotica.world.feat.inventory
 
-import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -81,7 +80,6 @@ fun InventoryView(
             when(result) {
                 is ApiResult.Loading -> {}
                 is ApiResult.Success -> {
-                    Log.d("marketdata", result.data.toString())
                     result.data?.let {
                         marketHeroes = it
                     }
@@ -97,7 +95,6 @@ fun InventoryView(
             when(result) {
                 is ApiResult.Loading -> {}
                 is ApiResult.Success -> {
-                    Log.d("marketdata", result.data.toString())
                     result.data?.let {
                         items = it
                     }
@@ -229,7 +226,7 @@ fun InventoryView(
                                         maxLines = 1,
                                         overflow = TextOverflow.Ellipsis
                                     )
-                                    if (item.price.coal != 0) {
+                                    if (item.price.coal.toInt() != 0) {
                                         Text(
                                             "\uD83E\uDEA8${item.price.coal}",
                                             fontWeight = FontWeight.Bold,
@@ -238,7 +235,7 @@ fun InventoryView(
                                             overflow = TextOverflow.Ellipsis
                                         )
                                     }
-                                    if (item.price.aura != 0) {
+                                    if (item.price.aura.toInt() != 0) {
                                         Text(
                                             "卐${item.price.aura}",
                                             fontWeight = FontWeight.Bold,

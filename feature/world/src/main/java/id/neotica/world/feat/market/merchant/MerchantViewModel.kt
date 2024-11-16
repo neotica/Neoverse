@@ -6,7 +6,6 @@ import id.neotica.domain.ApiResult
 import id.neotica.domain.model.Games
 import id.neotica.domain.model.market.Hero
 import id.neotica.domain.model.market.Item
-import id.neotica.domain.model.market.ItemPrice
 import id.neotica.domain.model.market.OwnerInfo
 import id.neotica.domain.remote.AuraRepository
 import id.neotica.domain.remote.MerchantRepository
@@ -72,10 +71,6 @@ class MerchantViewModel(
         _merchant.value = ApiResult.Loading()
         val actualItem = itemInput.copy(
             id = random,
-            price = ItemPrice(
-                aura = 0,
-                coal = 100
-            ),
             imageUrl = merchantRepo.getHeroPicture("${itemInput.name}-$random")
         )
         val send = merchantRepo.addItem(actualItem)

@@ -16,7 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -57,7 +57,7 @@ fun ItemDetailView(
     val context = LocalContext.current
 
     var openDialog by remember { mutableStateOf(false) }
-    val auraCustom = remember { mutableIntStateOf(0) }
+    val auraCustom = remember { mutableLongStateOf(0) }
 
     if (openDialog) {
         AlertDialogCustomDesc(
@@ -72,7 +72,7 @@ fun ItemDetailView(
             confirmButton = {
                 NeoButton("Okay") {
                     if (hero != null) {
-                        viewModel.pawn(auraCustom.intValue)
+                        viewModel.pawn(auraCustom.longValue)
                         navController.navigateUp()
                         navController.navigateUp()
                     } else Toast.makeText(

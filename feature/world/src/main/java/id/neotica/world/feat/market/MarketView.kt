@@ -330,7 +330,7 @@ fun MarketView(
                                         maxLines = 1,
                                         overflow = TextOverflow.Ellipsis
                                     )
-                                    if (item.price.coal != 0) {
+                                    if (item.price.coal.toInt() != 0) {
                                         Text(
                                             "\uD83E\uDEA8${item.price.coal}",
                                             fontWeight = FontWeight.Bold,
@@ -339,7 +339,7 @@ fun MarketView(
                                             overflow = TextOverflow.Ellipsis
                                         )
                                     }
-                                    if (item.price.aura != 0) {
+                                    if (item.price.aura.toInt() != 0) {
                                         Text(
                                             "卐${item.price.aura}",
                                             fontWeight = FontWeight.Bold,
