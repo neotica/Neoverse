@@ -54,10 +54,11 @@ class ItemDetailViewModel(
         fetchAuras()
         fetchBankAuras()
         when(screenState()) {
-            ScreenState.Global.toString() -> getDetail()
+            ScreenState.Global.toString(),
+            ScreenState.User.toString() -> getHeroDetail()
             ScreenState.UserInventory.toString() -> getDetailUser()
-            ScreenState.User.toString() -> getDetail()
-            ScreenState.GlobalItem.toString() -> getItemDetail()
+            ScreenState.GlobalItem.toString(),
+            ScreenState.InventoryItem.toString() -> getItemDetail()
         }
     }
 
@@ -65,7 +66,8 @@ class ItemDetailViewModel(
         ScreenState.Global.toString(),
         ScreenState.User.toString(),
         ScreenState.UserInventory.toString(),
-        ScreenState.GlobalItem.toString() -> args.type
+        ScreenState.GlobalItem.toString(),
+        ScreenState.InventoryItem.toString() -> args.type
         else -> ""
     }
 
@@ -87,7 +89,7 @@ class ItemDetailViewModel(
         }
     }
 
-    private fun getDetail() = viewModelScope.launch {
+    private fun getHeroDetail() = viewModelScope.launch {
         marketRepo.getHero(args.id).collect {
             _hero.value = it
         }

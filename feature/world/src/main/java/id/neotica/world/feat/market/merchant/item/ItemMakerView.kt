@@ -63,7 +63,7 @@ fun ItemMakerView(
                 val compressedImageUri = compressUri(uri, context)
                 selectedImages = listOf(compressedImageUri)
                 uriCurrent = compressedImageUri.toString()
-                viewModel.uploadHeroPic(name.value, compressedImageUri.toString())
+                viewModel.uploadItemPic(name.value, compressedImageUri.toString())
                 onClick = true
             }
         }

@@ -55,14 +55,14 @@ class MerchantViewModel(
                 id = currentUserId(),
                 name = currentUsername()
             ),
-            imageUrl = merchantRepo.getHeroPicture("${heroInput.name}-$random")
+            imageUrl = merchantRepo.getPicture("heroPicture/${heroInput.name}-$random")
         )
         val send = merchantRepo.addHero(actualItem)
         _merchant.value = send
     }
 
     fun uploadHeroPic(name: String, uri: String) = viewModelScope.launch {
-        merchantRepo.uploadHeroPicture("$name-$random", uri).collect {
+        merchantRepo.uploadPicture("heroPicture/$name-$random", uri).collect {
             _uploadState.value = it
         }
     }
@@ -71,9 +71,15 @@ class MerchantViewModel(
         _merchant.value = ApiResult.Loading()
         val actualItem = itemInput.copy(
             id = random,
-            imageUrl = merchantRepo.getHeroPicture("${itemInput.name}-$random")
+            imageUrl = merchantRepo.getPicture("itemPicture/${itemInput.name}-$random")
         )
         val send = merchantRepo.addItem(actualItem)
         _merchant.value = send
+    }
+
+    fun uploadItemPic(name: String, uri: String) = viewModelScope.launch {
+        merchantRepo.uploadPicture("itemPicture/$name-$random", uri).collect {
+            _uploadState.value = it
+        }
     }
 }

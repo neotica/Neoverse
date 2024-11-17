@@ -190,7 +190,7 @@ fun InventoryView(
                                     navController.navigate(
                                         WorldScreen.ItemDetailScreen(
                                             id = item.id,
-                                            ScreenState.UserInventory.toString(),
+                                            ScreenState.InventoryItem.toString(),
                                         )
                                     )
                                 }

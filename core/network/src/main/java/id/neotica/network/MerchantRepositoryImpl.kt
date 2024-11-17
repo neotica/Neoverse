@@ -29,10 +29,10 @@ class MerchantRepositoryImpl: MerchantRepository {
         } else ApiResult.Error("Error")
     }
 
-    override suspend fun uploadHeroPicture(heroId: String, uri: String): Flow<ApiResult<String>> = flow {
+    override suspend fun uploadPicture(id: String, uri: String): Flow<ApiResult<String>> = flow {
         emit(ApiResult.Loading())
         val storageRef = FirebaseStorage.getInstance().reference
-        val upload = storageRef.child("heroPicture/${heroId}").putFile(uri.toUri())
+        val upload = storageRef.child(id).putFile(uri.toUri())
         upload.await()
         if (upload.isSuccessful) {
             emit(ApiResult.Success("Success"))
@@ -41,9 +41,9 @@ class MerchantRepositoryImpl: MerchantRepository {
     }
 
     @OptIn(InternalCoroutinesApi::class)
-    override suspend fun getHeroPicture(id: String): String = withContext(Dispatchers.IO) {
+    override suspend fun getPicture(id: String): String = withContext(Dispatchers.IO) {
         val storageRef = FirebaseStorage.getInstance().reference
-            .child("heroPicture/${id}")
+            .child(id)
 
         suspendCancellableCoroutine { cont ->
             storageRef.downloadUrl.addOnSuccessListener { uri ->
