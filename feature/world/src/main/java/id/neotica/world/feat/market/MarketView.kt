@@ -1,5 +1,6 @@
 package id.neotica.world.feat.market
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -10,8 +11,9 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -39,6 +41,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
@@ -47,6 +50,7 @@ import androidx.navigation.NavController
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.Games
 import id.neotica.domain.model.market.Hero
+import id.neotica.domain.model.market.Item
 import id.neotica.droidcore.component.carousel.CarouselCard
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.ImageCoil
@@ -68,9 +72,9 @@ fun MarketView(
 ) {
     var currentAuras by remember { mutableStateOf<Games?>(null) }
     val onClick by remember { mutableStateOf(false) }
-    var marketItems by remember { mutableStateOf<List<Hero>>(emptyList()) }
-    val carouselState = CarouselState(itemCount = { marketItems.count() })
-    val lazyState = rememberLazyListState()
+    var heroes by remember { mutableStateOf<List<Hero>>(emptyList()) }
+    var items by remember { mutableStateOf<List<Item>>(emptyList()) }
+    val carouselState = CarouselState(itemCount = { heroes.count() })
     val lifecycleOwner = LocalLifecycleOwner.current
 
     LaunchedEffect(onClick) {
@@ -86,13 +90,30 @@ fun MarketView(
     }
 
     LaunchedEffect(Unit) {
-        viewModel.itemModel.collect { result ->
+        viewModel.hero.collect { result ->
 
             when(result) {
                 is ApiResult.Loading -> {}
                 is ApiResult.Success -> {
                     result.data?.let {
-                        marketItems = it
+                        heroes = it
+                    }
+
+                }
+                is ApiResult.Error -> {}
+            }
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.item.collect { result ->
+            Log.d("market item", result.toString())
+
+            when(result) {
+                is ApiResult.Loading -> {}
+                is ApiResult.Success -> {
+                    result.data?.let {
+                        items = it
                     }
 
                 }
@@ -104,7 +125,8 @@ fun MarketView(
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_RESUME) {
-                viewModel.fetchItem()
+                viewModel.fetchHeroes()
+                viewModel.fetchItems()
             }
         }
         lifecycleOwner.lifecycle.addObserver(observer)
@@ -120,12 +142,11 @@ fun MarketView(
         enableActionBar = true,
         contentInset = contentInsets
     ) {
-        marketItems .let {  }
         LazyColumn(contentPadding = PaddingValues(bottom = paddingValues.calculateBottomPadding())) {
             item {
                 val currentPage = rememberSaveable { mutableIntStateOf(0) }
                 CarouselCard(
-                    list = marketItems.take(5),
+                    list = heroes.take(5),
                     /*.filter { it.power > 1000 }.take(5).sortedByDescending { it.power },*/
                     currentPageState = currentPage
                 ) { item ->
@@ -183,9 +204,9 @@ fun MarketView(
                 }
                 LazyRow(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    state = lazyState
+                    state = rememberLazyListState()
                 ) {
-                    items(marketItems.take(8)) { item ->
+                    items(heroes.take(8)) { item ->
                         val state = if (viewModel.currentUserId() == item.owner.id) ScreenState.User.toString() else ScreenState.Global.toString()
                         Card(
                             Modifier
@@ -204,9 +225,9 @@ fun MarketView(
                                 contentColor = Color.White
                             )
                         ) {
-                            Column {
+                            Column(Modifier.width(144.dp)) {
                                 Box(
-                                    Modifier.size(124.dp)
+                                    Modifier.height(124.dp)
                                 ) {
                                     ImageCoil(
                                         item.imageUrl,
@@ -218,16 +239,115 @@ fun MarketView(
                                     )
                                 }
                                 Column(Modifier.padding(4.dp)) {
-                                    Text(item.name)
+                                    Text(
+                                        item.name,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis
+                                    )
                                     Text(
                                         "⚔${item.power}",
-                                        fontSize = FontSize.Small
+                                        fontSize = FontSize.Small,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis
                                     )
                                     Text(
                                         "卐${item.price}",
                                         fontWeight = FontWeight.Bold,
-                                        fontSize = FontSize.Normal
+                                        fontSize = FontSize.Normal,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis
                                     )
+                                }
+                            }
+                        }
+                    }
+                }
+                Row(
+                    Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        "Items!",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = FontSize.Normal,
+                    )
+                    Text(
+                        text = "More Items.. >>>",
+                        modifier = Modifier.clickable {  },
+                        fontWeight = FontWeight.Bold,
+                        fontSize = FontSize.Normal
+                    )
+                }
+                LazyRow(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    state = rememberLazyListState()
+                ) {
+                    items(items.take(8)) { item ->
+                        val state = ScreenState.GlobalItem.toString()
+                        Card(
+                            Modifier
+                                .clickable {
+                                    navController.navigate(
+                                        WorldScreen.ItemDetailScreen(
+                                            id = item.id,
+                                            state
+                                        )
+                                    )
+                                }
+                                .wrapContentHeight()
+                                .padding(2.dp),
+                            colors = CardDefaults.cardColors().copy(
+                                containerColor = DarkPrimaryTransparent2,
+                                contentColor = Color.White
+                            )
+                        ) {
+                            Column(Modifier.width(144.dp)) {
+                                Box(
+                                    Modifier.height(124.dp)
+                                ) {
+                                    ImageCoil(
+                                        item.imageUrl,
+                                        scaleCustom = true,
+                                        contentScale = ContentScale.Crop,
+                                        fillMaxWidth = true,
+                                        customModifier = true,
+                                        modifier = Modifier.fillMaxWidth()
+                                    )
+                                }
+                                Column(
+                                    Modifier
+                                        .padding(4.dp)
+                                ) {
+                                    Text(
+                                        item.name,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis
+
+                                    )
+                                    Text(
+                                        "⚔${item.power}",
+                                        fontSize = FontSize.Small,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis
+                                    )
+                                    if (item.price.coal.toInt() != 0) {
+                                        Text(
+                                            "\uD83E\uDEA8${item.price.coal}",
+                                            fontWeight = FontWeight.Bold,
+                                            fontSize = FontSize.Normal,
+                                            maxLines = 1,
+                                            overflow = TextOverflow.Ellipsis
+                                        )
+                                    }
+                                    if (item.price.aura.toInt() != 0) {
+                                        Text(
+                                            "卐${item.price.aura}",
+                                            fontWeight = FontWeight.Bold,
+                                            fontSize = FontSize.Normal,
+                                            maxLines = 1,
+                                            overflow = TextOverflow.Ellipsis
+                                        )
+                                    }
                                 }
                             }
                         }
@@ -240,10 +360,12 @@ fun MarketView(
                     itemSpacing = 12.dp,
                     flingBehavior = CarouselDefaults.singleAdvanceFlingBehavior(carouselState),
                 ) { index ->
-                    val value = marketItems[index]
+                    val value = heroes[index]
                     val state = if (viewModel.currentUserId() == value.owner.id) ScreenState.User.toString() else ScreenState.Global.toString()
                     Card(
-                        Modifier.clickable { navController.navigate(WorldScreen.ItemDetailScreen(id = value.id, state)) },
+                        Modifier.clickable {
+                            navController.navigate(WorldScreen.ItemDetailScreen(id = value.id, state))
+                        },
                         colors = CardDefaults.cardColors().copy(
                             containerColor = DarkPrimaryCard,
                             contentColor = Color.White)

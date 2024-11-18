@@ -7,5 +7,6 @@ class FontSize {
         val Small = 14.sp
         val Normal = 16.sp
         val Medium = 18.sp
+        val Big = 22.sp
     }
 }

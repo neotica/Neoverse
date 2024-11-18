@@ -13,7 +13,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -42,8 +42,8 @@ fun HeroMakerView(
     var onClick by remember { mutableStateOf(false) }
 
     val name = remember { mutableStateOf("") }
-    val power = remember { mutableIntStateOf(0) }
-    val price = remember { mutableIntStateOf(0) }
+    val power = remember { mutableLongStateOf(0) }
+    val price = remember { mutableLongStateOf(0) }
     val story = remember { mutableStateOf("") }
     val origin = remember { mutableStateOf("") }
     val pantheon = remember { mutableStateOf("") }
@@ -121,8 +121,8 @@ fun HeroMakerView(
                     Toast.makeText(context, result.data, Toast.LENGTH_SHORT).show()
                     val heroInput = Hero(
                         name = name.value,
-                        power = power.intValue,
-                        price = price.intValue,
+                        power = power.longValue,
+                        price = price.longValue,
                         background = HeroBackground(
                             story = story.value,
                             origin = origin.value,
@@ -130,7 +130,7 @@ fun HeroMakerView(
                         ),
                         imageUrl = ""
                     )
-                    viewModel.addItem(heroInput)
+                    viewModel.addHero(heroInput)
                 }
                 is ApiResult.Error -> {
                     onClick = false
@@ -160,7 +160,7 @@ fun HeroMakerView(
                 NeoTextField(origin, label = "Hero Origin")
                 NeoTextField(pantheon, label = "Hero Pantheon")
 
-                val enabledState = name.value.isNotEmpty() && power.intValue != 0 && price.intValue != 0
+                val enabledState = name.value.isNotEmpty() && power.longValue.toInt() != 0 && price.longValue.toInt() != 0
 
                 NeoButton("Add Item", enabled = enabledState) {
                     launchPhotoPicker()

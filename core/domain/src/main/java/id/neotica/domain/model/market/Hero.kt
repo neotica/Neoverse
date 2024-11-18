@@ -3,8 +3,8 @@ package id.neotica.domain.model.market
 data class Hero (
     val id: String = "",
     val name: String = "",
-    val power: Int = 0,
-    val price: Int = 0,
+    val power: Long = 0,
+    val price: Long = 0,
     val owner: OwnerInfo = OwnerInfo(),
     val background: HeroBackground? = HeroBackground(),
     val imageUrl: String = "",

@@ -7,9 +7,12 @@ import androidx.navigation.toRoute
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.Games
 import id.neotica.domain.model.market.Hero
+import id.neotica.domain.model.market.Item
 import id.neotica.domain.remote.AuraRepository
+import id.neotica.domain.remote.InventoryRepository
 import id.neotica.domain.remote.MarketRepository
 import id.neotica.domain.usecase.BuyHeroUseCase
+import id.neotica.domain.usecase.BuyItemUseCase
 import id.neotica.domain.usecase.GetUserIdUseCase
 import id.neotica.domain.usecase.GetUserNameUseCase
 import id.neotica.ui.navigation.WorldScreen
@@ -23,9 +26,11 @@ import kotlinx.coroutines.launch
 class ItemDetailViewModel(
     private val auraRepo: AuraRepository,
     private val marketRepo: MarketRepository,
+    private val inventoryRepository: InventoryRepository,
     private val getUserIdUseCase: GetUserIdUseCase,
     private val getUserNameUseCase: GetUserNameUseCase,
     private val buyHeroUseCase: BuyHeroUseCase,
+    private val buyItemUseCase: BuyItemUseCase,
     savedStateHandle: SavedStateHandle
 ): ViewModel() {
     private val _totalAuras: MutableStateFlow<ApiResult<Games?>> = MutableStateFlow(ApiResult.Loading())
@@ -37,7 +42,10 @@ class ItemDetailViewModel(
     private val args = savedStateHandle.toRoute<WorldScreen.ItemDetailScreen>()
 
     private val _hero: MutableStateFlow<ApiResult<Hero>> = MutableStateFlow(ApiResult.Loading())
-    val itemModel = _hero.asStateFlow()
+    val hero = _hero.asStateFlow()
+
+    private val _item: MutableStateFlow<ApiResult<Item>> = MutableStateFlow(ApiResult.Loading())
+    val item = _item.asStateFlow()
 
     private fun currentUserId(): String = getUserIdUseCase.invoke()
     private fun currentUsername(): String = getUserNameUseCase.invoke()
@@ -46,16 +54,20 @@ class ItemDetailViewModel(
         fetchAuras()
         fetchBankAuras()
         when(screenState()) {
-            ScreenState.Global.toString() -> getDetail()
+            ScreenState.Global.toString(),
+            ScreenState.User.toString() -> getHeroDetail()
             ScreenState.UserInventory.toString() -> getDetailUser()
-            ScreenState.User.toString() -> getDetail()
+            ScreenState.GlobalItem.toString() -> getItemDetail()
+            ScreenState.InventoryItem.toString() -> getInventoryItemDetail()
         }
     }
 
     fun screenState(): String = when (args.type) {
         ScreenState.Global.toString(),
         ScreenState.User.toString(),
-        ScreenState.UserInventory.toString() -> args.type
+        ScreenState.UserInventory.toString(),
+        ScreenState.GlobalItem.toString(),
+        ScreenState.InventoryItem.toString() -> args.type
         else -> ""
     }
 
@@ -77,15 +89,29 @@ class ItemDetailViewModel(
         }
     }
 
-    private fun getDetail() = viewModelScope.launch {
+    private fun getHeroDetail() = viewModelScope.launch {
         marketRepo.getHero(args.id).collect {
             _hero.value = it
         }
     }
 
+    private fun getItemDetail() = viewModelScope.launch {
+        marketRepo.getItem(args.id).collect {
+            _item.value = it
+        }
+    }
+
+    private fun getInventoryItemDetail() = viewModelScope.launch {
+        inventoryRepository.getItem(currentUserId(), args.id).collect {
+            _item.value = it
+        }
+    }
+
     fun buy(hero: Hero) = CoroutineScope(Dispatchers.IO).launch { buyHeroUseCase.invoke(hero) }
 
-    fun pawn(aura: Int) = viewModelScope.launch {
+    fun buyItem(item: Item) = CoroutineScope(Dispatchers.IO).launch { buyItemUseCase.invoke(item) }
+
+    fun pawn(aura: Long) = viewModelScope.launch {
         _hero.value.data?.let {
             val heroValue = it.copy(
                 price = aura,
@@ -96,7 +122,7 @@ class ItemDetailViewModel(
             )
             _bankAuras.value.data?.let { auraValue ->
                 val total = auraValue.aura.plus(aura)
-                auraRepo.postAurasToBank(total, currentUserId())
+                auraRepo.postAurasToBank(total.toInt(), currentUserId())
                 marketRepo.pawnHero(hero = heroValue, currentUserId())
             }
         }
@@ -113,7 +139,7 @@ class ItemDetailViewModel(
             )
             _bankAuras.value.data?.let { auraValue ->
                 val total = auraValue.aura.minus(aura)
-                auraRepo.postAurasToBank(total, currentUserId())
+                auraRepo.postAurasToBank(total.toInt(), currentUserId())
                 marketRepo.buyHero(hero = heroValue, currentUserId())
             }
         }
@@ -121,7 +147,7 @@ class ItemDetailViewModel(
     }
 
     private fun getDetailUser() = viewModelScope.launch {
-        marketRepo.getUserHero(args.id, currentUserId()).collect {
+        inventoryRepository.getHero(args.id, currentUserId()).collect {
             _hero.value = it
         }
     }

@@ -24,7 +24,7 @@ class GetAuraUseCase(
         auraRepo.getAuras(currentUserId()).collect {
             it.data?.aura.let { auraVal ->
                 if (auraVal != null) {
-                    initAura.intValue = auraVal
+                    initAura.intValue = auraVal.toInt()
                 }
             }
         }

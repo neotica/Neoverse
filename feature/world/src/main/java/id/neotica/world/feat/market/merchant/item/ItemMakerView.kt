@@ -1,7 +1,6 @@
 package id.neotica.world.feat.market.merchant.item
 
 import android.net.Uri
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
@@ -13,7 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -21,8 +20,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.Games
-import id.neotica.domain.model.market.Hero
-import id.neotica.domain.model.market.HeroBackground
+import id.neotica.domain.model.market.Item
+import id.neotica.domain.model.market.ItemPrice
 import id.neotica.droidcore.component.textfield.NeoTextField
 import id.neotica.droidcore.component.textfield.NumberField
 import id.neotica.ui.components.BasicScaffold
@@ -42,12 +41,10 @@ fun ItemMakerView(
     var onClick by remember { mutableStateOf(false) }
 
     val name = remember { mutableStateOf("") }
-    val power = remember { mutableIntStateOf(0) }
-    val auraPrice = remember { mutableIntStateOf(0) }
-    val coalPrice = remember { mutableIntStateOf(0) }
-    val story = remember { mutableStateOf("") }
-    val origin = remember { mutableStateOf("") }
-    val pantheon = remember { mutableStateOf("") }
+    val power = remember { mutableLongStateOf(0) }
+    val description = remember { mutableStateOf("") }
+    val auraPrice = remember { mutableLongStateOf(0) }
+    val coalPrice = remember { mutableLongStateOf(0) }
 
     var isLoading by remember { mutableStateOf(false) }
     var uploadLoading by remember { mutableStateOf(false) }
@@ -66,7 +63,7 @@ fun ItemMakerView(
                 val compressedImageUri = compressUri(uri, context)
                 selectedImages = listOf(compressedImageUri)
                 uriCurrent = compressedImageUri.toString()
-                viewModel.uploadHeroPic(name.value, compressedImageUri.toString())
+                viewModel.uploadItemPic(name.value, compressedImageUri.toString())
                 onClick = true
             }
         }
@@ -74,8 +71,6 @@ fun ItemMakerView(
 
     LaunchedEffect(Unit) {
         viewModel.totalAuras.collect { result ->
-            Log.d("auraCurrent", currentAuras.toString())
-
             when(result) {
                 is ApiResult.Loading -> {}
                 is ApiResult.Success -> {
@@ -93,7 +88,6 @@ fun ItemMakerView(
                     isLoading = true
                 }
                 is ApiResult.Success -> {
-                    Log.d("marketdata", result.data.toString())
                     isLoading = false
                     result.data?.let {
                         sendResult = it
@@ -109,7 +103,6 @@ fun ItemMakerView(
 
     LaunchedEffect(onClick) {
         viewModel.uploadState.collect { result ->
-            Log.d("merhcant", result.toString())
             when(result) {
                 is ApiResult.Loading -> {
                     onClick = false
@@ -120,15 +113,14 @@ fun ItemMakerView(
                     onClick = false
                     uploadLoading = false
                     Toast.makeText(context, result.data, Toast.LENGTH_SHORT).show()
-                    val heroInput = Hero(
+                    val heroInput = Item(
                         name = name.value,
-                        power = power.intValue,
-                        price = auraPrice.intValue,
-                        background = HeroBackground(
-                            story = story.value,
-                            origin = origin.value,
-                            pantheon = pantheon.value,
+                        power = power.longValue,
+                        price = ItemPrice(
+                            aura = auraPrice.longValue,
+                            coal = coalPrice.longValue
                         ),
+                        description = description.value,
                         imageUrl = ""
                     )
                     viewModel.addItem(heroInput)
@@ -157,12 +149,8 @@ fun ItemMakerView(
                 NumberField(power, label = "Power")
                 NumberField(auraPrice, label = "Aura Price")
                 NumberField(coalPrice, label = "Coal Price")
-                Text("Origin")
-                NeoTextField(story, label = "Hero Story")
-                NeoTextField(origin, label = "Hero Origin")
-                NeoTextField(pantheon, label = "Hero Pantheon")
 
-                val enabledState = name.value.isNotEmpty() && power.intValue != 0 && auraPrice.intValue != 0
+                val enabledState = name.value.isNotEmpty() && power.longValue.toInt() != 0 //&& auraPrice.intValue != 0
 
                 NeoButton("Add Item", enabled = enabledState) {
                     launchPhotoPicker()

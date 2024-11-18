@@ -40,12 +40,23 @@ class InventoryRepositoryImpl: InventoryRepository {
         }
     }
 
+    override suspend fun getHero(heroId: String, userId: String): Flow<ApiResult<Hero>> = flow {
+        val reference = firebase.getReference("userdata").child(userId).child("world")
+            .child("heroes").child(heroId).get().await()
+        try {
+            val value = reference.getValue(Hero::class.java)
+            emit(ApiResult.Success(value!!))
+        } catch (e: NullPointerException) {
+            emit(ApiResult.Error("exception: ${e.message}"))
+        }
+    }
+
     override suspend fun getItems(userId: String): Flow<ApiResult<List<Item>>> = flow {
         val list = mutableListOf<Item>()
         list.clear()
         try {
             val reference = firebase.getReference("userdata").child(userId)
-                .child("world").child("heroes").get().await()
+                .child("world").child("items").get().await()
             reference.children.forEach { data ->
                 Log.d("marketrepo", data.toString())
                 val cr = data.getValue(Item::class.java)
@@ -62,6 +73,17 @@ class InventoryRepositoryImpl: InventoryRepository {
             }
         } catch (e: NullPointerException) {
             emit(ApiResult.Error("exception: ${e.message}"))
+        }
+    }
+
+    override suspend fun getItem(userId: String, itemId: String): Flow<ApiResult<Item>> = flow {
+        val ref = firebase.getReference("userdata")
+            .child(userId).child("world").child("items").child(itemId).get().await()
+        try {
+            val value = ref.getValue(Item::class.java)
+            emit(ApiResult.Success(value!!))
+        } catch (e: Exception) {
+            emit(ApiResult.Error(e.message))
         }
     }
 }

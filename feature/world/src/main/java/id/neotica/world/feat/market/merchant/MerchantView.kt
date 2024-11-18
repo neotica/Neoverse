@@ -44,5 +44,8 @@ fun MerchantView(
         NeoButton("To Hero Maker") {
             navController.navigate(WorldScreen.HeroMakerScreen)
         }
+        NeoButton("To Item Maker") {
+            navController.navigate(WorldScreen.ItemMakerScreen)
+        }
     }
 }

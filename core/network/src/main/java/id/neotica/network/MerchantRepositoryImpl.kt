@@ -6,6 +6,7 @@ import com.google.firebase.database.database
 import com.google.firebase.storage.FirebaseStorage
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.market.Hero
+import id.neotica.domain.model.market.Item
 import id.neotica.domain.remote.MerchantRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.InternalCoroutinesApi
@@ -28,10 +29,10 @@ class MerchantRepositoryImpl: MerchantRepository {
         } else ApiResult.Error("Error")
     }
 
-    override suspend fun uploadHeroPicture(heroId: String, uri: String): Flow<ApiResult<String>> = flow {
+    override suspend fun uploadPicture(id: String, uri: String): Flow<ApiResult<String>> = flow {
         emit(ApiResult.Loading())
         val storageRef = FirebaseStorage.getInstance().reference
-        val upload = storageRef.child("heroPicture/${heroId}").putFile(uri.toUri())
+        val upload = storageRef.child(id).putFile(uri.toUri())
         upload.await()
         if (upload.isSuccessful) {
             emit(ApiResult.Success("Success"))
@@ -40,9 +41,9 @@ class MerchantRepositoryImpl: MerchantRepository {
     }
 
     @OptIn(InternalCoroutinesApi::class)
-    override suspend fun getHeroPicture(id: String): String = withContext(Dispatchers.IO) {
+    override suspend fun getPicture(id: String): String = withContext(Dispatchers.IO) {
         val storageRef = FirebaseStorage.getInstance().reference
-            .child("heroPicture/${id}")
+            .child(id)
 
         suspendCancellableCoroutine { cont ->
             storageRef.downloadUrl.addOnSuccessListener { uri ->
@@ -51,5 +52,13 @@ class MerchantRepositoryImpl: MerchantRepository {
                 cont.tryResumeWithException(exc)
             }
         }
+    }
+
+    override suspend fun addItem(item: Item): ApiResult<String> {
+        val reference = firebase.getReference("market").child("items").child(item.id).setValue(item)
+        reference.await()
+        return if (reference.isSuccessful) {
+            ApiResult.Success( "Is successful")
+        } else ApiResult.Error("Error")
     }
 }
