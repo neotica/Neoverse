@@ -57,8 +57,8 @@ class ItemDetailViewModel(
             ScreenState.Global.toString(),
             ScreenState.User.toString() -> getHeroDetail()
             ScreenState.UserInventory.toString() -> getDetailUser()
-            ScreenState.GlobalItem.toString(),
-            ScreenState.InventoryItem.toString() -> getItemDetail()
+            ScreenState.GlobalItem.toString() -> getItemDetail()
+            ScreenState.InventoryItem.toString() -> getInventoryItemDetail()
         }
     }
 
@@ -97,6 +97,12 @@ class ItemDetailViewModel(
 
     private fun getItemDetail() = viewModelScope.launch {
         marketRepo.getItem(args.id).collect {
+            _item.value = it
+        }
+    }
+
+    private fun getInventoryItemDetail() = viewModelScope.launch {
+        inventoryRepository.getItem(currentUserId(), args.id).collect {
             _item.value = it
         }
     }

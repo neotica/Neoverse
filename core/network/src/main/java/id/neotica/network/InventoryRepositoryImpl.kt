@@ -76,7 +76,7 @@ class InventoryRepositoryImpl: InventoryRepository {
         }
     }
 
-    override suspend fun getItem(userId: String, itemId: String): Flow<ApiResult<Item?>> = flow {
+    override suspend fun getItem(userId: String, itemId: String): Flow<ApiResult<Item>> = flow {
         val ref = firebase.getReference("userdata")
             .child(userId).child("world").child("items").child(itemId).get().await()
         try {

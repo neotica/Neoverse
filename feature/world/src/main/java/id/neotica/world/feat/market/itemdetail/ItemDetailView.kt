@@ -1,14 +1,15 @@
 package id.neotica.world.feat.market.itemdetail
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -105,7 +106,6 @@ fun ItemDetailView(
     LaunchedEffect(Unit) {
         hero?.owner?.let { viewModel.fetchSellerAuras(it.id) }
         viewModel.hero.collect { result ->
-            Log.d("hero", result.toString())
             when(result) {
                 is ApiResult.Loading -> {}
                 is ApiResult.Success -> {
@@ -151,43 +151,55 @@ fun ItemDetailView(
                         horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
                         item {
-                            Text(
-                                it.name.capitalize(Locale.current),
-                                fontWeight = FontWeight.Bold,
-                                fontSize = FontSize.Medium
-                            )
-                            Box(
-                                modifier = Modifier.size(200.dp)
-                            ) {
-                                ImageCoil(
-                                    it.imageUrl,
-                                    scaleCustom = true,
-                                    contentScale = ContentScale.Inside,
-                                    fillMaxWidth = true,
-                                    customModifier = true,
-                                    modifier = Modifier.fillMaxWidth()
-                                )
+                            Box {
+                                Column() {
+                                    Box(
+                                        modifier = Modifier.height(200.dp)
+                                    ) {
+                                        ImageCoil(
+                                            it.imageUrl,
+                                            scaleCustom = true,
+                                            contentScale = ContentScale.FillWidth,
+                                            fillMaxWidth = true,
+                                            customModifier = true,
+                                            modifier = Modifier.fillMaxWidth()
+                                        )
+                                    }
+                                    Spacer(Modifier.padding(4.dp))
+                                    Text(
+                                        it.name.capitalize(Locale.current),
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = FontSize.Big
+                                    )
+                                    Spacer(Modifier.padding(4.dp))
+                                    Row(
+                                        Modifier.fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.SpaceEvenly
+                                    ) {
+                                        Text("⚔ ${it.power}")
+                                        Text("卐${it.price}")
+                                    }
+                                    Spacer(Modifier.padding(8.dp))
+
+                                    if (it.background?.origin != "") {
+                                        Spacer(Modifier.padding(8.dp))
+                                        Text("Origin: ${it.background?.origin}")
+                                    }
+                                    if (it.background?.story != "") Text("Story: ${it.background?.story}")
+                                    if (it.background?.pantheon != "")
+                                        Text("Pantheon: ${it.background?.pantheon}")
+                                    //white space here
+                                }
+                                Column() {
+
+                                    Text(
+                                    modifier = Modifier.weight(1f),
+                                        text =  "Owned by ${it.owner.name}"
+                                    )
+                                }
                             }
 
-                            Spacer(Modifier.padding(4.dp))
-                            Row(
-                                Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceEvenly
-                            ) {
-                                Text("⚔ ${it.power}")
-                                Text("卐${it.price}")
-                            }
-                            Spacer(Modifier.padding(8.dp))
-                            Text("Owned by ${it.owner.name}")
 
-                            if (it.background?.origin != "") {
-                                Spacer(Modifier.padding(8.dp))
-                                Text("Origin: ${it.background?.origin}")
-                            }
-                            if (it.background?.story != "") Text("Story: ${it.background?.story}")
-                            if (it.background?.pantheon != "")
-                                Text("Pantheon: ${it.background?.pantheon}")
-                            Spacer(Modifier.padding(8.dp))
                         }
                     }
                 }
@@ -216,7 +228,6 @@ fun ItemDetailView(
                                     modifier = Modifier.fillMaxWidth()
                                 )
                             }
-
                             Spacer(Modifier.padding(4.dp))
                             Row(
                                 Modifier.fillMaxWidth(),
@@ -226,6 +237,7 @@ fun ItemDetailView(
                                 Text("卐${it.price.aura}")
                                 Text("\uD83E\uDEA8${it.price.coal}")
                             }
+                            Text("Stock: ${it.stock}")
                             Spacer(Modifier.padding(8.dp))
                         }
                     }
@@ -241,14 +253,14 @@ fun ItemDetailView(
                                 .padding(4.dp),
                             horizontalArrangement = Arrangement.SpaceBetween,
                         ) {
-                            NeoButton(
+                           /* NeoButton(
                                 "Chat",
                                 modifier = Modifier
                                     .weight(1f)
                                     .fillMaxWidth(),
                                 enabled = false
                             )
-                            Spacer(Modifier.padding(4.dp))
+                            Spacer(Modifier.padding(4.dp))*/
                             when (viewModel.screenState()) {
                                 ScreenState.GlobalItem.toString() -> {
                                     var onBuy by remember { mutableStateOf(false) }
