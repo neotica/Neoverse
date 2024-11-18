@@ -22,21 +22,45 @@ jobs:
     runs-on: ubuntu-latest
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - name: Check out branch
-      - uses: actions/checkout@v3
-      - name: Setup Java
-        uses: actions/setup-java@v3
+      # Checkout repository
+      - uses: actions/checkout@v2
+
+      # Set up JDK (Java 17 recommended)
+      - uses: actions/setup-java@v1
         with:
-          distribution: 'temurin'
           java-version: 17
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v2.0.10
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
-        run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      # Build APK (release version)
+      - name: Build APK
+        run: ./gradlew assembleRelease
+
+      # Sign APK using Base64 encoded keystore
+      - uses: r0adkll/sign-android-release@v1
+        name: Sign app APK
+        id: sign_app
+        with:
+          releaseDirectory: |
+            app/build/outputs/apk/release
+          signingKeyBase64: ${{ secrets.KEYSTORE_BASE_62 }}
+          alias: ${{ secrets.RELEASE_KEYSTORE_ALIAS }}
+          keyStorePassword: ${{ secrets.RELEASE_KEY_STORE_PASSWORD }}
+          keyPassword: ${{ secrets.RELEASE_KEY_PASSWORD }}
+        env:
+          BUILD_TOOLS_VERSION: "34.0.0"
+
+      # Upload signed APK to Firebase App Distribution
+#      - name: Upload signed APK to Firebase App Distribution
+#        uses: wzieba/Firebase-Distribution-Github-Action@v1
+#        with:
+#          appId: ${{ secrets.FIREBASE_APP_ID }}
+#          serviceCredentialsFileContent: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
+#          groups: testers
+#          file: ${{steps.sign_app.outputs.signedReleaseFile}}
+#
+#      - uses: actions/upload-artifact@v4
+#        with:
+#          name: Signed app bundle
+#          path: ${{steps.sign_app.outputs.signedReleaseFile}}
