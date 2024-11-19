@@ -1,5 +1,3 @@
-import java.util.Properties
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
@@ -8,31 +6,9 @@ plugins {
     alias(libs.plugins.compose.compiler)
 }
 
-//val environment = System.getenv()
-//fun getLocalProperty(key: String) = gradleLocalProperties(rootDir).getProperty(key)
-//fun String.toFile() = File(this)
-
 android {
     namespace = "id.neotica.neoverse"
     compileSdk = 35
-
-    /*signingConfigs {
-        create("release") {
-            storeFile = File("../keystore.jks")
-            storePassword = System.getenv("RELEASE_KEYSTORE_PASSWORD")
-            keyAlias = System.getenv("RELEASE_KEYSTORE_ALIAS")
-            keyPassword = System.getenv("RELEASE_KEY_PASSWORD")
-       }
-        *//*create("release") {
-            val properties = Properties().apply {
-                load(File("app/signing.properties").reader())
-            }
-            storeFile = File(properties.getProperty("storeFilePath"))
-            storePassword = properties.getProperty("storePassword")
-            keyPassword = properties.getProperty("keyPassword")
-            keyAlias = "neoverse"
-        }*//*
-    }*/
 
     defaultConfig {
         applicationId = "id.neotica.neoverse"
@@ -63,7 +39,6 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-//            signingConfig = signingConfigs.getByName("release")
         }
     }
     compileOptions {
