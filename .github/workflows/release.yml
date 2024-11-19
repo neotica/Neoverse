@@ -50,7 +50,7 @@ jobs:
 
         run: |
             echo $ENCODED_STRING > neoverse-keystore.jks.base64.txt
-            base64 -d keystore-b64.txt > neoverse-keystore.jks
+            base64 -d neoverse-keystore.jks.base64.txt > neoverse-keystore.jks
 
       - name: Build Release apk
         env:
