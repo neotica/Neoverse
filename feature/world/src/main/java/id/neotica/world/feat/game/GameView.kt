@@ -100,7 +100,7 @@ fun GameView(
                 button = "Get Aura!"
             ) {
                 Toast.makeText(context, "Congratulations, you've got $random aura!", Toast.LENGTH_SHORT).show()
-                viewModel.sendInitialAura(random)
+                viewModel.sendInitialAura(random.toLong())
                 navController.navigate(WorldScreen.GameScreen) {
                     popUpTo(RootScreen.WorldNav) {
                         inclusive = true

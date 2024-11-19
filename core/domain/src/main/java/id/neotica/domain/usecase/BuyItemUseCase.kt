@@ -31,11 +31,11 @@ class BuyItemUseCase(
                         currentUserId().let {
                             if (itemQty != null) {
                                 val heroQty = heroValue.copy(stock = itemQty)
-                                auraRepo.postAuras(totalBuyer.toInt(), currentUserId())
+                                auraRepo.postAuras(totalBuyer, currentUserId())
                                 marketRepository.buyItem(heroQty, currentUserId())
                             } else {
                                 val heroQty = heroValue.copy(stock = 1)
-                                auraRepo.postAuras(totalBuyer.toInt(), currentUserId())
+                                auraRepo.postAuras(totalBuyer, currentUserId())
                                 marketRepository.buyItem(heroQty, currentUserId())
                             }
                         }

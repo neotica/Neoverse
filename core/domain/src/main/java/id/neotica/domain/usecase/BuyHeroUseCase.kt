@@ -37,9 +37,9 @@ class BuyHeroUseCase(
 
                         if (totalBuyer != null && totalSeller != null && totalBank != null) {
                             hero.data?.owner?.id?.let {
-                                auraRepo.postAuras(totalSeller.toInt(), it)
-                                auraRepo.postAuras(totalBuyer.toInt(), currentUserId())
-                                auraRepo.postAurasToBank(totalBank.toInt(), currentUserId())
+                                auraRepo.postAuras(totalSeller, it)
+                                auraRepo.postAuras(totalBuyer, currentUserId())
+                                auraRepo.postAurasToBank(totalBank, currentUserId())
                                 marketRepository.buyHero(heroValue, currentUserId())
                             }
                         }

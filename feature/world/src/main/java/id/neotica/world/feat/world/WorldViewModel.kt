@@ -29,7 +29,7 @@ class WorldViewModel(
         }
     }
 
-    fun sendInitialAura(aura: Int) = viewModelScope.launch {
+    fun sendInitialAura(aura: Long) = viewModelScope.launch {
         gameRepo.postAuras(aura, currentUserId())
         fetchAuras()
     }

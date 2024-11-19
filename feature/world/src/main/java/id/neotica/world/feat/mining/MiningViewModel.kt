@@ -33,7 +33,7 @@ class MiningViewModel(
     fun postAura(aura: Int) = viewModelScope.launch {
         val total = _totalAuras.value.data?.aura
         if (total != null) {
-            auraRepo.postAuras(total.toInt() + aura, currentUserId)
+            auraRepo.postAuras(total + aura, currentUserId)
         }
         fetchAuras()
     }

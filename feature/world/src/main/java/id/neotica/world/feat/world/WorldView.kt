@@ -130,7 +130,7 @@ fun WorldView(
                         maxWidth = true,
                     ) {
                         Toast.makeText(context, "Congratulations, you've got $random aura!", Toast.LENGTH_SHORT).show()
-                        viewModel.sendInitialAura(random)
+                        viewModel.sendInitialAura(random.toLong())
                         onClick = !onClick
                         navController.navigate(WorldScreen.HomeScreen) {
                             popUpTo(RootScreen.WorldNav) {

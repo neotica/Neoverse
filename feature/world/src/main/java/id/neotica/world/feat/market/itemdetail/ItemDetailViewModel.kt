@@ -122,7 +122,7 @@ class ItemDetailViewModel(
             )
             _bankAuras.value.data?.let { auraValue ->
                 val total = auraValue.aura.plus(aura)
-                auraRepo.postAurasToBank(total.toInt(), currentUserId())
+                auraRepo.postAurasToBank(total, currentUserId())
                 marketRepo.pawnHero(hero = heroValue, currentUserId())
             }
         }
@@ -139,7 +139,7 @@ class ItemDetailViewModel(
             )
             _bankAuras.value.data?.let { auraValue ->
                 val total = auraValue.aura.minus(aura)
-                auraRepo.postAurasToBank(total.toInt(), currentUserId())
+                auraRepo.postAurasToBank(total, currentUserId())
                 marketRepo.buyHero(hero = heroValue, currentUserId())
             }
         }

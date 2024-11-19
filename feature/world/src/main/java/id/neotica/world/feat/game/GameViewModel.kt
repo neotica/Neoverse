@@ -43,14 +43,14 @@ class GameViewModel(
         fetchAuras()
     }
 
-    fun sendInitialAura(aura: Int) = viewModelScope.launch {
+    fun sendInitialAura(aura: Long) = viewModelScope.launch {
         gameRepo.postAuras(aura, currentUserId())
     }
 
     fun sendAuraPoints(aura: Int) = viewModelScope.launch {
         val tot = _totalAuras.value.data?.aura
         if (tot != null) {
-            gameRepo.postAuras(tot.toInt() + aura, currentUserId())
+            gameRepo.postAuras(tot + aura, currentUserId())
         }
         fetchAuras()
         Log.d("aura", aura.toString())
