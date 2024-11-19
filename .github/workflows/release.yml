@@ -38,9 +38,7 @@ jobs:
 #      - name: Setup Android SDK
 #        uses: android-actions/setup-android@v2.0.10
 
-      # Build APK (release version)
-      - name: Build APK
-        run: ./gradlew assembleRelease
+
 
 #      - name: Decode Keystore
 #        env:
@@ -81,7 +79,9 @@ jobs:
         env:
           BUILD_TOOLS_VERSION: "34.0.0"
 
-
+      # Build APK (release version)
+      - name: Build APK
+        run: ./gradlew assembleRelease
 
       # Upload signed APK to Firebase App Distribution
 #      - name: Upload signed APK to Firebase App Distribution
