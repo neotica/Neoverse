@@ -38,8 +38,6 @@ jobs:
 #      - name: Setup Android SDK
 #        uses: android-actions/setup-android@v2.0.10
 
-
-
 #      - name: Decode Keystore
 #        env:
 #           ENCODED_STRING: ${{ secrets.KEYSTORE_BASE_64 }}
@@ -65,6 +63,10 @@ jobs:
 #          RELEASE_KEY_PASSWORD: ${{ secrets.RELEASE_KEY_PASSWORD }}
 #        run: ./gradlew bundleRelease --stacktrace
 
+      # Build APK (release version)
+      - name: Build APK
+        run: ./gradlew assembleRelease
+
       # Sign APK using Base64 encoded keystore
       - uses: r0adkll/sign-android-release@v1
         name: Sign app APK
@@ -79,9 +81,7 @@ jobs:
         env:
           BUILD_TOOLS_VERSION: "34.0.0"
 
-      # Build APK (release version)
-      - name: Build APK
-        run: ./gradlew assembleRelease
+
 
       # Upload signed APK to Firebase App Distribution
 #      - name: Upload signed APK to Firebase App Distribution

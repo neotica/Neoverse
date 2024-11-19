@@ -16,14 +16,14 @@ android {
     namespace = "id.neotica.neoverse"
     compileSdk = 35
 
-    signingConfigs {
+    /*signingConfigs {
         create("release") {
             storeFile = File("../keystore.jks")
             storePassword = System.getenv("RELEASE_KEYSTORE_PASSWORD")
             keyAlias = System.getenv("RELEASE_KEYSTORE_ALIAS")
             keyPassword = System.getenv("RELEASE_KEY_PASSWORD")
        }
-        /*create("release") {
+        *//*create("release") {
             val properties = Properties().apply {
                 load(File("app/signing.properties").reader())
             }
@@ -31,8 +31,8 @@ android {
             storePassword = properties.getProperty("storePassword")
             keyPassword = properties.getProperty("keyPassword")
             keyAlias = "neoverse"
-        }*/
-    }
+        }*//*
+    }*/
 
     defaultConfig {
         applicationId = "id.neotica.neoverse"
@@ -63,7 +63,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            signingConfig = signingConfigs.getByName("release")
+//            signingConfig = signingConfigs.getByName("release")
         }
     }
     compileOptions {
