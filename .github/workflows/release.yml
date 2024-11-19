@@ -43,14 +43,14 @@ jobs:
 
       - name: Decode Keystore
         env:
-           ENCODED_STRING: ${{ secrets.KEYSTORE_BASE_62 }}
+           ENCODED_STRING: ${{ secrets.KEYSTORE_BASE_64 }}
            RELEASE_KEYSTORE_PASSWORD: ${{ secrets.RELEASE_KEYSTORE_PASSWORD }}
            RELEASE_KEYSTORE_ALIAS: ${{ secrets.RELEASE_KEYSTORE_ALIAS }}
            RELEASE_KEY_PASSWORD: ${{ secrets.RELEASE_KEY_PASSWORD }}
 
         run: |
-            echo $ENCODED_STRING > keystore-b64.txt
-            base64 -d keystore-b64.txt > keystore.jks
+            echo $ENCODED_STRING > neoverse-keystore.jks.base64.txt
+            base64 -d keystore-b64.txt > neoverse-keystore.jks
 
       - name: Build Release apk
         env:
