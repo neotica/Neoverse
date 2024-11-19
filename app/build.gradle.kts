@@ -18,6 +18,12 @@ android {
 
     signingConfigs {
         create("release") {
+            storeFile = File("/Users/ryomartin/Downloads/neoverse-keystore.jks")
+            storePassword = System.getenv("RELEASE_KEYSTORE_PASSWORD")
+            keyAlias = System.getenv("RELEASE_KEYSTORE_ALIAS")
+            keyPassword = System.getenv("RELEASE_KEY_PASSWORD")
+       }
+        /*create("release") {
             val properties = Properties().apply {
                 load(File("app/signing.properties").reader())
             }
@@ -25,10 +31,7 @@ android {
             storePassword = properties.getProperty("storePassword")
             keyPassword = properties.getProperty("keyPassword")
             keyAlias = "neoverse"
-        }
-//        create("NeoSigninConfigs") {
-//            keyAlias = getLocalProperty("signin.keyAlias") ?: environment
-//        }
+        }*/
     }
 
     defaultConfig {
