@@ -19,3 +19,5 @@ local.properties
 /.idea/other.xml
 /.idea/gradle.xml
 /.idea/inspectionProfiles
+/app/debug
+/app/release

@@ -33,14 +33,14 @@ class AuraRepositoryImpl: AuraRepository {
         }
     }
 
-    override suspend fun postAuras(aura: Int, userId: String) {
+    override suspend fun postAuras(aura: Long, userId: String) {
         val original = firebase.getReference("userdata")
             .child(userId).child("world")
             .child("aura").setValue(aura)
         original.await()
     }
 
-    override suspend fun postAurasToBank(aura: Int, userId: String) {
+    override suspend fun postAurasToBank(aura: Long, userId: String) {
         val original = firebase.getReference("bank").child("aura").setValue(aura)
         original.await()
     }
