@@ -36,10 +36,11 @@ fun NeoButton(
             contentColor = Color.White,
         )
     }
-
     Button(
         modifier = modifier.then(if (maxWidth) maxWidthModifier else defaultModifier),
-        onClick = onClick,
+        onClick = {
+            onClick()
+        },
         enabled = enabled,
         colors = buttonColors,
         shape = RoundedCornerShape(20)

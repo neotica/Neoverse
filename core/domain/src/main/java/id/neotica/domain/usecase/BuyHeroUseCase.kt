@@ -1,10 +1,13 @@
 package id.neotica.domain.usecase
 
+import id.neotica.domain.ApiResult
 import id.neotica.domain.model.market.Hero
 import id.neotica.domain.remote.AuraRepository
 import id.neotica.domain.remote.MarketRepository
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 
 class BuyHeroUseCase(
     private val auraRepo: AuraRepository,
@@ -12,12 +15,12 @@ class BuyHeroUseCase(
     private val getUserIdUseCase: GetUserIdUseCase,
     private val getUserNameUseCase: GetUserNameUseCase,
 ) {
-    suspend operator fun invoke(hero: Hero) = main(hero)
+    operator fun invoke(hero: Hero): Flow<ApiResult<String>> = main(hero)
 
     private fun currentUserId(): String = getUserIdUseCase.invoke()
     private fun currentUsername(): String = getUserNameUseCase.invoke()
 
-    private suspend fun main(heroParent: Hero) = withContext(Dispatchers.IO) {
+    private fun main(heroParent: Hero): Flow<ApiResult<String>> = flow {
         val aura = heroParent.price
 
         marketRepository.getHero(heroParent.id).collect { hero ->
@@ -40,12 +43,14 @@ class BuyHeroUseCase(
                                 auraRepo.postAuras(totalSeller, it)
                                 auraRepo.postAuras(totalBuyer, currentUserId())
                                 auraRepo.postAurasToBank(totalBank, currentUserId())
-                                marketRepository.buyHero(heroValue, currentUserId())
+                                marketRepository.buyHero(heroValue, currentUserId()).collect { result ->
+                                    emit(result)
+                                }
                             }
                         }
                     }
                 }
             }
         }
-    }
+    }.flowOn(Dispatchers.IO)
 }

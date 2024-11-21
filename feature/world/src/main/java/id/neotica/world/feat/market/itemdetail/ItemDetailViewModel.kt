@@ -47,6 +47,9 @@ class ItemDetailViewModel(
     private val _item: MutableStateFlow<ApiResult<Item>> = MutableStateFlow(ApiResult.Loading())
     val item = _item.asStateFlow()
 
+    private val _buyHeroState: MutableStateFlow<ApiResult<String>> = MutableStateFlow(ApiResult.Loading())
+    val buyHeroState = _buyHeroState.asStateFlow()
+
     private fun currentUserId(): String = getUserIdUseCase.invoke()
     private fun currentUsername(): String = getUserNameUseCase.invoke()
 
@@ -89,7 +92,7 @@ class ItemDetailViewModel(
         }
     }
 
-    private fun getHeroDetail() = viewModelScope.launch {
+    fun getHeroDetail() = viewModelScope.launch {
         marketRepo.getHero(args.id).collect {
             _hero.value = it
         }
@@ -107,11 +110,15 @@ class ItemDetailViewModel(
         }
     }
 
-    fun buy(hero: Hero) = CoroutineScope(Dispatchers.IO).launch { buyHeroUseCase.invoke(hero) }
+    fun buy(hero: Hero) = viewModelScope.launch {
+        buyHeroUseCase.invoke(hero).collect {
+            _buyHeroState.value = it
+        }
+    }
 
     fun buyItem(item: Item) = CoroutineScope(Dispatchers.IO).launch { buyItemUseCase.invoke(item) }
 
-    fun pawn(aura: Long) = viewModelScope.launch {
+    fun pawn(aura: Long) = CoroutineScope(Dispatchers.IO).launch {
         _hero.value.data?.let {
             val heroValue = it.copy(
                 price = aura,
@@ -129,7 +136,7 @@ class ItemDetailViewModel(
         fetchAuras()
     }
 
-    fun store(aura: Int) = viewModelScope.launch {
+    fun store(aura: Long) = viewModelScope.launch {
         _hero.value.data?.let {
             val heroValue = it.copy(
                 owner = it.owner.copy(
@@ -140,7 +147,9 @@ class ItemDetailViewModel(
             _bankAuras.value.data?.let { auraValue ->
                 val total = auraValue.aura.minus(aura)
                 auraRepo.postAurasToBank(total, currentUserId())
-                marketRepo.buyHero(hero = heroValue, currentUserId())
+                marketRepo.buyHero(hero = heroValue, currentUserId()).collect { buyHero ->
+                    _buyHeroState.value = buyHero
+                }
             }
         }
         fetchAuras()
