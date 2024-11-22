@@ -1,5 +1,6 @@
 package id.neotica.neoverse.presentation.screen.home
 
+import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
@@ -33,7 +34,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -75,6 +79,7 @@ fun HomeView(
     var isLoadingChats by remember { mutableStateOf(false) }
     var currentuser by remember { mutableStateOf<User?>(null) }
 
+    val context = LocalContext.current
 
     LaunchedEffect(isPressed) {
         isPressed = false
@@ -128,6 +133,7 @@ fun HomeView(
     val nestedState = rememberNestedScrollInteropConnection()
     val listState = rememberLazyListState()
     val showTopCard = remember { derivedStateOf { listState.firstVisibleItemScrollOffset == 0 } }
+    val haptic = LocalHapticFeedback.current
 
     Scaffold (
         modifier = Modifier.windowInsetsPadding(WindowInsets.safeDrawing),
@@ -171,8 +177,16 @@ fun HomeView(
                                         url = it.imageUrl,
                                         round = true,
                                         size = 55.dp,
-                                        contentAlignment = Alignment.CenterEnd
-                                    )
+                                        contentAlignment = Alignment.CenterEnd,
+                                        onLongClick = {
+                                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                            Toast
+                                                .makeText(context, "Go to Profile", Toast.LENGTH_SHORT)
+                                                .show()
+                                        }
+                                    ) {
+                                        navController.navigate(RootScreen.AuthNav)
+                                    }
                                 }
                             }
                         }
@@ -207,6 +221,7 @@ fun HomeView(
                             val friendInstance = friendList.firstOrNull {
                                 it.username == chatName
                             }
+
                             ChatListItem(
                                 name = chatName,
                                 image = friendInstance?.imageUrl.toString(),

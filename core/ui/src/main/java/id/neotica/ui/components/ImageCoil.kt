@@ -1,7 +1,8 @@
 package id.neotica.ui.components
 
 import android.content.Context
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
@@ -17,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ImageCoil(
     url: String,
@@ -29,6 +31,7 @@ fun ImageCoil(
     scaleCustom: Boolean = false,
     contentScale: ContentScale = ContentScale.Fit,
     contentAlignment: Alignment = Alignment.Center,
+    onLongClick: (() -> Unit)? = null,
     onClick: (() -> Unit)? = null,
 ) {
 
@@ -52,7 +55,9 @@ fun ImageCoil(
                     Modifier
                         .size(size)
                         .clip(RoundedCornerShape(if (round) 120.dp else 12.dp))
-                        .clickable { onClick() }
+                        .combinedClickable(
+                            onLongClick = onLongClick
+                        ) { onClick() }
                 } else {
                     Modifier
                         .size(size)

@@ -2,7 +2,6 @@ package id.neotica.ui.components.navigation
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.selection.selectableGroup
@@ -25,7 +24,6 @@ fun CustomNavBar(
     containerColor: Color = NavigationBarDefaults.containerColor,
     contentColor: Color = MaterialTheme.colorScheme.contentColorFor(containerColor),
     tonalElevation: Dp = NavigationBarDefaults.Elevation,
-    windowInsets: WindowInsets = NavigationBarDefaults.windowInsets,
     content: @Composable RowScope.() -> Unit
 ) {
     Surface(
@@ -34,7 +32,7 @@ fun CustomNavBar(
         tonalElevation = tonalElevation,
         modifier = modifier
             .padding(
-                start = 12.dp, end = 12.dp, bottom = 18.dp
+                start = 12.dp, end = 12.dp
             ),
         shape = RoundedCornerShape(20.dp)
     ) {

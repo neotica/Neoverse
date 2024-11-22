@@ -43,9 +43,7 @@ class HomeViewModel(
         getChatroom()
     }
 
-    fun isLoggedIn(): Boolean {
-        return getUserIdUseCase.invoke().isNotEmpty()
-    }
+    fun isLoggedIn(): Boolean = getUserIdUseCase.invoke().isNotEmpty()
 
     fun isUserVerified() = userRepo.isUserVerified()
 

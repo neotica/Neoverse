@@ -384,6 +384,7 @@ fun MarketView(
                         }
                     }
                 }
+                Spacer(Modifier.padding(4.dp))
             }
         }
     }
