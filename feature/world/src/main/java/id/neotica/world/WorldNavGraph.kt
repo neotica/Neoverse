@@ -4,7 +4,6 @@ import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -24,7 +23,6 @@ import id.neotica.world.feat.world.WorldView
 
 fun NavGraphBuilder.worldNavGraph(
     navController: NavController,
-    contentInsets: WindowInsets,
     paddingValues: PaddingValues
 ) {
     navigation<RootScreen.WorldNav>(
@@ -54,7 +52,7 @@ fun NavGraphBuilder.worldNavGraph(
             popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End, tween(100)) },
         ) {
             MarketView(
-                navController, paddingValues, contentInsets
+                navController, paddingValues
             )
         }
         composable<WorldScreen.ItemDetailScreen>(
@@ -70,7 +68,7 @@ fun NavGraphBuilder.worldNavGraph(
             exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End, tween(100)) }
         ) {
             MerchantView(
-                navController, paddingValues, contentInsets
+                navController, paddingValues
             )
         }
         composable<WorldScreen.InventoryScreen>(
@@ -78,7 +76,7 @@ fun NavGraphBuilder.worldNavGraph(
             exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End, tween(100)) }
         ) {
             InventoryView(
-                navController, paddingValues, contentInsets
+                navController, paddingValues
             )
         }
         composable<WorldScreen.MiningScreen>(
@@ -86,7 +84,7 @@ fun NavGraphBuilder.worldNavGraph(
             exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End, tween(100)) }
         ) {
             MiningView(
-                navController, paddingValues, contentInsets
+                navController, paddingValues
             )
         }
         composable<WorldScreen.HeroMakerScreen>(
@@ -94,7 +92,7 @@ fun NavGraphBuilder.worldNavGraph(
             exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End, tween(100)) }
         ) {
             HeroMakerView(
-                navController, paddingValues, contentInsets
+                navController, paddingValues
             )
         }
         composable<WorldScreen.ItemMakerScreen>(
@@ -102,7 +100,7 @@ fun NavGraphBuilder.worldNavGraph(
             exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End, tween(100)) }
         ) {
             ItemMakerView(
-                navController, paddingValues, contentInsets
+                navController, paddingValues
             )
         }
     }

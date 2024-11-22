@@ -2,7 +2,6 @@ package id.neotica.world.feat.market.merchant
 
 import android.util.Log
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -21,7 +20,6 @@ import org.koin.androidx.compose.koinViewModel
 fun MerchantView(
     navController: NavController,
     paddingValues: PaddingValues,
-    contentInsets: WindowInsets,
     viewModel: MerchantViewModel = koinViewModel()
 ) {
     var currentAuras by remember { mutableStateOf<Games?>(null) }
@@ -40,7 +38,7 @@ fun MerchantView(
         }
     }
 
-    BasicScaffold("Merchant", contentInset = contentInsets) {
+    BasicScaffold("Merchant") {
         NeoButton("To Hero Maker") {
             navController.navigate(WorldScreen.HeroMakerScreen)
         }

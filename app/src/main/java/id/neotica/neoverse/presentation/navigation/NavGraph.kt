@@ -6,7 +6,6 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -22,7 +21,6 @@ import id.neotica.world.worldNavGraph
 fun NavGraph(
     navController: NavHostController,
     paddingValues: PaddingValues,
-    contentInsets: WindowInsets,
 ) {
     NavHost(
         navController,
@@ -39,7 +37,7 @@ fun NavGraph(
 
         homeNavGraph(navController, paddingValues)
         authNavGraph(navController, paddingValues)
-        worldNavGraph(navController, contentInsets, paddingValues)
+        worldNavGraph(navController, paddingValues)
         friendNavGraph(navController, paddingValues)
     }
 }

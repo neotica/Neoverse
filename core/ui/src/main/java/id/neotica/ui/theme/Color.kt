@@ -20,3 +20,5 @@ val DarkPrimaryCard = Color(0xFF3A4486)
 val DarkBackground = Color(0xFF151A3B)
 
 val NegativePrimary = Color(0xFFE05D5D)
+
+val TransparentText = Color(0xA1FFFFFF)

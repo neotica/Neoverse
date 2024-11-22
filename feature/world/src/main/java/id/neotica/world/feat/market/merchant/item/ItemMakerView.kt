@@ -6,7 +6,6 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -34,7 +33,6 @@ import org.koin.androidx.compose.koinViewModel
 fun ItemMakerView(
     navController: NavController,
     paddingValues: PaddingValues,
-    contentInsets: WindowInsets,
     viewModel: MerchantViewModel = koinViewModel()
 ) {
     var currentAuras by remember { mutableStateOf<Games?>(null) }
@@ -140,7 +138,7 @@ fun ItemMakerView(
         )
     }
 
-    BasicScaffold("Item Maker", contentInset = contentInsets) {
+    BasicScaffold("Item Maker") {
         LazyColumn(contentPadding = PaddingValues(bottom = paddingValues.calculateBottomPadding())) {
             item {
                 Text("Your Aura: ${currentAuras?.aura ?: ""}")

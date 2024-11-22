@@ -15,7 +15,7 @@ import id.neotica.ui.navigation.Screen
 
 fun NavGraphBuilder.homeNavGraph(
     navController: NavController,
-    paddingValues: PaddingValues
+    paddingValues: PaddingValues,
 ) {
     navigation<RootScreen.HomeNav>(
         startDestination = Screen.HomeScreen
