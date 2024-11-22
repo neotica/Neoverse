@@ -38,6 +38,7 @@ import kotlinx.coroutines.delay
 fun BasicScaffold(
     topBarTitle: String,
     enableActionBar: Boolean = false,
+    customActionBar: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
     navController: NavController? = null,
     paddingValues: PaddingValues = PaddingValues(),
@@ -68,6 +69,17 @@ fun BasicScaffold(
                     ),
                     navigationIcon = {
                         if (!enableActionBar) {
+                            customActionBar?.let {
+                                IconButton(onClick = {
+                                    it.invoke()
+                                }
+                                ) {
+                                    Icon(
+                                        imageVector = ImageVector.vectorResource(R.drawable.ic_arrow_back),
+                                        contentDescription = ""
+                                    )
+                                }
+                            }
                         } else {
                             IconButton(onClick = {
                                 navController?.navigateBack()

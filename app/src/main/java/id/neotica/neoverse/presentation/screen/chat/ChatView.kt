@@ -1,6 +1,7 @@
 package id.neotica.neoverse.presentation.screen.chat
 
 import android.annotation.SuppressLint
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -43,6 +44,7 @@ import id.neotica.domain.model.chat.Message
 import id.neotica.domain.utils.convertLongToTime
 import id.neotica.ui.navigation.Screen
 import id.neotica.ui.components.BasicScaffold
+import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.theme.DarkPrimary
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
@@ -56,9 +58,25 @@ fun ChatView(
 ) {
     val messages = viewModel.message.collectAsState()
 
+    BackHandler {
+        navController.navigate(RootScreen.HomeNav) {
+            popUpTo(RootScreen.HomeNav) {
+                inclusive = true
+            }
+            launchSingleTop
+        }
+    }
+
     BasicScaffold(
         topBarTitle = args.user2,
-        enableActionBar = true,
+        customActionBar = {
+            navController.navigate(RootScreen.HomeNav) {
+                popUpTo(RootScreen.HomeNav) {
+                    inclusive = true
+                }
+                launchSingleTop
+            }
+        },
         navController = navController,
         paddingValues = paddingValues,
         fullScreen = true

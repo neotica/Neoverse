@@ -5,6 +5,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -22,6 +23,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
@@ -138,6 +140,24 @@ fun HomeView(
     Scaffold (
         modifier = Modifier.windowInsetsPadding(WindowInsets.safeDrawing),
     ) { it ->
+        Box(
+            Modifier.fillMaxSize()
+                .padding(PaddingValues(bottom = paddingValues.calculateBottomPadding()))
+            ,
+        ) {
+            FloatingActionButton(
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(12.dp)
+                ,
+                containerColor = DarkPrimaryTransparent2,
+                onClick = {
+                    navController.navigate(Screen.AddChatScreen)
+                }
+            ) {
+                Text("+")
+            }
+        }
         Column(Modifier.padding(it)) {
             AnimatedVisibility(
                 visible = showTopCard.value,
@@ -208,6 +228,7 @@ fun HomeView(
                     state = listState,
                     contentPadding = PaddingValues(bottom = paddingValues.calculateBottomPadding())
                 ) {
+//                    item { for(i in 1..30) Text("hshjkcvhbxdbjkcvbcvxcvxdvx") }
                     if(!isLoadingChats) {
                         items(parentChatrooms.value.filter { channels ->
                             val current = currentuser?.username.toString()

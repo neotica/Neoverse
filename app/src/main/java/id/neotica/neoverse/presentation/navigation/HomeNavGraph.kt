@@ -10,6 +10,7 @@ import androidx.navigation.navigation
 import androidx.navigation.toRoute
 import id.neotica.neoverse.presentation.screen.chat.ChatView
 import id.neotica.neoverse.presentation.screen.home.HomeView
+import id.neotica.neoverse.presentation.screen.home.addchat.AddChatView
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.Screen
 
@@ -22,6 +23,9 @@ fun NavGraphBuilder.homeNavGraph(
     ) {
         composable<Screen.HomeScreen> {
             HomeView(navController, paddingValues)
+        }
+        composable<Screen.AddChatScreen> {
+            AddChatView(navController, paddingValues)
         }
         composable<Screen.Chat>(
             enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start, tween(100)) },

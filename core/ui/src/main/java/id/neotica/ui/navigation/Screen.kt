@@ -11,13 +11,15 @@ sealed class Screen {
     // Home Navigation
     @Serializable
     data object HomeScreen: Screen()
-
+    @Serializable
+    data object AddChatScreen: Screen()
     @Serializable
     data class Chat(
         val chatId: String,
         val user2: String,
         val chatroomId: String ?= ""
-        )
+    )
+
     @Serializable
     data object Setting: Screen()
     @Serializable
