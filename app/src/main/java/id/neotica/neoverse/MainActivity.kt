@@ -13,9 +13,9 @@ import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.systemBars
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.AccountCircle
@@ -92,7 +92,8 @@ class MainActivity: ComponentActivity() {
                     Screen.RegisterScreen,
                     Screen.VerifyEmailScreen,
                     Screen.PrivacyPolicyScreen,
-                    Screen.TermsOfServiceScreen
+                    Screen.TermsOfServiceScreen,
+                    Screen.AddChatScreen
                 )
 
                 val includeRoute = bottomBarExcludedRoutes.none {
@@ -119,7 +120,6 @@ class MainActivity: ComponentActivity() {
                         Scaffold(
                             modifier = Modifier
                                 .background(DarkBackground)
-                                .windowInsetsPadding(WindowInsets.systemBars)
                                 .fillMaxSize(),
                             bottomBar = {
                                 AnimatedVisibility (
@@ -169,7 +169,10 @@ class MainActivity: ComponentActivity() {
 
                             NavGraph(
                                 navController = navController,
-                                paddingValues = innerPadding,
+                                paddingValues = PaddingValues(
+                                    top = innerPadding.calculateTopPadding(),
+                                    bottom = innerPadding.calculateBottomPadding() - WindowInsets.systemBars.asPaddingValues().calculateBottomPadding()
+                                ),
                             )
                         }
                     }

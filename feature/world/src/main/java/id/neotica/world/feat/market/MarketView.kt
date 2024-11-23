@@ -9,9 +9,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
@@ -142,13 +146,18 @@ fun MarketView(
         horizontalAlignment = Alignment.CenterHorizontally,
         navController = navController,
         enableActionBar = true,
+        fullScreen = true,
         topBarVisibility = scrollUpValue(listState),
     ) {
         LazyColumn(
             state = listState,
-            contentPadding = PaddingValues(bottom = paddingValues.calculateBottomPadding())
+            contentPadding = PaddingValues(
+                bottom = WindowInsets.systemBars.asPaddingValues().calculateBottomPadding() + paddingValues.calculateBottomPadding()
+            )
         ) {
             item {
+                Spacer(Modifier.padding(WindowInsets.statusBars.asPaddingValues().calculateTopPadding()))
+
                 val currentPage = rememberSaveable { mutableIntStateOf(0) }
                 CarouselCard(
                     list = heroes.take(5),

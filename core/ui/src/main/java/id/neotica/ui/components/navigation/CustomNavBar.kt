@@ -2,8 +2,11 @@ package id.neotica.ui.components.navigation
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
@@ -32,7 +35,7 @@ fun CustomNavBar(
         tonalElevation = tonalElevation,
         modifier = modifier
             .padding(
-                start = 12.dp, end = 12.dp
+                start = 12.dp, end = 12.dp, bottom = WindowInsets.systemBars.asPaddingValues().calculateBottomPadding()
             ),
         shape = RoundedCornerShape(20.dp)
     ) {

@@ -7,9 +7,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -42,10 +46,11 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import id.neotica.domain.model.chat.Message
 import id.neotica.domain.utils.convertLongToTime
-import id.neotica.ui.navigation.Screen
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.navigation.RootScreen
+import id.neotica.ui.navigation.Screen
 import id.neotica.ui.theme.DarkPrimary
+import id.neotica.ui.theme.Transparent
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
@@ -78,7 +83,6 @@ fun ChatView(
             }
         },
         navController = navController,
-        paddingValues = paddingValues,
         fullScreen = true
     ) {
         ChatMessages(
@@ -103,22 +107,19 @@ fun ChatMessages(
     val scrollState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
         coroutineScope.launch {
             scrollState.scrollToItem(messages.size + 1)
         }
         Column(Modifier.fillMaxSize()) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(Color.Transparent), verticalAlignment = Alignment.CenterVertically
-            ){
-                Text("\n")
-            }
             LazyColumn(
                 modifier = Modifier
                     .weight(1f),
-                state = scrollState
+                state = scrollState,
+                contentPadding = PaddingValues(top = WindowInsets.statusBars.asPaddingValues().calculateTopPadding() * 2)
             ) {
                 items(messages) { messages ->
                     ChatBubble(message = messages)
@@ -126,12 +127,13 @@ fun ChatMessages(
             }
             Surface(
                 modifier = Modifier
-                    .fillMaxWidth(),
+                    .padding(start = 4.dp, end = 4.dp, top = 4.dp, bottom = WindowInsets.systemBars.asPaddingValues().calculateBottomPadding())
+                ,
+                color = Transparent,
                 shape = RoundedCornerShape(32.dp)
             ) {
                 Card(
-                    Modifier
-                        .padding(bottom = 8.dp, start = 4.dp, end = 4.dp, top = 4.dp),
+                    Modifier,
                     shape = RoundedCornerShape(32.dp),
                     elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
                 ) {
