@@ -74,7 +74,7 @@ fun GameView(
     }
 
     BasicScaffold(
-        topBarTitle = "The Bar",
+        topBarTitle = "The Treasure Chest's Tavern",
         horizontalAlignment = Alignment.CenterHorizontally,
         navController = navController,
         enableActionBar = true

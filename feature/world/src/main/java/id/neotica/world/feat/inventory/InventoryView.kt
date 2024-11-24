@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -52,7 +51,6 @@ import org.koin.androidx.compose.koinViewModel
 fun InventoryView(
     navController: NavController,
     paddingValues: PaddingValues,
-    contentInsets: WindowInsets,
     viewModel: InventoryViewModel = koinViewModel()
 ) {
     var currentAuras by remember { mutableStateOf<Games?>(null) }
@@ -121,7 +119,6 @@ fun InventoryView(
         topBarTitle = "Inventory",
         navController = navController,
         enableActionBar = true,
-        contentInset = contentInsets
     ) {
         LazyColumn {
             item {

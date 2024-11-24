@@ -23,6 +23,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.dp
 import id.neotica.world.feat.game.GameViewModel
 import id.neotica.world.utils.generateTranspose
@@ -56,6 +58,10 @@ fun SlotMachine(modifier: Modifier = Modifier, viewModel: GameViewModel = koinVi
         var giveAura by rememberSaveable { mutableStateOf(false) }
 
         val numbComb = "${randomStrings[0]}${randomStrings[1]}${randomStrings[2]}"
+
+        val haptic = LocalHapticFeedback.current
+        var onPressed by rememberSaveable { mutableStateOf(false) }
+        if (onPressed) haptic.performHapticFeedback(HapticFeedbackType.LongPress)
 
         Row {
             val cardColorsPrime = CardColors(
@@ -112,6 +118,7 @@ fun SlotMachine(modifier: Modifier = Modifier, viewModel: GameViewModel = koinVi
                 randomStrings.forEachIndexed { index, _ ->
                     randomStrings[index] = generateTranspose(SecureRandom())
                 }
+                onPressed = true
             }
 
             Spacer(Modifier.padding(4.dp))
@@ -120,6 +127,7 @@ fun SlotMachine(modifier: Modifier = Modifier, viewModel: GameViewModel = koinVi
                     text="Stop!",
                     enabled = stopEnabled
                 ) {
+                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                     viewModel.getAuraPoints(numbComb)
                     viewModel.sendAuraPoints(viewModel.auraPoints.value)
                     stopEnabled = false

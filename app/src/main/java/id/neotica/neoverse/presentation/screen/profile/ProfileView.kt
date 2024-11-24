@@ -1,7 +1,10 @@
 package id.neotica.neoverse.presentation.screen.profile
 
 import android.util.Log
+import android.widget.Toast
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -9,7 +12,9 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -18,11 +23,18 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color.Companion.White
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.User
+import id.neotica.ui.R
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.ImageCoil
 import id.neotica.ui.components.LoadingIndicatorBool
@@ -32,6 +44,7 @@ import id.neotica.ui.navigation.Screen
 import id.neotica.ui.theme.DarkPrimary
 import org.koin.androidx.compose.koinViewModel
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ProfileView(
     navController: NavController,
@@ -40,6 +53,8 @@ fun ProfileView(
 ) {
     var user by remember { mutableStateOf<User?>(null) }
     val isLoading by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+    val haptic = LocalHapticFeedback.current
 
     LaunchedEffect(Unit) {
         if (!viewModel.isLoggedIn()) navController.navigate(Screen.LoginScreen) {
@@ -63,7 +78,25 @@ fun ProfileView(
     BasicScaffold(
         topBarTitle = "Profile",
         horizontalAlignment = Alignment.CenterHorizontally,
-        paddingValues = paddingValues
+        paddingValues = paddingValues,
+        trailingIcon = {
+            Icon(
+                modifier = Modifier
+                    .minimumInteractiveComponentSize()
+                    .combinedClickable(
+                        onClick = {
+                            navController.navigate(Screen.AboutScreen)
+                                  },
+                        onLongClick = {
+                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                            Toast.makeText(context, "About", Toast.LENGTH_SHORT).show()
+                        },
+                    ),
+                imageVector = ImageVector.vectorResource(R.drawable.ic_info),
+                contentDescription = "",
+                tint = White
+            )
+        }
     ) {
         LoadingIndicatorBool(isLoading = isLoading) {
 

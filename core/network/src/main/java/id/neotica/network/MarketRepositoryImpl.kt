@@ -48,7 +48,7 @@ class MarketRepositoryImpl: MarketRepository {
         }
     }
 
-    override suspend fun buyHero(hero: Hero, userId: String): ApiResult<String> {
+    override suspend fun buyHero(hero: Hero, userId: String): Flow<ApiResult<String>> = flow {
         val reference = firebase.getReference("market").child("heroes").child(hero.id).removeValue()
         reference.await()
 
@@ -57,9 +57,9 @@ class MarketRepositoryImpl: MarketRepository {
             .child("heroes")
             .child(hero.id).setValue(hero)
         buyReference.await()
-        return if (buyReference.isSuccessful) {
-            ApiResult.Success( "Is successful")
-        } else ApiResult.Error("Error")
+        if (buyReference.isSuccessful) {
+            emit(ApiResult.Success("Is successful"))
+        } else emit(ApiResult.Error("Error"))
     }
 
     override suspend fun pawnHero(hero: Hero, userId: String): ApiResult<String> {

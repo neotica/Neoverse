@@ -16,6 +16,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.dp
 import id.neotica.droidcore.component.alert.NeoAlert
 import id.neotica.ui.theme.DarkPrimaryTransparent
@@ -56,6 +58,8 @@ fun ChatListItem(
         null
     }
 
+    val haptic = LocalHapticFeedback.current
+
     if (openDialog.value) {
         NeoAlert(
             openDialog = openDialog,
@@ -79,7 +83,10 @@ fun ChatListItem(
             .fillMaxWidth()
             .combinedClickable(
                 onClick = { onClick() },
-                onLongClick = longClick,
+                onLongClick = {
+                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                    longClick?.invoke()
+                },
             )
             .padding(paddingValues),
     ) {

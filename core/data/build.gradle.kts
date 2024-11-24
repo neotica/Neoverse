@@ -48,7 +48,7 @@ dependencies {
     api(libs.kotlinx.serialization.json)
 
     // Koin
-    api("io.insert-koin:koin-androidx-compose:3.5.6")
+    api(libs.koin.androidx.compose)
 
     //Crop
 //    implementation("io.github.rroohit:ImageCropView:3.0.1")

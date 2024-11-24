@@ -10,9 +10,12 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
@@ -54,6 +57,7 @@ import id.neotica.domain.model.market.Item
 import id.neotica.droidcore.component.carousel.CarouselCard
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.ImageCoil
+import id.neotica.ui.components.scroll.scrollTopValue
 import id.neotica.ui.navigation.WorldScreen
 import id.neotica.ui.state.ScreenState
 import id.neotica.ui.theme.DarkPrimaryCard
@@ -67,7 +71,6 @@ import org.koin.androidx.compose.koinViewModel
 fun MarketView(
     navController: NavController,
     paddingValues: PaddingValues,
-    contentInsets: WindowInsets,
     viewModel: MarketViewModel = koinViewModel()
 ) {
     var currentAuras by remember { mutableStateOf<Games?>(null) }
@@ -76,6 +79,9 @@ fun MarketView(
     var items by remember { mutableStateOf<List<Item>>(emptyList()) }
     val carouselState = CarouselState(itemCount = { heroes.count() })
     val lifecycleOwner = LocalLifecycleOwner.current
+
+    /**This is the state to make the top app bar disappear/appears on lazyList scroll**/
+    val listState = rememberLazyListState()
 
     LaunchedEffect(onClick) {
         viewModel.totalAuras.collect { result ->
@@ -140,10 +146,18 @@ fun MarketView(
         horizontalAlignment = Alignment.CenterHorizontally,
         navController = navController,
         enableActionBar = true,
-        contentInset = contentInsets
+        fullScreen = true,
+        topBarVisibility = scrollTopValue(listState),
     ) {
-        LazyColumn(contentPadding = PaddingValues(bottom = paddingValues.calculateBottomPadding())) {
+        LazyColumn(
+            state = listState,
+            contentPadding = PaddingValues(
+                bottom = WindowInsets.systemBars.asPaddingValues().calculateBottomPadding() + paddingValues.calculateBottomPadding()
+            )
+        ) {
             item {
+                Spacer(Modifier.padding(WindowInsets.statusBars.asPaddingValues().calculateTopPadding()))
+
                 val currentPage = rememberSaveable { mutableIntStateOf(0) }
                 CarouselCard(
                     list = heroes.take(5),
@@ -379,6 +393,7 @@ fun MarketView(
                         }
                     }
                 }
+                Spacer(Modifier.padding(4.dp))
             }
         }
     }

@@ -38,7 +38,7 @@ import id.neotica.droidcore.component.alert.AlertDialogCustomDesc
 import id.neotica.droidcore.component.textfield.NumberField
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.ImageCoil
-import id.neotica.ui.components.LoadingIndicatorBool
+import id.neotica.ui.components.LoadingIndicator
 import id.neotica.ui.components.NeoButton
 import id.neotica.ui.state.ScreenState
 import id.neotica.ui.theme.FontSize
@@ -51,7 +51,7 @@ fun ItemDetailView(
     viewModel: ItemDetailViewModel = koinViewModel()
 ) {
     var currentAuras by remember { mutableStateOf<Games?>(null) }
-    val onClick by remember { mutableStateOf(false) }
+    var onClick by remember { mutableStateOf(false) }
     var loading by remember { mutableStateOf(false) }
     var hero by remember { mutableStateOf<Hero?>(null) }
     var item by remember { mutableStateOf<Item?>(null) }
@@ -103,7 +103,7 @@ fun ItemDetailView(
         }
     }
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(onClick) {
         hero?.owner?.let { viewModel.fetchSellerAuras(it.id) }
         viewModel.hero.collect { result ->
             when(result) {
@@ -128,8 +128,22 @@ fun ItemDetailView(
         }
     }
 
+    LaunchedEffect(onClick) {
+        viewModel.buyHeroState.collect { result ->
+            when(result) {
+                is ApiResult.Loading -> {
+                    loading = true
+                }
+                is ApiResult.Success -> {
+                    navController.navigateUp()
+                }
+                is ApiResult.Error -> {}
+            }
+        }
+    }
+
     val scaffoldTitle = when(viewModel.screenState()) {
-        ScreenState.UserInventory.toString() -> "Inventory"
+        ScreenState.UserInventory.toString(), ScreenState.InventoryItem.toString() -> "Inventory"
         else -> "Market"
     }
 
@@ -139,204 +153,189 @@ fun ItemDetailView(
         navController = navController,
         enableActionBar = true
     ) {
-        LoadingIndicatorBool(loading) {
-            Box(
-                Modifier.fillMaxSize()
-            ) {
-                hero?.let {
-                    LazyColumn(
-                        Modifier
-                            .fillMaxWidth(),
-                        contentPadding = PaddingValues(bottom = 30.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                    ) {
-                        item {
-                            Box {
-                                Column() {
-                                    Box(
-                                        modifier = Modifier.height(200.dp)
-                                    ) {
-                                        ImageCoil(
-                                            it.imageUrl,
-                                            scaleCustom = true,
-                                            contentScale = ContentScale.FillWidth,
-                                            fillMaxWidth = true,
-                                            customModifier = true,
-                                            modifier = Modifier.fillMaxWidth()
-                                        )
-                                    }
-                                    Spacer(Modifier.padding(4.dp))
-                                    Text(
-                                        it.name.capitalize(Locale.current),
-                                        fontWeight = FontWeight.Bold,
-                                        fontSize = FontSize.Big
-                                    )
-                                    Spacer(Modifier.padding(4.dp))
-                                    Row(
-                                        Modifier.fillMaxWidth(),
-                                        horizontalArrangement = Arrangement.SpaceEvenly
-                                    ) {
-                                        Text("⚔ ${it.power}")
-                                        Text("卐${it.price}")
-                                    }
-                                    Spacer(Modifier.padding(8.dp))
-
-                                    if (it.background?.origin != "") {
-                                        Spacer(Modifier.padding(8.dp))
-                                        Text("Origin: ${it.background?.origin}")
-                                    }
-                                    if (it.background?.story != "") Text("Story: ${it.background?.story}")
-                                    if (it.background?.pantheon != "")
-                                        Text("Pantheon: ${it.background?.pantheon}")
-                                    //white space here
-                                }
-                                Column() {
-
-                                    Text(
-                                    modifier = Modifier.weight(1f),
-                                        text =  "Owned by ${it.owner.name}"
-                                    )
-                                }
-                            }
-
-
-                        }
-                    }
-                }
-                item?.let {
-                    LazyColumn(
-                        Modifier
-                            .fillMaxWidth(),
-                        contentPadding = PaddingValues(bottom = 30.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                    ) {
-                        item {
-                            Text(
-                                it.name.capitalize(Locale.current),
-                                fontWeight = FontWeight.Bold,
-                                fontSize = FontSize.Medium
-                            )
-                            Box(
-                                modifier = Modifier.size(200.dp)
-                            ) {
-                                ImageCoil(
-                                    it.imageUrl,
-                                    scaleCustom = true,
-                                    contentScale = ContentScale.Inside,
-                                    fillMaxWidth = true,
-                                    customModifier = true,
-                                    modifier = Modifier.fillMaxWidth()
-                                )
-                            }
-                            Spacer(Modifier.padding(4.dp))
-                            Row(
-                                Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceEvenly
-                            ) {
-                                Text("⚔ ${it.power}")
-                                Text("卐${it.price.aura}")
-                                Text("\uD83E\uDEA8${it.price.coal}")
-                            }
-                            Text("Stock: ${it.stock}")
-                            Spacer(Modifier.padding(8.dp))
-                        }
-                    }
-                }
+        Box(
+            Modifier.fillMaxSize()
+        ) {
+            if (loading) LoadingIndicator()
+            hero?.let {
                 LazyColumn(
-                    modifier = Modifier.align(Alignment.BottomCenter),
+                    Modifier
+                        .fillMaxWidth(),
+                    contentPadding = PaddingValues(bottom = 30.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     item {
-                        Row(
-                            Modifier
-                                .fillMaxWidth()
-                                .padding(4.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween,
+                        Box {
+                            Column {
+                                Box(
+                                    modifier = Modifier.height(200.dp)
+                                ) {
+                                    ImageCoil(
+                                        it.imageUrl,
+                                        scaleCustom = true,
+                                        contentScale = ContentScale.FillWidth,
+                                        fillMaxWidth = true,
+                                        customModifier = true,
+                                        modifier = Modifier.fillMaxWidth()
+                                    )
+                                }
+                                Spacer(Modifier.padding(4.dp))
+                                Text(
+                                    it.name.capitalize(Locale.current),
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = FontSize.Big
+                                )
+                                Spacer(Modifier.padding(4.dp))
+                                Row(
+                                    Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceEvenly
+                                ) {
+                                    Text("⚔ ${it.power}")
+                                    Text("卐${it.price}")
+                                }
+                                Spacer(Modifier.padding(8.dp))
+
+                                if (it.background?.origin != "") {
+                                    Spacer(Modifier.padding(8.dp))
+                                    Text("Origin: ${it.background?.origin}")
+                                }
+                                if (it.background?.story != "") Text("Story: ${it.background?.story}")
+                                if (it.background?.pantheon != "")
+                                    Text("Pantheon: ${it.background?.pantheon}")
+                            }
+                            Column {
+                                Text(
+                                    modifier = Modifier.weight(1f),
+                                    text =  "Owned by ${it.owner.name}"
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+            item?.let {
+                LazyColumn(
+                    Modifier
+                        .fillMaxWidth(),
+                    contentPadding = PaddingValues(bottom = 30.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    item {
+                        Text(
+                            it.name.capitalize(Locale.current),
+                            fontWeight = FontWeight.Bold,
+                            fontSize = FontSize.Medium
+                        )
+                        Box(
+                            modifier = Modifier.size(200.dp)
                         ) {
-                           /* NeoButton(
-                                "Chat",
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .fillMaxWidth(),
-                                enabled = false
+                            ImageCoil(
+                                it.imageUrl,
+                                scaleCustom = true,
+                                contentScale = ContentScale.Inside,
+                                fillMaxWidth = true,
+                                customModifier = true,
+                                modifier = Modifier.fillMaxWidth()
                             )
-                            Spacer(Modifier.padding(4.dp))*/
-                            when (viewModel.screenState()) {
-                                ScreenState.GlobalItem.toString() -> {
-                                    var onBuy by remember { mutableStateOf(false) }
-                                    LaunchedEffect(onBuy) {
-                                        if (onBuy) {
-                                            onBuy = false
-                                            if (item != null) viewModel.buyItem(item!!)
-                                        }
-                                    }
-                                    NeoButton(
-                                        "Buy",
-                                        modifier = Modifier
-                                            .weight(1f)
-                                            .fillMaxWidth(),
-                                        enabled = item != null
-                                    ) {
-                                        if (item != null) {
-                                            onBuy = true
-                                            navController.navigateUp()
-                                        } else Toast.makeText(
-                                            context,
-                                            "there is no auras!",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
-                                    }
-                                }
-                                ScreenState.Global.toString() -> {
-                                    var onBuy by remember { mutableStateOf(false) }
-                                    LaunchedEffect(onBuy) {
-                                        if (onBuy) {
-                                            onBuy = false
-                                            if (hero != null) {
-                                                viewModel.buy(hero!!)
-                                            }
-                                        }
-                                    }
-                                    NeoButton(
-                                        "Buy",
-                                        modifier = Modifier
-                                            .weight(1f)
-                                            .fillMaxWidth(),
-                                        enabled = hero?.price != null
-                                    ) {
-                                        if (hero != null) {
-                                            onBuy = true
-                                            navController.navigateUp()
-                                        } else Toast.makeText(
-                                            context,
-                                            "there is no auras!",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
+                        }
+                        Spacer(Modifier.padding(4.dp))
+                        Row(
+                            Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceEvenly
+                        ) {
+                            Text("⚔ ${it.power}")
+                            Text("卐${it.price.aura}")
+                            Text("\uD83E\uDEA8${it.price.coal}")
+                        }
+                        Text("Stock: ${it.stock}")
+                        Spacer(Modifier.padding(8.dp))
+                    }
+                }
+            }
+            LazyColumn(
+                modifier = Modifier.align(Alignment.BottomCenter),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                item {
+                    Row(
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(4.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                    ) {
+                        /* NeoButton(
+                             "Chat",
+                             modifier = Modifier
+                                 .weight(1f)
+                                 .fillMaxWidth(),
+                             enabled = false
+                         )
+                         Spacer(Modifier.padding(4.dp))*/
+                        when (viewModel.screenState()) {
+                            ScreenState.GlobalItem.toString() -> {
+                                var onBuy by remember { mutableStateOf(false) }
+                                LaunchedEffect(onBuy) {
+                                    if (onBuy) {
+                                        onBuy = false
+                                        if (item != null) viewModel.buyItem(item!!)
                                     }
                                 }
-                                ScreenState.UserInventory.toString() -> {
-                                    NeoButton(
-                                        "Pawn",
-                                        modifier = Modifier
-                                            .weight(1f)
-                                            .fillMaxWidth(),
-                                        enabled = hero?.price != null
-                                    ) {
-                                        openDialog = true
-                                    }
+                                NeoButton(
+                                    "Buy",
+                                    modifier = Modifier
+                                        .weight(1f)
+                                        .fillMaxWidth(),
+                                    enabled = item != null
+                                ) {
+                                    if (item != null) {
+                                        onBuy = true
+                                        navController.navigateUp()
+                                    } else Toast.makeText(
+                                        context,
+                                        "there is no auras!",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
                                 }
-                                ScreenState.User.toString() -> {
-                                    NeoButton(
-                                        "Store",
-                                        modifier = Modifier
-                                            .weight(1f)
-                                            .fillMaxWidth(),
-                                        enabled = hero?.price != null
-                                    ) {
-                                        if (hero != null) {
-                                            viewModel.store(hero?.price?.toInt()!!)
-                                            navController.navigateUp()
-                                        } else Toast.makeText(
+                            }
+                            ScreenState.Global.toString() -> {
+                                NeoButton(
+                                    "Buy",
+                                    modifier = Modifier
+                                        .weight(1f)
+                                        .fillMaxWidth(),
+                                    enabled = hero?.price != null
+                                ) {
+                                    viewModel.buy(hero!!)
+                                    onClick = true
+                                }
+                            }
+                            ScreenState.UserInventory.toString() -> {
+                                NeoButton(
+                                    "Pawn",
+                                    modifier = Modifier
+                                        .weight(1f)
+                                        .fillMaxWidth(),
+                                    enabled = hero?.price != null
+                                ) {
+                                    openDialog = true
+                                }
+                            }
+                            ScreenState.User.toString() -> {
+                                NeoButton(
+                                    "Store",
+                                    modifier = Modifier
+                                        .weight(1f)
+                                        .fillMaxWidth(),
+                                    enabled = hero?.price != null
+                                ) {
+                                    if (hero != null) {
+                                        viewModel.store(hero?.price!!)
+                                        viewModel.getHeroDetail()
+                                        onClick = true
+
+                                    } else {
+
+                                        Toast.makeText(
                                             context,
                                             "there is no auras!",
                                             Toast.LENGTH_SHORT

@@ -1,7 +1,6 @@
 package id.neotica.world.feat.mining
 
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -25,7 +24,6 @@ import org.koin.androidx.compose.koinViewModel
 fun MiningView(
     navController: NavController,
     paddingValues: PaddingValues,
-    contentInsets: WindowInsets,
     viewModel: MiningViewModel = koinViewModel()
 ) {
     var coal by remember { mutableIntStateOf(0) }

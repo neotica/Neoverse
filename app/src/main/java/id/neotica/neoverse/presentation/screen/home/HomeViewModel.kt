@@ -10,6 +10,7 @@ import id.neotica.domain.model.chat.ParentNeo
 import id.neotica.domain.model.User
 import id.neotica.domain.remote.ChatRepository
 import id.neotica.domain.remote.UserRepository
+import id.neotica.domain.usecase.GetAuraUseCase
 import id.neotica.domain.usecase.GetUserIdUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -20,10 +21,12 @@ class HomeViewModel(
     private val chatRepo: ChatRepository,
     private val userDatabase: CurrentUserRepository,
     private val friendDatabase: FriendDaoRepository,
-    private val getUserIdUseCase: GetUserIdUseCase
+    private val getUserIdUseCase: GetUserIdUseCase,
+    private val getAuraUseCase: GetAuraUseCase
 ): ViewModel() {
 
     private var _user: MutableStateFlow<ApiResult<User?>> = MutableStateFlow(ApiResult.Loading())
+    fun currentAura(): String = getAuraUseCase.invoke().toString()
 
     private var _userEntity: MutableStateFlow<ApiResult<User?>> = MutableStateFlow(
         ApiResult.Loading())
@@ -40,9 +43,7 @@ class HomeViewModel(
         getChatroom()
     }
 
-    fun isLoggedIn(): Boolean {
-        return getUserIdUseCase.invoke().isNotEmpty()
-    }
+    fun isLoggedIn(): Boolean = getUserIdUseCase.invoke().isNotEmpty()
 
     fun isUserVerified() = userRepo.isUserVerified()
 

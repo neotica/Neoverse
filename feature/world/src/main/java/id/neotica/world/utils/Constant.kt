@@ -1,3 +1,3 @@
 package id.neotica.world.utils
 
-const val rockPicture = "https://media.discordapp.net/attachments/1302557233351098398/1302557412233973772/img_rock.png?ex=6730759f&is=672f241f&hm=64f9f1b6cdbea31a38e49c73d2709658d0b2e1552266d4c147a1a60c529a4db6&"
+const val rockPicture = "https://firebasestorage.googleapis.com/v0/b/neoverse-neotica.appspot.com/o/resPicture%2Fpngkey.com-rock-clipart-png-8389846.png?alt=media&token=92cfc29d-8c75-4267-ad37-72f71cf1cc59"
