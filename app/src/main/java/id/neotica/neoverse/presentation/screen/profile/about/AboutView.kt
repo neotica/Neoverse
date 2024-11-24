@@ -1,0 +1,58 @@
+package id.neotica.neoverse.presentation.screen.profile.about
+
+import android.content.Intent
+import android.net.Uri
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import id.neotica.ui.components.BasicScaffold
+import id.neotica.ui.theme.DarkPrimary
+
+@Composable
+fun AboutView(navController: NavController, paddingValues: PaddingValues, modifier: Modifier = Modifier) {
+    BasicScaffold(
+        topBarTitle = "About",
+        true,
+        navController = navController,
+        paddingValues = paddingValues
+    ) {
+        val context = LocalContext.current
+
+        Column(
+            Modifier.padding(4.dp)
+        ) {
+            Text("This project is created by Ryo Martin Sopian.")
+            Text("Some icons may use assets from (and free for commercial uses): ")
+            Column(
+                Modifier.padding(start = 2.dp)
+            ) {
+                Text(
+                    color = DarkPrimary,
+                    fontSize = 14.sp,
+                    text = "- Streamline",
+                    modifier = Modifier.clickable {
+                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://streamlinehq.com"))
+                        context.startActivity(intent)
+                    }
+                )
+                Text(
+                    color = DarkPrimary,
+                    fontSize = 14.sp,
+                    text = "- Glitch",
+                    modifier = Modifier.clickable {
+                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://archive.org/details/glitch-public-domain-game-art"))
+                        context.startActivity(intent)
+                    }
+                )
+            }
+        }
+    }
+}

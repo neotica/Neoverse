@@ -94,7 +94,7 @@ fun WorldView(
         if (!auraInit) {
             Text("Your Aura: ${currentAuras?.aura ?: ""}")
             Spacer(Modifier.padding(4.dp))
-            NeoButton("To Bar") {
+            NeoButton("Tavern") {
                 navController.navigate(WorldScreen.GameScreen)
             }
             Spacer(Modifier.padding(4.dp))

@@ -77,7 +77,7 @@ class MainActivity: ComponentActivity() {
                     ),
                     NavigationItem(
                         title = "World",
-                        icon = ImageVector.vectorResource(R.drawable.ic_aura),
+                        icon = ImageVector.vectorResource(R.drawable.ic_world),
                         screen = RootScreen.WorldNav
                     ),
                     NavigationItem(

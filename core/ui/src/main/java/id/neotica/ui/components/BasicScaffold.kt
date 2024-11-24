@@ -46,6 +46,7 @@ fun BasicScaffold(
     fullScreen: Boolean = false,
     enableEye: Boolean = false,
     horizontalAlignment: Alignment.Horizontal = Alignment.Start,
+    trailingIcon: (@Composable () -> Unit)? = null,
     topBarVisibility: Boolean = true,
     content: @Composable () -> Unit
 ) {
@@ -95,6 +96,10 @@ fun BasicScaffold(
                     actions = {
                         val eyeState = remember { mutableStateOf(false) }
                         val blinkCount = remember { mutableIntStateOf(0) }
+
+                        if (trailingIcon != null) {
+                            trailingIcon()
+                        }
 
                         if (enableEye) {
                             LaunchedEffect(eyeState.value) {
