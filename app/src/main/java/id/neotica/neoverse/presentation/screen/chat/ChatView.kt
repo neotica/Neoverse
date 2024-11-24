@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -24,7 +25,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
@@ -38,7 +38,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -48,6 +47,7 @@ import com.google.firebase.auth.auth
 import id.neotica.domain.model.chat.Message
 import id.neotica.domain.utils.convertLongToTime
 import id.neotica.ui.components.BasicScaffold
+import id.neotica.ui.components.scroll.scrollBottomValue
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.Screen
 import id.neotica.ui.theme.BlackTransparent40
@@ -62,11 +62,11 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun ChatView(
     navController: NavController,
-    paddingValues: PaddingValues,
     args: Screen.Chat,
     viewModel: ChatViewModel = koinViewModel()
 ) {
     val messages = viewModel.message.collectAsState()
+    val listState = rememberLazyListState()
 
     BackHandler {
         navController.navigate(RootScreen.HomeNav) {
@@ -88,10 +88,12 @@ fun ChatView(
             }
         },
         navController = navController,
+        topBarVisibility = !scrollBottomValue(listState),
         fullScreen = true
     ) {
         ChatMessages(
             messages = messages.value,
+            listState = listState
         ) { msg ->
             if (msg.isNotEmpty()) {
                 viewModel.sendMessage(chatId = args.chatId, msg)
@@ -100,17 +102,14 @@ fun ChatView(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun ChatMessages(
     messages: List<Message>,
+    listState: LazyListState,
     onSendMessage: (String) -> Unit
 ) {
-    val hideKeyboardController = LocalSoftwareKeyboardController.current
-
     val msg = remember { mutableStateOf("") }
-    val scrollState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
 
     Box(
@@ -118,13 +117,13 @@ fun ChatMessages(
             .fillMaxSize()
     ) {
         coroutineScope.launch {
-            scrollState.scrollToItem(messages.size + 1)
+            listState.scrollToItem(messages.size + 1)
         }
         Column(Modifier.fillMaxSize()) {
             LazyColumn(
                 modifier = Modifier
                     .weight(1f),
-                state = scrollState,
+                state = listState,
                 contentPadding = PaddingValues(
                     bottom = WindowInsets.systemBars.asPaddingValues().calculateBottomPadding() + 46.dp,
                     top = WindowInsets.statusBars.asPaddingValues().calculateTopPadding() * 2

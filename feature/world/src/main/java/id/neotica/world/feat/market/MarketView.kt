@@ -57,7 +57,7 @@ import id.neotica.domain.model.market.Item
 import id.neotica.droidcore.component.carousel.CarouselCard
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.ImageCoil
-import id.neotica.ui.components.scroll.scrollUpValue
+import id.neotica.ui.components.scroll.scrollTopValue
 import id.neotica.ui.navigation.WorldScreen
 import id.neotica.ui.state.ScreenState
 import id.neotica.ui.theme.DarkPrimaryCard
@@ -147,7 +147,7 @@ fun MarketView(
         navController = navController,
         enableActionBar = true,
         fullScreen = true,
-        topBarVisibility = scrollUpValue(listState),
+        topBarVisibility = scrollTopValue(listState),
     ) {
         LazyColumn(
             state = listState,

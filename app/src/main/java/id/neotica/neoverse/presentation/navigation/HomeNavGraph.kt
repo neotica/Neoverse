@@ -32,7 +32,7 @@ fun NavGraphBuilder.homeNavGraph(
             exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End, tween(100)) }
         ) {
             val args = it.toRoute<Screen.Chat>()
-            ChatView(navController, paddingValues, args)
+            ChatView(navController, args)
         }
     }
 }
