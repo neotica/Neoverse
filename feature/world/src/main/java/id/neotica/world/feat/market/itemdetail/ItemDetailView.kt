@@ -143,7 +143,7 @@ fun ItemDetailView(
     }
 
     val scaffoldTitle = when(viewModel.screenState()) {
-        ScreenState.UserInventory.toString() -> "Inventory"
+        ScreenState.UserInventory.toString(), ScreenState.InventoryItem.toString() -> "Inventory"
         else -> "Market"
     }
 
