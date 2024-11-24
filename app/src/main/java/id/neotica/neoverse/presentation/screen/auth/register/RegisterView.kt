@@ -35,6 +35,9 @@ fun RegisterView(
     viewModel: RegisterViewModel = koinViewModel()
     ) {
     val nameValue = remember { mutableStateOf("") }
+    val nameNoWhiteSpace = remember(nameValue.value) {
+        !nameValue.value.contains(Regex("\\s"))
+    }
     val emailValue = remember { mutableStateOf("") }
     val passwordValue = remember { mutableStateOf("") }
     var isButtonPressed by remember { mutableStateOf(false) }
@@ -124,6 +127,7 @@ fun RegisterView(
                                 enabled = nameValue.value.isNotEmpty()
                                         && emailValue.value.isNotEmpty()
                                         && passwordValue.value.isNotEmpty()
+                                        && nameNoWhiteSpace
                                         && isUserExist,
                             ) {
                                 isButtonPressed = true

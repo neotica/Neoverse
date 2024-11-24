@@ -177,9 +177,13 @@ fun HomeView(
                             modifier = Modifier
                                 .padding(8.dp)
                         ) {
-                            Column {
+                            Column(
+                                Modifier.weight(4f)
+                            ) {
                                 Text(
                                     text = "Welcome, ${currentuser?.username ?: ""}!",
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
                                     fontSize = FontSize.Big,
                                     fontWeight = FontWeight.Bold
                                 )
@@ -190,7 +194,9 @@ fun HomeView(
                                 )
                             }
                             Column(
-                                Modifier.align(Alignment.CenterVertically)
+                                Modifier
+                                    .weight(1f)
+                                    .align(Alignment.CenterVertically)
                             ) {
                                 currentuser?.let {
                                     ImageCoil(
