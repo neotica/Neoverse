@@ -45,7 +45,7 @@ class FriendViewModel(
     private var _friendProfile: MutableStateFlow<ApiResult<User?>> = MutableStateFlow(ApiResult.Loading())
     val friendProfile = _friendProfile.asStateFlow()
 
-    fun currentUserId(): String = _userEntity.value.data?.userId ?: ""
+    fun currentUserId(): String = getUserIdUseCase.invoke()
     private fun currentUserName(): String = _userEntity.value.data?.username ?: ""
 
     init {

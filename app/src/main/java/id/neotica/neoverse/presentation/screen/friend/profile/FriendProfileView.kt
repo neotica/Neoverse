@@ -57,17 +57,6 @@ fun FriendProfileView(
                     isLoading = false
                     isPressed = false
                     friend = result.data
-                    run {
-                        val friends = User(
-                            userId = friend?.userId.toString(),
-                            username = friend?.username.toString(),
-                            userEmail = friend?.userEmail.toString(),
-                            status = friend?.status.toString(),
-                            imageUrl = friend?.imageUrl.toString()
-                        )
-                        viewModel.unFriend(friends)
-                        viewModel.addFriend(friends)
-                    }
                 }
                 is ApiResult.Error -> {
                     isLoading = false
@@ -136,17 +125,17 @@ fun FriendProfileView(
                         ) {
                             Text(modifier = Modifier.fillMaxWidth(), text = it.username, textAlign = TextAlign.Center)
                             NeoButton("Chat") {
-                                val friendUsername = friend?.username.toString()
-                                val friendId = friend?.userId.toString()
+                                val friendUsername = it.username
+                                val friendId = it.userId
 
                                 val chatRoomFiltered =
-                                    viewModel.getRoomFiltered(friend?.userId.toString(), chatrooms.value)
+                                    viewModel.getRoomFiltered(it.userId, chatrooms.value)
                                 if (chatRoomFiltered.toString() == "null") {
                                     Log.d("friendchat", "null")
 
                                     navController.navigate(
                                         Screen.Chat(
-                                            chatId = currentId + friend?.userId,
+                                            chatId = currentId + it.userId,
                                             user2 = friendUsername
                                         )
                                     )
@@ -160,10 +149,10 @@ fun FriendProfileView(
                                     )
                                 } else {
                                     Log.d("friendchat", "not null")
-                                    chatRoomFiltered.let {
+                                    chatRoomFiltered?.let { chatFilteredAbsolute ->
                                         navController.navigate(
                                             Screen.Chat(
-                                                chatId = chatRoomFiltered?.name.toString(),
+                                                chatId = chatFilteredAbsolute.name,
                                                 user2 = friendUsername
                                             )
                                         )
