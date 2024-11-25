@@ -1,7 +1,8 @@
 package id.neotica.neoverse.presentation.screen.profile.termsofsercive
 
-import android.annotation.SuppressLint
+import android.content.Intent
 import android.graphics.Bitmap
+import android.net.Uri
 import android.net.http.SslError
 import android.webkit.SslErrorHandler
 import android.webkit.WebResourceRequest
@@ -20,7 +21,6 @@ import androidx.navigation.NavController
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.LoadingIndicator
 
-@SuppressLint("SetJavaScriptEnabled")
 @Composable
 fun TermsOfServiceView(navController: NavController,  paddingValues: PaddingValues, modifier: Modifier = Modifier) {
     BasicScaffold(
@@ -39,13 +39,17 @@ fun TermsOfServiceView(navController: NavController,  paddingValues: PaddingValu
                         settings.loadWithOverviewMode = true
                         settings.useWideViewPort = true
                         webViewClient = object : WebViewClient() {
-                            @SuppressLint("WebViewClientOnReceivedSslError")
                             override fun onReceivedSslError(
                                 view: WebView?,
                                 handler: SslErrorHandler?,
                                 error: SslError?
                             ) {
-                                handler?.proceed()
+                                isLoading = false
+                                handler?.cancel()
+                                navController.navigateUp().apply {
+                                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://neotica.id/terms-of-services.html"))
+                                    context.startActivity(intent)
+                                }
                             }
 
                             override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {

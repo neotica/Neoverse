@@ -28,6 +28,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -47,8 +48,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.navigation.NavController
 import id.neotica.domain.ApiResult
+import id.neotica.domain.model.Games
 import id.neotica.domain.model.User
 import id.neotica.domain.model.chat.ChatRoom
 import id.neotica.domain.model.chat.ParentNeo
@@ -76,10 +81,11 @@ fun HomeView(
 
     var friendList by remember { mutableStateOf<List<User>>(emptyList()) }
 
-
     var isLoading by remember { mutableStateOf(false) }
     var isLoadingChats by remember { mutableStateOf(false) }
     var currentuser by remember { mutableStateOf<User?>(null) }
+    val lifecycleOwner = LocalLifecycleOwner.current
+    var currentAura by remember { mutableStateOf<Games?>(null) }
 
     val context = LocalContext.current
 
@@ -129,6 +135,31 @@ fun HomeView(
                     isLoadingChats = false
                 }
             }
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.fetchAuras()
+        viewModel.totalAuras.collect { result ->
+            when(result) {
+                is ApiResult.Loading -> {}
+                is ApiResult.Success -> {
+                    currentAura = result.data
+                }
+                is ApiResult.Error -> {}
+            }
+        }
+    }
+
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME) {
+                viewModel.fetchAuras()
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
         }
     }
 
@@ -188,7 +219,7 @@ fun HomeView(
                                     fontWeight = FontWeight.Bold
                                 )
                                 Text(
-                                    text = "You have ${viewModel.currentAura()} Auras.",
+                                    text = "You have ${currentAura?.aura ?: "0"} Auras.",
                                     fontSize = FontSize.Small,
                                     color = TransparentText
                                 )

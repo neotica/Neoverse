@@ -50,6 +50,8 @@ dependencies {
     api(libs.firebase.database)
     api(libs.firebase.storage)
     api(libs.firebase.firestore.ktx)
+    api(libs.firebase.appcheck.playintegrity)
+    api("com.google.firebase:firebase-appcheck-debug")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

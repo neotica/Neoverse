@@ -36,6 +36,10 @@ import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.google.firebase.Firebase
+import com.google.firebase.appcheck.appCheck
+import com.google.firebase.appcheck.playintegrity.PlayIntegrityAppCheckProviderFactory
+import com.google.firebase.initialize
 import id.neotica.neoverse.presentation.navigation.NavGraph
 import id.neotica.ui.R
 import id.neotica.ui.components.navigation.CustomNavBar
@@ -57,6 +61,21 @@ class MainActivity: ComponentActivity() {
         if (VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             enableEdgeToEdge()
         }
+
+        Firebase.initialize(this)
+        Firebase.appCheck.installAppCheckProviderFactory(
+            PlayIntegrityAppCheckProviderFactory.getInstance()
+        )
+//        Firebase.appCheck.getAppCheckToken(false)
+//        Log.d("integrity", integrity.toString())
+/*        Firebase.initialize(this)
+        Firebase.appCheck.installAppCheckProviderFactory(
+            DebugAppCheckProviderFactory.getInstance()
+        )*/
+//        Firebase.appCheck.
+
+//            DebugAppCheckProviderFactory.getInstance()
+
         setContent {
             NeoverseTheme {
                 val navController = rememberNavController()

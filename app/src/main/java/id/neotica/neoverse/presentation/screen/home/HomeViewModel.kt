@@ -5,12 +5,13 @@ import androidx.lifecycle.viewModelScope
 import id.neotica.domain.ApiResult
 import id.neotica.domain.local.CurrentUserRepository
 import id.neotica.domain.local.FriendDaoRepository
+import id.neotica.domain.model.Games
+import id.neotica.domain.model.User
 import id.neotica.domain.model.chat.ChatRoom
 import id.neotica.domain.model.chat.ParentNeo
-import id.neotica.domain.model.User
+import id.neotica.domain.remote.AuraRepository
 import id.neotica.domain.remote.ChatRepository
 import id.neotica.domain.remote.UserRepository
-import id.neotica.domain.usecase.GetAuraUseCase
 import id.neotica.domain.usecase.GetUserIdUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -22,11 +23,12 @@ class HomeViewModel(
     private val userDatabase: CurrentUserRepository,
     private val friendDatabase: FriendDaoRepository,
     private val getUserIdUseCase: GetUserIdUseCase,
-    private val getAuraUseCase: GetAuraUseCase
+    private val auraRepo: AuraRepository,
 ): ViewModel() {
-
     private var _user: MutableStateFlow<ApiResult<User?>> = MutableStateFlow(ApiResult.Loading())
-    fun currentAura(): String = getAuraUseCase.invoke().toString()
+
+    private val _totalAuras: MutableStateFlow<ApiResult<Games?>> = MutableStateFlow(ApiResult.Loading())
+    val totalAuras = _totalAuras.asStateFlow()
 
     private var _userEntity: MutableStateFlow<ApiResult<User?>> = MutableStateFlow(
         ApiResult.Loading())
@@ -41,11 +43,20 @@ class HomeViewModel(
     init {
         getUser()
         getChatroom()
+        fetchAuras()
     }
 
-    fun isLoggedIn(): Boolean = getUserIdUseCase.invoke().isNotEmpty()
+    private fun currentUserId() = getUserIdUseCase.invoke()
+
+    fun isLoggedIn(): Boolean = currentUserId().isNotEmpty()
 
     fun isUserVerified() = userRepo.isUserVerified()
+
+    fun fetchAuras() = viewModelScope.launch {
+        auraRepo.getAuras(currentUserId()).collect {
+            _totalAuras.value = it
+        }
+    }
 
     private fun getUser() = viewModelScope.launch {
         val userData = userDatabase.getUser()

@@ -92,11 +92,13 @@ fun ChatListItem(
     ) {
         Row {
             Box(
-                Modifier.padding(2.dp)
+                Modifier
+                    .padding(2.dp)
             ) {
                 ImageCoil(
                     url = image,
                     fillMaxWidth = false,
+                    round = true,
                     size = 72.dp,
                     contentAlignment = Alignment.CenterStart
                 )

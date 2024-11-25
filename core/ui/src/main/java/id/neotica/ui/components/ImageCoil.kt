@@ -5,6 +5,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
@@ -64,7 +65,11 @@ fun ImageCoil(
                         .clip(RoundedCornerShape(if (round) 120.dp else 12.dp))
                 }
             } else modifier,
-            loading = { LoadingIndicator() },
+            loading = {
+                Box(
+                    Modifier.padding(12.dp)
+                ) { LoadingIndicator() }
+            },
             contentScale = if(round) ContentScale.Crop else {
                 if (!scaleCustom) {
                     ContentScale.Fit
