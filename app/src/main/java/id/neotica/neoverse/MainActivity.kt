@@ -112,6 +112,8 @@ class MainActivity: ComponentActivity() {
                     Screen.VerifyEmailScreen,
                     Screen.PrivacyPolicyScreen,
                     Screen.TermsOfServiceScreen,
+                    Screen.DeleteAccountScreen,
+                    Screen.AboutScreen,
                     Screen.AddChatScreen
                 )
 

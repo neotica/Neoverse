@@ -171,24 +171,6 @@ fun HomeView(
     Scaffold (
         modifier = Modifier.windowInsetsPadding(WindowInsets.safeDrawing),
     ) { it ->
-        Box(
-            Modifier.fillMaxSize()
-                .padding(PaddingValues(bottom = paddingValues.calculateBottomPadding()))
-            ,
-        ) {
-            FloatingActionButton(
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(12.dp)
-                ,
-                containerColor = DarkPrimaryTransparent2,
-                onClick = {
-                    navController.navigate(Screen.AddChatScreen)
-                }
-            ) {
-                Text("+")
-            }
-        }
         Column(Modifier.padding(it)) {
             AnimatedVisibility(
                 visible = showTopCard.value,
@@ -336,6 +318,24 @@ fun HomeView(
                         }
                     }
                 }
+            }
+        }
+        Box(
+            Modifier.fillMaxSize()
+                .padding(PaddingValues(bottom = paddingValues.calculateBottomPadding()))
+            ,
+        ) {
+            FloatingActionButton(
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(12.dp)
+                ,
+                containerColor = DarkPrimaryTransparent2,
+                onClick = {
+                    navController.navigate(Screen.AddChatScreen)
+                }
+            ) {
+                Text("+")
             }
         }
     }
