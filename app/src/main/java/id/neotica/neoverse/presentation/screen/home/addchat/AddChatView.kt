@@ -119,7 +119,7 @@ fun AddChatView(
 
 
     BasicScaffold(
-        "Friends",
+        "Add Chat",
         paddingValues = paddingValues
     ) {
         LoadingIndicatorBool(isLoadingChats) {

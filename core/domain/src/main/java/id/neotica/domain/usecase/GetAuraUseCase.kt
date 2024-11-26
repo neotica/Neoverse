@@ -1,6 +1,6 @@
 package id.neotica.domain.usecase
 
-import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableLongStateOf
 import id.neotica.domain.remote.AuraRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -12,9 +12,9 @@ class GetAuraUseCase(
     private val getUserIdUseCase: GetUserIdUseCase,
 ) {
     private fun currentUserId(): String = getUserIdUseCase.invoke()
-    private var initAura = mutableIntStateOf(0)
+    private var initAura = mutableLongStateOf(0)
 
-    operator fun invoke(): Int = initAura.intValue
+    operator fun invoke(): Long = initAura.longValue
 
     init {
         CoroutineScope(Dispatchers.IO).launch { main() }
@@ -24,7 +24,7 @@ class GetAuraUseCase(
         auraRepo.getAuras(currentUserId()).collect {
             it.data?.aura.let { auraVal ->
                 if (auraVal != null) {
-                    initAura.intValue = auraVal.toInt()
+                    initAura.longValue = auraVal
                 }
             }
         }

@@ -1,12 +1,14 @@
 package id.neotica.neoverse.presentation.screen.auth.register
 
 import android.widget.Toast
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -18,15 +20,18 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import id.neotica.domain.ApiResult
 import id.neotica.droidcore.component.textfield.NeoTextField
 import id.neotica.droidcore.component.textfield.PasswordTextField
-import id.neotica.domain.ApiResult
-import id.neotica.ui.navigation.Screen
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.LoadingIndicatorBool
 import id.neotica.ui.components.NeoButton
+import id.neotica.ui.navigation.Screen
+import id.neotica.ui.theme.DarkPrimary
 import org.koin.androidx.compose.koinViewModel
+import java.util.Locale
 
 @Composable
 fun RegisterView(
@@ -35,6 +40,9 @@ fun RegisterView(
     viewModel: RegisterViewModel = koinViewModel()
     ) {
     val nameValue = remember { mutableStateOf("") }
+    val nameNoWhiteSpace = remember(nameValue.value) {
+        !nameValue.value.contains(Regex("\\s"))
+    }
     val emailValue = remember { mutableStateOf("") }
     val passwordValue = remember { mutableStateOf("") }
     var isButtonPressed by remember { mutableStateOf(false) }
@@ -93,7 +101,7 @@ fun RegisterView(
         true,
         navController = navController
     ) {
-        Box(Modifier.padding(4.dp)) {
+        Box(Modifier.padding(horizontal = 4.dp)) {
             Column {
                 LoadingIndicatorBool(isLoading = isLoading) {
                     Box(Modifier.weight(1f)) {
@@ -107,6 +115,31 @@ fun RegisterView(
                             NeoTextField(value = emailValue, label = "Email")
                             Spacer(Modifier.padding(4.dp))
                             PasswordTextField(value = passwordValue, placeholder = "Password")
+                            Spacer(Modifier.padding(4.dp))
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.Center
+                            ) {
+                                Text(
+                                    color = DarkPrimary,
+                                    fontSize = 14.sp,
+                                    text = "Privacy Policy",
+                                    modifier = Modifier.clickable {
+                                        navController.navigate(Screen.PrivacyPolicyScreen)
+                                    }
+                                )
+                                Spacer(Modifier.weight(1f))
+                                Text(
+                                    color = DarkPrimary,
+                                    fontSize = 14.sp,
+                                    text = "Terms of Service",
+                                    modifier = Modifier.clickable {
+                                        navController.navigate(Screen.TermsOfServiceScreen)
+                                    }
+                                )
+                            }
+                            Spacer(Modifier.padding(16.dp))
+                            Text("By registering, you are already accepting the Terms and Service and Privacy Policy of this app.")
                         }
                     }
                     Row(
@@ -124,14 +157,18 @@ fun RegisterView(
                                 enabled = nameValue.value.isNotEmpty()
                                         && emailValue.value.isNotEmpty()
                                         && passwordValue.value.isNotEmpty()
+                                        && nameNoWhiteSpace
                                         && isUserExist,
                             ) {
                                 isButtonPressed = true
-                                viewModel.register(nameValue.value, emailValue.value, passwordValue.value)
+                                viewModel.register(nameValue.value.replaceFirstChar {
+                                    it.lowercase(
+                                        Locale.getDefault()
+                                    )
+                                }, emailValue.value, passwordValue.value)
                             }
                         }
                     }
-                    Spacer(Modifier.padding(8.dp))
                 }
             }
         }

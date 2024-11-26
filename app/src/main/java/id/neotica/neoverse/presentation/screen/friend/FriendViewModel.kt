@@ -13,6 +13,8 @@ import id.neotica.domain.remote.ChatRepository
 import id.neotica.domain.remote.UserRepository
 import id.neotica.domain.usecase.GetUserIdUseCase
 import id.neotica.domain.utils.randomUUID
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -43,7 +45,7 @@ class FriendViewModel(
     private var _friendProfile: MutableStateFlow<ApiResult<User?>> = MutableStateFlow(ApiResult.Loading())
     val friendProfile = _friendProfile.asStateFlow()
 
-    fun currentUserId(): String = _userEntity.value.data?.userId ?: ""
+    fun currentUserId(): String = getUserIdUseCase.invoke()
     private fun currentUserName(): String = _userEntity.value.data?.username ?: ""
 
     init {
@@ -72,7 +74,8 @@ class FriendViewModel(
         databaseRepo.addFriendList(friends)
     }
 
-    fun addFriend(friend: User) = viewModelScope.launch {
+    // TODO: Add stateFlow for addFriend and unFriend, use viewModelScope.
+    fun addFriend(friend: User) = CoroutineScope(Dispatchers.IO).launch {
         userRepo.addFriend(friend)
         databaseRepo.addFriend(friend)
     }
@@ -83,7 +86,7 @@ class FriendViewModel(
         _friendProfile.value = user
     }
 
-    fun unFriend(friend: User) = viewModelScope.launch {
+    fun unFriend(friend: User) = CoroutineScope(Dispatchers.IO).launch {
         userRepo.unfriend(friend)
         databaseRepo.unfriend(friend.username)
     }

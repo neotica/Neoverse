@@ -31,6 +31,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -77,6 +79,14 @@ fun ChatView(
         }
     }
 
+    val layoutInfo by remember { derivedStateOf { listState.layoutInfo } }
+
+    val scrollTrue = when {
+        layoutInfo.visibleItemsInfo.lastOrNull()?.index == layoutInfo.totalItemsCount - 1 -> true
+        !scrollBottomValue(listState) -> true
+        else -> false
+    }
+
     BasicScaffold(
         topBarTitle = args.user2,
         customActionBar = {
@@ -88,14 +98,14 @@ fun ChatView(
             }
         },
         navController = navController,
-        topBarVisibility = !scrollBottomValue(listState),
+        topBarVisibility = scrollTrue,
         fullScreen = true
     ) {
         ChatMessages(
             messages = messages.value,
             listState = listState
         ) { msg ->
-            if (msg.isNotEmpty()) {
+            if (msg.isNotEmpty() && args.user2.isNotEmpty()) {
                 viewModel.sendMessage(chatId = args.chatId, msg)
             }
         }
@@ -137,7 +147,14 @@ fun ChatMessages(
         Surface(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
-                .padding(start = 4.dp, end = 4.dp, top = 4.dp, bottom = WindowInsets.systemBars.asPaddingValues().calculateBottomPadding())
+                .padding(
+                    start = 4.dp,
+                    end = 4.dp,
+                    top = 4.dp,
+                    bottom = WindowInsets.systemBars
+                        .asPaddingValues()
+                        .calculateBottomPadding()
+                )
             ,
             color = Transparent,
             shape = RoundedCornerShape(32.dp)

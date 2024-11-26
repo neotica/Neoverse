@@ -1,7 +1,9 @@
 package id.neotica.neoverse.presentation.screen.profile.privacypolicy
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.graphics.Bitmap
+import android.net.Uri
 import android.net.http.SslError
 import android.webkit.SslErrorHandler
 import android.webkit.WebResourceRequest
@@ -34,18 +36,23 @@ fun PrivacyPolicyView(navController: NavController, paddingValues: PaddingValues
         Box {
             AndroidView(
                 factory = {
+                    isLoading = true
                     WebView(it).apply {
                         settings.javaScriptEnabled = true
                         settings.loadWithOverviewMode = true
                         settings.useWideViewPort = true
                         webViewClient = object : WebViewClient() {
-                            @SuppressLint("WebViewClientOnReceivedSslError")
                             override fun onReceivedSslError(
                                 view: WebView?,
                                 handler: SslErrorHandler?,
                                 error: SslError?
                             ) {
-                                handler?.proceed()
+                                isLoading = false
+                                handler?.cancel()
+                                navController.navigateUp().apply {
+                                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://neotica.id/privacy-policy.html"))
+                                    context.startActivity(intent)
+                                }
                             }
 
                             override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {

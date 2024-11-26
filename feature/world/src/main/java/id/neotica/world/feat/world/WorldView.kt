@@ -97,7 +97,7 @@ fun WorldView(
             NeoButton("Tavern") {
                 navController.navigate(WorldScreen.GameScreen)
             }
-            Spacer(Modifier.padding(4.dp))
+            /*Spacer(Modifier.padding(4.dp))
             Row(
                 Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
@@ -112,7 +112,7 @@ fun WorldView(
             Spacer(Modifier.padding(4.dp))
             NeoButton("To Merchant") {
                 navController.navigate(WorldScreen.MerchantScreen)
-            }
+            }*/
             Spacer(Modifier.padding(4.dp))
             NeoButton("To Mining Field") {
                 navController.navigate(WorldScreen.MiningScreen)
