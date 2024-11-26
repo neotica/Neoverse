@@ -10,13 +10,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -24,7 +21,6 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
@@ -60,12 +56,14 @@ import id.neotica.domain.model.chat.ParentNeo
 import id.neotica.domain.utils.convertLongToHour
 import id.neotica.domain.utils.filteredRoom
 import id.neotica.domain.utils.returnFriendName
+import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.ChatListItem
 import id.neotica.ui.components.ImageCoil
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.Screen
 import id.neotica.ui.theme.DarkPrimaryTransparent2
 import id.neotica.ui.theme.FontSize
+import id.neotica.ui.theme.NeoPadding
 import id.neotica.ui.theme.TransparentText
 import org.koin.androidx.compose.koinViewModel
 
@@ -168,10 +166,12 @@ fun HomeView(
     val showTopCard = remember { derivedStateOf { listState.firstVisibleItemScrollOffset == 0 } }
     val haptic = LocalHapticFeedback.current
 
-    Scaffold (
-        modifier = Modifier.windowInsetsPadding(WindowInsets.safeDrawing),
-    ) { it ->
-        Column(Modifier.padding(it)) {
+    BasicScaffold (
+        topBarTitle = "HomeView",
+        topBarVisibility = false,
+        fullScreen = true
+    ) {
+        Column {
             AnimatedVisibility(
                 visible = showTopCard.value,
                 enter = expandVertically(),
@@ -180,7 +180,11 @@ fun HomeView(
                 Column {
                     Card(
                         modifier = Modifier
-                            .padding(horizontal = 4.dp)
+                            .padding(
+                                top = NeoPadding.statusBarPadding,
+                                start = 4.dp,
+                                end = 4.dp,
+                            )
                             .fillMaxWidth(),
                         colors = CardDefaults.cardColors().copy(
                             containerColor = DarkPrimaryTransparent2
@@ -245,7 +249,9 @@ fun HomeView(
             ) {
                 LazyColumn(
                     state = listState,
-                    contentPadding = PaddingValues(bottom = paddingValues.calculateBottomPadding())
+                    contentPadding = PaddingValues(
+                        bottom = NeoPadding.systemBarPadding + paddingValues.calculateBottomPadding()
+                    )
                 ) {
 //                    item { for(i in 1..30) Text("hshjkcvhbxdbjkcvbcvxcvxdvx") }
                     if(!isLoadingChats) {
@@ -320,23 +326,24 @@ fun HomeView(
                 }
             }
         }
-        Box(
-            Modifier.fillMaxSize()
-                .padding(PaddingValues(bottom = paddingValues.calculateBottomPadding()))
+    }
+    Box(
+        Modifier
+            .fillMaxSize()
+            .padding(PaddingValues(bottom = NeoPadding.systemBarPadding + paddingValues.calculateBottomPadding()))
+        ,
+    ) {
+        FloatingActionButton(
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(12.dp)
             ,
-        ) {
-            FloatingActionButton(
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(12.dp)
-                ,
-                containerColor = DarkPrimaryTransparent2,
-                onClick = {
-                    navController.navigate(Screen.AddChatScreen)
-                }
-            ) {
-                Text("+")
+            containerColor = DarkPrimaryTransparent2,
+            onClick = {
+                navController.navigate(Screen.AddChatScreen)
             }
+        ) {
+            Text("+")
         }
     }
 }
