@@ -26,13 +26,14 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
@@ -59,6 +60,7 @@ import id.neotica.domain.utils.returnFriendName
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.ChatListItem
 import id.neotica.ui.components.ImageCoil
+import id.neotica.ui.components.scroll.nestedScrollConnection
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.Screen
 import id.neotica.ui.theme.DarkPrimaryTransparent2
@@ -84,6 +86,9 @@ fun HomeView(
     var currentuser by remember { mutableStateOf<User?>(null) }
     val lifecycleOwner = LocalLifecycleOwner.current
     var currentAura by remember { mutableStateOf<Games?>(null) }
+
+    val headerAlpha2 = remember { mutableFloatStateOf(1f) }
+    val headerSize2 = remember { mutableStateOf(100.dp) }
 
     val context = LocalContext.current
 
@@ -163,7 +168,6 @@ fun HomeView(
 
     val nestedState = rememberNestedScrollInteropConnection()
     val listState = rememberLazyListState()
-    val showTopCard = remember { derivedStateOf { listState.firstVisibleItemScrollOffset == 0 } }
     val haptic = LocalHapticFeedback.current
 
     BasicScaffold (
@@ -173,7 +177,8 @@ fun HomeView(
     ) {
         Column {
             AnimatedVisibility(
-                visible = showTopCard.value,
+                modifier = Modifier.alpha(headerAlpha2.floatValue),
+                visible = headerAlpha2.floatValue != 0f,
                 enter = expandVertically(),
                 exit = shrinkVertically(),
             ) {
@@ -247,13 +252,20 @@ fun HomeView(
                     viewModel.getChatroom()
                 }
             ) {
+
                 LazyColumn(
+                    modifier = Modifier.nestedScroll(
+                        nestedScrollConnection(
+                            headerAlpha = headerAlpha2,
+                            headerSize2
+                        )
+                    ),
                     state = listState,
                     contentPadding = PaddingValues(
                         bottom = NeoPadding.systemBarPadding + paddingValues.calculateBottomPadding()
                     )
                 ) {
-//                    item { for(i in 1..30) Text("hshjkcvhbxdbjkcvbcvxcvxdvx") }
+//                    item { for(i in 1..19) Text("hshjkcvhbxdbjkcvbcvxcvxdvx") }
                     if(!isLoadingChats) {
                         items(parentChatrooms.value.filter { channels ->
                             val current = currentuser?.username.toString()
@@ -347,4 +359,3 @@ fun HomeView(
         }
     }
 }
-
