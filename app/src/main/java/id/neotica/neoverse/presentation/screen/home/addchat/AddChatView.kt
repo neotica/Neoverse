@@ -20,6 +20,7 @@ import androidx.navigation.NavController
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.User
 import id.neotica.domain.model.chat.ChatRoom
+import id.neotica.domain.utils.randomUUID
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.LoadingIndicatorBool
 import id.neotica.ui.components.ProfileCard
@@ -148,8 +149,11 @@ fun AddChatView(
                                     if (chatRoomFiltered.toString() == "null") {
                                         Log.d("friendchat", "null")
 
+                                        val roomIdGenerated = randomUUID()
+
                                         navController.navigate(
                                             Screen.Chat(
+                                                chatroomId = roomIdGenerated,
                                                 chatId = currentId + friends.userId,
                                                 user2 = friendUsername
                                             )
@@ -161,12 +165,14 @@ fun AddChatView(
                                         viewModel.addChatroom(
                                             user2 = friendUsername,
                                             user = addUser,
+                                            roomId = roomIdGenerated
                                         )
                                     } else {
                                         Log.d("friendchat", "not null")
                                         chatRoomFiltered.let {
                                             navController.navigate(
                                                 Screen.Chat(
+                                                    chatroomId = chatRoomFiltered?.id,
                                                     chatId = chatRoomFiltered?.name.toString(),
                                                     user2 = friendUsername
                                                 )
