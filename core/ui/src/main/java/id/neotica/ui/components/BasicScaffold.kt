@@ -1,7 +1,5 @@
 package id.neotica.ui.components
 
-import android.os.Build
-import android.os.Build.VERSION
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
@@ -51,16 +49,8 @@ fun BasicScaffold(
     topBarVisibility: Boolean = true,
     content: @Composable () -> Unit
 ) {
-    val baseVerticalPadding = if (VERSION.SDK_INT <= Build.VERSION_CODES.P) {
-        4.dp
-    } else {
-        0.dp
-    }
     Scaffold(
-        modifier = Modifier
-            .padding(
-                vertical = baseVerticalPadding
-            ),
+        modifier = Modifier,
         topBar = {
             AnimatedVisibility(
                 visible = topBarVisibility,

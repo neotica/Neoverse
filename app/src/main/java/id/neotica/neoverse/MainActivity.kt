@@ -39,7 +39,6 @@ import com.google.firebase.appcheck.appCheck
 import com.google.firebase.appcheck.playintegrity.PlayIntegrityAppCheckProviderFactory
 import com.google.firebase.initialize
 import id.neotica.neoverse.presentation.navigation.NavGraph
-import id.neotica.neoverse.utils.isLessThanApi28
 import id.neotica.ui.R
 import id.neotica.ui.components.navigation.CustomNavBar
 import id.neotica.ui.components.navigation.CustomNavigationSuiteScaffold
@@ -57,7 +56,7 @@ class MainActivity: ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         installSplashScreen()
-        if (isLessThanApi28()) enableEdgeToEdge()
+        enableEdgeToEdge()
 
         Firebase.initialize(this)
         Firebase.appCheck.installAppCheckProviderFactory(
