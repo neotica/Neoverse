@@ -15,8 +15,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import id.neotica.neoverse.R
 import id.neotica.ui.navigation.RootScreen
+import id.neotica.ui.navigation.Screen
 
 @Composable
 fun SplashView(navController: NavController) {
@@ -44,9 +47,17 @@ fun SplashView(navController: NavController) {
     }
 
     LaunchedEffect(Unit) {
-        navController.navigate(RootScreen.HomeNav) {
-            popUpTo(navController.graph.startDestinationId) {
-                inclusive = true
+        if (Firebase.auth.currentUser != null) {
+            navController.navigate(RootScreen.HomeNav) {
+                popUpTo(navController.graph.startDestinationId) {
+                    inclusive = true
+                }
+            }
+        } else {
+            navController.navigate(Screen.LoginScreen) {
+                popUpTo(navController.graph.startDestinationId) {
+                    inclusive = true
+                }
             }
         }
     }

@@ -129,7 +129,11 @@ fun ChatMessages(
         coroutineScope.launch {
             listState.scrollToItem(messages.size + 1)
         }
-        Column(Modifier.fillMaxSize()) {
+        Column(
+            Modifier
+                .fillMaxSize()
+                .padding(horizontal = 16.dp)
+        ) {
             LazyColumn(
                 modifier = Modifier
                     .weight(1f),
@@ -148,8 +152,8 @@ fun ChatMessages(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .padding(
-                    start = 4.dp,
-                    end = 4.dp,
+                    start = 8.dp,
+                    end = 8.dp,
                     top = 4.dp,
                     bottom = WindowInsets.systemBars
                         .asPaddingValues()

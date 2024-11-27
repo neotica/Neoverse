@@ -1,5 +1,6 @@
 package id.neotica.neoverse.presentation.screen.home
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
@@ -77,6 +78,7 @@ fun HomeView(
     val parentChatrooms = remember { mutableStateOf<List<ParentNeo<ChatRoom>>>(emptyList()) }
 
     var friendList by remember { mutableStateOf<List<User>>(emptyList()) }
+    var friendListLocal by remember { mutableStateOf<List<User>>(emptyList()) }
 
     var isLoading by remember { mutableStateOf(false) }
     var isLoadingChats by remember { mutableStateOf(false) }
@@ -126,7 +128,16 @@ fun HomeView(
                     viewModel.chatList.forEach { _ ->
                         parentChatrooms.value = result.data!!
                         viewModel.getFriendsRoom().collect {
-                            friendList = it
+                            if (it.isNotEmpty()) {
+                                friendList = it
+                                Log.d("friend", "didnt collect")
+                                isPressed = false
+                            } else {
+                                isPressed = false
+                                viewModel.getFriends()
+                                Log.d("friend", "else")
+
+                            }
                         }
                     }
                 }
@@ -147,6 +158,29 @@ fun HomeView(
                     currentAura = result.data
                 }
                 is ApiResult.Error -> {}
+            }
+        }
+    }
+
+    LaunchedEffect(isPressed) {
+
+        viewModel.friendList.collect { result ->
+            Log.d("friendList", result.toString())
+            when(result) {
+                is ApiResult.Loading -> isLoading = true
+                is ApiResult.Success -> {
+                    isPressed = false
+                    isLoading = false
+                    result.data?.let {
+                        friendListLocal = result.data!!
+                        viewModel.addFriendList(friendListLocal)
+                    }
+                }
+                is ApiResult.Error -> {
+                    isPressed = false
+                    isLoading = false
+                    Log.d("neotica", result.errorMessage.toString())
+                }
             }
         }
     }

@@ -37,6 +37,9 @@ class HomeViewModel(
     private val _chatroom: MutableStateFlow<ApiResult<List<ParentNeo<ChatRoom>>>> = MutableStateFlow(ApiResult.Loading())
     val chatroom = _chatroom.asStateFlow()
 
+    private var _friendList: MutableStateFlow<ApiResult<List<User>>> = MutableStateFlow(ApiResult.Loading())
+    val friendList = _friendList.asStateFlow()
+
     private val _chatList = mutableListOf<ParentNeo<ChatRoom>>()
     val chatList: List<ParentNeo<ChatRoom>> = _chatList
 
@@ -90,6 +93,17 @@ class HomeViewModel(
     }
 
     fun getFriendsRoom() = friendDatabase.getFriends()
+
+    fun getFriends() = viewModelScope.launch {
+        _friendList.value = ApiResult.Loading()
+        userRepo.getFriends().collect {
+            _friendList.value = it
+        }
+    }
+
+    fun addFriendList(friends: List<User>) = viewModelScope.launch {
+        friendDatabase.addFriendList(friends)
+    }
 
     fun deleteChatroom(chatroom: ChatRoom) = viewModelScope.launch {
         getChatroom()

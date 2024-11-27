@@ -134,6 +134,7 @@ fun SlotMachine(modifier: Modifier = Modifier, viewModel: GameViewModel = koinVi
                     randomStrings[index] = generateTranspose(SecureRandom())
                 }
                 onPressed = true
+                viewModel.getItemEvent("Play", "Button")
             }
 
             Spacer(Modifier.padding(4.dp))
@@ -151,6 +152,7 @@ fun SlotMachine(modifier: Modifier = Modifier, viewModel: GameViewModel = koinVi
                         onClick = !onClick
                         delayedClick = true
                     }
+                    viewModel.getItemEvent("Stop", "Button")
                 }
             }
         }

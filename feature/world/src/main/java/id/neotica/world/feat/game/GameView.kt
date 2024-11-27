@@ -90,9 +90,9 @@ fun GameView(
                         .padding(30.dp))
             }
             Spacer(Modifier.padding(20.dp))
-            NeoButton("Drink Beer!") {
+            /*NeoButton("Drink Beer!") {
                 viewModel.sendAuraPoints(-5)
-            }
+            }*/
         } else {
             NeoCard(
                 title = "Receive your first time Aura!",

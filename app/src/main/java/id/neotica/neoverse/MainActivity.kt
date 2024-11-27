@@ -110,7 +110,8 @@ class MainActivity: ComponentActivity() {
                 }
                 val specificRoutes = setOf(
                     "id.neotica.ui.navigation.Screen.Chat/{chatId}/{user2}?chatroomId={chatroomId}",
-                    "id.neotica.ui.navigation.WorldScreen.ItemDetailScreen/{id}/{type}"
+                    "id.neotica.ui.navigation.WorldScreen.ItemDetailScreen/{id}/{type}",
+                    "id.neotica.ui.navigation.Screen.EditProfileScreen/{profPic}"
                 )
                 val currentRoute = navBackStackEntry?.destination?.route
                 Log.d("currentScreen", navBackStackEntry?.destination?.route.toString())
