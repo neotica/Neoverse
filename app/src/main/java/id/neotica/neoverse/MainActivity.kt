@@ -1,7 +1,5 @@
 package id.neotica.neoverse
 
-import android.os.Build
-import android.os.Build.VERSION
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -41,6 +39,7 @@ import com.google.firebase.appcheck.appCheck
 import com.google.firebase.appcheck.playintegrity.PlayIntegrityAppCheckProviderFactory
 import com.google.firebase.initialize
 import id.neotica.neoverse.presentation.navigation.NavGraph
+import id.neotica.neoverse.utils.isLessThanApi28
 import id.neotica.ui.R
 import id.neotica.ui.components.navigation.CustomNavBar
 import id.neotica.ui.components.navigation.CustomNavigationSuiteScaffold
@@ -58,23 +57,12 @@ class MainActivity: ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         installSplashScreen()
-        if (VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            enableEdgeToEdge()
-        }
+        if (isLessThanApi28()) enableEdgeToEdge()
 
         Firebase.initialize(this)
         Firebase.appCheck.installAppCheckProviderFactory(
             PlayIntegrityAppCheckProviderFactory.getInstance()
         )
-//        Firebase.appCheck.getAppCheckToken(false)
-//        Log.d("integrity", integrity.toString())
-/*        Firebase.initialize(this)
-        Firebase.appCheck.installAppCheckProviderFactory(
-            DebugAppCheckProviderFactory.getInstance()
-        )*/
-//        Firebase.appCheck.
-
-//            DebugAppCheckProviderFactory.getInstance()
 
         setContent {
             NeoverseTheme {

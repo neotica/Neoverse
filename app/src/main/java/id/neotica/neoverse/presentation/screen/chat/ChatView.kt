@@ -57,7 +57,7 @@ import id.neotica.ui.theme.DarkPrimary
 import id.neotica.ui.theme.DarkPrimaryTransparent2
 import id.neotica.ui.theme.FontSize
 import id.neotica.ui.theme.Transparent
-import id.neotica.ui.theme.TransparentText
+import id.neotica.ui.theme.TransparentText40
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
@@ -191,7 +191,7 @@ fun ChatMessages(
                             if (msg.value.isEmpty()) {
                                 Text(
                                     text = "Message",
-                                    color = TransparentText,
+                                    color = TransparentText40,
                                     fontSize = FontSize.Normal
                                 )
                             }

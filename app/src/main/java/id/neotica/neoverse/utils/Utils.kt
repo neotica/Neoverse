@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
+import android.os.Build.VERSION
 import android.provider.MediaStore
 import java.io.ByteArrayOutputStream
 import java.io.File
@@ -12,7 +13,7 @@ import java.util.concurrent.TimeUnit
 
 fun compressUri(uri: Uri, context: Context): Uri {
     val contentResolver = context.contentResolver
-    val bitmap: Bitmap = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+    val bitmap: Bitmap = if (VERSION.SDK_INT >= Build.VERSION_CODES.P) {
         val source = ImageDecoder.createSource(contentResolver, uri)
         ImageDecoder.decodeBitmap(source)
     } else {
@@ -33,3 +34,5 @@ fun getImageUriFromByteArray(byteArray: ByteArray, context: Context): Uri {
     file.writeBytes(byteArray)
     return Uri.fromFile(file)
 }
+
+fun isLessThanApi28(): Boolean = VERSION.SDK_INT <= Build.VERSION_CODES.P

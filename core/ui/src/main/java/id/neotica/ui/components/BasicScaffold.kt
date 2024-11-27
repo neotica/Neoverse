@@ -41,7 +41,6 @@ fun BasicScaffold(
     topBarTitle: String,
     enableActionBar: Boolean = false,
     customActionBar: (() -> Unit)? = null,
-    modifier: Modifier = Modifier,
     navController: NavController? = null,
     paddingValues: PaddingValues = PaddingValues(),
     paddingValuesBottomOnly: Boolean = true,
@@ -52,13 +51,16 @@ fun BasicScaffold(
     topBarVisibility: Boolean = true,
     content: @Composable () -> Unit
 ) {
-    val baseVerticalPadding = if (VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+    val baseVerticalPadding = if (VERSION.SDK_INT <= Build.VERSION_CODES.P) {
         4.dp
     } else {
         0.dp
     }
     Scaffold(
-        modifier = Modifier.padding(vertical = baseVerticalPadding),
+        modifier = Modifier
+            .padding(
+                vertical = baseVerticalPadding
+            ),
         topBar = {
             AnimatedVisibility(
                 visible = topBarVisibility,
@@ -159,7 +161,9 @@ fun BasicScaffold(
                 modifier = Modifier
                     .padding(
                         if (paddingValuesBottomOnly) {
-                            PaddingValues(bottom = paddingValues.calculateBottomPadding())
+                            PaddingValues(
+                                bottom = paddingValues.calculateBottomPadding()
+                            )
                         } else {
                             paddingValues
                         }

@@ -118,7 +118,7 @@ fun ProfileView(
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 48.dp)
+                        .padding(horizontal = 16.dp)
                 ) {
                     NeoButton("Edit Profile", maxWidth = true) {
                         navController.navigate(Screen.EditProfileScreen(profPic = user?.imageUrl ?: ""))
@@ -142,7 +142,9 @@ fun ProfileView(
                         }
                     }
                     Row(
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier
+                            .padding(vertical = 4.dp)
+                            .fillMaxWidth(),
                         horizontalArrangement = Arrangement.Center
                     ) {
                         Text(

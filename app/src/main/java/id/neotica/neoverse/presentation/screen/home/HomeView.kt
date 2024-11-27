@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -41,10 +40,8 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
@@ -66,7 +63,7 @@ import id.neotica.ui.navigation.Screen
 import id.neotica.ui.theme.DarkPrimaryTransparent2
 import id.neotica.ui.theme.FontSize
 import id.neotica.ui.theme.NeoPadding
-import id.neotica.ui.theme.TransparentText
+import id.neotica.ui.theme.TransparentText20
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -187,8 +184,8 @@ fun HomeView(
                         modifier = Modifier
                             .padding(
                                 top = NeoPadding.statusBarPadding,
-                                start = 4.dp,
-                                end = 4.dp,
+                                start = 16.dp,
+                                end = 16.dp,
                             )
                             .fillMaxWidth(),
                         colors = CardDefaults.cardColors().copy(
@@ -212,7 +209,7 @@ fun HomeView(
                                 Text(
                                     text = "You have ${currentAura?.aura ?: "0"} Auras.",
                                     fontSize = FontSize.Small,
-                                    color = TransparentText
+                                    color = TransparentText20
                                 )
                             }
                             Column(
@@ -292,28 +289,37 @@ fun HomeView(
                                 alertButton = "Clear",
                                 content = {
                                     channelItemParent.value.let {
-                                        Text(
-                                            text = chatName,
-                                            textAlign = TextAlign.Center,
-                                            fontWeight = FontWeight.Bold
-                                        )
-                                        if (it.lastMessage.isNotEmpty()) {
-                                            Row(
-                                                modifier = Modifier.fillMaxWidth(),
-                                                horizontalArrangement = Arrangement.SpaceBetween
+                                        Row(
+                                            modifier = Modifier.fillMaxWidth(),
+                                            horizontalArrangement = Arrangement.SpaceBetween
+                                        ) {
+                                            Text(
+                                                modifier = Modifier.weight(5f),
+                                                text = chatName,
+                                                overflow = TextOverflow.Ellipsis,
+                                                fontWeight = FontWeight.Bold,
+                                                fontSize = FontSize.Normal
+                                            )
+                                            Box(
+                                                modifier = Modifier.weight(1f),
                                             ) {
                                                 Text(
-                                                    text = channelItemParent.value.lastMessage,
-                                                    maxLines = 1,
-                                                    overflow = TextOverflow.Ellipsis,
-                                                    modifier = Modifier.widthIn(max = 274.dp)
-                                                )
-                                                Text(
+                                                    modifier = Modifier.align(Alignment.CenterEnd),
                                                     text = convertLongToHour(it.lastOpened),
                                                     maxLines = 1,
-                                                    fontSize = 12.sp
+                                                    fontSize = FontSize.Smaller,
+                                                    color = TransparentText20
                                                 )
                                             }
+                                        }
+                                        if (it.lastMessage.isNotEmpty()) {
+                                            Text(
+                                                text = channelItemParent.value.lastMessage,
+                                                maxLines = 1,
+                                                overflow = TextOverflow.Ellipsis,
+                                                fontSize = FontSize.Normal,
+                                                color = TransparentText20
+                                            )
                                         } else {
                                             Text(
                                                 text = "No message has been sent.",
