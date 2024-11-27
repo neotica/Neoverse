@@ -60,8 +60,10 @@ fun NeoverseTheme(
             // Change StatusBar icon color.
             val window = (view.context as Activity).window
             if (!darkTheme) WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
-//            WindowCompat.setDecorFitsSystemWindows(window, false)
-            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) window.navigationBarColor = Transparent.toArgb()
+            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
+                if (!darkTheme) WindowCompat.getInsetsController(window, view).isAppearanceLightNavigationBars = darkTheme
+                window.navigationBarColor = Transparent.toArgb()
+            }
         }
     }
 
