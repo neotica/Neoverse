@@ -24,6 +24,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.input.pointer.PointerEventPass
+import androidx.compose.ui.input.pointer.PointerInputChange
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.dp
 import id.neotica.world.feat.game.GameViewModel
@@ -75,7 +78,19 @@ fun SlotMachine(modifier: Modifier = Modifier, viewModel: GameViewModel = koinVi
             ) {
                 Box {
                     Column {
-                        Row(Modifier.height(80.dp)) {
+                        Row(
+                            modifier = Modifier
+                                .height(80.dp)
+                                .pointerInput(Unit) {
+                                    awaitPointerEventScope {
+                                        while (true) {
+                                            awaitPointerEvent(pass = PointerEventPass.Initial)
+                                                .changes
+                                                .forEach(PointerInputChange::consume)
+                                        }
+                                    }
+                                }
+                        ) {
                             CircularList(
                                 items = randomStrings,
                                 scroll = onClick,
