@@ -8,6 +8,7 @@ import android.webkit.SslErrorHandler
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
@@ -29,7 +30,8 @@ fun TermsOfServiceView(navController: NavController,  paddingValues: PaddingValu
         navController = navController,
         paddingValues = paddingValues
     ) {
-        var isLoading by remember { mutableStateOf(false) }
+        var isLoading by remember { mutableStateOf(true) }
+        if (isLoading) BackHandler {}
 
         Box {
             AndroidView(
