@@ -22,7 +22,7 @@ kotlin {
         iosSimulatorArm64()
     ).forEach {
         it.binaries.framework {
-            baseName = "shared"
+            baseName = "coreNeoverse"
             isStatic = true
         }
     }
@@ -36,6 +36,7 @@ kotlin {
             //put your multiplatform dependencies here
             api(libs.koin.core)
             api(libs.kotlinx.serialization.json)
+            api(libs.coroutines.core)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
@@ -44,7 +45,7 @@ kotlin {
 }
 
 android {
-    namespace = "id.neotica.data"
+    namespace = "id.neotica.core"
     compileSdk = 35
 
     defaultConfig {

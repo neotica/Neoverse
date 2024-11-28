@@ -23,7 +23,7 @@ kotlin {
         iosSimulatorArm64()
     ).forEach {
         it.binaries.framework {
-            baseName = "shared"
+            baseName = "domain"
             isStatic = true
         }
     }
@@ -37,8 +37,14 @@ kotlin {
             // Koin
             api(libs.koin.androidx.compose)
         }
+        androidUnitTest.dependencies {
+            implementation(libs.junit.jupiter)
+            implementation(libs.mockito.core)
+        }
         commonMain.dependencies {
             //put your multiplatform dependencies here
+            implementation(projects.core.core)
+//            implementation(libs.coroutines.core)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

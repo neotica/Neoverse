@@ -24,6 +24,7 @@ wearToolingPreview = "1.0.0"
 coreSplashscreen = "1.0.1"
 androidx-wear-compose = "1.4.0"
 junitJupiter = "5.11.1"
+coroutines = "1.9.0"
 
 [libraries]
 androidx-adaptive = { module = "androidx.compose.material3.adaptive:adaptive" }
@@ -82,6 +83,8 @@ junit-jupiter-params = { group = "org.junit.jupiter", name = "junit-jupiter-para
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koinAndroidxCompose"}
 #KMP Test
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
+#KMP Coroutine
+coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines"}
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
