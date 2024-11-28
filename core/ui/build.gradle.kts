@@ -48,7 +48,7 @@ android {
 }
 
 dependencies {
-    implementation(project(":core:core"))
+    implementation(projects.core.core)
 
     // UI
     api(libs.androidx.navigation.compose)

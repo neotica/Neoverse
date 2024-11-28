@@ -40,8 +40,8 @@ android {
 }
 
 dependencies {
-    implementation(project(":core:core"))
-    implementation(project(":core:domain"))
+    implementation(projects.core.core)
+    implementation(projects.core.domain)
 
     // Retrofit for network operations
     implementation("com.squareup.retrofit2:retrofit:2.11.0")
