@@ -2,19 +2,23 @@ package id.neotica.ui.components
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
+import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
@@ -81,30 +85,39 @@ fun ChatListItem(
         colors = cardColorsTransparent,
         modifier = Modifier
             .fillMaxWidth()
+            .clip(RoundedCornerShape(24.dp))
             .combinedClickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = ripple(bounded = true),
                 onClick = { onClick() },
                 onLongClick = {
                     haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                     longClick?.invoke()
                 },
-            )
-            .padding(paddingValues),
+             ),
     ) {
-        Row {
+        Row(
+            Modifier
+                .padding(
+                    vertical = 8.dp,
+                    horizontal = 16.dp
+                )
+        ) {
             Box(
                 Modifier
-                    .padding(2.dp)
+                    .weight(1f)
             ) {
                 ImageCoil(
                     url = image,
                     fillMaxWidth = false,
                     round = true,
-                    size = 72.dp,
+                    size = 62.dp,
                     contentAlignment = Alignment.CenterStart
                 )
             }
             Column(
-                Modifier.padding(8.dp),
+                Modifier
+                    .weight(4f)
             ) {
                 content()
             }

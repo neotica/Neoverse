@@ -24,4 +24,5 @@ val DarkBackground = Color(0xFF151A3B)
 
 val NegativePrimary = Color(0xFFE05D5D)
 
-val TransparentText = Color(0xA1FFFFFF)
+val TransparentText40 = Color(0x99FFFFFF)
+val TransparentText20 = Color(0xCCFFFFFF)

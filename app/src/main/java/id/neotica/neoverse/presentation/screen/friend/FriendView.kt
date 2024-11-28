@@ -38,7 +38,6 @@ fun FriendView(
     var friendList2 by remember { mutableStateOf<List<User>>(emptyList()) }
     var isLoading by remember { mutableStateOf(false) }
     var isLoadingChats by remember { mutableStateOf(false) }
-    var isFriendEmpty by remember { mutableStateOf(false) }
     var isPressed by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
@@ -56,7 +55,6 @@ fun FriendView(
                     isPressed = false
 
                 } else {
-                    isFriendEmpty = true
                     isPressed = false
                     viewModel.getFriends()
                     Log.d("friend", "else")

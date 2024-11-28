@@ -39,7 +39,6 @@ fun BasicScaffold(
     topBarTitle: String,
     enableActionBar: Boolean = false,
     customActionBar: (() -> Unit)? = null,
-    modifier: Modifier = Modifier,
     navController: NavController? = null,
     paddingValues: PaddingValues = PaddingValues(),
     paddingValuesBottomOnly: Boolean = true,
@@ -152,7 +151,9 @@ fun BasicScaffold(
                 modifier = Modifier
                     .padding(
                         if (paddingValuesBottomOnly) {
-                            PaddingValues(bottom = paddingValues.calculateBottomPadding())
+                            PaddingValues(
+                                bottom = paddingValues.calculateBottomPadding()
+                            )
                         } else {
                             paddingValues
                         }

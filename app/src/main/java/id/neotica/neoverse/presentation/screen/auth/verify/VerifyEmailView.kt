@@ -42,7 +42,6 @@ fun VerifyEmailView(
     BasicScaffold(
         "Verify email",
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.padding(paddingValues)
     ) {
         Box(Modifier.padding(4.dp)) {
             Column {

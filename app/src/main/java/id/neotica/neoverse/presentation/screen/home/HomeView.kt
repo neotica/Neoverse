@@ -1,5 +1,6 @@
 package id.neotica.neoverse.presentation.screen.home
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
@@ -10,13 +11,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawing
-import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -24,19 +21,19 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
@@ -44,10 +41,8 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
@@ -60,13 +55,16 @@ import id.neotica.domain.model.chat.ParentNeo
 import id.neotica.domain.utils.convertLongToHour
 import id.neotica.domain.utils.filteredRoom
 import id.neotica.domain.utils.returnFriendName
+import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.ChatListItem
 import id.neotica.ui.components.ImageCoil
+import id.neotica.ui.components.scroll.nestedScrollConnection
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.Screen
 import id.neotica.ui.theme.DarkPrimaryTransparent2
 import id.neotica.ui.theme.FontSize
-import id.neotica.ui.theme.TransparentText
+import id.neotica.ui.theme.NeoPadding
+import id.neotica.ui.theme.TransparentText20
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -80,12 +78,16 @@ fun HomeView(
     val parentChatrooms = remember { mutableStateOf<List<ParentNeo<ChatRoom>>>(emptyList()) }
 
     var friendList by remember { mutableStateOf<List<User>>(emptyList()) }
+    var friendListLocal by remember { mutableStateOf<List<User>>(emptyList()) }
 
     var isLoading by remember { mutableStateOf(false) }
     var isLoadingChats by remember { mutableStateOf(false) }
     var currentuser by remember { mutableStateOf<User?>(null) }
     val lifecycleOwner = LocalLifecycleOwner.current
     var currentAura by remember { mutableStateOf<Games?>(null) }
+
+    val headerAlpha2 = remember { mutableFloatStateOf(1f) }
+    val headerSize2 = remember { mutableStateOf(100.dp) }
 
     val context = LocalContext.current
 
@@ -126,7 +128,16 @@ fun HomeView(
                     viewModel.chatList.forEach { _ ->
                         parentChatrooms.value = result.data!!
                         viewModel.getFriendsRoom().collect {
-                            friendList = it
+                            if (it.isNotEmpty()) {
+                                friendList = it
+                                Log.d("friend", "didnt collect")
+                                isPressed = false
+                            } else {
+                                isPressed = false
+                                viewModel.getFriends()
+                                Log.d("friend", "else")
+
+                            }
                         }
                     }
                 }
@@ -151,6 +162,29 @@ fun HomeView(
         }
     }
 
+    LaunchedEffect(isPressed) {
+
+        viewModel.friendList.collect { result ->
+            Log.d("friendList", result.toString())
+            when(result) {
+                is ApiResult.Loading -> isLoading = true
+                is ApiResult.Success -> {
+                    isPressed = false
+                    isLoading = false
+                    result.data?.let {
+                        friendListLocal = result.data!!
+                        viewModel.addFriendList(friendListLocal)
+                    }
+                }
+                is ApiResult.Error -> {
+                    isPressed = false
+                    isLoading = false
+                    Log.d("neotica", result.errorMessage.toString())
+                }
+            }
+        }
+    }
+
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_RESUME) {
@@ -165,22 +199,28 @@ fun HomeView(
 
     val nestedState = rememberNestedScrollInteropConnection()
     val listState = rememberLazyListState()
-    val showTopCard = remember { derivedStateOf { listState.firstVisibleItemScrollOffset == 0 } }
     val haptic = LocalHapticFeedback.current
 
-    Scaffold (
-        modifier = Modifier.windowInsetsPadding(WindowInsets.safeDrawing),
-    ) { it ->
-        Column(Modifier.padding(it)) {
+    BasicScaffold (
+        topBarTitle = "HomeView",
+        topBarVisibility = false,
+        fullScreen = true
+    ) {
+        Column {
             AnimatedVisibility(
-                visible = showTopCard.value,
+                modifier = Modifier.alpha(headerAlpha2.floatValue),
+                visible = headerAlpha2.floatValue != 0f,
                 enter = expandVertically(),
                 exit = shrinkVertically(),
             ) {
                 Column {
                     Card(
                         modifier = Modifier
-                            .padding(horizontal = 4.dp)
+                            .padding(
+                                top = NeoPadding.statusBarPadding,
+                                start = 16.dp,
+                                end = 16.dp,
+                            )
                             .fillMaxWidth(),
                         colors = CardDefaults.cardColors().copy(
                             containerColor = DarkPrimaryTransparent2
@@ -203,7 +243,7 @@ fun HomeView(
                                 Text(
                                     text = "You have ${currentAura?.aura ?: "0"} Auras.",
                                     fontSize = FontSize.Small,
-                                    color = TransparentText
+                                    color = TransparentText20
                                 )
                             }
                             Column(
@@ -243,11 +283,20 @@ fun HomeView(
                     viewModel.getChatroom()
                 }
             ) {
+
                 LazyColumn(
+                    modifier = Modifier.nestedScroll(
+                        nestedScrollConnection(
+                            headerAlpha = headerAlpha2,
+                            headerSize2
+                        )
+                    ),
                     state = listState,
-                    contentPadding = PaddingValues(bottom = paddingValues.calculateBottomPadding())
+                    contentPadding = PaddingValues(
+                        bottom = NeoPadding.systemBarPadding + paddingValues.calculateBottomPadding()
+                    )
                 ) {
-//                    item { for(i in 1..30) Text("hshjkcvhbxdbjkcvbcvxcvxdvx") }
+//                    item { for(i in 1..19) Text("hshjkcvhbxdbjkcvbcvxcvxdvx") }
                     if(!isLoadingChats) {
                         items(parentChatrooms.value.filter { channels ->
                             val current = currentuser?.username.toString()
@@ -274,28 +323,37 @@ fun HomeView(
                                 alertButton = "Clear",
                                 content = {
                                     channelItemParent.value.let {
-                                        Text(
-                                            text = chatName,
-                                            textAlign = TextAlign.Center,
-                                            fontWeight = FontWeight.Bold
-                                        )
-                                        if (it.lastMessage.isNotEmpty()) {
-                                            Row(
-                                                modifier = Modifier.fillMaxWidth(),
-                                                horizontalArrangement = Arrangement.SpaceBetween
+                                        Row(
+                                            modifier = Modifier.fillMaxWidth(),
+                                            horizontalArrangement = Arrangement.SpaceBetween
+                                        ) {
+                                            Text(
+                                                modifier = Modifier.weight(5f),
+                                                text = chatName,
+                                                overflow = TextOverflow.Ellipsis,
+                                                fontWeight = FontWeight.Bold,
+                                                fontSize = FontSize.Normal
+                                            )
+                                            Box(
+                                                modifier = Modifier.weight(1f),
                                             ) {
                                                 Text(
-                                                    text = channelItemParent.value.lastMessage,
-                                                    maxLines = 1,
-                                                    overflow = TextOverflow.Ellipsis,
-                                                    modifier = Modifier.widthIn(max = 274.dp)
-                                                )
-                                                Text(
+                                                    modifier = Modifier.align(Alignment.CenterEnd),
                                                     text = convertLongToHour(it.lastOpened),
                                                     maxLines = 1,
-                                                    fontSize = 12.sp
+                                                    fontSize = FontSize.Smaller,
+                                                    color = TransparentText20
                                                 )
                                             }
+                                        }
+                                        if (it.lastMessage.isNotEmpty()) {
+                                            Text(
+                                                text = channelItemParent.value.lastMessage,
+                                                maxLines = 1,
+                                                overflow = TextOverflow.Ellipsis,
+                                                fontSize = FontSize.Normal,
+                                                color = TransparentText20
+                                            )
                                         } else {
                                             Text(
                                                 text = "No message has been sent.",
@@ -320,24 +378,24 @@ fun HomeView(
                 }
             }
         }
-        Box(
-            Modifier.fillMaxSize()
-                .padding(PaddingValues(bottom = paddingValues.calculateBottomPadding()))
+    }
+    Box(
+        Modifier
+            .fillMaxSize()
+            .padding(PaddingValues(bottom = NeoPadding.systemBarPadding + paddingValues.calculateBottomPadding()))
+        ,
+    ) {
+        FloatingActionButton(
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(12.dp)
             ,
-        ) {
-            FloatingActionButton(
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(12.dp)
-                ,
-                containerColor = DarkPrimaryTransparent2,
-                onClick = {
-                    navController.navigate(Screen.AddChatScreen)
-                }
-            ) {
-                Text("+")
+            containerColor = DarkPrimaryTransparent2,
+            onClick = {
+                navController.navigate(Screen.AddChatScreen)
             }
+        ) {
+            Text("+")
         }
     }
 }
-

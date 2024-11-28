@@ -8,7 +8,12 @@ import android.provider.Settings
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -17,6 +22,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import id.neotica.neoverse.presentation.screen.profile.ProfileViewModel
 import id.neotica.neoverse.utils.compressUri
@@ -72,11 +78,32 @@ fun EditProfileView(
             )
         }
 
-        ImageCoil(url = args.profPic, context = LocalContext.current)
+        Column {
+            Box(Modifier.padding(32.dp)) {
+                ImageCoil(
+                    url = args.profPic,
+                    context = LocalContext.current,
+                    modifier = Modifier.align(Alignment.Center),
+                    round = true
+                )
+            }
 
-        NeoButton("ChangePhoto") {
-            cameraPermissionResultLauncher.launch(Manifest.permission.CAMERA)
-            launchPhotoPicker()
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                item {
+                    NeoButton("Change your profile picture") {
+                        launchPhotoPicker()
+                    }
+
+                    NeoButton("Take from camera", enabled = false) {
+                        cameraPermissionResultLauncher.launch(Manifest.permission.CAMERA)
+                    }
+                }
+            }
         }
     }
 }

@@ -57,7 +57,7 @@ import id.neotica.ui.theme.DarkPrimary
 import id.neotica.ui.theme.DarkPrimaryTransparent2
 import id.neotica.ui.theme.FontSize
 import id.neotica.ui.theme.Transparent
-import id.neotica.ui.theme.TransparentText
+import id.neotica.ui.theme.TransparentText40
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
@@ -129,7 +129,11 @@ fun ChatMessages(
         coroutineScope.launch {
             listState.scrollToItem(messages.size + 1)
         }
-        Column(Modifier.fillMaxSize()) {
+        Column(
+            Modifier
+                .fillMaxSize()
+                .padding(horizontal = 16.dp)
+        ) {
             LazyColumn(
                 modifier = Modifier
                     .weight(1f),
@@ -148,8 +152,8 @@ fun ChatMessages(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .padding(
-                    start = 4.dp,
-                    end = 4.dp,
+                    start = 8.dp,
+                    end = 8.dp,
                     top = 4.dp,
                     bottom = WindowInsets.systemBars
                         .asPaddingValues()
@@ -191,7 +195,7 @@ fun ChatMessages(
                             if (msg.value.isEmpty()) {
                                 Text(
                                     text = "Message",
-                                    color = TransparentText,
+                                    color = TransparentText40,
                                     fontSize = FontSize.Normal
                                 )
                             }

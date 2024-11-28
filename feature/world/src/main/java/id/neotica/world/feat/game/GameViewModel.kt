@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import id.neotica.domain.model.Games
 import id.neotica.domain.ApiResult
 import id.neotica.domain.remote.AuraRepository
+import id.neotica.domain.remote.FirebaseRepository
 import id.neotica.domain.usecase.GetUserIdUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -15,7 +16,8 @@ import kotlin.random.asKotlinRandom
 
 class GameViewModel(
     private val gameRepo: AuraRepository,
-    private val getIdUseCase: GetUserIdUseCase
+    private val getIdUseCase: GetUserIdUseCase,
+    private val firebase: FirebaseRepository
 ): ViewModel() {
     private val _randomNum = MutableStateFlow("")
     val randomNum = _randomNum.asStateFlow()
@@ -41,6 +43,10 @@ class GameViewModel(
         generateTranspose2()
         generateTranspose3()
         fetchAuras()
+    }
+
+    fun getItemEvent(itemName: String, contentType: String){
+        firebase.itemLog("GameView", itemName, contentType)
     }
 
     fun sendInitialAura(aura: Long) = viewModelScope.launch {
@@ -103,5 +109,7 @@ class GameViewModel(
             "$smile$smile$smile" -> _auraPoints.value = 50
             else -> _auraPoints.value = -10
         }
+
+        firebase.eventLog("GameView", "slot_result", _auraPoints.value.toString())
     }
 }

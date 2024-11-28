@@ -1,7 +1,5 @@
 package id.neotica.neoverse
 
-import android.os.Build
-import android.os.Build.VERSION
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -58,23 +56,12 @@ class MainActivity: ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         installSplashScreen()
-        if (VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            enableEdgeToEdge()
-        }
+        enableEdgeToEdge()
 
         Firebase.initialize(this)
         Firebase.appCheck.installAppCheckProviderFactory(
             PlayIntegrityAppCheckProviderFactory.getInstance()
         )
-//        Firebase.appCheck.getAppCheckToken(false)
-//        Log.d("integrity", integrity.toString())
-/*        Firebase.initialize(this)
-        Firebase.appCheck.installAppCheckProviderFactory(
-            DebugAppCheckProviderFactory.getInstance()
-        )*/
-//        Firebase.appCheck.
-
-//            DebugAppCheckProviderFactory.getInstance()
 
         setContent {
             NeoverseTheme {
@@ -123,7 +110,8 @@ class MainActivity: ComponentActivity() {
                 }
                 val specificRoutes = setOf(
                     "id.neotica.ui.navigation.Screen.Chat/{chatId}/{user2}?chatroomId={chatroomId}",
-                    "id.neotica.ui.navigation.WorldScreen.ItemDetailScreen/{id}/{type}"
+                    "id.neotica.ui.navigation.WorldScreen.ItemDetailScreen/{id}/{type}",
+                    "id.neotica.ui.navigation.Screen.EditProfileScreen/{profPic}"
                 )
                 val currentRoute = navBackStackEntry?.destination?.route
                 Log.d("currentScreen", navBackStackEntry?.destination?.route.toString())
