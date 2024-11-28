@@ -14,8 +14,8 @@ android {
         applicationId = "id.neotica.neoverse"
         minSdk = 27
         targetSdk = 35
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 14
+        versionName = "0.6.5"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -25,8 +25,9 @@ android {
 
     buildTypes {
         debug {
-            isMinifyEnabled = true
-            isShrinkResources = true
+            isMinifyEnabled = false
+//            isMinifyEnabled = true
+//            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -62,13 +63,13 @@ android {
 }
 
 dependencies {
-    implementation(project(":core:database"))
-    implementation(project(":core:domain"))
-    implementation(project(":core:network"))
-    implementation(project(":core:ui"))
-    implementation(project(":core:data"))
-    implementation(project(":feature:world"))
-    implementation(project(":core:retrofit"))
+    implementation(projects.core.database)
+    implementation(projects.core.domain)
+    implementation(projects.core.network)
+    implementation(projects.core.ui)
+    implementation(projects.core.core)
+    implementation(projects.core.retrofit)
+    implementation(projects.feature.world)
 
     // Testing
     testImplementation(libs.junit)
