@@ -1,3 +1,4 @@
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 pluginManagement {
     repositories {
         google {
@@ -27,7 +28,7 @@ include(":core:database")
 include(":core:domain")
 include(":core:network")
 include(":core:ui")
-include(":core:data")
+include(":core:core")
 include(":feature")
 include(":feature:world")
 include(":core:retrofit")

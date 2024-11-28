@@ -40,7 +40,7 @@ android {
 }
 
 dependencies {
-    implementation(project(":core:data"))
+    implementation(project(":core:core"))
     implementation(project(":core:domain"))
 
     // Retrofit for network operations

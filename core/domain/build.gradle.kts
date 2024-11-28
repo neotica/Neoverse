@@ -1,7 +1,49 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
+    alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.android.library)
-    alias(libs.plugins.jetbrains.kotlin.android)
     id("de.mannodermaus.android-junit5") version "1.11.2.0"
+}
+
+kotlin {
+    androidTarget {
+        compilations.all {
+            compileTaskProvider.configure {
+                compilerOptions {
+                    jvmTarget.set(JvmTarget.JVM_1_8)
+                }
+            }
+        }
+    }
+
+    listOf(
+        iosX64(),
+        iosArm64(),
+        iosSimulatorArm64()
+    ).forEach {
+        it.binaries.framework {
+            baseName = "shared"
+            isStatic = true
+        }
+    }
+
+    sourceSets {
+        androidMain.dependencies {
+            implementation(libs.androidx.core.ktx)
+            implementation(libs.androidx.lifecycle.runtime.ktx)
+            api(libs.kotlinx.serialization.json)
+
+            // Koin
+            api(libs.koin.androidx.compose)
+        }
+        commonMain.dependencies {
+            //put your multiplatform dependencies here
+        }
+        commonTest.dependencies {
+            implementation(libs.kotlin.test)
+        }
+    }
 }
 
 android {
@@ -35,16 +77,4 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
-}
-
-dependencies {
-    implementation(project(":core:data"))
-
-    testImplementation(libs.junit.jupiter)
-    testImplementation(libs.mockito.core)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
 }
