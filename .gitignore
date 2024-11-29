@@ -23,6 +23,7 @@ local.properties
 /app/release
 #wear
 /neoversewear/build
+/neoversewear/release
 #xcode
 /iosApp/Neoverse/GoogleService-Info.plist
 /iosApp/Neoverse.xcodeproj/xcuserdata/
