@@ -47,9 +47,9 @@ android {
 }
 
 dependencies {
-    implementation(project(":core:ui"))
-    implementation(project(":core:data"))
-    implementation(project(":core:domain"))
+    implementation(projects.core.ui)
+    implementation(projects.core.core)
+    implementation(projects.core.domain)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

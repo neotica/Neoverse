@@ -40,8 +40,8 @@ android {
 }
 
 dependencies {
-    implementation(project(":core:data"))
-    implementation(project(":core:domain"))
+    implementation(projects.core.core)
+    implementation(projects.core.domain)
 
     //Firebase
     api(platform(libs.firebase.bom))
@@ -51,7 +51,7 @@ dependencies {
     api(libs.firebase.storage)
     api(libs.firebase.firestore.ktx)
     api(libs.firebase.appcheck.playintegrity)
-    api("com.google.firebase:firebase-appcheck-debug")
+    api(libs.firebase.appcheck.debug)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

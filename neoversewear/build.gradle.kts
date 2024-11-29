@@ -52,7 +52,7 @@ dependencies {
     implementation(project(":core:domain"))
     implementation(project(":core:network"))
     implementation(project(":core:ui"))
-    implementation(project(":core:data"))
+    implementation(project(":core:core"))
     implementation(project(":feature:world"))
 
     implementation(libs.play.services.wearable)

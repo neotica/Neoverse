@@ -21,3 +21,12 @@ local.properties
 /.idea/inspectionProfiles
 /app/debug
 /app/release
+#wear
+/neoversewear/build
+/neoversewear/release
+#xcode
+/iosApp/Neoverse/GoogleService-Info.plist
+/iosApp/Neoverse.xcodeproj/xcuserdata/
+/iosApp/Neoverse.xcodeproj/project.xcworkspace/xcuserdata
+/iosApp/Neoverse.xcodeproj/project.xcworkspace/contents.xcworkspacedata
+/iosApp/Neoverse.xcodeproj/project.xcworkspace/xcshareddata

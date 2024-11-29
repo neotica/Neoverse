@@ -41,8 +41,8 @@ android {
 }
 
 dependencies {
-    implementation(project(":core:data"))
-    implementation(project(":core:domain"))
+    implementation(projects.core.core)
+    implementation(projects.core.domain)
 
     implementation(libs.room)
     implementation(libs.room.runtime)
