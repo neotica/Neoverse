@@ -3,6 +3,7 @@ package id.neotica.world.di
 import id.neotica.world.feat.game.GameViewModel
 import id.neotica.world.feat.inventory.InventoryViewModel
 import id.neotica.world.feat.kanye.KanyeViewModel
+import id.neotica.world.feat.leaderboards.LeaderBoardsViewModel
 import id.neotica.world.feat.market.MarketViewModel
 import id.neotica.world.feat.market.itemdetail.ItemDetailViewModel
 import id.neotica.world.feat.market.merchant.MerchantViewModel
@@ -20,4 +21,5 @@ val worldModules = module {
     viewModelOf(::MerchantViewModel)
     viewModelOf(::InventoryViewModel)
     viewModelOf(::MiningViewModel)
+    viewModelOf(::LeaderBoardsViewModel)
 }

@@ -15,7 +15,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
 import androidx.wear.compose.material.Text
 import id.neotica.domain.ApiResult
-import id.neotica.domain.model.Games
+import id.neotica.domain.model.World
 import id.neotica.neoversewear.presentation.components.BasicWearScreen
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.Screen
@@ -23,7 +23,7 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun WBarView(navController: NavController, viewModel: WBarViewModel = koinViewModel()) {
-    var currentAuras by remember { mutableStateOf<Games?>(null) }
+    var currentAuras by remember { mutableStateOf<World?>(null) }
     var auraInit by remember { mutableStateOf(false) }
     val context = LocalContext.current
 

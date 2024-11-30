@@ -1,11 +1,9 @@
 package id.neotica.domain.model
 
-import id.neotica.domain.model.chat.ParentNeo
-
 data class UserData(
-    val id: String = "",
-    val friends: ParentNeo<Friends>,
-    val games: Games
+    val userId: String = "",
+    val friends: Friends = Friends(),
+    val world: World = World()
 )
 
 data class Friends(
@@ -14,6 +12,7 @@ data class Friends(
     val imageUrl: String = ""
 )
 
-data class Games(
+data class World(
+    val username: String = "",
     var aura: Long = 0
 )

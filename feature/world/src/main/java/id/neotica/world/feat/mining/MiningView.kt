@@ -13,7 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
 import id.neotica.domain.ApiResult
-import id.neotica.domain.model.Games
+import id.neotica.domain.model.World
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.ImagePermanentCache
 import id.neotica.ui.components.NeoButton
@@ -27,7 +27,7 @@ fun MiningView(
     viewModel: MiningViewModel = koinViewModel()
 ) {
     var coal by remember { mutableIntStateOf(0) }
-    var currentAuras by remember { mutableStateOf<Games?>(null) }
+    var currentAuras by remember { mutableStateOf<World?>(null) }
     var isLoading by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {

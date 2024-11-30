@@ -20,10 +20,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import id.neotica.domain.ApiResult
-import id.neotica.domain.model.Games
+import id.neotica.domain.model.World
 import id.neotica.droidcore.component.cards.deprecated.NeoCard
 import id.neotica.ui.components.BasicScaffold
-import id.neotica.ui.components.NeoButton
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.Screen
 import id.neotica.ui.navigation.WorldScreen
@@ -38,7 +37,7 @@ fun GameView(
     viewModel: GameViewModel = koinViewModel()
 ) {
 
-    var currentAuras by remember { mutableStateOf<Games?>(null) }
+    var currentAuras by remember { mutableStateOf<World?>(null) }
     var auraInit by remember { mutableStateOf(false) }
     val random = Random.nextInt(2000)
     val context = LocalContext.current

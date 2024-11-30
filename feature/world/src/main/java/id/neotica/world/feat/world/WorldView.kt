@@ -1,12 +1,9 @@
 package id.neotica.world.feat.world
 
 import android.widget.Toast
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,7 +22,7 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.navigation.NavController
 import id.neotica.domain.ApiResult
-import id.neotica.domain.model.Games
+import id.neotica.domain.model.World
 import id.neotica.droidcore.component.cards.Pocket
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.NeoButton
@@ -41,7 +38,7 @@ fun WorldView(
     paddingValues: PaddingValues,
     viewModel: WorldViewModel = koinViewModel()
 ) {
-    var currentAuras by remember { mutableStateOf<Games?>(null) }
+    var currentAuras by remember { mutableStateOf<World?>(null) }
     var auraInit by remember { mutableStateOf(false) }
     var onClick by remember { mutableStateOf(false) }
     val random = Random.nextInt(2000)
@@ -114,7 +111,11 @@ fun WorldView(
                 navController.navigate(WorldScreen.MerchantScreen)
             }*/
             Spacer(Modifier.padding(4.dp))
-            NeoButton("To Mining Field") {
+            NeoButton("Leaderboards") {
+                navController.navigate(WorldScreen.LeaderBoardsScreen)
+            }
+            Spacer(Modifier.padding(4.dp))
+            NeoButton("Mining Field") {
                 navController.navigate(WorldScreen.MiningScreen)
             }
 

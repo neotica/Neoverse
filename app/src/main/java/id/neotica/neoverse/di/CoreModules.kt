@@ -10,6 +10,7 @@ import id.neotica.domain.local.FriendDaoRepository
 import id.neotica.domain.remote.AuthRepository
 import id.neotica.domain.remote.ChatRepository
 import id.neotica.domain.remote.AuraRepository
+import id.neotica.domain.remote.FeedRepository
 import id.neotica.domain.remote.FirebaseRepository
 import id.neotica.domain.remote.InventoryRepository
 import id.neotica.domain.remote.MarketRepository
@@ -30,6 +31,7 @@ import id.neotica.neoverse.presentation.screen.home.HomeViewModel
 import id.neotica.neoverse.presentation.screen.home.addchat.AddChatViewModel
 import id.neotica.neoverse.presentation.screen.profile.ProfileViewModel
 import id.neotica.network.AuraRepositoryImpl
+import id.neotica.network.FeedRepositoryImpl
 import id.neotica.network.FirebaseRepositoryImpl
 import id.neotica.network.InventoryRepositoryImpl
 import id.neotica.network.MarketRepositoryImpl
@@ -51,6 +53,7 @@ val repositoryModules = module {
     singleOf(::InventoryRepositoryImpl) bind InventoryRepository::class
     singleOf(::MerchantRepositoryImpl) bind MerchantRepository::class
     singleOf(::FirebaseRepositoryImpl) bind FirebaseRepository::class
+    singleOf(::FeedRepositoryImpl) bind FeedRepository::class
 }
 
 val viewModelModules = module {

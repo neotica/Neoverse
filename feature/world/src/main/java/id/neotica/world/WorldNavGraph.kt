@@ -13,6 +13,7 @@ import id.neotica.ui.navigation.WorldScreen
 import id.neotica.world.feat.game.GameView
 import id.neotica.world.feat.inventory.InventoryView
 import id.neotica.world.feat.kanye.KanyeView
+import id.neotica.world.feat.leaderboards.LeaderBoardsView
 import id.neotica.world.feat.market.MarketView
 import id.neotica.world.feat.market.itemdetail.ItemDetailView
 import id.neotica.world.feat.market.merchant.MerchantView
@@ -100,6 +101,14 @@ fun NavGraphBuilder.worldNavGraph(
             exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End, tween(100)) }
         ) {
             ItemMakerView(
+                navController, paddingValues
+            )
+        }
+        composable<WorldScreen.LeaderBoardsScreen>(
+            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start, tween(100)) },
+            exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End, tween(100)) }
+        ) {
+            LeaderBoardsView(
                 navController, paddingValues
             )
         }

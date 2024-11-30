@@ -3,7 +3,7 @@ package id.neotica.world.feat.game
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import id.neotica.domain.model.Games
+import id.neotica.domain.model.World
 import id.neotica.domain.ApiResult
 import id.neotica.domain.remote.AuraRepository
 import id.neotica.domain.remote.FirebaseRepository
@@ -29,7 +29,7 @@ class GameViewModel(
     private val _auraPoints = MutableStateFlow(0)
     val auraPoints = _auraPoints.asStateFlow()
 
-    private val _totalAuras: MutableStateFlow<ApiResult<Games?>> = MutableStateFlow(ApiResult.Loading())
+    private val _totalAuras: MutableStateFlow<ApiResult<World?>> = MutableStateFlow(ApiResult.Loading())
     val totalAuras = _totalAuras.asStateFlow()
 
     private fun currentUserId(): String = getIdUseCase.invoke()

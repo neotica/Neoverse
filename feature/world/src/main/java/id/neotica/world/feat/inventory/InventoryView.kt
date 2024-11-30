@@ -36,7 +36,7 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.navigation.NavController
 import id.neotica.domain.ApiResult
-import id.neotica.domain.model.Games
+import id.neotica.domain.model.World
 import id.neotica.domain.model.market.Hero
 import id.neotica.domain.model.market.Item
 import id.neotica.ui.components.BasicScaffold
@@ -53,7 +53,7 @@ fun InventoryView(
     paddingValues: PaddingValues,
     viewModel: InventoryViewModel = koinViewModel()
 ) {
-    var currentAuras by remember { mutableStateOf<Games?>(null) }
+    var currentAuras by remember { mutableStateOf<World?>(null) }
     val onClick by remember { mutableStateOf(false) }
     var marketHeroes by remember { mutableStateOf<List<Hero>>(emptyList()) }
     var items by remember { mutableStateOf<List<Item>>(emptyList()) }

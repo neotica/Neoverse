@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import id.neotica.domain.ApiResult
 import id.neotica.domain.local.CurrentUserRepository
 import id.neotica.domain.local.FriendDaoRepository
-import id.neotica.domain.model.Games
+import id.neotica.domain.model.World
 import id.neotica.domain.model.User
 import id.neotica.domain.model.chat.ChatRoom
 import id.neotica.domain.model.chat.ParentNeo
@@ -27,7 +27,7 @@ class HomeViewModel(
 ): ViewModel() {
     private var _user: MutableStateFlow<ApiResult<User?>> = MutableStateFlow(ApiResult.Loading())
 
-    private val _totalAuras: MutableStateFlow<ApiResult<Games?>> = MutableStateFlow(ApiResult.Loading())
+    private val _totalAuras: MutableStateFlow<ApiResult<World?>> = MutableStateFlow(ApiResult.Loading())
     val totalAuras = _totalAuras.asStateFlow()
 
     private var _userEntity: MutableStateFlow<ApiResult<User?>> = MutableStateFlow(
