@@ -46,7 +46,21 @@ fun SlotMachine(modifier: Modifier = Modifier, viewModel: GameViewModel = koinVi
         val randomNum = viewModel.randomNum.collectAsState()
         val randomNum2 = viewModel.randomNum2.collectAsState()
         val randomNum3 = viewModel.randomNum3.collectAsState()
-        val randomStrings = remember {
+        val randomStrings1 = remember {
+            mutableStateListOf(
+                randomNum.value,
+                randomNum2.value,
+                randomNum3.value
+            )
+        }
+        val randomStrings2 = remember {
+            mutableStateListOf(
+                randomNum.value,
+                randomNum2.value,
+                randomNum3.value
+            )
+        }
+        val randomStrings3 = remember {
             mutableStateListOf(
                 randomNum.value,
                 randomNum2.value,
@@ -60,7 +74,7 @@ fun SlotMachine(modifier: Modifier = Modifier, viewModel: GameViewModel = koinVi
 
         var giveAura by rememberSaveable { mutableStateOf(false) }
 
-        val numbComb = "${randomStrings[0]}${randomStrings[1]}${randomStrings[2]}"
+        val numbComb = "${randomStrings1[0]}${randomStrings2[1]}${randomStrings3[2]}"
 
         val haptic = LocalHapticFeedback.current
         var onPressed by rememberSaveable { mutableStateOf(false) }
@@ -92,17 +106,17 @@ fun SlotMachine(modifier: Modifier = Modifier, viewModel: GameViewModel = koinVi
                                 }
                         ) {
                             CircularList(
-                                items = randomStrings,
+                                items = randomStrings1,
                                 scroll = onClick,
                                 num1 = 3,
                                 num2 = 2
                             )
                             CircularList(
-                                items = randomStrings,
+                                items = randomStrings2,
                                 scroll = onClick
                             )
                             CircularList(
-                                items = randomStrings,
+                                items = randomStrings3,
                                 scroll = onClick,
                                 num2 = 3
                             )
@@ -130,8 +144,14 @@ fun SlotMachine(modifier: Modifier = Modifier, viewModel: GameViewModel = koinVi
                 delayedClick = false
                 giveAura = true
                 stopEnabled = true
-                randomStrings.forEachIndexed { index, _ ->
-                    randomStrings[index] = generateTranspose(SecureRandom())
+                randomStrings1.forEachIndexed { index, _ ->
+                    randomStrings1[index] = generateTranspose(SecureRandom())
+                }
+                randomStrings2.forEachIndexed { index, _ ->
+                    randomStrings2[index] = generateTranspose(SecureRandom())
+                }
+                randomStrings3.forEachIndexed { index, _ ->
+                    randomStrings3[index] = generateTranspose(SecureRandom())
                 }
                 onPressed = true
                 viewModel.getItemEvent("Play", "Button")

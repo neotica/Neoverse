@@ -51,10 +51,9 @@ class LeaderBoardsViewModel(
     fun inputUserIdToWorld() = viewModelScope.launch {
         _userData.value.data?.let { data ->
 
-            val dummyData = data.copy(
-                world = data.world.copy(username = currentUsername())
-            )
-            feedRepository.inputUsernameToWorld(dummyData)
+            feedRepository.inputUsernameToWorld(currentUsername(), currentUserId())
         }
+        Log.d("LeaderboardVM3", _userData.value.toString())
+        getAllUser()
     }
 }

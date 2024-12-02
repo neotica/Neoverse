@@ -1,5 +1,7 @@
 package id.neotica.domain.model
 
+import id.neotica.domain.model.market.Item
+
 data class UserData(
     val userId: String = "",
     val friends: Friends = Friends(),
@@ -14,5 +16,6 @@ data class Friends(
 
 data class World(
     val username: String = "",
-    var aura: Long = 0
+    var aura: Long = 0,
+    val items: Item = Item()
 )

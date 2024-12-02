@@ -29,7 +29,10 @@ class FeedRepositoryImpl: FeedRepository {
                 list.add(parentValue)
             }
             emit(ApiResult.Success(
-                list.filter { it.value.world.username!= "" }
+                list.filter {
+                    it.value.world.username!= "" &&
+                            it.value.world.username!= "laetuz"
+                }
                     .sortedByDescending { it.value.world.aura }
             ))
         } catch (e: Exception) {
@@ -37,9 +40,9 @@ class FeedRepositoryImpl: FeedRepository {
         }
     }
 
-    override suspend fun inputUsernameToWorld(userData: UserData) {
-        val reference = firebase.reference.child("userdata").child(userData.userId)
-            .child("world").child("username").setValue(userData.world.username)
+    override suspend fun inputUsernameToWorld(username: String, userId: String) {
+        val reference = firebase.reference.child("userdata").child(userId)
+            .child("world").child("username").setValue(username)
         reference.await()
     }
 }

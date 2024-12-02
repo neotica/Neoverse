@@ -23,7 +23,9 @@ import id.neotica.domain.ApiResult
 import id.neotica.domain.model.UserData
 import id.neotica.domain.model.chat.ParentNeo
 import id.neotica.ui.components.BasicScaffold
+import id.neotica.ui.components.LoadingIndicatorBool
 import id.neotica.ui.components.NeoButton
+import id.neotica.ui.theme.NeoPadding
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -34,12 +36,14 @@ fun LeaderBoardsView(
 ) {
     var isLoading by remember { mutableStateOf(false) }
     var allUser by remember { mutableStateOf<List<ParentNeo<UserData>>?>(emptyList()) }
+    var onClick by remember { mutableStateOf(false) }
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(onClick) {
         viewModel.allUser.collect { result ->
             when(result) {
                 is ApiResult.Loading -> isLoading = true
                 is ApiResult.Success -> {
+                    onClick = false
                     isLoading = false
                     allUser = result.data
                 }
@@ -54,25 +58,32 @@ fun LeaderBoardsView(
         navController = navController,
         enableActionBar = true
     ) {
+        Spacer(Modifier.padding(8.dp))
         NeoButton("Join Leaderboards") {
             viewModel.inputUserIdToWorld()
+            onClick = true
         }
-        LazyColumn {
-            allUser?.let {
-                itemsIndexed(it) { index, child ->
-                    Row(
-                        modifier = Modifier
-                            .padding(horizontal = 16.dp)
-                            .fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Row {
-                            Text("${index + 1}")
-                            Spacer(Modifier.padding(8.dp))
-                            Text(child.value.world.username)
+        Spacer(Modifier.padding(8.dp))
+        LoadingIndicatorBool(isLoading) {
+            LazyColumn(
+                contentPadding = PaddingValues(
+                    bottom = NeoPadding.systemBarPadding + paddingValues.calculateBottomPadding()
+                )
+            ) {
+                allUser?.let {
+                    itemsIndexed(it) { index, child ->
+                        Row(
+                            modifier = Modifier
+                                .padding(horizontal = 16.dp)
+                                .fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Row {
+                                Text("${index + 1}. ")
+                                Text(child.value.world.username)
+                            }
+                            Text("${child.value.world.aura} Aura")
                         }
-
-                        Text(child.value.world.aura.toString())
                     }
                 }
             }

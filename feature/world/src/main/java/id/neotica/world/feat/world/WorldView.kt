@@ -91,6 +91,10 @@ fun WorldView(
         if (!auraInit) {
             Text("Your Aura: ${currentAuras?.aura ?: ""}")
             Spacer(Modifier.padding(4.dp))
+            NeoButton("Leaderboards") {
+                navController.navigate(WorldScreen.LeaderBoardsScreen)
+            }
+            Spacer(Modifier.padding(4.dp))
             NeoButton("Tavern") {
                 navController.navigate(WorldScreen.GameScreen)
             }
@@ -110,10 +114,6 @@ fun WorldView(
             NeoButton("To Merchant") {
                 navController.navigate(WorldScreen.MerchantScreen)
             }*/
-            Spacer(Modifier.padding(4.dp))
-            NeoButton("Leaderboards") {
-                navController.navigate(WorldScreen.LeaderBoardsScreen)
-            }
             Spacer(Modifier.padding(4.dp))
             NeoButton("Mining Field") {
                 navController.navigate(WorldScreen.MiningScreen)

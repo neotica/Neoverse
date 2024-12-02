@@ -55,6 +55,12 @@ fun GameView(
                 is ApiResult.Success -> {
                     currentAuras = result.data
                     if (result.data?.aura == null) auraInit = true
+                    result.data?.let {
+                        if (it.aura <= 0) {
+                            Toast.makeText(context, "Aura is below", Toast.LENGTH_SHORT).show()
+                            navController.navigateUp()
+                        }
+                    }
                 }
                 is ApiResult.Error -> {
                     if (result.data?.aura == null) auraInit = true
@@ -79,7 +85,7 @@ fun GameView(
         enableActionBar = true
     ) {
         if (!auraInit) {
-            Text("Your Aura:" + currentAuras?.aura.toString())
+            Text("Your Aura: ${currentAuras?.aura ?: ""}")
 
             Spacer(Modifier.padding(20.dp))
             Card {

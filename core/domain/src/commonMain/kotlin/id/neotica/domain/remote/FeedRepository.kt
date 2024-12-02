@@ -7,5 +7,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface FeedRepository {
     fun getAllUserData(): Flow<ApiResult<List<ParentNeo<UserData>>>>
-    suspend fun inputUsernameToWorld(userData: UserData)
+    suspend fun inputUsernameToWorld(username: String, userId: String)
 }

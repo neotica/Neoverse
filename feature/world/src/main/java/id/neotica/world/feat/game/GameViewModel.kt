@@ -103,9 +103,9 @@ class GameViewModel(
         val shark = "\uD83E\uDD88"
 
         when(result) {
-            "$seven$seven$seven" -> _auraPoints.value = 500
-            "$star$star$star" -> _auraPoints.value = 200
-            "$shark$shark$shark" -> _auraPoints.value = 100
+            "$seven$seven$seven" -> _auraPoints.value = 750
+            "$star$star$star" -> _auraPoints.value = 250
+            "$shark$shark$shark" -> _auraPoints.value = 150
             "$smile$smile$smile" -> _auraPoints.value = 50
             else -> _auraPoints.value = -10
         }
