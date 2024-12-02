@@ -9,4 +9,5 @@ interface AuraRepository {
     suspend fun getAuras(userId: String): Flow<ApiResult<World?>>
     suspend fun postAurasToBank(aura: Long, userId: String)
     suspend fun getBankAura(userId: String): Flow<ApiResult<World?>>
+    suspend fun getAurasDecrypt(userId: String): Flow<ApiResult<Long?>>
 }

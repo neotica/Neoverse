@@ -22,7 +22,6 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.navigation.NavController
 import id.neotica.domain.ApiResult
-import id.neotica.domain.model.World
 import id.neotica.droidcore.component.cards.Pocket
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.NeoButton
@@ -38,7 +37,7 @@ fun WorldView(
     paddingValues: PaddingValues,
     viewModel: WorldViewModel = koinViewModel()
 ) {
-    var currentAuras by remember { mutableStateOf<World?>(null) }
+    var currentAuras by remember { mutableStateOf<Long?>(null) }
     var auraInit by remember { mutableStateOf(false) }
     var onClick by remember { mutableStateOf(false) }
     val random = Random.nextInt(2000)
@@ -54,10 +53,10 @@ fun WorldView(
                 }
                 is ApiResult.Success -> {
                     currentAuras = result.data
-                    if (result.data?.aura == null) auraInit = true
+                    if (result.data == null) auraInit = true
                 }
                 is ApiResult.Error -> {
-                    if (result.data?.aura == null) auraInit = true
+                    if (result.data == null) auraInit = true
                 }
             }
         }
@@ -89,7 +88,7 @@ fun WorldView(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         if (!auraInit) {
-            Text("Your Aura: ${currentAuras?.aura ?: ""}")
+            Text("Your Aura: ${currentAuras ?: ""}")
             Spacer(Modifier.padding(4.dp))
             NeoButton("Leaderboards") {
                 navController.navigate(WorldScreen.LeaderBoardsScreen)

@@ -19,3 +19,15 @@ data class World(
     var aura: Long = 0,
     val items: Item = Item()
 )
+
+data class UserDataFirebase(
+    val userId: String = "",
+    val friends: Friends = Friends(),
+    val world: WorldFirebase = WorldFirebase()
+)
+
+data class WorldFirebase(
+    val username: String = "",
+    var aura: String = "",
+    val items: Item = Item()
+)

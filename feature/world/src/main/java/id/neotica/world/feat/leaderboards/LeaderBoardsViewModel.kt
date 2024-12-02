@@ -38,7 +38,7 @@ class LeaderBoardsViewModel(
     private fun getAllUser() = viewModelScope.launch {
         feedRepository.getAllUserData().collect {
             _allUser.value = it
-            Log.d("leaderboards", it.toString())
+            Log.d("leaderboards vm", it.toString())
         }
     }
 

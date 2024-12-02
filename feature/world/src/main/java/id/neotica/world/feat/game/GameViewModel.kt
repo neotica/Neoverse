@@ -3,7 +3,6 @@ package id.neotica.world.feat.game
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import id.neotica.domain.model.World
 import id.neotica.domain.ApiResult
 import id.neotica.domain.remote.AuraRepository
 import id.neotica.domain.remote.FirebaseRepository
@@ -29,7 +28,7 @@ class GameViewModel(
     private val _auraPoints = MutableStateFlow(0)
     val auraPoints = _auraPoints.asStateFlow()
 
-    private val _totalAuras: MutableStateFlow<ApiResult<World?>> = MutableStateFlow(ApiResult.Loading())
+    private val _totalAuras: MutableStateFlow<ApiResult<Long?>> = MutableStateFlow(ApiResult.Loading())
     val totalAuras = _totalAuras.asStateFlow()
 
     private fun currentUserId(): String = getIdUseCase.invoke()
@@ -49,12 +48,12 @@ class GameViewModel(
         firebase.itemLog("GameView", itemName, contentType)
     }
 
-    fun sendInitialAura(aura: Long) = viewModelScope.launch {
+    fun sendJancok(aura: Long) = viewModelScope.launch {
         gameRepo.postAuras(aura, currentUserId())
     }
 
     fun sendAuraPoints(aura: Int) = viewModelScope.launch {
-        val tot = _totalAuras.value.data?.aura
+        val tot = _totalAuras.value.data
         if (tot != null) {
             gameRepo.postAuras(tot + aura, currentUserId())
         }
@@ -63,7 +62,8 @@ class GameViewModel(
     }
 
     private fun fetchAuras() = viewModelScope.launch {
-        gameRepo.getAuras(currentUserId()).collect {
+        gameRepo.getAurasDecrypt(currentUserId()).collect {
+            Log.d("auraDecrypted VM", it.toString())
             _totalAuras.value = it
         }
     }

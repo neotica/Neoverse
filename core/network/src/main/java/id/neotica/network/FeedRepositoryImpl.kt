@@ -4,8 +4,10 @@ import com.google.firebase.Firebase
 import com.google.firebase.database.database
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.UserData
+import id.neotica.domain.model.UserDataFirebase
 import id.neotica.domain.model.chat.ParentNeo
 import id.neotica.domain.remote.FeedRepository
+import id.neotica.network.utils.userDataToLong
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
@@ -18,16 +20,17 @@ class FeedRepositoryImpl: FeedRepository {
         list.clear()
         emit(ApiResult.Loading())
         val ref = firebase.getReference("userdata").get().await()
+
         try {
-            ref.children.forEach { data ->
-                val value = data.getValue(UserData::class.java)
+            ref.children.forEach {
+                val value = it.getValue(UserDataFirebase::class.java)
                 val parentValue = ParentNeo(
-                    key = data.key!!,
+                    key = it.key!!,
                     value = value!!
                 )
-
-                list.add(parentValue)
+                list.add(userDataToLong(parentValue))
             }
+
             emit(ApiResult.Success(
                 list.filter {
                     it.value.world.username!= "" &&
