@@ -31,7 +31,7 @@ import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import id.neotica.domain.ApiResult
-import id.neotica.domain.model.Games
+import id.neotica.domain.model.World
 import id.neotica.domain.model.market.Hero
 import id.neotica.domain.model.market.Item
 import id.neotica.droidcore.component.alert.AlertDialogCustomDesc
@@ -50,7 +50,7 @@ fun ItemDetailView(
     paddingValues: PaddingValues,
     viewModel: ItemDetailViewModel = koinViewModel()
 ) {
-    var currentAuras by remember { mutableStateOf<Games?>(null) }
+    var currentAuras by remember { mutableStateOf<World?>(null) }
     var onClick by remember { mutableStateOf(false) }
     var loading by remember { mutableStateOf(false) }
     var hero by remember { mutableStateOf<Hero?>(null) }

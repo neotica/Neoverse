@@ -2,6 +2,7 @@ package id.neotica.domain.remote
 
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.User
+import id.neotica.domain.model.UserData
 import kotlinx.coroutines.flow.Flow
 
 interface UserRepository {
@@ -17,4 +18,5 @@ interface UserRepository {
     suspend fun changeProfilePicture(uri: String)
     suspend fun changeUserProfile(user: User)
     suspend fun getUserProfilePic(): String
+    fun getWorldDetail(userId: String): Flow<ApiResult<UserData>>
 }

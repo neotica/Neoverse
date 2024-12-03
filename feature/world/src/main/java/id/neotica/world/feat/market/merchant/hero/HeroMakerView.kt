@@ -19,7 +19,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
 import id.neotica.domain.ApiResult
-import id.neotica.domain.model.Games
+import id.neotica.domain.model.World
 import id.neotica.domain.model.market.Hero
 import id.neotica.domain.model.market.HeroBackground
 import id.neotica.droidcore.component.textfield.NeoTextField
@@ -36,7 +36,7 @@ fun HeroMakerView(
     paddingValues: PaddingValues,
     viewModel: MerchantViewModel = koinViewModel()
 ) {
-    var currentAuras by remember { mutableStateOf<Games?>(null) }
+    var currentAuras by remember { mutableStateOf<World?>(null) }
     var onClick by remember { mutableStateOf(false) }
 
     val name = remember { mutableStateOf("") }

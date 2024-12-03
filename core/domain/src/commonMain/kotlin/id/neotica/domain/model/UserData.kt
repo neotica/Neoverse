@@ -1,11 +1,11 @@
 package id.neotica.domain.model
 
-import id.neotica.domain.model.chat.ParentNeo
+import id.neotica.domain.model.market.Item
 
 data class UserData(
-    val id: String = "",
-    val friends: ParentNeo<Friends>,
-    val games: Games
+    val userId: String = "",
+    val friends: Friends = Friends(),
+    val world: World = World()
 )
 
 data class Friends(
@@ -14,6 +14,20 @@ data class Friends(
     val imageUrl: String = ""
 )
 
-data class Games(
-    var aura: Long = 0
+data class World(
+    val username: String = "",
+    var aura: Long = 0,
+    val items: Item = Item()
+)
+
+data class UserDataFirebase(
+    val userId: String = "",
+    val friends: Friends = Friends(),
+    val world: WorldFirebase = WorldFirebase()
+)
+
+data class WorldFirebase(
+    val username: String = "",
+    var aura: String = "",
+    val items: Item = Item()
 )

@@ -3,7 +3,7 @@ package id.neotica.world.feat.inventory
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import id.neotica.domain.ApiResult
-import id.neotica.domain.model.Games
+import id.neotica.domain.model.World
 import id.neotica.domain.model.market.Hero
 import id.neotica.domain.model.market.Item
 import id.neotica.domain.remote.AuraRepository
@@ -18,7 +18,7 @@ class InventoryViewModel(
     private val inventoryRepo: InventoryRepository,
     private val getUserIdUseCase: GetUserIdUseCase,
 ): ViewModel() {
-    private val _totalAuras: MutableStateFlow<ApiResult<Games?>> = MutableStateFlow(ApiResult.Loading())
+    private val _totalAuras: MutableStateFlow<ApiResult<World?>> = MutableStateFlow(ApiResult.Loading())
     val totalAuras = _totalAuras.asStateFlow()
 
     private val _hero: MutableStateFlow<ApiResult<List<Hero>>> = MutableStateFlow(ApiResult.Loading())

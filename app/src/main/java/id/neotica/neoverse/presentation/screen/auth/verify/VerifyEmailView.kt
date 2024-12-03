@@ -19,9 +19,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.NeoButton
+import id.neotica.ui.navigation.Screen
 import id.neotica.ui.theme.DarkPrimary
 import org.koin.androidx.compose.koinViewModel
 
@@ -35,7 +35,7 @@ fun VerifyEmailView(
     LaunchedEffect(Unit) {
         if (viewModel.isUserVerified()) {
             viewModel.logout()
-            navController.navigate(RootScreen.AuthNav)
+            navController.navigate(Screen.LoginScreen)
         } else
             viewModel.sendEmailVerification()
     }
@@ -63,7 +63,7 @@ fun VerifyEmailView(
                         maxWidth = true
                     ) {
                         viewModel.logout()
-                        navController.navigate(RootScreen.AuthNav)
+                        navController.navigate(Screen.LoginScreen)
                     }
                 }
                 Row(

@@ -8,6 +8,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.User
+import id.neotica.domain.model.UserData
 import id.neotica.domain.remote.UserRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.InternalCoroutinesApi
@@ -62,6 +63,17 @@ class UserRepositoryImpl: UserRepository {
             ApiResult.Success(userList)
         } catch (e: Exception) {
             ApiResult.Error(e.message)
+        }
+    }
+
+    override fun getWorldDetail(userId: String): Flow<ApiResult<UserData>> = flow {
+        val ref = firebase.getReference("userdata")
+            .child(userId).get().await()
+        try {
+            val value = ref.getValue(UserData::class.java)
+            emit(ApiResult.Success(value!!))
+        } catch (e: Exception) {
+            emit(ApiResult.Error(e.message))
         }
     }
 

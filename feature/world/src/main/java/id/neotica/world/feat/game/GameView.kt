@@ -2,11 +2,13 @@ package id.neotica.world.feat.game
 
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -20,16 +22,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import id.neotica.domain.ApiResult
-import id.neotica.domain.model.Games
-import id.neotica.droidcore.component.cards.deprecated.NeoCard
 import id.neotica.ui.components.BasicScaffold
-import id.neotica.ui.components.NeoButton
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.Screen
-import id.neotica.ui.navigation.WorldScreen
+import id.neotica.ui.theme.DarkPrimary
+import id.neotica.ui.theme.Transparent
 import id.neotica.world.feat.game.components.SlotMachine
 import org.koin.androidx.compose.koinViewModel
-import kotlin.random.Random
 
 @Composable
 fun GameView(
@@ -38,9 +37,8 @@ fun GameView(
     viewModel: GameViewModel = koinViewModel()
 ) {
 
-    var currentAuras by remember { mutableStateOf<Games?>(null) }
+    var currentAuras by remember { mutableStateOf<Long?>(null) }
     var auraInit by remember { mutableStateOf(false) }
-    val random = Random.nextInt(2000)
     val context = LocalContext.current
 
     LaunchedEffect(Unit) {
@@ -48,17 +46,22 @@ fun GameView(
 
         viewModel.totalAuras.collect { result ->
             Log.d("auraInit", result.errorMessage. toString())
-
             when(result) {
                 is ApiResult.Loading -> {
                     auraInit = false
                 }
                 is ApiResult.Success -> {
                     currentAuras = result.data
-                    if (result.data?.aura == null) auraInit = true
+                    if (result.data == null) auraInit = true
+                    result.data?.let {
+                        if (it <= 0) {
+                            Toast.makeText(context, "Aura is below", Toast.LENGTH_SHORT).show()
+                            navController.navigateUp()
+                        }
+                    }
                 }
                 is ApiResult.Error -> {
-                    if (result.data?.aura == null) auraInit = true
+                    if (result.data == null) auraInit = true
                 }
             }
         }
@@ -79,34 +82,23 @@ fun GameView(
         navController = navController,
         enableActionBar = true
     ) {
-        if (!auraInit) {
-            Text("Your Aura:" + currentAuras?.aura.toString())
+        Text("Your Aura: ${currentAuras ?: ""}")
 
-            Spacer(Modifier.padding(20.dp))
-            Card {
-                SlotMachine(
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(30.dp))
-            }
-            Spacer(Modifier.padding(20.dp))
-            /*NeoButton("Drink Beer!") {
-                viewModel.sendAuraPoints(-5)
-            }*/
-        } else {
-            NeoCard(
-                title = "Receive your first time Aura!",
-                desc = "hello",
-                button = "Get Aura!"
-            ) {
-                Toast.makeText(context, "Congratulations, you've got $random aura!", Toast.LENGTH_SHORT).show()
-                viewModel.sendInitialAura(random.toLong())
-                navController.navigate(WorldScreen.GameScreen) {
-                    popUpTo(RootScreen.WorldNav) {
-                        inclusive = true
-                    }
-                }
-            }
+        Spacer(Modifier.padding(20.dp))
+        Card(
+            colors = CardDefaults.cardColors().copy(
+                containerColor = Transparent
+            ),
+            border = BorderStroke(2.dp, DarkPrimary)
+        ) {
+            SlotMachine(
+                Modifier
+                    .fillMaxWidth()
+                    .padding(30.dp))
         }
+        Spacer(Modifier.padding(20.dp))
+        /*NeoButton("Drink Beer!") {
+            viewModel.sendAuraPoints(-5)
+        }*/
     }
 }

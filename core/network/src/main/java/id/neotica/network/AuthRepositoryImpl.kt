@@ -3,8 +3,12 @@ package id.neotica.network
 import android.util.Log
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthException
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.database.database
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestoreException
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.User
 import id.neotica.domain.remote.AuthRepository
@@ -22,16 +26,27 @@ class AuthRepositoryImpl: AuthRepository {
     override suspend fun login(email: String, password: String): ApiResult<String> {
         auth = FirebaseAuth.getInstance()
 
-        val loginResult = auth.signInWithEmailAndPassword(email, password)
-        return try {
-            loginResult.await()
-            if (loginResult.isSuccessful) {
-                 ApiResult.Success("Success")
+        try {
+            val loginResult = auth.signInWithEmailAndPassword(email, password).await()
+            val user = loginResult.user
+
+            return if (user != null) {
+                if (user.isEmailVerified) {
+                    ApiResult.Success("Login successful")
+                } else {
+                    ApiResult.Error("Email not verified. Please verify your email.")
+                }
             } else {
-                ApiResult.Error("Error")
+                ApiResult.Error("Login failed: User not found.")
             }
+        } catch (e: FirebaseAuthInvalidUserException) {
+            return ApiResult.Error("Invalid user: ${e.message}")
+        } catch (e: FirebaseAuthInvalidCredentialsException) {
+            return ApiResult.Error("Invalid credentials: ${e.message}")
+        } catch (e: FirebaseAuthException) {
+            return ApiResult.Error("Authentication error: ${e.message}")
         } catch (e: Exception) {
-            ApiResult.Error("Exception")
+            return ApiResult.Error("Unexpected error: ${e.message}")
         }
     }
 
@@ -39,26 +54,31 @@ class AuthRepositoryImpl: AuthRepository {
         auth = FirebaseAuth.getInstance()
         firestore = FirebaseFirestore.getInstance()
 
-        val registerResult = auth.createUserWithEmailAndPassword(email, password)
-
         try {
-            registerResult.await()
-            if (registerResult.isSuccessful) {
-                val currentUser = auth.currentUser
+            val registerResult = auth.createUserWithEmailAndPassword(email, password).await()
+            if (registerResult.user != null) {
+                val currentUser = auth.currentUser!!
                 val dataUser = User(
-                    userId = currentUser!!.uid,
+                    userId = currentUser.uid,
                     username = username,
                     userEmail = email
                 )
+                // Send verification email
                 currentUser.sendEmailVerification()
-                firestore.collection("Users").document(currentUser.uid).set(dataUser)
-                return ApiResult.Success("Success")
 
+                // Save user data in Firestore
+                firestore.collection("Users").document(currentUser.uid).set(dataUser).await()
+
+                return ApiResult.Success("Registration successful")
             } else {
-                return ApiResult.Error("Error")
+                return ApiResult.Error("Registration failed: Unknown error")
             }
+        } catch (e: FirebaseAuthException) {
+            return ApiResult.Error("Authentication Error: ${e.message}")
+        } catch (e: FirebaseFirestoreException) {
+            return ApiResult.Error("Firestore Error: ${e.message}")
         } catch (e: Exception) {
-            return ApiResult.Error("Exception")
+            return ApiResult.Error("Unexpected Error: ${e.message}")
         }
     }
 

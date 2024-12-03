@@ -94,6 +94,10 @@ sealed class WorldScreen {
     data object InventoryScreen: Screen()
     @Serializable
     data object MiningScreen: Screen()
+    @Serializable
+    data object LeaderBoardsScreen: Screen()
+    @Serializable
+    data object SuperAdminScreen: Screen()
 }
 
 data class NavigationItem(

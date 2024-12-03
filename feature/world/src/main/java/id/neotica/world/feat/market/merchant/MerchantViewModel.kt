@@ -3,7 +3,7 @@ package id.neotica.world.feat.market.merchant
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import id.neotica.domain.ApiResult
-import id.neotica.domain.model.Games
+import id.neotica.domain.model.World
 import id.neotica.domain.model.market.Hero
 import id.neotica.domain.model.market.Item
 import id.neotica.domain.model.market.OwnerInfo
@@ -22,7 +22,7 @@ class MerchantViewModel(
     private val getUserIdUseCase: GetUserIdUseCase,
     private val getUserNameUseCase: GetUserNameUseCase
 ): ViewModel() {
-    private val _totalAuras: MutableStateFlow<ApiResult<Games?>> = MutableStateFlow(ApiResult.Loading())
+    private val _totalAuras: MutableStateFlow<ApiResult<World?>> = MutableStateFlow(ApiResult.Loading())
     val totalAuras = _totalAuras.asStateFlow()
 
     private val _merchant: MutableStateFlow<ApiResult<String>> = MutableStateFlow(ApiResult.Loading())

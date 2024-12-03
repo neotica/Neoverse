@@ -51,7 +51,7 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.navigation.NavController
 import id.neotica.domain.ApiResult
-import id.neotica.domain.model.Games
+import id.neotica.domain.model.World
 import id.neotica.domain.model.market.Hero
 import id.neotica.domain.model.market.Item
 import id.neotica.droidcore.component.carousel.CarouselCard
@@ -73,7 +73,7 @@ fun MarketView(
     paddingValues: PaddingValues,
     viewModel: MarketViewModel = koinViewModel()
 ) {
-    var currentAuras by remember { mutableStateOf<Games?>(null) }
+    var currentAuras by remember { mutableStateOf<World?>(null) }
     val onClick by remember { mutableStateOf(false) }
     var heroes by remember { mutableStateOf<List<Hero>>(emptyList()) }
     var items by remember { mutableStateOf<List<Item>>(emptyList()) }

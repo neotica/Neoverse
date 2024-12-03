@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import id.neotica.domain.ApiResult
-import id.neotica.domain.model.Games
+import id.neotica.domain.model.World
 import id.neotica.domain.model.market.Hero
 import id.neotica.domain.model.market.Item
 import id.neotica.domain.remote.AuraRepository
@@ -33,11 +33,11 @@ class ItemDetailViewModel(
     private val buyItemUseCase: BuyItemUseCase,
     savedStateHandle: SavedStateHandle
 ): ViewModel() {
-    private val _totalAuras: MutableStateFlow<ApiResult<Games?>> = MutableStateFlow(ApiResult.Loading())
+    private val _totalAuras: MutableStateFlow<ApiResult<World?>> = MutableStateFlow(ApiResult.Loading())
     val totalAuras = _totalAuras.asStateFlow()
 
-    private val _sellerAuras: MutableStateFlow<ApiResult<Games?>> = MutableStateFlow(ApiResult.Loading())
-    private val _bankAuras: MutableStateFlow<ApiResult<Games?>> = MutableStateFlow(ApiResult.Loading())
+    private val _sellerAuras: MutableStateFlow<ApiResult<World?>> = MutableStateFlow(ApiResult.Loading())
+    private val _bankAuras: MutableStateFlow<ApiResult<World?>> = MutableStateFlow(ApiResult.Loading())
 
     private val args = savedStateHandle.toRoute<WorldScreen.ItemDetailScreen>()
 

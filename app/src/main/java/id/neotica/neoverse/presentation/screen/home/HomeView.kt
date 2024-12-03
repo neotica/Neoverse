@@ -48,7 +48,6 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.navigation.NavController
 import id.neotica.domain.ApiResult
-import id.neotica.domain.model.Games
 import id.neotica.domain.model.User
 import id.neotica.domain.model.chat.ChatRoom
 import id.neotica.domain.model.chat.ParentNeo
@@ -84,7 +83,7 @@ fun HomeView(
     var isLoadingChats by remember { mutableStateOf(false) }
     var currentuser by remember { mutableStateOf<User?>(null) }
     val lifecycleOwner = LocalLifecycleOwner.current
-    var currentAura by remember { mutableStateOf<Games?>(null) }
+    var currentAura by remember { mutableStateOf<Long?>(null) }
 
     val headerAlpha2 = remember { mutableFloatStateOf(1f) }
     val headerSize2 = remember { mutableStateOf(100.dp) }
@@ -241,7 +240,7 @@ fun HomeView(
                                     fontWeight = FontWeight.Bold
                                 )
                                 Text(
-                                    text = "You have ${currentAura?.aura ?: "0"} Auras.",
+                                    text = "You have ${currentAura ?: "0"} Auras.",
                                     fontSize = FontSize.Small,
                                     color = TransparentText20
                                 )
