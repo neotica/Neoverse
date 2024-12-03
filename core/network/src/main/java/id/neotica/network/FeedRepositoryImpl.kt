@@ -28,8 +28,8 @@ class FeedRepositoryImpl: FeedRepository {
                     key = it.key!!,
                     value = value!!
                 )
-                val aura = it.child("world").child("aura").value.toString()
-                if (aura != "null") {
+                val aura = it.child("world").child("aura").value
+                if (aura != null && aura.toString() != "null" && aura.toString() != "") {
                     val userDataLong = userDataToLong(parentValue)
                     list.add(userDataLong)
                 }
