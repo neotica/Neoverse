@@ -27,7 +27,8 @@ class AuthRepositoryImpl: AuthRepository {
         auth = FirebaseAuth.getInstance()
 
         try {
-            val user = auth.currentUser
+            val loginResult = auth.signInWithEmailAndPassword(email, password).await()
+            val user = loginResult.user
 
             return if (user != null) {
                 if (user.isEmailVerified) {
