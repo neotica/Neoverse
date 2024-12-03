@@ -7,7 +7,6 @@ import id.neotica.domain.ApiResult
 import id.neotica.domain.model.UserData
 import id.neotica.domain.model.chat.ParentNeo
 import id.neotica.domain.remote.FeedRepository
-import id.neotica.domain.remote.UserRepository
 import id.neotica.domain.usecase.GetUserIdUseCase
 import id.neotica.domain.usecase.GetUserNameUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,7 +17,6 @@ class LeaderBoardsViewModel(
     private val getUserIdUseCase: GetUserIdUseCase,
     private val feedRepository: FeedRepository,
     private val getUserNameUseCase: GetUserNameUseCase,
-    private val useRepo: UserRepository
 ): ViewModel() {
     private fun currentUsername(): String = getUserNameUseCase.invoke()
     private fun currentUserId(): String = getUserIdUseCase.invoke()
@@ -32,7 +30,6 @@ class LeaderBoardsViewModel(
 
     init {
         getAllUser()
-        fetchUserWorld()
     }
 
     private fun getAllUser() = viewModelScope.launch {
@@ -42,17 +39,8 @@ class LeaderBoardsViewModel(
         }
     }
 
-    private fun fetchUserWorld() = viewModelScope.launch {
-        useRepo.getWorldDetail(currentUserId()).collect {
-            _userData.value = it
-        }
-    }
-
     fun inputUserIdToWorld() = viewModelScope.launch {
-        _userData.value.data?.let { data ->
-
-            feedRepository.inputUsernameToWorld(currentUsername(), currentUserId())
-        }
+        feedRepository.inputUsernameToWorld(currentUsername(), currentUserId())
         Log.d("LeaderboardVM3", _userData.value.toString())
         getAllUser()
     }

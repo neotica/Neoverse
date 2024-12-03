@@ -1,11 +1,10 @@
 package id.neotica.network.utils
 
 import java.security.Key
+import java.util.Base64
 import javax.crypto.Cipher
 import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.SecretKeySpec
-import kotlin.io.encoding.Base64
-import kotlin.io.encoding.ExperimentalEncodingApi
 
 object LongCryptoUtil {
     private const val ALGORITHM = "AES"
@@ -25,7 +24,6 @@ object LongCryptoUtil {
     }
 
     // Encrypt a Long value
-    @OptIn(ExperimentalEncodingApi::class)
     fun encrypt(value: Long): String {
         val cipher = Cipher.getInstance(TRANSFORMATION)
         val iv = generateIv()
@@ -34,13 +32,13 @@ object LongCryptoUtil {
 
         val encryptedBytes = cipher.doFinal(value.toString().toByteArray())
         val ivAndCipher = iv + encryptedBytes // Prepend IV to the ciphertext
-        return Base64.encode(ivAndCipher) //.getEncoder().encodeToString(ivAndCipher)
+        val base64Encoded = Base64.getEncoder().encodeToString(ivAndCipher)
+        return base64Encoded.replace("=", "")
     }
 
     // Decrypt an encrypted string back to a Long
-    @OptIn(ExperimentalEncodingApi::class)
     fun decrypt(encryptedValue: String): Long {
-        val ivAndCipher = Base64.decode(encryptedValue) //.getDecoder().decode(encryptedValue)
+        val ivAndCipher = Base64.getDecoder().decode(encryptedValue)
         val iv = ivAndCipher.copyOfRange(0, IV_SIZE) // Extract IV
         val cipherBytes = ivAndCipher.copyOfRange(IV_SIZE, ivAndCipher.size)
         val key = ByteArray(16) { 0x32 }

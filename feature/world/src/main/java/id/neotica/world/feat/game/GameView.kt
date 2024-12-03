@@ -23,14 +23,12 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import id.neotica.domain.ApiResult
 import id.neotica.ui.components.BasicScaffold
-import id.neotica.ui.components.NeoButton
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.Screen
 import id.neotica.ui.theme.DarkPrimary
 import id.neotica.ui.theme.Transparent
 import id.neotica.world.feat.game.components.SlotMachine
 import org.koin.androidx.compose.koinViewModel
-import kotlin.random.Random
 
 @Composable
 fun GameView(
@@ -41,7 +39,6 @@ fun GameView(
 
     var currentAuras by remember { mutableStateOf<Long?>(null) }
     var auraInit by remember { mutableStateOf(false) }
-    val random = Random.nextInt(2000)
     val context = LocalContext.current
 
     LaunchedEffect(Unit) {
@@ -87,9 +84,6 @@ fun GameView(
     ) {
         Text("Your Aura: ${currentAuras ?: ""}")
 
-        NeoButton("Push ") {
-            viewModel.sendJancok(50)
-        }
         Spacer(Modifier.padding(20.dp))
         Card(
             colors = CardDefaults.cardColors().copy(

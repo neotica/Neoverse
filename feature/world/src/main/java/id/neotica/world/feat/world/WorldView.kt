@@ -98,6 +98,10 @@ fun WorldView(
                 navController.navigate(WorldScreen.GameScreen)
             }
             /*Spacer(Modifier.padding(4.dp))
+            NeoButton("SuperAdmin") {
+                navController.navigate(WorldScreen.SuperAdminScreen)
+            }*/
+            /*Spacer(Modifier.padding(4.dp))
             Row(
                 Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly

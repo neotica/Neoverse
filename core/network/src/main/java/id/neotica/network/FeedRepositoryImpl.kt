@@ -28,7 +28,11 @@ class FeedRepositoryImpl: FeedRepository {
                     key = it.key!!,
                     value = value!!
                 )
-                list.add(userDataToLong(parentValue))
+                val aura = it.child("world").child("aura").value.toString()
+                if (aura != "null") {
+                    val userDataLong = userDataToLong(parentValue)
+                    list.add(userDataLong)
+                }
             }
 
             emit(ApiResult.Success(
