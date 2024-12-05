@@ -30,6 +30,7 @@ import id.neotica.neoverse.presentation.screen.friend.FriendViewModel
 import id.neotica.neoverse.presentation.screen.dump.DumpViewModel
 import id.neotica.neoverse.presentation.screen.home.HomeViewModel
 import id.neotica.neoverse.presentation.screen.home.addchat.AddChatViewModel
+import id.neotica.neoverse.presentation.screen.main.MainViewModel
 import id.neotica.neoverse.presentation.screen.profile.ProfileViewModel
 import id.neotica.network.AuraRepositoryImpl
 import id.neotica.network.FeedRepositoryImpl
@@ -69,6 +70,7 @@ val viewModelModules = module {
     viewModelOf(::FriendViewModel)
     viewModelOf(::VerifyEmailViewModel)
     viewModelOf(::DumpViewModel)
+    viewModelOf(::MainViewModel)
 }
 
 val useCaseModules = module {
