@@ -59,11 +59,13 @@ fun LeaderBoardsView(
         enableActionBar = true
     ) {
         Spacer(Modifier.padding(8.dp))
-        NeoButton("Join Leaderboards") {
-            viewModel.inputUserIdToWorld()
-            onClick = true
+        if (!viewModel.hasJoinedLeaderBoards() && !isLoading) {
+            NeoButton("Join Leaderboards") {
+                viewModel.joinLeaderboards()
+                onClick = true
+            }
+            Spacer(Modifier.padding(8.dp))
         }
-        Spacer(Modifier.padding(8.dp))
         LoadingIndicatorBool(isLoading) {
             LazyColumn(
                 contentPadding = PaddingValues(
