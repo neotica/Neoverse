@@ -7,6 +7,7 @@ data class ChatRoom(
     val user1: String = "",
     val user1id: String = "",
     val user1Read: Boolean = false,
+    val fcmToken: String = "",
     val user2: String = "",
     val user2id: String = "",
     val user2Read: Boolean = false,

@@ -10,11 +10,14 @@ import com.google.firebase.auth.auth
 import com.google.firebase.database.database
 import id.neotica.domain.ApiResult
 import id.neotica.domain.local.CurrentUserRepository
+import id.neotica.domain.model.User
 import id.neotica.domain.model.chat.ChatRoom
 import id.neotica.domain.model.chat.Message
-import id.neotica.domain.model.User
+import id.neotica.domain.model.chat.notification.NotificationBody
+import id.neotica.domain.model.chat.notification.SendMessageDto
 import id.neotica.domain.remote.ChatRepository
 import id.neotica.domain.remote.UserRepository
+import id.neotica.domain.usecase.GetUserNameUseCase
 import id.neotica.ui.navigation.Screen
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -26,6 +29,7 @@ class ChatViewModel(
     private val userRepo: UserRepository,
     private val chatRepo: ChatRepository,
     private val currentUserDatabase: CurrentUserRepository,
+    private val getUserNameUseCase: GetUserNameUseCase,
     savedStateHandle: SavedStateHandle
 ): ViewModel() {
     private val args = savedStateHandle.toRoute<Screen.Chat>()
@@ -40,6 +44,9 @@ class ChatViewModel(
     init {
         getChatroom()
         getUserRoomInstance()
+        viewModelScope.launch {
+            chatRepo.subscribeToTopic("chat")
+        }
     }
 
     private fun getUserRoomInstance() = viewModelScope.launch {
@@ -68,6 +75,22 @@ class ChatViewModel(
         )
         chatRepo.sendMessage(chatId, messageValue)
         updateLastMessage(chat)
+        val sendMessageDto = SendMessageDto(
+            to = if (_chatroom.value.data == null) null else _chatroom.value.data?.fcmToken,
+            notification = NotificationBody(
+                title = getUserNameUseCase.invoke(),
+                body = chat
+            )
+        )
+        Log.d("chatvm", sendMessageDto.toString())
+        sendNotification(sendMessageDto)
+    }
+
+    private fun sendNotification(messageDto: SendMessageDto) = viewModelScope.launch {
+        chatRepo.sendNotification(
+            isBroadcast = messageDto.to != null,
+            messageDto = messageDto
+        )
     }
 
     private fun updateLastMessage(message: String) = viewModelScope.launch {
