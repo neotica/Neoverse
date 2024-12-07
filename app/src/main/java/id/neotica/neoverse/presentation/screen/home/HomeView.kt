@@ -43,6 +43,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.core.content.pm.PackageInfoCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
@@ -51,7 +52,7 @@ import id.neotica.domain.ApiResult
 import id.neotica.domain.model.User
 import id.neotica.domain.model.chat.ChatRoom
 import id.neotica.domain.model.chat.ParentNeo
-import id.neotica.domain.utils.convertLongToHour
+import id.neotica.domain.utils.convertLongToTime
 import id.neotica.domain.utils.filteredRoom
 import id.neotica.domain.utils.returnFriendName
 import id.neotica.ui.components.BasicScaffold
@@ -88,7 +89,39 @@ fun HomeView(
     val headerAlpha2 = remember { mutableFloatStateOf(1f) }
     val headerSize2 = remember { mutableStateOf(100.dp) }
 
+    var versionCode by remember { mutableStateOf<Int?>(null) }
+
     val context = LocalContext.current
+
+    LaunchedEffect(Unit) {
+
+        viewModel.versionCode.collect { result ->
+            when(result) {
+                is ApiResult.Loading -> {
+                    isLoading = true
+                }
+                is ApiResult.Success -> {
+                    isLoading = false
+                    versionCode = result.data
+                    val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
+                    val version: Long = PackageInfoCompat.getLongVersionCode(packageInfo)
+                    versionCode?.let {
+                        if (it > version) {
+                            navController.navigate(Screen.UpdateAppScreen) {
+                                popUpTo(RootScreen.HomeNav) {
+                                    inclusive = true
+                                }
+                                launchSingleTop
+                            }
+                        }
+                    }
+                }
+                is ApiResult.Error -> {
+                    isLoading = false
+                }
+            }
+        }
+    }
 
     LaunchedEffect(isPressed) {
         isPressed = false
@@ -338,7 +371,7 @@ fun HomeView(
                                             ) {
                                                 Text(
                                                     modifier = Modifier.align(Alignment.CenterEnd),
-                                                    text = convertLongToHour(it.lastOpened),
+                                                    text = convertLongToTime(it.lastOpened, true),
                                                     maxLines = 1,
                                                     fontSize = FontSize.Smaller,
                                                     color = TransparentText20

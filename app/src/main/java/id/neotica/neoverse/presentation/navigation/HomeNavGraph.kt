@@ -11,6 +11,7 @@ import androidx.navigation.toRoute
 import id.neotica.neoverse.presentation.screen.chat.ChatView
 import id.neotica.neoverse.presentation.screen.home.HomeView
 import id.neotica.neoverse.presentation.screen.home.addchat.AddChatView
+import id.neotica.neoverse.presentation.screen.home.updateapp.UpdateAppView
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.Screen
 
@@ -33,6 +34,9 @@ fun NavGraphBuilder.homeNavGraph(
         ) {
             val args = it.toRoute<Screen.Chat>()
             ChatView(navController, args)
+        }
+        composable<Screen.UpdateAppScreen> {
+            UpdateAppView()
         }
     }
 }

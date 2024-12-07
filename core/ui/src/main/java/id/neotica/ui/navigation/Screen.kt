@@ -19,6 +19,8 @@ sealed class Screen {
         val user2: String,
         val chatroomId: String ?= ""
     )
+    @Serializable
+    data object UpdateAppScreen: Screen()
 
     @Serializable
     data object Setting: Screen()

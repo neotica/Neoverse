@@ -35,13 +35,17 @@ class LeaderBoardsViewModel(
     private fun getAllUser() = viewModelScope.launch {
         feedRepository.getAllUserData().collect {
             _allUser.value = it
-            Log.d("leaderboards vm", it.toString())
         }
     }
 
-    fun inputUserIdToWorld() = viewModelScope.launch {
+    fun hasJoinedLeaderBoards(): Boolean {
+        val filteredValue = _allUser.value.data?.filter { it.value.world.username == currentUsername() }
+        Log.d("leaderboard", filteredValue.toString())
+        return !filteredValue.isNullOrEmpty()
+    }
+
+    fun joinLeaderboards() = viewModelScope.launch {
         feedRepository.inputUsernameToWorld(currentUsername(), currentUserId())
-        Log.d("LeaderboardVM3", _userData.value.toString())
         getAllUser()
     }
 }

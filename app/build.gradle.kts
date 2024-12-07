@@ -14,8 +14,8 @@ android {
         applicationId = "id.neotica.neoverse"
         minSdk = 27
         targetSdk = 35
-        versionCode = 19
-        versionName = "0.8.1"
+        versionCode = 21
+        versionName = "0.8.3"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -68,7 +68,6 @@ dependencies {
     implementation(projects.core.network)
     implementation(projects.core.ui)
     implementation(projects.core.core)
-    implementation(projects.core.retrofit)
     implementation(projects.feature.world)
 
     // Testing

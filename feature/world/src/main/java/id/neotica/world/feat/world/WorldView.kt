@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.core.content.pm.PackageInfoCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
@@ -40,12 +41,43 @@ fun WorldView(
     var currentAuras by remember { mutableStateOf<Long?>(null) }
     var auraInit by remember { mutableStateOf(false) }
     var onClick by remember { mutableStateOf(false) }
+    var isLoading by remember { mutableStateOf(false) }
+    var versionCode by remember { mutableStateOf<Int?>(null) }
+
     val random = Random.nextInt(2000)
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
 
-    LaunchedEffect(onClick) {
+    LaunchedEffect(Unit) {
+        viewModel.versionCode.collect { result ->
+            when(result) {
+                is ApiResult.Loading -> {
+                    isLoading = true
+                }
+                is ApiResult.Success -> {
+                    isLoading = false
+                    versionCode = result.data
+                    val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
+                    val version: Long = PackageInfoCompat.getLongVersionCode(packageInfo)
+                    versionCode?.let {
+                        if (it > version) {
+                            navController.navigate(Screen.UpdateAppScreen) {
+                                popUpTo(RootScreen.HomeNav) {
+                                    inclusive = true
+                                }
+                                launchSingleTop
+                            }
+                        }
+                    }
+                }
+                is ApiResult.Error -> {
+                    isLoading = false
+                }
+            }
+        }
+    }
 
+    LaunchedEffect(onClick) {
         viewModel.totalAuras.collect { result ->
             when(result) {
                 is ApiResult.Loading -> {

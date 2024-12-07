@@ -20,3 +20,5 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 -keep class id.neotica.domain.model.* { *; }
+-keep class id.neotica.domain.model.chat.** { *; }
+-keep class id.neotica.domain.model.chat.notification.** { *; }

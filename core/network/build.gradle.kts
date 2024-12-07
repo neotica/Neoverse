@@ -42,6 +42,7 @@ android {
 dependencies {
     implementation(projects.core.core)
     implementation(projects.core.domain)
+    implementation(projects.core.retrofit)
 
     //Firebase
     api(platform(libs.firebase.bom))
@@ -49,6 +50,7 @@ dependencies {
     api(libs.firebase.auth)
     api(libs.firebase.database)
     api(libs.firebase.storage)
+    api(libs.firebase.messaging)
     api(libs.firebase.firestore.ktx)
     api(libs.firebase.appcheck.playintegrity)
     api(libs.firebase.appcheck.debug)

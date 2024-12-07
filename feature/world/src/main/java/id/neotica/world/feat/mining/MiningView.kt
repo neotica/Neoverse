@@ -58,24 +58,13 @@ fun MiningView(
 
         Text("Coal Mined: $coal")
         if (coal >= 100) {
-            if (coal < 200) {
-                NeoButton(
-                    text = "Exchange 100 Coals for 1 Aura",
-                ) {
-                    if (coal >= 100 && !isLoading) {
-                        coal -= 100
-                        viewModel.postAura(1)
-                    }
-                }
-            } else {
-                val hundredsSum = coal / 100
-                val coalSum = hundredsSum * 100
+            val hundredsSum = coal / 100
+            val coalSum = hundredsSum * 100
 
-                NeoButton("Exchange $coalSum Coals for $hundredsSum Aura") {
-                    if (coal >= 100 && !isLoading) {
-                        coal -= coalSum
-                        viewModel.postAura(hundredsSum)
-                    }
+            NeoButton("Exchange $coalSum Coals for $hundredsSum Aura") {
+                if (coal >= 100 && !isLoading) {
+                    coal -= coalSum
+                    viewModel.postAura(hundredsSum)
                 }
             }
         } else {

@@ -4,6 +4,7 @@ import id.neotica.domain.ApiResult
 import id.neotica.domain.model.chat.ChatRoom
 import id.neotica.domain.model.chat.Message
 import id.neotica.domain.model.chat.ParentNeo
+import id.neotica.domain.model.chat.notification.SendMessageDto
 import kotlinx.coroutines.flow.Flow
 
 interface ChatRepository {
@@ -14,4 +15,6 @@ interface ChatRepository {
     fun sendMessage(chatId: String, message: Message)
     suspend fun updateChatroom(chatId: String, chatRoom: ChatRoom)
     suspend fun deleteChatroom(chatroom: ChatRoom)
+    suspend fun subscribeToTopic(topic: String)
+    suspend fun sendNotification(isBroadcast: Boolean, messageDto: SendMessageDto)
 }

@@ -44,9 +44,10 @@ dependencies {
     implementation(projects.core.domain)
 
     // Retrofit for network operations
-    implementation("com.squareup.retrofit2:retrofit:2.11.0")
-    implementation("com.squareup.retrofit2:converter-gson:2.11.0")
-    implementation("com.squareup.okhttp3:logging-interceptor:4.9.0")
+    api("com.squareup.retrofit2:retrofit:2.11.0")
+    api("com.squareup.retrofit2:converter-gson:2.11.0")
+    api("com.squareup.okhttp3:logging-interceptor:4.9.0")
+    api("com.squareup.retrofit2:converter-moshi:2.9.0")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

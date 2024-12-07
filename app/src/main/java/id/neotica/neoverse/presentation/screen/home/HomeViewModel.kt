@@ -10,6 +10,7 @@ import id.neotica.domain.model.chat.ChatRoom
 import id.neotica.domain.model.chat.ParentNeo
 import id.neotica.domain.remote.AuraRepository
 import id.neotica.domain.remote.ChatRepository
+import id.neotica.domain.remote.SuperAdminRepository
 import id.neotica.domain.remote.UserRepository
 import id.neotica.domain.usecase.GetUserIdUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,8 +24,12 @@ class HomeViewModel(
     private val friendDatabase: FriendDaoRepository,
     private val getUserIdUseCase: GetUserIdUseCase,
     private val auraRepo: AuraRepository,
+    private val adminRepo: SuperAdminRepository,
 ): ViewModel() {
     private var _user: MutableStateFlow<ApiResult<User?>> = MutableStateFlow(ApiResult.Loading())
+
+    private val _versionCode: MutableStateFlow<ApiResult<Int>> = MutableStateFlow(ApiResult.Loading())
+    val versionCode = _versionCode.asStateFlow()
 
     private val _totalAuras: MutableStateFlow<ApiResult<Long?>> = MutableStateFlow(ApiResult.Loading())
     val totalAuras = _totalAuras.asStateFlow()
@@ -46,6 +51,7 @@ class HomeViewModel(
         getUser()
         getChatroom()
         fetchAuras()
+        getMinimumVersion()
     }
 
     private fun currentUserId() = getUserIdUseCase.invoke()
@@ -57,6 +63,12 @@ class HomeViewModel(
     fun fetchAuras() = viewModelScope.launch {
         auraRepo.getAurasDecrypt(currentUserId()).collect {
             _totalAuras.value = it
+        }
+    }
+
+    private fun getMinimumVersion() = viewModelScope.launch {
+        adminRepo.getMinimumVersion().collect {
+            _versionCode.value = it
         }
     }
 

@@ -15,6 +15,7 @@ import id.neotica.domain.remote.FirebaseRepository
 import id.neotica.domain.remote.InventoryRepository
 import id.neotica.domain.remote.MarketRepository
 import id.neotica.domain.remote.MerchantRepository
+import id.neotica.domain.remote.SuperAdminRepository
 import id.neotica.domain.remote.UserRepository
 import id.neotica.domain.usecase.BuyHeroUseCase
 import id.neotica.domain.usecase.BuyItemUseCase
@@ -29,6 +30,7 @@ import id.neotica.neoverse.presentation.screen.friend.FriendViewModel
 import id.neotica.neoverse.presentation.screen.dump.DumpViewModel
 import id.neotica.neoverse.presentation.screen.home.HomeViewModel
 import id.neotica.neoverse.presentation.screen.home.addchat.AddChatViewModel
+import id.neotica.neoverse.presentation.screen.main.MainViewModel
 import id.neotica.neoverse.presentation.screen.profile.ProfileViewModel
 import id.neotica.network.AuraRepositoryImpl
 import id.neotica.network.FeedRepositoryImpl
@@ -36,6 +38,7 @@ import id.neotica.network.FirebaseRepositoryImpl
 import id.neotica.network.InventoryRepositoryImpl
 import id.neotica.network.MarketRepositoryImpl
 import id.neotica.network.MerchantRepositoryImpl
+import id.neotica.network.SuperAdminRepositoryImpl
 import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.singleOf
@@ -54,6 +57,7 @@ val repositoryModules = module {
     singleOf(::MerchantRepositoryImpl) bind MerchantRepository::class
     singleOf(::FirebaseRepositoryImpl) bind FirebaseRepository::class
     singleOf(::FeedRepositoryImpl) bind FeedRepository::class
+    singleOf(::SuperAdminRepositoryImpl) bind SuperAdminRepository::class
 }
 
 val viewModelModules = module {
@@ -66,6 +70,7 @@ val viewModelModules = module {
     viewModelOf(::FriendViewModel)
     viewModelOf(::VerifyEmailViewModel)
     viewModelOf(::DumpViewModel)
+    viewModelOf(::MainViewModel)
 }
 
 val useCaseModules = module {
