@@ -52,7 +52,7 @@ import id.neotica.domain.ApiResult
 import id.neotica.domain.model.User
 import id.neotica.domain.model.chat.ChatRoom
 import id.neotica.domain.model.chat.ParentNeo
-import id.neotica.domain.utils.convertLongToHour
+import id.neotica.domain.utils.convertLongToTime
 import id.neotica.domain.utils.filteredRoom
 import id.neotica.domain.utils.returnFriendName
 import id.neotica.ui.components.BasicScaffold
@@ -371,7 +371,7 @@ fun HomeView(
                                             ) {
                                                 Text(
                                                     modifier = Modifier.align(Alignment.CenterEnd),
-                                                    text = convertLongToHour(it.lastOpened),
+                                                    text = convertLongToTime(it.lastOpened, true),
                                                     maxLines = 1,
                                                     fontSize = FontSize.Smaller,
                                                     color = TransparentText20

@@ -27,7 +27,7 @@ import id.neotica.domain.ApiResult
 import id.neotica.domain.model.User
 import id.neotica.domain.model.chat.ChatRoom
 import id.neotica.domain.model.chat.ParentNeo
-import id.neotica.domain.utils.convertLongToHour
+import id.neotica.domain.utils.convertLongToTime
 import id.neotica.domain.utils.filteredRoom
 import id.neotica.domain.utils.returnFriendName
 import id.neotica.neoversewear.presentation.components.SpacerItem
@@ -194,7 +194,7 @@ fun WearHomeScreen(navController: NavController, viewModel: WHomeViewModel = koi
                                         modifier = Modifier.widthIn(max = 200.dp)
                                     )
                                     Text(
-                                        text = convertLongToHour(it.lastOpened),
+                                        text = convertLongToTime(it.lastOpened),
                                         fontWeight = FontWeight.Light,
                                         maxLines = 1,
                                         fontSize = 8.sp,

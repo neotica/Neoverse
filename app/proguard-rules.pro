@@ -21,4 +21,5 @@
 #-renamesourcefileattribute SourceFile
 -keep class com.google.android.gms.** { *; }
 -keep class com.google.firebase.** { *; }
--keep class id.neotica.domain.model.* { *; }
+-keep class id.neotica.domain.model.** { *; }
+#-keep class id.neotica.domain.model.chat* { *; }

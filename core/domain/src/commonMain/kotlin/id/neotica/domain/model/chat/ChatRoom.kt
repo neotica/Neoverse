@@ -1,6 +1,8 @@
 package id.neotica.domain.model.chat
 import id.neotica.neoverse.getCurrentTimeMillis
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class ChatRoom(
     val id: String = "",
     val name: String = "",
