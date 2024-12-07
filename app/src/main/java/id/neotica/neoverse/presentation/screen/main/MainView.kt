@@ -170,8 +170,6 @@ fun MainView(
                             bottom = innerPadding.calculateBottomPadding() - WindowInsets.systemBars.asPaddingValues().calculateBottomPadding()
                         ),
                     )
-
-
                 }
             }
             else -> {
