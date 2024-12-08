@@ -5,6 +5,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -37,7 +39,7 @@ fun FriendView(
     var friendList by remember { mutableStateOf<List<User>>(emptyList()) }
     var friendList2 by remember { mutableStateOf<List<User>>(emptyList()) }
     var isLoading by remember { mutableStateOf(false) }
-    var isLoadingChats by remember { mutableStateOf(false) }
+    val isLoadingChats by remember { mutableStateOf(false) }
     var isPressed by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
@@ -92,7 +94,11 @@ fun FriendView(
         "Friends",
         paddingValues = paddingValues
     ) {
-        Box {
+        Box(
+            Modifier
+                .padding(horizontal = 16.dp)
+                .fillMaxWidth()
+        ) {
             NeoButton("Add Friend") {
                 navController.navigate(Screen.SearchUserScreen)
             }
@@ -102,7 +108,7 @@ fun FriendView(
                 Modifier
                     .fillMaxSize()
             ) {
-                Box {
+                Box(Modifier.padding(horizontal = 12.dp)) {
                     if (!isLoadingChats) {
                         LazyVerticalGrid(
                             columns = GridCells.Fixed(3)

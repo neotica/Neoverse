@@ -2,6 +2,8 @@ package id.neotica.neoverse.presentation.screen.chat
 
 import android.annotation.SuppressLint
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,17 +32,20 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -55,9 +60,11 @@ import id.neotica.ui.navigation.Screen
 import id.neotica.ui.theme.BlackTransparent40
 import id.neotica.ui.theme.DarkPrimary
 import id.neotica.ui.theme.DarkPrimaryTransparent2
+import id.neotica.ui.theme.DarkPrimaryTransparent80
 import id.neotica.ui.theme.FontSize
 import id.neotica.ui.theme.Transparent
 import id.neotica.ui.theme.TransparentText40
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
@@ -84,6 +91,7 @@ fun ChatView(
     val scrollTrue = when {
         layoutInfo.visibleItemsInfo.lastOrNull()?.index == layoutInfo.totalItemsCount - 1 -> true
         !scrollBottomValue(listState) -> true
+        messages.value.isEmpty() -> true
         else -> false
     }
 
@@ -122,6 +130,13 @@ fun ChatMessages(
     val msg = remember { mutableStateOf("") }
     val coroutineScope = rememberCoroutineScope()
 
+    var showCard by remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        delay(500L)
+        showCard = true
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -134,17 +149,42 @@ fun ChatMessages(
                 .fillMaxSize()
                 .padding(horizontal = 16.dp)
         ) {
-            LazyColumn(
-                modifier = Modifier
-                    .weight(1f),
-                state = listState,
-                contentPadding = PaddingValues(
-                    bottom = WindowInsets.systemBars.asPaddingValues().calculateBottomPadding() + 46.dp,
-                    top = WindowInsets.statusBars.asPaddingValues().calculateTopPadding() * 2
-                )
-            ) {
-                items(messages) { messages ->
-                    ChatBubble(message = messages)
+            if (messages.isNotEmpty()) {
+                LazyColumn(
+                    modifier = Modifier
+                        .weight(1f),
+                    state = listState,
+                    contentPadding = PaddingValues(
+                        bottom = WindowInsets.systemBars.asPaddingValues().calculateBottomPadding() + 46.dp,
+                        top = WindowInsets.statusBars.asPaddingValues().calculateTopPadding() * 2
+                    )
+                ) {
+                    items(messages) { messages ->
+                        ChatBubble(message = messages)
+                    }
+                }
+            } else {
+                androidx.compose.animation.AnimatedVisibility(
+                    visible = messages.isEmpty() && showCard,
+                    enter = fadeIn(tween(500))
+                ) {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Card(
+                            modifier = Modifier
+                                .padding(16.dp)
+                                .align(Alignment.Center),
+                            colors = CardDefaults.cardColors().copy(containerColor = DarkPrimaryTransparent80)
+                        ) {
+                            Text(
+                                modifier = Modifier.padding(8.dp),
+                                text = "Whoops! It's a bit empty around here. Try sending a message! 😣",
+                                textAlign = TextAlign.Center
+                            )
+                        }
+                    }
                 }
             }
         }

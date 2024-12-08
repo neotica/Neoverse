@@ -127,21 +127,15 @@ fun SearchUser(
                     }
                 }
                 Column(
-                    Modifier.padding(horizontal = 4.dp)
+                    Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
                 ) {
                     NeoTextField(
                         value = username,
+                        label = "Search",
                         onValueChange = {
                             viewModel.searchFriend(username.value.trim())
                         }
                     )
-                    NeoButton(
-                        text = "Search",
-                        maxWidth = true
-                    ) {
-                        isPressed.value = true
-                        viewModel.searchFriend(username.value)
-                    }
                 }
             }
         }
