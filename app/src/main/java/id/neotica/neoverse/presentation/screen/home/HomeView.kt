@@ -2,9 +2,6 @@ package id.neotica.neoverse.presentation.screen.home
 
 import android.util.Log
 import android.widget.Toast
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,8 +14,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -31,10 +26,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
@@ -63,6 +58,7 @@ import id.neotica.ui.R
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.ChatListItem
 import id.neotica.ui.components.ImageCoil
+import id.neotica.ui.components.droidcore.CustomNeoTextField
 import id.neotica.ui.components.scroll.nestedScrollConnection
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.Screen
@@ -95,6 +91,7 @@ fun HomeView(
     val headerSize2 = remember { mutableStateOf(100.dp) }
 
     var versionCode by remember { mutableStateOf<Int?>(null) }
+    val username = rememberSaveable { mutableStateOf("") }
 
     val context = LocalContext.current
 
@@ -243,72 +240,74 @@ fun HomeView(
         topBarVisibility = false,
         fullScreen = true
     ) {
+        Spacer(Modifier.padding(top = NeoPadding.statusBarPadding + 16.dp))
         Column {
-            AnimatedVisibility(
-                modifier = Modifier.alpha(headerAlpha2.floatValue),
-                visible = headerAlpha2.floatValue != 0f,
-                enter = expandVertically(),
-                exit = shrinkVertically(),
-            ) {
-                Column {
-                    Card(
+            Column {
+                Column(
+                    modifier = Modifier
+//                        .height(TopAppBarDefaults.LargeAppBarExpandedHeight)
+//                            .padding(TopAppBarDefaults.)
+                        .padding(
+////                                top = NeoPadding.statusBarPadding,
+                            start = 16.dp,
+                            end = 16.dp,
+                        )
+                        .fillMaxWidth(),
+//                        colors = CardDefaults.cardColors().copy(
+//                            containerColor = DarkPrimaryTransparent2
+//                        ),
+                ) {
+                    Row(
                         modifier = Modifier
-                            .padding(
-                                top = NeoPadding.statusBarPadding,
-                                start = 16.dp,
-                                end = 16.dp,
-                            )
-                            .fillMaxWidth(),
-                        colors = CardDefaults.cardColors().copy(
-                            containerColor = DarkPrimaryTransparent2
-                        ),
+//                            .padding(8.dp)
                     ) {
-                        Row(
-                            modifier = Modifier
-                                .padding(8.dp)
+                        Column(
+                            Modifier.weight(4f)
                         ) {
-                            Column(
-                                Modifier.weight(4f)
-                            ) {
-                                Text(
-                                    text = "Welcome, ${currentuser?.username ?: ""}!",
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis,
-                                    fontSize = FontSize.Big,
-                                    fontWeight = FontWeight.Bold
-                                )
-                                Text(
-                                    text = "You have ${currentAura ?: "0"} Auras.",
-                                    fontSize = FontSize.Small,
-                                    color = TransparentText20
-                                )
-                            }
-                            Column(
-                                Modifier
-                                    .weight(1f)
-                                    .align(Alignment.CenterVertically)
-                            ) {
-                                currentuser?.let {
-                                    ImageCoil(
-                                        url = it.imageUrl,
-                                        round = true,
-                                        size = 55.dp,
-                                        contentAlignment = Alignment.CenterEnd,
-                                        onLongClick = {
-                                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                                            Toast
-                                                .makeText(context, "Go to Profile", Toast.LENGTH_SHORT)
-                                                .show()
-                                        }
-                                    ) {
-                                        navController.navigate(RootScreen.AuthNav)
+                            Text(
+                                text = "Welcome, ${currentuser?.username ?: ""}!",
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                                fontSize = FontSize.Big,
+                                fontWeight = FontWeight.Bold
+                            )
+                            Text(
+                                text = "You have ${currentAura ?: "0"} Auras.",
+                                fontSize = FontSize.Small,
+                                color = TransparentText20
+                            )
+                        }
+                        Column(
+                            Modifier
+                                .weight(1f)
+                                .align(Alignment.CenterVertically)
+                        ) {
+                            currentuser?.let {
+                                ImageCoil(
+                                    url = it.imageUrl,
+                                    round = true,
+                                    size = 55.dp,
+                                    contentAlignment = Alignment.CenterEnd,
+                                    onLongClick = {
+                                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                        Toast
+                                            .makeText(context, "Go to Profile", Toast.LENGTH_SHORT)
+                                            .show()
                                     }
+                                ) {
+                                    navController.navigate(RootScreen.AuthNav)
                                 }
+
                             }
                         }
                     }
-                    Spacer(Modifier.padding(4.dp))
                 }
+                CustomNeoTextField(
+                    value = username,
+                    label = "Search",
+                    padding = PaddingValues(horizontal = 16.dp),
+                )
+                Spacer(Modifier.padding(4.dp))
             }
             PullToRefreshBox(
                 modifier = Modifier
@@ -334,11 +333,25 @@ fun HomeView(
                     )
                 ) {
 //                    item { for(i in 1..19) Text("hshjkcvhbxdbjkcvbcvxcvxdvx") }
+                    val chatItem = parentChatrooms.value.filter { channels ->
+                        val current = currentuser?.username.toString()
+                        filteredRoom(
+                            current,
+                            channels.value.user1,
+                            channels.value.user2
+                        )
+                    }
                     if(!isLoadingChats) {
-                        items(parentChatrooms.value.filter { channels ->
-                            val current = currentuser?.username.toString()
-                            filteredRoom(current, channels.value.user1, channels.value.user2)
-                        }) { channelItemParent ->
+                        items(
+                            if(username.value.isEmpty()) {
+                                chatItem
+                            } else {
+                                chatItem.filter {
+                                    it.value.user1.contains(username.value, true)
+                                            || it.value.user2.contains(username.value)
+                                }
+                            }
+                        ) { channelItemParent ->
                             val chatName = returnFriendName(
                                 currentuser?.username.toString(),
                                 channelItemParent.value.user1,

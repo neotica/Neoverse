@@ -27,7 +27,6 @@ import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavController
 import id.neotica.ui.R
@@ -62,7 +61,6 @@ fun BasicScaffold(
                         Text(topBarTitle)
                     },
                     modifier = Modifier,
-                    expandedHeight = 35.dp,
                     colors = TopAppBarDefaults.topAppBarColors(
                         containerColor = Transparent,
                         titleContentColor = White,

@@ -18,10 +18,10 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
-import id.neotica.droidcore.component.textfield.NeoTextField
 import id.neotica.domain.model.User
 import id.neotica.domain.ApiResult
 import id.neotica.ui.navigation.RootScreen
@@ -29,6 +29,7 @@ import id.neotica.neoverse.presentation.screen.friend.FriendViewModel
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.NeoButton
 import id.neotica.ui.components.ProfileCard
+import id.neotica.ui.components.droidcore.CustomNeoTextField
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
@@ -41,6 +42,8 @@ fun SearchUser(
     var userList by remember { mutableStateOf<List<User>>(emptyList()) }
     val isPressed = remember { mutableStateOf(false) }
     var isLoading by remember { mutableStateOf(false) }
+
+    val focusRequester = remember { FocusRequester() }
 
     LaunchedEffect(isPressed.value) {
         viewModel.userList.collect { result ->
@@ -59,7 +62,7 @@ fun SearchUser(
     }
 
     BasicScaffold(
-        topBarTitle = "Search User",
+        topBarTitle = "Add Friend",
         true,
         navController = navController,
         paddingValues = paddingValues,
@@ -69,19 +72,30 @@ fun SearchUser(
                 .fillMaxSize(),
         ) {
             Column {
+                CustomNeoTextField(
+                    value = username,
+                    label = "Search",
+                    focusRequester = focusRequester,
+                    padding = PaddingValues(horizontal = 16.dp),
+                    onValueChange = {
+                        viewModel.searchFriend(username.value.trim())
+                    }
+                )
                 Box(
                     modifier = Modifier
                         .weight(1f)
-                        .fillMaxSize(),
+//                        .fillMaxSize(),
                 ) {
                     LazyColumn(
-                        modifier = Modifier.fillMaxSize(),
+//                        modifier = Modifier.fillMaxSize(),
                         verticalArrangement = Arrangement.Center
                     ) {
                         item {
                             if (userList.isEmpty()) {
                                 Box(
-                                    modifier = Modifier.fillMaxSize(),
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .padding(16.dp),
                                     contentAlignment = Alignment.Center
                                 ) {
                                     Text("It's empty here ^^")
@@ -89,13 +103,13 @@ fun SearchUser(
                             } else {
                                 userList.forEach { user ->
                                     Column(
-                                        Modifier.fillMaxSize().padding(horizontal = 20.dp),
+                                        Modifier.padding(horizontal = 16.dp, vertical = 16.dp),
                                         horizontalAlignment = Alignment.CenterHorizontally,
                                     ) {
                                         ProfileCard(
                                             name = user.username,
                                             image = user.imageUrl,
-                                            size = 200.dp,
+                                            size = 100.dp,
                                             content = {
                                                 NeoButton(
                                                     text = "Add Friend",
@@ -125,17 +139,6 @@ fun SearchUser(
                             }
                         }
                     }
-                }
-                Column(
-                    Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-                ) {
-                    NeoTextField(
-                        value = username,
-                        label = "Search",
-                        onValueChange = {
-                            viewModel.searchFriend(username.value.trim())
-                        }
-                    )
                 }
             }
         }

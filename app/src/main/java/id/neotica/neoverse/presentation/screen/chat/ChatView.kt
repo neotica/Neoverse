@@ -19,7 +19,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
@@ -32,10 +31,12 @@ import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
@@ -45,7 +46,6 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -76,10 +76,10 @@ import id.neotica.ui.theme.DarkPrimary
 import id.neotica.ui.theme.DarkPrimaryTransparent2
 import id.neotica.ui.theme.DarkPrimaryTransparent80
 import id.neotica.ui.theme.FontSize
+import id.neotica.ui.theme.NeoPadding
 import id.neotica.ui.theme.Transparent
 import id.neotica.ui.theme.TransparentText40
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -91,6 +91,12 @@ fun ChatView(
 ) {
     val messages = viewModel.message.collectAsState()
     val listState = rememberLazyListState()
+
+    LaunchedEffect(messages.value) {
+        if (messages.value.isNotEmpty()) {
+            listState.scrollToItem(messages.value.size - 1)
+        }
+    }
 
     BackHandler {
         navController.navigate(RootScreen.HomeNav) {
@@ -169,7 +175,7 @@ fun ChatView(
     ) {
         ChatMessages(
             messages = messages.value,
-            listState = listState
+            listState = listState,
         ) { msg ->
             if (msg.isNotEmpty() && args.user2.isNotEmpty()) {
                 viewModel.sendMessage(chatId = args.chatId, msg)
@@ -178,6 +184,7 @@ fun ChatView(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun ChatMessages(
@@ -186,8 +193,6 @@ fun ChatMessages(
     onSendMessage: (String) -> Unit
 ) {
     val msg = remember { mutableStateOf("") }
-    val coroutineScope = rememberCoroutineScope()
-
     var showCard by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
@@ -199,9 +204,6 @@ fun ChatMessages(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        coroutineScope.launch {
-            listState.scrollToItem(messages.size + 1)
-        }
         Column(
             Modifier
                 .fillMaxSize()
@@ -213,8 +215,8 @@ fun ChatMessages(
                         .weight(1f),
                     state = listState,
                     contentPadding = PaddingValues(
-                        bottom = WindowInsets.systemBars.asPaddingValues().calculateBottomPadding() + 46.dp,
-                        top = WindowInsets.statusBars.asPaddingValues().calculateTopPadding() * 2
+                        bottom = NeoPadding.systemBarPadding + 46.dp,
+                        top = NeoPadding.statusBarPadding + TopAppBarDefaults.TopAppBarExpandedHeight
                     )
                 ) {
                     items(messages) { messages ->
