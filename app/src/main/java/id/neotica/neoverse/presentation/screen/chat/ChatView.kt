@@ -1,10 +1,14 @@
 package id.neotica.neoverse.presentation.screen.chat
 
 import android.annotation.SuppressLint
+import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -27,10 +31,13 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.minimumInteractiveComponentSize
+import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -42,8 +49,13 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -53,7 +65,9 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import id.neotica.domain.model.chat.Message
 import id.neotica.domain.utils.convertLongToTime
+import id.neotica.ui.R
 import id.neotica.ui.components.BasicScaffold
+import id.neotica.ui.components.DropdownItem
 import id.neotica.ui.components.scroll.scrollBottomValue
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.Screen
@@ -68,6 +82,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ChatView(
     navController: NavController,
@@ -94,6 +109,8 @@ fun ChatView(
         messages.value.isEmpty() -> true
         else -> false
     }
+    val context = LocalContext.current
+    val haptic = LocalHapticFeedback.current
 
     BasicScaffold(
         topBarTitle = args.user2,
@@ -107,7 +124,48 @@ fun ChatView(
         },
         navController = navController,
         topBarVisibility = scrollTrue,
-        fullScreen = true
+        fullScreen = true,
+        trailingIcon = {
+            var expanded by remember { mutableStateOf(false) }
+
+            Box {
+                Icon(
+                    modifier = Modifier
+                        .minimumInteractiveComponentSize()
+                        .combinedClickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = ripple(bounded = true, color = White),
+                            onClick = {
+                                expanded = !expanded
+                            },
+                            onLongClick = {
+                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                Toast
+                                    .makeText(context, "More", Toast.LENGTH_SHORT)
+                                    .show()
+                            },
+                        ),
+                    imageVector = ImageVector.vectorResource(R.drawable.three_dots),
+                    contentDescription = "",
+                    tint = White
+                )
+                DropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false },
+                    containerColor = DarkPrimaryTransparent2,
+                ) {
+                    DropdownItem("Delete Chat", White) {
+                        viewModel.deleteChatroom()
+                        navController.navigate(RootScreen.HomeNav) {
+                            popUpTo(RootScreen.HomeNav) {
+                                inclusive = true
+                            }
+                            launchSingleTop
+                        }
+                    }
+                }
+            }
+        }
     ) {
         ChatMessages(
             messages = messages.value,
@@ -223,7 +281,7 @@ fun ChatMessages(
                             .weight(1f),
                         textStyle = TextStyle.Default.copy(
                             fontSize = FontSize.Normal,
-                            color = Color.White,
+                            color = White,
                         ),
                         cursorBrush = SolidColor(DarkPrimary),
                     ) { innerTextField ->
@@ -263,9 +321,9 @@ fun ChatBubble(message: Message) {
         BlackTransparent40
     }
     val textColor = if (isCurrentUser) {
-        Color.White
+        White
     } else {
-        Color.White
+        White
     }
     Box(
         modifier = Modifier

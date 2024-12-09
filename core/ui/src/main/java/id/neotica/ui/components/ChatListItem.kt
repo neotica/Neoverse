@@ -5,7 +5,6 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -23,19 +22,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.dp
-import id.neotica.droidcore.component.alert.NeoAlert
 import id.neotica.ui.theme.DarkPrimaryTransparent
 import id.neotica.ui.theme.Transparent
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ChatListItem(
-    name: String,
     image: String,
-    paddingValues: PaddingValues = PaddingValues(),
     content: @Composable () -> Unit = {},
-    alertTitle: String = "",
-    alertButton: String = "",
     enableLongClick: Boolean = false,
     onLongClick: () -> Unit = {},
     onClick: () -> Unit = {}
@@ -63,23 +57,6 @@ fun ChatListItem(
     }
 
     val haptic = LocalHapticFeedback.current
-
-    if (openDialog.value) {
-        NeoAlert(
-            openDialog = openDialog,
-            title = alertTitle,
-            backButton = "Cancel",
-            confirmButton = {
-                NeoButton(
-                    alertButton,
-                    negative = true
-                ) {
-                    onLongClick()
-                    openDialog.value = false
-                }
-            },
-        )
-    }
 
     Card(
         colors = cardColorsTransparent,

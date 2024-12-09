@@ -21,6 +21,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
@@ -34,11 +35,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Color.Companion.White
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -55,6 +59,7 @@ import id.neotica.domain.model.chat.ParentNeo
 import id.neotica.domain.utils.convertLongToTime
 import id.neotica.domain.utils.filteredRoom
 import id.neotica.domain.utils.returnFriendName
+import id.neotica.ui.R
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.ChatListItem
 import id.neotica.ui.components.ImageCoil
@@ -344,15 +349,9 @@ fun HomeView(
                             }
 
                             ChatListItem(
-                                name = chatName,
                                 image = friendInstance?.imageUrl.toString(),
                                 enableLongClick = true,
-                                onLongClick = {
-                                    isPressed = true
-                                    viewModel.deleteChatroom(channelItemParent.value)
-                                },
-                                alertTitle = "Clear Chat with $chatName?",
-                                alertButton = "Clear",
+                                onLongClick = {},
                                 content = {
                                     channelItemParent.value.let {
                                         Row(
@@ -427,7 +426,11 @@ fun HomeView(
                 navController.navigate(Screen.AddChatScreen)
             }
         ) {
-            Text("+")
+            Icon(
+                imageVector = ImageVector.vectorResource(R.drawable.add_chat),
+                contentDescription = "",
+                tint = White
+            )
         }
     }
 }

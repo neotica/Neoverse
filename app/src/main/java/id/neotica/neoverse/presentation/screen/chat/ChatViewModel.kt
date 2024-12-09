@@ -16,6 +16,8 @@ import id.neotica.domain.remote.ChatRepository
 import id.neotica.domain.remote.UserRepository
 import id.neotica.domain.usecase.GetUserNameUseCase
 import id.neotica.ui.navigation.Screen
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
@@ -66,6 +68,10 @@ class ChatViewModel(
             )
         )
         sendNotification(sendMessageDto)
+    }
+
+    fun deleteChatroom() = CoroutineScope(Dispatchers.IO).launch {
+        _chatroom.value.data?.let { chatRepo.deleteChatroom(it) }
     }
 
     private fun sendNotification(messageDto: SendMessageDto) = viewModelScope.launch {
