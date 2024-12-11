@@ -101,7 +101,6 @@ fun FriendView(
         }
     }
 
-
     BasicScaffold(
         "Friends",
         paddingValues = paddingValues

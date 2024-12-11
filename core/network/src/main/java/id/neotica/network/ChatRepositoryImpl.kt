@@ -19,6 +19,7 @@ import id.neotica.domain.model.chat.notification.SendMessageDto
 import id.neotica.domain.remote.ChatRepository
 import id.neotica.network.di.NetworkApiService
 import id.neotica.network.utils.StringCryptoUtil
+import id.neotica.network.utils.baseUrl
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -136,7 +137,7 @@ class ChatRepositoryImpl: ChatRepository {
     }
 
     private val api: NetworkApiService = Retrofit.Builder()
-        .baseUrl("http://18.141.159.232:8080")
+        .baseUrl(baseUrl)
         .addConverterFactory(MoshiConverterFactory.create())
         .build()
         .create()
@@ -155,10 +156,10 @@ class ChatRepositoryImpl: ChatRepository {
 
     override suspend fun sendNotification(isBroadcast: Boolean, messageDto: SendMessageDto) {
         try {
-            reloadFcmToken()
+
             if (isBroadcast) {
                 api.sendMessage(messageDto)
-            } else api.broadcast(messageDto)
+            } //else api.broadcast(messageDto)
         } catch (e: Exception) {
 
             Log.d("sendNotification", e.message.toString())

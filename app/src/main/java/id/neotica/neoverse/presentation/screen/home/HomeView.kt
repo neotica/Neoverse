@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -57,6 +58,7 @@ import id.neotica.domain.utils.returnFriendName
 import id.neotica.ui.R
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.ChatListItem
+import id.neotica.ui.components.FlipCard
 import id.neotica.ui.components.ImageCoil
 import id.neotica.ui.components.droidcore.CustomNeoTextField
 import id.neotica.ui.components.scroll.nestedScrollConnection
@@ -245,22 +247,13 @@ fun HomeView(
             Column {
                 Column(
                     modifier = Modifier
-//                        .height(TopAppBarDefaults.LargeAppBarExpandedHeight)
-//                            .padding(TopAppBarDefaults.)
                         .padding(
-////                                top = NeoPadding.statusBarPadding,
                             start = 16.dp,
                             end = 16.dp,
                         )
                         .fillMaxWidth(),
-//                        colors = CardDefaults.cardColors().copy(
-//                            containerColor = DarkPrimaryTransparent2
-//                        ),
                 ) {
-                    Row(
-                        modifier = Modifier
-//                            .padding(8.dp)
-                    ) {
+                    Row {
                         Column(
                             Modifier.weight(4f)
                         ) {
@@ -279,23 +272,41 @@ fun HomeView(
                         }
                         Column(
                             Modifier
-                                .weight(1f)
                                 .align(Alignment.CenterVertically)
                         ) {
                             currentuser?.let {
-                                ImageCoil(
-                                    url = it.imageUrl,
-                                    round = true,
-                                    size = 55.dp,
-                                    contentAlignment = Alignment.CenterEnd,
-                                    onLongClick = {
-                                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                                        Toast
-                                            .makeText(context, "Go to Profile", Toast.LENGTH_SHORT)
-                                            .show()
+                                Box(Modifier.size(55.dp)) {
+                                    FlipCard(
+                                        frontSide = {
+                                            ImageCoil(
+                                                url = it.imageUrl,
+                                                round = true,
+                                                size = 55.dp,
+                                                contentAlignment = Alignment.Center,
+                                                onLongClick = {
+                                                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                                    Toast
+                                                        .makeText(context, "Go to Profile", Toast.LENGTH_SHORT)
+                                                        .show()
+                                                }
+                                            ) {
+                                                navController.navigate(RootScreen.AuthNav)
+                                            }
+                                        }
+                                    ) {
+                                        ImageCoil(
+                                            url = it.imageUrl,
+                                            round = true,
+                                            size = 55.dp,
+                                            contentAlignment = Alignment.CenterEnd,
+                                            onLongClick = {
+                                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                                Toast.makeText(context, "Go to Profile", Toast.LENGTH_SHORT).show()
+                                            }
+                                        ) {
+                                            navController.navigate(RootScreen.AuthNav)
+                                        }
                                     }
-                                ) {
-                                    navController.navigate(RootScreen.AuthNav)
                                 }
 
                             }

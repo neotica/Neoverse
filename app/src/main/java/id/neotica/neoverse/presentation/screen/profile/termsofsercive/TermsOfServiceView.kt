@@ -19,6 +19,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavController
+import id.neotica.network.utils.termsOfService
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.LoadingIndicator
 
@@ -37,7 +38,7 @@ fun TermsOfServiceView(navController: NavController,  paddingValues: PaddingValu
             AndroidView(
                 factory = {
                     WebView(it).apply {
-                        settings.javaScriptEnabled = true
+//                        settings.javaScriptEnabled = true
                         settings.loadWithOverviewMode = true
                         settings.useWideViewPort = true
                         webViewClient = object : WebViewClient() {
@@ -49,7 +50,7 @@ fun TermsOfServiceView(navController: NavController,  paddingValues: PaddingValu
                                 isLoading = false
                                 handler?.cancel()
                                 navController.navigateUp().apply {
-                                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://neotica.id/terms-of-services.html"))
+                                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(termsOfService))
                                     context.startActivity(intent)
                                 }
                             }
@@ -74,7 +75,7 @@ fun TermsOfServiceView(navController: NavController,  paddingValues: PaddingValu
                     }
                 },
                 update = {
-                    it.loadUrl("https://neotica.id/terms-of-services.html")
+                    it.loadUrl(termsOfService)
                 }
             )
             if (isLoading) {

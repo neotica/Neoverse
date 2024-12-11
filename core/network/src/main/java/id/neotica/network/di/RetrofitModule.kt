@@ -1,5 +1,6 @@
 package id.neotica.network.di
 
+import id.neotica.network.utils.baseUrl
 import okhttp3.OkHttpClient
 import org.koin.dsl.module
 import retrofit2.Retrofit
@@ -13,7 +14,7 @@ val retrofitModule = module {
         .build()
     single {
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://18.141.159.232:8080")
+            .baseUrl(baseUrl)
             .addConverterFactory(GsonConverterFactory.create())
             .client(client)
             .build()

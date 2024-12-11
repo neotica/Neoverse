@@ -20,6 +20,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavController
+import id.neotica.network.utils.privacyPolicy
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.LoadingIndicator
 
@@ -52,7 +53,7 @@ fun PrivacyPolicyView(navController: NavController, paddingValues: PaddingValues
                                 isLoading = false
                                 handler?.cancel()
                                 navController.navigateUp().apply {
-                                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://neotica.id/privacy-policy.html"))
+                                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(privacyPolicy))
                                     context.startActivity(intent)
                                 }
                             }
@@ -77,7 +78,7 @@ fun PrivacyPolicyView(navController: NavController, paddingValues: PaddingValues
                     }
                 },
                 update = {
-                    it.loadUrl("https://neotica.id/privacy-policy.html")
+                    it.loadUrl(privacyPolicy)
                 }
             )
             if (isLoading) {
