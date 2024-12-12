@@ -136,6 +136,22 @@ class ChatRepositoryImpl: ChatRepository {
         key.await()
     }
 
+    override suspend fun subscribeToTopic(topic: String) {
+        Firebase.messaging.subscribeToTopic(topic).await()
+    }
+
+    override suspend fun sendNotification(isBroadcast: Boolean, messageDto: SendMessageDto) {
+        try {
+
+            if (isBroadcast) {
+                api.sendMessage(messageDto)
+            } //else api.broadcast(messageDto)
+        } catch (e: Exception) {
+            Log.d("sendNotification", e.message.toString())
+        }
+
+    }
+
     private val api: NetworkApiService = Retrofit.Builder()
         .baseUrl(baseUrl)
         .addConverterFactory(MoshiConverterFactory.create())
@@ -148,22 +164,5 @@ class ChatRepositoryImpl: ChatRepository {
             onRemoteTokenChange(newToken)
             Log.d("FCM Token", "Reloaded token: $newToken")
         }
-    }
-
-    override suspend fun subscribeToTopic(topic: String) {
-        Firebase.messaging.subscribeToTopic(topic).await()
-    }
-
-    override suspend fun sendNotification(isBroadcast: Boolean, messageDto: SendMessageDto) {
-        try {
-
-            if (isBroadcast) {
-                api.sendMessage(messageDto)
-            } //else api.broadcast(messageDto)
-        } catch (e: Exception) {
-
-            Log.d("sendNotification", e.message.toString())
-        }
-
     }
 }
