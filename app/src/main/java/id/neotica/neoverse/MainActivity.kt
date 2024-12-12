@@ -1,6 +1,8 @@
 package id.neotica.neoverse
 
 import android.Manifest
+import android.app.NotificationManager
+import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -53,6 +55,9 @@ class MainActivity: ComponentActivity() {
             PlayIntegrityAppCheckProviderFactory.getInstance()
         )
         requestNotificationPermission()
+
+        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.cancelAll() // Clear all notification when user clicked on it.
 
         setContent {
             val viewModel = koinViewModel<MainViewModel>()

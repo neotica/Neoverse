@@ -285,7 +285,7 @@ fun ChatMessages(
                             fontSize = FontSize.Normal,
                             color = White,
                         ),
-                        cursorBrush = SolidColor(DarkPrimary),
+                        cursorBrush = SolidColor(White),
                     ) { innerTextField ->
                         Box(
                             Modifier

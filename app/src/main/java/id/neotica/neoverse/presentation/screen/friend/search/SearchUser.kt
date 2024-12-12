@@ -29,7 +29,7 @@ import id.neotica.neoverse.presentation.screen.friend.FriendViewModel
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.NeoButton
 import id.neotica.ui.components.ProfileCard
-import id.neotica.ui.components.droidcore.CustomNeoTextField
+import id.neotica.ui.components.droidcore.NeoSearchBar
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
@@ -79,7 +79,7 @@ fun SearchUser(
                 .fillMaxSize(),
         ) {
             Column {
-                CustomNeoTextField(
+                NeoSearchBar(
                     value = username,
                     label = "Search",
                     focusRequester = focusRequester,

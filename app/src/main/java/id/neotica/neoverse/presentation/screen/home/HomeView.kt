@@ -60,7 +60,7 @@ import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.ChatListItem
 import id.neotica.ui.components.FlipCard
 import id.neotica.ui.components.ImageCoil
-import id.neotica.ui.components.droidcore.CustomNeoTextField
+import id.neotica.ui.components.droidcore.NeoSearchBar
 import id.neotica.ui.components.scroll.nestedScrollConnection
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.Screen
@@ -313,10 +313,14 @@ fun HomeView(
                         }
                     }
                 }
-                CustomNeoTextField(
+                NeoSearchBar(
                     value = username,
-                    label = "Search",
-                    padding = PaddingValues(horizontal = 16.dp),
+                    label = "Search Chat",
+                    padding = PaddingValues(
+                        top = 8.dp,
+                        start = 16.dp,
+                        end = 16.dp
+                    ),
                 )
                 Spacer(Modifier.padding(4.dp))
             }
