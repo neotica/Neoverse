@@ -40,6 +40,7 @@ fun SearchUser(
 ) {
     val username = rememberSaveable { mutableStateOf("") }
     var userList by remember { mutableStateOf<List<User>>(emptyList()) }
+    var friendList by remember { mutableStateOf<List<User>>(emptyList()) }
     val isPressed = remember { mutableStateOf(false) }
     var isLoading by remember { mutableStateOf(false) }
 
@@ -58,6 +59,12 @@ fun SearchUser(
                     Log.d("neotica", result.errorMessage.toString())
                 }
             }
+        }
+    }
+
+    LaunchedEffect(isPressed.value) {
+        viewModel.getFriendsRoom().collect { result ->
+            friendList = result
         }
     }
 
@@ -84,56 +91,66 @@ fun SearchUser(
                 Box(
                     modifier = Modifier
                         .weight(1f)
-//                        .fillMaxSize(),
                 ) {
                     LazyColumn(
-//                        modifier = Modifier.fillMaxSize(),
                         verticalArrangement = Arrangement.Center
                     ) {
                         item {
-                            if (userList.isEmpty()) {
-                                Box(
-                                    modifier = Modifier
-                                        .fillMaxSize()
-                                        .padding(16.dp),
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    Text("It's empty here ^^")
-                                }
-                            } else {
-                                userList.forEach { user ->
-                                    Column(
-                                        Modifier.padding(horizontal = 16.dp, vertical = 16.dp),
-                                        horizontalAlignment = Alignment.CenterHorizontally,
+                            when {
+                                userList.isEmpty() -> {
+                                    Box(
+                                        modifier = Modifier
+                                            .fillMaxSize()
+                                            .padding(16.dp),
+                                        contentAlignment = Alignment.Center
                                     ) {
-                                        ProfileCard(
-                                            name = user.username,
-                                            image = user.imageUrl,
-                                            size = 100.dp,
-                                            content = {
-                                                NeoButton(
-                                                    text = "Add Friend",
-                                                    maxWidth = true
-                                                ) {
-                                                    val friends = User(
-                                                        userId = user.userId,
-                                                        username = user.username,
-                                                        userEmail = user.userEmail,
-                                                        status = user.status,
-                                                        imageUrl = user.imageUrl
-                                                    )
+                                        Text("It's empty here ^^")
+                                    }
+                                }
+                                else -> {
+                                    userList.forEach { user ->
+                                        Column(
+                                            Modifier.padding(horizontal = 16.dp, vertical = 16.dp),
+                                            horizontalAlignment = Alignment.CenterHorizontally,
+                                        ) {
+                                            ProfileCard(
+                                                name = user.username,
+                                                image = user.imageUrl,
+                                                size = 100.dp,
+                                                content = {
+                                                    val friendValue = friendList.any { it.userId == user.userId }
 
-                                                    if (friends.userId != viewModel.currentUserId()) {
-                                                        viewModel.viewModelScope.launch {
-                                                            viewModel.addFriend(friends)
+                                                    val textValue = when {
+                                                        user.userId == viewModel.currentUserId() -> "Go to your profile"
+                                                        friendValue -> "Friend Added"
+                                                        else -> "Add Friend"
+                                                    }
+
+                                                    NeoButton(
+                                                        text = textValue,
+                                                        maxWidth = true,
+                                                        enabled = !friendValue
+                                                    ) {
+                                                        val friends = User(
+                                                            userId = user.userId,
+                                                            username = user.username,
+                                                            userEmail = user.userEmail,
+                                                            status = user.status,
+                                                            imageUrl = user.imageUrl
+                                                        )
+
+                                                        if (friends.userId != viewModel.currentUserId()) {
+                                                            viewModel.viewModelScope.launch {
+                                                                viewModel.addFriend(friends)
+                                                            }
+                                                            navController.navigateUp()
+                                                        } else {
+                                                            navController.navigate(RootScreen.AuthNav)
                                                         }
-                                                        navController.navigateUp()
-                                                    } else {
-                                                        navController.navigate(RootScreen.AuthNav)
                                                     }
                                                 }
-                                            }
-                                        )
+                                            )
+                                        }
                                     }
                                 }
                             }
