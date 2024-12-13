@@ -30,11 +30,11 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.User
-import id.neotica.droidcore.component.textfield.NeoTextField
 import id.neotica.ui.R
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.LoadingIndicatorBool
 import id.neotica.ui.components.ProfileCard
+import id.neotica.ui.components.droidcore.NeoSearchBar
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.Screen
 import org.koin.androidx.compose.koinViewModel
@@ -115,7 +115,7 @@ fun FriendView(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                NeoTextField(
+                NeoSearchBar(
                     value = username,
                     label = "Search",
                     trailingIcon = {

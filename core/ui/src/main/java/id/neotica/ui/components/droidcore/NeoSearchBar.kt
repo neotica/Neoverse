@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -33,6 +34,7 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import id.neotica.ui.R
 import id.neotica.ui.theme.FontSize
@@ -45,7 +47,7 @@ fun NeoSearchBar(
     onValueChange: ((String) -> Unit)? = null,
     icon: (@Composable () -> Unit)? = null,
     placeHolder: String? = null,
-    imeAction: ImeAction = ImeAction.Done,
+    imeAction: ImeAction = ImeAction.Search,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     isError: Boolean? = false,
     focusRequester: FocusRequester? = null,
@@ -75,11 +77,8 @@ fun NeoSearchBar(
                 width = 1.dp,
                 color = TransparentText40,
                 shape = RoundedCornerShape(12.dp)
-            )
-            .height(46.dp),
+            ),
         colors = CardDefaults.cardColors().copy(containerColor = Transparent),
-//        shape = RoundedCornerShape(32.dp),
-//        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
     ) {
         Row(
             modifier = Modifier,
@@ -89,7 +88,7 @@ fun NeoSearchBar(
                 imageVector = ImageVector.vectorResource(R.drawable.ic_search),
                 contentDescription = "",
                 tint = TransparentText40,
-                modifier = Modifier.padding(start = 16.dp)
+                modifier = Modifier.padding(horizontal =  16.dp)
             )
             BasicTextField(
                 value = textFieldValue,
@@ -106,35 +105,36 @@ fun NeoSearchBar(
                     fontSize = FontSize.Normal,
                     color = White,
                 ),
+                maxLines = 1,
+                keyboardOptions = KeyboardOptions(
+                    imeAction = imeAction
+                ),
                 cursorBrush = SolidColor(White),
             ) { innerTextField ->
 
-                Box(
+                Row(
                     Modifier
-                        .padding(start = 12.dp, end = 12.dp, top = 5.dp * 2, bottom = 5.dp)
-                        .height(46.dp)
+                        .height(46.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Row {
-
+                    Box {
+                        innerTextField()
                         if (textFieldValue.isEmpty()) {
                             Text(
                                 text = label ?: "",
+                                modifier = Modifier,
                                 color = TransparentText40,
-                                fontSize = FontSize.Normal
+                                fontSize = FontSize.Normal,
+                                maxLines = 1,
+                                textAlign = TextAlign.Start
                             )
                         }
                     }
-
-                    innerTextField()
                 }
             }
-//            IconButton(onClick = {
-//                onSendMessage(msg.value)
-//                textFieldValue = ""
-//            }) {
-//                Icon(imageVector = Icons.AutoMirrored.Filled.Send, contentDescription = "send")
-//            }
+            if (trailingIcon != null) {
+                trailingIcon()
+            }
         }
     }
-
 }
