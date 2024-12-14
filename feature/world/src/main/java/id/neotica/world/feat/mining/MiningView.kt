@@ -1,5 +1,6 @@
 package id.neotica.world.feat.mining
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -17,9 +18,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import id.neotica.domain.ApiResult
+import id.neotica.droidcore.component.alert.NeoAlert
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.ImagePermanentCache
 import id.neotica.ui.components.NeoButton
+import id.neotica.ui.navigation.navigateBack
 import id.neotica.world.utils.rockPicture
 import org.koin.androidx.compose.koinViewModel
 
@@ -32,6 +35,7 @@ fun MiningView(
     var coal by remember { mutableIntStateOf(0) }
     var currentAuras by remember { mutableStateOf<Long?>(null) }
     var isLoading by remember { mutableStateOf(false) }
+    val openDialog = remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         viewModel.totalAuras.collect { result ->
@@ -46,10 +50,28 @@ fun MiningView(
         }
     }
 
+    BackHandler {
+        openDialog.value = true
+    }
+
+    if (openDialog.value) {
+        NeoAlert(
+            openDialog = openDialog,
+            title = "Exit Mining Cave?",
+            desc = "You are leaving the Cave. Legend has it that once travelers depart, dwarves emerge from their hidden dwellings to claim all the resources you’ve worked so hard to mine. When you return, the coal you left behind will be gone.",
+            backButton = "Cancel",
+            hasIcon = true,
+            confirmButton = {
+                NeoButton("Okay!") { navController.navigateBack() }
+            }
+        )
+    }
+
     BasicScaffold(
         topBarTitle = "Mining ⛏\uFE0F",
         horizontalAlignment = Alignment.CenterHorizontally,
         navController = navController,
+        customActionBar = { openDialog.value = true },
         enableActionBar = true
     ) {
         LazyColumn(

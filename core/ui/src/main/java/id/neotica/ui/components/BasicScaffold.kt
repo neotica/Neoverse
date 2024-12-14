@@ -27,9 +27,9 @@ import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
-import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavController
 import id.neotica.ui.R
+import id.neotica.ui.navigation.navigateBack
 import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -66,21 +66,13 @@ fun BasicScaffold(
                         titleContentColor = White,
                     ),
                     navigationIcon = {
-                        if (!enableActionBar) {
-                            customActionBar?.let {
-                                IconButton(onClick = {
-                                    it.invoke()
-                                }
-                                ) {
-                                    Icon(
-                                        imageVector = ImageVector.vectorResource(R.drawable.ic_arrow_back),
-                                        contentDescription = ""
-                                    )
-                                }
-                            }
-                        } else {
+                        if (enableActionBar) {
                             IconButton(onClick = {
-                                navController?.navigateBack()
+                                if (customActionBar != null) {
+                                    customActionBar.invoke()
+                                } else {
+                                    navController?.navigateBack()
+                                }
                             }
                             ) {
                                 Icon(
@@ -176,14 +168,5 @@ fun BasicScaffold(
                 horizontalAlignment = horizontalAlignment
             ) { content() }
         }
-    }
-}
-
-private val NavController.canGoBack: Boolean
-    get() = currentBackStackEntry?.lifecycle?.currentState == Lifecycle.State.RESUMED
-
-private fun NavController.navigateBack() {
-    if (canGoBack) {
-        popBackStack()
     }
 }

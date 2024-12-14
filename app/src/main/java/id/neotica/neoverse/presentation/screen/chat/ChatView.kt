@@ -120,6 +120,7 @@ fun ChatView(
 
     BasicScaffold(
         topBarTitle = args.user2,
+        enableActionBar = true,
         customActionBar = {
             navController.navigate(RootScreen.HomeNav) {
                 popUpTo(RootScreen.HomeNav) {

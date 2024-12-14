@@ -39,15 +39,14 @@ import id.neotica.ui.components.navigation.NavigationSuiteType
 import id.neotica.ui.navigation.NavigationItem
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.Screen
+import id.neotica.ui.navigation.WorldScreen
 import id.neotica.ui.state.AdaptiveState
 import id.neotica.ui.theme.DarkBackground
 import id.neotica.ui.theme.DarkPrimary
 import id.neotica.ui.theme.NeoverseTheme
 
 @Composable
-fun MainView(
-    modifier: Modifier = Modifier,
-) {
+fun MainView() {
     NeoverseTheme {
         val navController = rememberNavController()
 
@@ -86,7 +85,10 @@ fun MainView(
             Screen.DeleteAccountScreen,
             Screen.AboutScreen,
             Screen.AddChatScreen,
-            Screen.UpdateAppScreen
+            Screen.UpdateAppScreen,
+            WorldScreen.GameScreen,
+            WorldScreen.MiningScreen,
+            WorldScreen.LeaderBoardsScreen
         )
 
         val includeRoute = bottomBarExcludedRoutes.none {
