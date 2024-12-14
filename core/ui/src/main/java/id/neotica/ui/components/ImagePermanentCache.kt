@@ -7,14 +7,17 @@ import android.graphics.drawable.BitmapDrawable
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.Dp
 import androidx.core.graphics.drawable.toBitmap
 import coil.Coil
 import coil.request.ImageRequest
@@ -27,40 +30,73 @@ fun ImagePermanentCache(
     context: Context,
     fileName: String,
     url: String,
-    clickable: () -> Unit
+    width: Dp? = null,
+    height: Dp? = null,
+    size: Dp ? = null,
+    contentScale: ContentScale = ContentScale.Fit,
+    clickable: (() -> Unit)? = null
 ) {
     if (ifFileExist(context, fileName)) {
         Box(
             Modifier
-                .size(200.dp)
-                .clickable { clickable() },
+                .then(if (width != null) Modifier.width(width) else Modifier)
+                .then(if (height != null) Modifier.height(height) else Modifier)
+                .then(if (size != null) Modifier.size(size) else Modifier)
+                .then(if (clickable != null) Modifier.clickable { clickable() } else Modifier),
             contentAlignment = Alignment.Center
         ) {
-            DisplaySavedImage(fileName)
+            DisplaySavedImage(
+                fileName, contentScale,
+                modifier = modifier
+                    .then(if (width != null) Modifier.width(width) else Modifier)
+                    .then(if (height != null) Modifier.height(height) else Modifier)
+                    .then(if (size != null) Modifier.size(size) else Modifier)
+            )
         }
     } else {
         downloadAndSaveImage(
             context = context,
             url = url,
-            fileName = fileName
+            fileName = fileName,
         )
-        ImageCoil(
-            url = url,
-            size = 200.dp
-        ) {
-            clickable()
+        if (clickable != null) {
+            ImageCoil(
+                url = url,
+                width = width,
+                height = height,
+                size = size,
+                contentScale = contentScale,
+                fillMaxWidth = false,
+            ) {
+                clickable()
+            }
+        } else {
+            ImageCoil(
+                url = url,
+                width = width,
+                height = height,
+                size = size,
+                contentScale = contentScale,
+                fillMaxWidth = false,
+            )
         }
+
     }
 }
 
 @Composable
-private fun DisplaySavedImage(fileName: String, modifier: Modifier = Modifier) {
+private fun DisplaySavedImage(
+    fileName: String,
+    contentScale: ContentScale = ContentScale.Fit,
+    modifier: Modifier = Modifier,
+) {
     val context = LocalContext.current
     val bitmap = remember { loadImageFromFilesDir(context, fileName) }
 
     bitmap?.let {
         Image(
             bitmap = it.asImageBitmap(),
+            contentScale = contentScale,
             contentDescription = "Saved Image",
             modifier = modifier
         )

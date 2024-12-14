@@ -5,8 +5,10 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -23,7 +25,9 @@ import coil.request.ImageRequest
 @Composable
 fun ImageCoil(
     url: String,
-    size: Dp = 100.dp,
+    size: Dp? = null,
+    height: Dp? = null,
+    width: Dp? = null,
     customModifier: Boolean = false,
     modifier: Modifier = Modifier,
     fillMaxWidth: Boolean = true,
@@ -51,20 +55,16 @@ fun ImageCoil(
                 .data(url)
                 .build(),
             contentDescription =  "",
-            modifier = if (!customModifier) {
-                if (onClick != null) {
-                    Modifier
-                        .size(size)
-                        .clip(RoundedCornerShape(if (round) 120.dp else 12.dp))
-                        .combinedClickable(
-                            onLongClick = onLongClick
-                        ) { onClick() }
-                } else {
-                    Modifier
-                        .size(size)
-                        .clip(RoundedCornerShape(if (round) 120.dp else 12.dp))
-                }
-            } else modifier,
+            modifier = Modifier
+                .then(if (height != null) Modifier.height(height) else Modifier)
+                .then(if (width != null) Modifier.width(width) else Modifier)
+                .then(if (size != null) Modifier.size(size) else Modifier)
+                .clip(RoundedCornerShape(if (round) 120.dp else 12.dp))
+                .then( if (onClick != null) {
+                    Modifier.combinedClickable(
+                        onLongClick = onLongClick
+                    ) { onClick() }
+                } else Modifier),
             loading = {
                 Box(
                     Modifier.padding(12.dp)

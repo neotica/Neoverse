@@ -83,6 +83,7 @@ fun EditProfileView(
         Column {
             Box(Modifier.padding(32.dp)) {
                 ImageCoil(
+                    size = 100.dp,
                     url = args.profPic,
                     context = LocalContext.current,
                     modifier = Modifier.align(Alignment.Center),

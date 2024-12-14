@@ -10,8 +10,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,11 +26,17 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.navigation.NavController
 import id.neotica.domain.ApiResult
 import id.neotica.droidcore.component.cards.Pocket
+import id.neotica.droidcore.component.carousel.CarouselCard
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.NeoButton
+import id.neotica.ui.components.world.WorldCard
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.Screen
 import id.neotica.ui.navigation.WorldScreen
+import id.neotica.world.utils.bgLeaderBoards
+import id.neotica.world.utils.bgMining
+import id.neotica.world.utils.bgTavern
+import id.neotica.world.utils.worldIntro2
 import org.koin.androidx.compose.koinViewModel
 import kotlin.random.Random
 
@@ -47,6 +55,29 @@ fun WorldView(
     val random = Random.nextInt(2000)
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
+
+    val test = ""
+
+    val worldCardItems = listOf(
+        WorldCardItem(
+            title = "Tavern",
+            fileName = "bg_tavern$test",
+            url = bgTavern,
+            navigateTo = { navController.navigate(WorldScreen.GameScreen) }
+        ),
+        WorldCardItem(
+            title = "Mining Cave",
+            fileName = "bg_mining$test",
+            url = bgMining,
+            navigateTo = { navController.navigate(WorldScreen.MiningScreen) }
+        ),
+        WorldCardItem(
+            title = "Leaderboards",
+            fileName = "bg_leaderboards$test",
+            url = bgLeaderBoards,
+            navigateTo = { navController.navigate(WorldScreen.LeaderBoardsScreen) }
+        )
+    )
 
     LaunchedEffect(Unit) {
         viewModel.versionCode.collect { result ->
@@ -115,6 +146,8 @@ fun WorldView(
         }
     }
 
+    val currentPage = rememberSaveable { mutableIntStateOf(0) }
+
     BasicScaffold(
         topBarTitle = "World",
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -122,16 +155,24 @@ fun WorldView(
         if (!auraInit) {
             Text("Your Aura: ${currentAuras ?: ""}")
             Spacer(Modifier.padding(4.dp))
-            NeoButton("Leaderboards") {
-                navController.navigate(WorldScreen.LeaderBoardsScreen)
+            CarouselCard(
+                list = worldCardItems,
+                currentPageState = currentPage
+            ) { item ->
+                WorldCard(
+                    title = item.title,
+                    fileName = item.fileName,
+                    url = item.url,
+                    onClick = item.navigateTo
+                )
             }
-            Spacer(Modifier.padding(4.dp))
-            NeoButton("Tavern") {
-                navController.navigate(WorldScreen.GameScreen)
-            }
+
             /*Spacer(Modifier.padding(4.dp))
             NeoButton("SuperAdmin") {
                 navController.navigate(WorldScreen.SuperAdminScreen)
+            }*/
+            /*NeoButton("To Merchant") {
+                navController.navigate(WorldScreen.MerchantScreen)
             }*/
             /*Spacer(Modifier.padding(4.dp))
             Row(
@@ -144,21 +185,13 @@ fun WorldView(
                 NeoButton("To Inventory") {
                     navController.navigate(WorldScreen.InventoryScreen)
                 }
-            }
-            Spacer(Modifier.padding(4.dp))
-            NeoButton("To Merchant") {
-                navController.navigate(WorldScreen.MerchantScreen)
             }*/
-            Spacer(Modifier.padding(4.dp))
-            NeoButton("Mining Field") {
-                navController.navigate(WorldScreen.MiningScreen)
-            }
 
         } else {
             Pocket(
                 title = "Welcome to the Portal!"
             ) {
-                Text("Welcome to the World Section! Ready to step into a realm of wonder? \uD83C\uDFF0 Venture through the mystical portal into Peking Town, a charming village brimming with secrets and adventure. \uD83D\uDDFA\uFE0F Your epic quest begins here. Tap the button below to unlock the portal and claim your aura!")
+                Text(worldIntro2)
                 Spacer(Modifier.padding(9.dp))
                 Box(Modifier.padding(horizontal = 8.dp)) {
                     NeoButton(
@@ -179,3 +212,10 @@ fun WorldView(
         }
     }
 }
+
+private data class WorldCardItem(
+    val title: String,
+    val fileName: String,
+    val url: String,
+    val navigateTo: () -> Unit
+)

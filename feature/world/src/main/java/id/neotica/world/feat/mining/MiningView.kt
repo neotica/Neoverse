@@ -61,8 +61,9 @@ fun MiningView(
 
                 ImagePermanentCache(
                     context = LocalContext.current,
-                    fileName = "rockkkk",
+                    fileName = "obj_rock",
                     url = rockPicture,
+                    size = 200.dp
                 ) { coal += 1 }
 
                 Text("Coal Mined: $coal")
