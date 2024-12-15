@@ -4,18 +4,25 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import id.neotica.domain.ApiResult
+import id.neotica.domain.model.chat.ParentNeo
+import id.neotica.domain.model.tavern.TavernPost
 import id.neotica.domain.remote.AuraRepository
+import id.neotica.domain.remote.FeedRepository
 import id.neotica.domain.remote.FirebaseRepository
 import id.neotica.domain.usecase.GetUserIdUseCase
+import id.neotica.domain.usecase.GetUserNameUseCase
+import id.neotica.domain.utils.randomUUID
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.security.SecureRandom
 import kotlin.random.asKotlinRandom
 
-class GameViewModel(
+class TavernViewModel(
     private val gameRepo: AuraRepository,
+    private val feedRepo: FeedRepository,
     private val getIdUseCase: GetUserIdUseCase,
+    private val getUserNameUseCase: GetUserNameUseCase,
     private val firebase: FirebaseRepository
 ): ViewModel() {
     private val _randomNum = MutableStateFlow("")
@@ -31,7 +38,11 @@ class GameViewModel(
     private val _totalAuras: MutableStateFlow<ApiResult<Long?>> = MutableStateFlow(ApiResult.Loading())
     val totalAuras = _totalAuras.asStateFlow()
 
+    private var _whispers: MutableStateFlow<ApiResult<List<ParentNeo<TavernPost>>>> = MutableStateFlow(ApiResult.Loading())
+    val whispers = _whispers.asStateFlow()
+
     private fun currentUserId(): String = getIdUseCase.invoke()
+    private fun currentUsername(): String = getUserNameUseCase.invoke()
 
     fun isLoggedIn(): Boolean {
         return getIdUseCase.invoke() != ""
@@ -42,14 +53,11 @@ class GameViewModel(
         generateTranspose2()
         generateTranspose3()
         fetchAuras()
+        getPosts()
     }
 
     fun getItemEvent(itemName: String, contentType: String){
         firebase.itemLog("GameView", itemName, contentType)
-    }
-
-    fun sendJancok(aura: Long) = viewModelScope.launch {
-        gameRepo.postAuras(aura, currentUserId())
     }
 
     fun sendAuraPoints(aura: Int) = viewModelScope.launch {
@@ -109,7 +117,29 @@ class GameViewModel(
             "$smile$smile$smile" -> _auraPoints.value = 50
             else -> _auraPoints.value = -10
         }
-
         firebase.eventLog("GameView", "slot_result", _auraPoints.value.toString())
+    }
+
+    fun sendPost(message: String) = viewModelScope.launch {
+        val post = TavernPost(
+            id = randomUUID(),
+            creatorId = currentUserId(),
+            creatorName = currentUsername(),
+            message = message
+        )
+        val tot = _totalAuras.value.data
+        if (tot != null) {
+            feedRepo.postWhisper(post)
+            sendAuraPoints(-5)
+            fetchAuras()
+        }
+        getPosts()
+    }
+
+    private fun getPosts() = viewModelScope.launch {
+        feedRepo.getWhispers().collect {
+            Log.d("Whispers", it.data .toString())
+            _whispers.value = it
+        }
     }
 }

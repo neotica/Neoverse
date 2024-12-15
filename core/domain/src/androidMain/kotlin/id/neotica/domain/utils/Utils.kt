@@ -8,11 +8,16 @@ import java.util.UUID
 
 fun randomUUID(): String = UUID.randomUUID().toString()
 
-fun convertLongToTime(time: Long, minutesOnly: Boolean = false): String {
+fun convertLongToTime(time: Long, minutesOnly: Boolean = false, clean: Boolean = false): String {
     val date = Date(time)
     val format = SimpleDateFormat("yyyy.MM.dd HH:mm", Locale.getDefault())
     format.timeZone = TimeZone.getDefault()
 
+    if (clean) {
+        val cleanFormat = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault())
+        cleanFormat.timeZone = TimeZone.getDefault()
+        return cleanFormat.format(date)
+    }
     return if (minutesOnly) {
         val minutes = SimpleDateFormat("HH:mm", Locale.getDefault())
         minutes.timeZone = TimeZone.getDefault()

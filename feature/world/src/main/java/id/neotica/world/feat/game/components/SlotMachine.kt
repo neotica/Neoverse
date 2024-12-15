@@ -29,7 +29,7 @@ import androidx.compose.ui.input.pointer.PointerInputChange
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.dp
-import id.neotica.world.feat.game.GameViewModel
+import id.neotica.world.feat.game.TavernViewModel
 import id.neotica.world.utils.generateTranspose
 import id.neotica.ui.components.NeoButton
 import id.neotica.ui.components.SlideInto
@@ -41,7 +41,7 @@ import java.security.SecureRandom
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
-fun SlotMachine(modifier: Modifier = Modifier, viewModel: GameViewModel = koinViewModel()) {
+fun SlotMachine(modifier: Modifier = Modifier, viewModel: TavernViewModel = koinViewModel()) {
     Column(Modifier.padding(20.dp)) {
         val randomNum = viewModel.randomNum.collectAsState()
         val randomNum2 = viewModel.randomNum2.collectAsState()
@@ -80,6 +80,12 @@ fun SlotMachine(modifier: Modifier = Modifier, viewModel: GameViewModel = koinVi
         var onPressed by rememberSaveable { mutableStateOf(false) }
         if (onPressed) haptic.performHapticFeedback(HapticFeedbackType.LongPress)
 
+        Box {
+            SlideInto(delayedClick) {
+                Text("You received ${viewModel.auraPoints.value} auras")
+            }
+            Text("")
+        }
         Row {
             val cardColorsPrime = CardColors(
                 containerColor = DarkPrimaryTransparent,
@@ -177,11 +183,6 @@ fun SlotMachine(modifier: Modifier = Modifier, viewModel: GameViewModel = koinVi
             }
         }
         Log.d("slot", "numb$numbComb")
-        Box {
-            SlideInto(delayedClick) {
-                Text("You received ${viewModel.auraPoints.value} auras")
-            }
-            Text("")
-        }
+
     }
 }
