@@ -11,4 +11,6 @@ interface FeedRepository {
     suspend fun inputUsernameToWorld(username: String, userId: String)
     suspend fun postWhisper(post: TavernPost)
     suspend fun getWhispers(): Flow<ApiResult<List<ParentNeo<TavernPost>>>>
+    suspend fun postLogs(post: TavernPost)
+    suspend fun getLogs(): Flow<ApiResult<List<ParentNeo<TavernPost>>>>
 }

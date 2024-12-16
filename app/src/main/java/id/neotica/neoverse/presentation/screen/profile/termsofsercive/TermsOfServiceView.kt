@@ -10,7 +10,7 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -22,19 +22,20 @@ import androidx.navigation.NavController
 import id.neotica.network.utils.termsOfService
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.LoadingIndicator
+import id.neotica.ui.theme.NeoPadding
 
 @Composable
-fun TermsOfServiceView(navController: NavController,  paddingValues: PaddingValues, modifier: Modifier = Modifier) {
+fun TermsOfServiceView(navController: NavController) {
     BasicScaffold(
         topBarTitle = "Terms of Service",
         true,
         navController = navController,
-        paddingValues = paddingValues
+        fullScreen = true
     ) {
         var isLoading by remember { mutableStateOf(true) }
         if (isLoading) BackHandler {}
 
-        Box {
+        Box(Modifier.padding(top = NeoPadding.topBarPadding)) {
             AndroidView(
                 factory = {
                     WebView(it).apply {

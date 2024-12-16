@@ -4,6 +4,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -21,8 +22,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,6 +33,9 @@ import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import id.neotica.domain.ApiResult
@@ -40,18 +46,22 @@ import id.neotica.droidcore.component.textfield.NeoTextField
 import id.neotica.ui.R
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.LoadingIndicator
+import id.neotica.ui.components.droidcore.CustomCarousel
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.Screen
 import id.neotica.ui.theme.DarkPrimary
 import id.neotica.ui.theme.DarkPrimaryTransparent40
+import id.neotica.ui.theme.DarkPrimaryTransparent80
+import id.neotica.ui.theme.FontSize
+import id.neotica.ui.theme.NeoPadding
 import id.neotica.ui.theme.Transparent
+import id.neotica.ui.theme.TransparentText20
 import id.neotica.world.feat.game.components.SlotMachine
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun TavernView(
     navController: NavController,
-    paddingValues: PaddingValues,
     viewModel: TavernViewModel = koinViewModel()
 ) {
 
@@ -62,7 +72,9 @@ fun TavernView(
 
     var isLoading by remember { mutableStateOf(false) }
     var whispers by remember { mutableStateOf<List<ParentNeo<TavernPost>>?>(emptyList()) }
+    var logs by remember { mutableStateOf<List<ParentNeo<TavernPost>>?>(emptyList()) }
     var onClick by remember { mutableStateOf(false) }
+    val currentPage = rememberSaveable { mutableIntStateOf(0) }
 
     LaunchedEffect(onClick) {
         viewModel.whispers.collect { result ->
@@ -72,6 +84,21 @@ fun TavernView(
                     onClick = false
                     isLoading = false
                     whispers = result.data
+                }
+                is ApiResult.Error -> isLoading = false
+            }
+        }
+    }
+
+    LaunchedEffect(onClick) {
+        viewModel.logs.collect { result ->
+            when(result) {
+                is ApiResult.Loading -> isLoading = true
+                is ApiResult.Success -> {
+                    onClick = false
+                    isLoading = false
+                    logs = result.data
+                    Log.d("Tavern Log", result.data.toString())
                 }
                 is ApiResult.Error -> isLoading = false
             }
@@ -117,15 +144,20 @@ fun TavernView(
         topBarTitle = "The Dragon Chest's Tavern",
         horizontalAlignment = Alignment.CenterHorizontally,
         navController = navController,
-        enableActionBar = true
+        enableActionBar = true,
+        fullScreen = true
     ) {
+        Spacer(Modifier.padding(top = NeoPadding.topBarPadding))
         Text("Your Aura: ${currentAuras ?: ""}")
 
         LazyColumn(
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
+            contentPadding = PaddingValues(
+                bottom = NeoPadding.systemBarPadding
+            )
         ) {
             item {
-                Spacer(Modifier.padding(vertical = 16.dp))
+                Spacer(Modifier.padding(vertical = 8.dp))
                 Card(
                     colors = CardDefaults.cardColors().copy(
                         containerColor = Transparent
@@ -157,7 +189,7 @@ fun TavernView(
                                                 onClick = true
                                             }
                                         },
-                                        imageVector = ImageVector.vectorResource(R.drawable.add_chat),
+                                        imageVector = ImageVector.vectorResource(R.drawable.ic_send),
                                         contentDescription = "",
                                         tint = White
                                     )
@@ -168,22 +200,84 @@ fun TavernView(
                 }
             }
 
+            logs?.let {
+                item {
+                    CustomCarousel(
+                        list = it,
+                        currentPageState = currentPage,
+                    ) { item ->
+                        val value = item.value
+
+                        Card(
+                            Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp, vertical = 8.dp),
+                            colors = CardDefaults.cardColors().copy(containerColor = DarkPrimaryTransparent80)
+                        ) {
+                            Row(
+                                Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 8.dp, vertical = 4.dp),
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Text(
+                                    modifier = Modifier.weight(1f),
+                                    text = value.message,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
+                                    fontSize = FontSize.Smaller
+                                )
+                                Text(
+                                    text = convertLongToTime(
+                                        time = value.createdAt,
+                                        last = true
+                                    ),
+                                    fontSize = FontSize.Smaller
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+
             whispers?.let {
                 items(it) { items ->
                     val value = items.value
-                    Card(
-                        Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp, vertical = 8.dp),
-                        colors = CardDefaults.cardColors().copy(containerColor = DarkPrimaryTransparent40)
-                    ) {
-                        Column(Modifier.padding(16.dp)) {
-                            Text(value.creatorName)
-                            Text(value.message)
-                            Text(convertLongToTime(
-                                time = value.createdAt,
-                                clean = true
-                            ))
+
+                    if (value.creatorName != "System") {
+                        Card(
+                            Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp, vertical = 8.dp),
+                            colors = CardDefaults.cardColors().copy(containerColor = DarkPrimaryTransparent40)
+                        ) {
+                            Column(Modifier.padding(16.dp)) {
+                                Row {
+                                    Text(
+                                        text = value.creatorName,
+                                        color = TransparentText20
+                                    )
+                                    Text(
+                                        text = " whispered..",
+                                    )
+                                }
+
+                                Text(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    text= "\"${value.message}\"",
+                                    fontStyle = FontStyle.Italic,
+                                    textAlign = TextAlign.Center
+                                )
+                                Text(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    text = convertLongToTime(
+                                        time = value.createdAt,
+                                        last = true
+                                    ),
+                                    fontSize = FontSize.Smaller,
+                                    textAlign = TextAlign.End
+                                )
+                            }
                         }
                     }
                 }

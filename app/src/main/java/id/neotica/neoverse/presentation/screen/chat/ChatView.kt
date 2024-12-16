@@ -36,7 +36,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
@@ -217,7 +216,7 @@ fun ChatMessages(
                     state = listState,
                     contentPadding = PaddingValues(
                         bottom = NeoPadding.systemBarPadding + 46.dp,
-                        top = NeoPadding.statusBarPadding + TopAppBarDefaults.TopAppBarExpandedHeight
+                        top = NeoPadding.topBarPadding
                     )
                 ) {
                     items(messages) { messages ->

@@ -4,7 +4,6 @@ import android.content.Intent
 import android.net.Uri
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -20,12 +19,11 @@ import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.theme.DarkPrimary
 
 @Composable
-fun AboutView(navController: NavController, paddingValues: PaddingValues, modifier: Modifier = Modifier) {
+fun AboutView(navController: NavController) {
     BasicScaffold(
         topBarTitle = "About",
         true,
         navController = navController,
-        paddingValues = paddingValues
     ) {
         val context = LocalContext.current
 

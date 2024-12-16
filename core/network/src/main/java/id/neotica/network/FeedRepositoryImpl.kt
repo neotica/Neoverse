@@ -83,4 +83,34 @@ class FeedRepositoryImpl: FeedRepository {
             emit(ApiResult.Error(e.message))
         }
     }
+
+    override suspend fun postLogs(post: TavernPost) {
+        val reference = firebase.reference.child("world").child("tavern")
+            .child("logs").child(post.id).setValue(post)
+        reference.await()
+    }
+
+    override suspend fun getLogs(): Flow<ApiResult<List<ParentNeo<TavernPost>>>> = flow {
+        val list = mutableListOf<ParentNeo<TavernPost>>()
+        list.clear()
+        emit(ApiResult.Loading())
+        val ref = firebase.getReference("world").child("tavern").child("logs").get().await()
+        Log.d("feedRepo3", ref.toString())
+        try {
+            ref.children.forEach {
+                val value = it.getValue(TavernPost::class.java)
+                val parentValue = ParentNeo(
+                    key = it.key!!,
+                    value = value!!
+                )
+                list.add(parentValue)
+                Log.d("feedRepo4", value.toString())
+            }
+
+            emit(ApiResult.Success(list.sortedByDescending { it.value.createdAt }))
+        } catch (e: Exception) {
+            emit(ApiResult.Error(e.message))
+        }
+    }
+
 }

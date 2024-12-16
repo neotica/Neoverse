@@ -86,6 +86,7 @@ fun MainView() {
             Screen.AboutScreen,
             Screen.AddChatScreen,
             Screen.UpdateAppScreen,
+            Screen.SearchUserScreen,
             WorldScreen.GameScreen,
             WorldScreen.MiningScreen,
             WorldScreen.LeaderBoardsScreen
@@ -212,6 +213,5 @@ fun MainView() {
                 }
             }
         }
-
     }
 }

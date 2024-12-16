@@ -1,6 +1,5 @@
 package id.neotica.world.feat.game
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import id.neotica.domain.ApiResult
@@ -41,6 +40,9 @@ class TavernViewModel(
     private var _whispers: MutableStateFlow<ApiResult<List<ParentNeo<TavernPost>>>> = MutableStateFlow(ApiResult.Loading())
     val whispers = _whispers.asStateFlow()
 
+    private var _logs: MutableStateFlow<ApiResult<List<ParentNeo<TavernPost>>>> = MutableStateFlow(ApiResult.Loading())
+    val logs = _logs.asStateFlow()
+
     private fun currentUserId(): String = getIdUseCase.invoke()
     private fun currentUsername(): String = getUserNameUseCase.invoke()
 
@@ -53,7 +55,8 @@ class TavernViewModel(
         generateTranspose2()
         generateTranspose3()
         fetchAuras()
-        getPosts()
+        getWhispers()
+        getLogs()
     }
 
     fun getItemEvent(itemName: String, contentType: String){
@@ -66,12 +69,10 @@ class TavernViewModel(
             gameRepo.postAuras(tot + aura, currentUserId())
         }
         fetchAuras()
-        Log.d("aura", aura.toString())
     }
 
     private fun fetchAuras() = viewModelScope.launch {
         gameRepo.getAurasDecrypt(currentUserId()).collect {
-            Log.d("auraDecrypted VM", it.toString())
             _totalAuras.value = it
         }
     }
@@ -111,10 +112,22 @@ class TavernViewModel(
         val shark = "\uD83E\uDD88"
 
         when(result) {
-            "$seven$seven$seven" -> _auraPoints.value = 750
-            "$star$star$star" -> _auraPoints.value = 250
-            "$shark$shark$shark" -> _auraPoints.value = 150
-            "$smile$smile$smile" -> _auraPoints.value = 50
+            "$seven$seven$seven" -> {
+                sendScore(750)
+                _auraPoints.value = 750
+            }
+            "$star$star$star" -> {
+                sendScore(250)
+                _auraPoints.value = 250
+            }
+            "$shark$shark$shark" -> {
+                sendScore(150)
+                _auraPoints.value = 150
+            }
+            "$smile$smile$smile" -> {
+                sendScore(50)
+                _auraPoints.value = 50
+            }
             else -> _auraPoints.value = -10
         }
         firebase.eventLog("GameView", "slot_result", _auraPoints.value.toString())
@@ -133,13 +146,38 @@ class TavernViewModel(
             sendAuraPoints(-5)
             fetchAuras()
         }
-        getPosts()
+        getWhispers()
     }
 
-    private fun getPosts() = viewModelScope.launch {
+    private fun sendScore(aura: Long) = viewModelScope.launch {
+        val message: String = when(aura) {
+            50L -> "${currentUsername()} has won $aura auras!"
+            100L -> "${currentUsername()} has won $aura auras!"
+            150L -> "${currentUsername()} has won $aura auras!"
+            250L -> "${currentUsername()} has won $aura auras!"
+            750L -> "JACKPOT!!! ${currentUsername()} has won $aura auras!!!"
+            else -> "${currentUsername()} has won $aura auras!"
+        }
+        val post = TavernPost(
+            id = randomUUID(),
+            creatorId = "System",
+            creatorName = "System",
+            message = message
+        )
+        feedRepo.postLogs(post)
+        getWhispers()
+        getLogs()
+    }
+
+    private fun getWhispers() = viewModelScope.launch {
         feedRepo.getWhispers().collect {
-            Log.d("Whispers", it.data .toString())
             _whispers.value = it
+        }
+    }
+
+    private fun getLogs() = viewModelScope.launch {
+        feedRepo.getLogs().collect {
+            _logs.value = it
         }
     }
 }

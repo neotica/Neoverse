@@ -40,9 +40,7 @@ fun NavGraphBuilder.worldNavGraph(
             enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start, tween(100)) },
             exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End, tween(100)) }
         ) {
-            TavernView(
-                navController, paddingValues
-            )
+            TavernView(navController)
         }
         composable<WorldScreen.KanyeScreen> {
             KanyeView(
