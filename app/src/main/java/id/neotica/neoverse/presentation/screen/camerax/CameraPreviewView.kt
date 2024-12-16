@@ -4,6 +4,8 @@ import android.util.Log
 import android.widget.Toast
 import androidx.camera.core.CameraSelector
 import androidx.camera.view.LifecycleCameraController
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -16,19 +18,20 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.navigation.NavController
+import id.neotica.camera.R
 import id.neotica.domain.ApiResult
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.LoadingIndicator
-import id.neotica.ui.components.NeoButton
 import id.neotica.ui.navigation.navigateBack
 import id.neotica.ui.theme.NeoPadding
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun CameraPreviewView(
-    navController: NavController, modifier: Modifier = Modifier,
+    navController: NavController,
     viewModel: CameraPreviewViewModel = koinViewModel()
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -68,16 +71,18 @@ fun CameraPreviewView(
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
             CameraContent(cameraController, lifecycleOwner)
-            NeoButton(
-                "Capture",
+            Image(
+                painter = painterResource(R.drawable.ic_shutter),
+                contentDescription = "Camera Shutter Button.",
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .padding(bottom = NeoPadding.systemBarPadding)
-            ) {
-                viewModel.capturePhoto(context, cameraController)
-                launchKey++
-                isPressed = true
-            }
+                    .clickable(enabled = !isLoading) {
+                        viewModel.capturePhoto(context, cameraController)
+                        launchKey++
+                        isPressed = true
+                }
+            )
         }
     }
     if (isLoading) Box(Modifier.fillMaxSize()) { LoadingIndicator() }
