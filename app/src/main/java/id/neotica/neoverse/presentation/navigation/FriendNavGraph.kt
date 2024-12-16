@@ -27,7 +27,7 @@ fun NavGraphBuilder.friendNavGraph(
             enterTransition = { fadeIn(tween(100)) },
             exitTransition = { ExitTransition.None }
         ) {
-            SearchUser(navController = navController, paddingValues = paddingValues)
+            SearchUser(navController = navController)
         }
         composable<Screen.FriendProfileScreen>(
             enterTransition = { fadeIn(tween(100)) },
@@ -36,7 +36,6 @@ fun NavGraphBuilder.friendNavGraph(
             val args = it.toRoute<Screen.FriendProfileScreen>()
             FriendProfileView(
                 navController,
-                paddingValues = paddingValues,
                 userId = args.userId
             )
         }

@@ -147,7 +147,7 @@ fun MainView() {
                                         onClick = {
                                             navController.navigate(it.screen) {
                                                 navController.graph.startDestinationId.let { route ->
-                                                    popUpTo(route) {
+                                                    popUpTo(Screen.HomeScreen) {
                                                         saveState = true
                                                         inclusive = false
                                                     }
@@ -166,7 +166,6 @@ fun MainView() {
                         }
                     }
                 ) { innerPadding ->
-
                     NavGraph(
                         navController = navController,
                         paddingValues = PaddingValues(
