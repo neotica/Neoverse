@@ -11,6 +11,7 @@ import androidx.navigation.toRoute
 import id.neotica.neoverse.presentation.screen.auth.login.LoginView
 import id.neotica.neoverse.presentation.screen.auth.register.RegisterView
 import id.neotica.neoverse.presentation.screen.auth.verify.VerifyEmailView
+import id.neotica.neoverse.presentation.screen.camerax.CameraPreviewView
 import id.neotica.neoverse.presentation.screen.profile.ProfileView
 import id.neotica.neoverse.presentation.screen.profile.about.AboutView
 import id.neotica.neoverse.presentation.screen.profile.accountsettings.AccountSettingView
@@ -68,6 +69,12 @@ fun NavGraphBuilder.authNavGraph(
         ) {
             val args = it.toRoute<Screen.EditProfileScreen>()
             EditProfileView(navController, paddingValues, args = args)
+        }
+        composable<Screen.CameraPreviewScreen>(
+            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start, tween(100)) },
+            exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End, tween(100)) }
+        ) {
+            CameraPreviewView(navController)
         }
         composable<Screen.AboutScreen>(
             enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start, tween(100)) },

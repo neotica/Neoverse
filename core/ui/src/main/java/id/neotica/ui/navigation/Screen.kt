@@ -50,6 +50,8 @@ sealed class Screen {
     data object DeleteAccountScreen: Screen()
     @Serializable
     data object AboutScreen: Screen()
+    @Serializable
+    data object CameraPreviewScreen: Screen()
 
     //Friend Navigation
     @Serializable

@@ -69,6 +69,7 @@ dependencies {
     implementation(projects.core.ui)
     implementation(projects.core.core)
     implementation(projects.feature.world)
+    implementation(projects.core.camera)
 
     // Testing
     testImplementation(libs.junit)

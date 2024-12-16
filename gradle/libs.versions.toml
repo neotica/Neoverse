@@ -1,5 +1,6 @@
 [versions]
 agp = "8.7.2"
+cameraxVersion = "1.4.1"
 koinAndroidxCompose = "3.5.6"
 kotlin = "2.0.20"
 coreKtx = "1.15.0"
@@ -25,6 +26,8 @@ coreSplashscreen = "1.0.1"
 androidx-wear-compose = "1.4.0"
 junitJupiter = "5.11.1"
 coroutines = "1.9.0"
+appcompat = "1.7.0"
+material = "1.12.0"
 
 [libraries]
 androidx-adaptive = { module = "androidx.compose.material3.adaptive:adaptive" }
@@ -47,6 +50,11 @@ androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-toolin
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
+#camera
+androidx-camera-camera2 = { module = "androidx.camera:camera-camera2", version.ref = "cameraxVersion" }
+androidx-camera-core = { module = "androidx.camera:camera-core", version.ref = "cameraxVersion" }
+androidx-camera-lifecycle = { module = "androidx.camera:camera-lifecycle", version.ref = "cameraxVersion" }
+androidx-camera-view = { module = "androidx.camera:camera-view", version.ref = "cameraxVersion" }
 #firebase
 firebase-firestore-ktx = { group = "com.google.firebase", name = "firebase-firestore-ktx", version.ref = "firebaseFirestoreKtx" }
 firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
@@ -86,6 +94,8 @@ koin-core = { module = "io.insert-koin:koin-core", version.ref = "koinAndroidxCo
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 #KMP Coroutine
 coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines"}
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

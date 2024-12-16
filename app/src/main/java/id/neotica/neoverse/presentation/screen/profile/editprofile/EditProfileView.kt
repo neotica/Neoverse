@@ -5,7 +5,6 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
-import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -103,8 +102,8 @@ fun EditProfileView(
                         launchPhotoPicker()
                     }
                     MenuItem("Use Camera") {
-                        Toast.makeText(context, "Not available yet.", Toast.LENGTH_SHORT).show()
-//                        cameraPermissionResultLauncher.launch(Manifest.permission.CAMERA)
+                        cameraPermissionResultLauncher.launch(Manifest.permission.CAMERA)
+                        navController.navigate(Screen.CameraPreviewScreen)
                     }
                 }
             }

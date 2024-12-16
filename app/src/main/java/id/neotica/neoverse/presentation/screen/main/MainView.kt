@@ -86,6 +86,7 @@ fun MainView() {
             Screen.AboutScreen,
             Screen.AddChatScreen,
             Screen.UpdateAppScreen,
+            Screen.CameraPreviewScreen,
             Screen.SearchUserScreen,
             WorldScreen.GameScreen,
             WorldScreen.MiningScreen,
