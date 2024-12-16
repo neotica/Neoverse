@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -14,6 +15,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -28,7 +30,7 @@ import id.neotica.neoverse.presentation.screen.profile.ProfileViewModel
 import id.neotica.neoverse.utils.compressUri
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.ImageCoil
-import id.neotica.ui.components.NeoButton
+import id.neotica.ui.components.MenuItem
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.Screen
 import org.koin.androidx.compose.koinViewModel
@@ -81,6 +83,7 @@ fun EditProfileView(
         Column {
             Box(Modifier.padding(32.dp)) {
                 ImageCoil(
+                    size = 100.dp,
                     url = args.profPic,
                     context = LocalContext.current,
                     modifier = Modifier.align(Alignment.Center),
@@ -95,12 +98,13 @@ fun EditProfileView(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 item {
-                    NeoButton("Change your profile picture") {
+                    Text("Change profile Picture")
+                    MenuItem("Use Gallery") {
                         launchPhotoPicker()
                     }
-
-                    NeoButton("Take from camera", enabled = false) {
-                        cameraPermissionResultLauncher.launch(Manifest.permission.CAMERA)
+                    MenuItem("Use Camera") {
+                        Toast.makeText(context, "Not available yet.", Toast.LENGTH_SHORT).show()
+//                        cameraPermissionResultLauncher.launch(Manifest.permission.CAMERA)
                     }
                 }
             }

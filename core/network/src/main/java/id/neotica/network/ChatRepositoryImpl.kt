@@ -18,6 +18,8 @@ import id.neotica.domain.model.chat.notification.ChatState
 import id.neotica.domain.model.chat.notification.SendMessageDto
 import id.neotica.domain.remote.ChatRepository
 import id.neotica.network.di.NetworkApiService
+import id.neotica.network.utils.StringCryptoUtil
+import id.neotica.network.utils.baseUrl
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -46,13 +48,20 @@ class ChatRepositoryImpl: ChatRepository {
             val reference = firebase.getReference("chatroom").get().await()
             reference.children.forEach { data ->
                 val cr = data.getValue(ChatRoom::class.java)
+                val crDecrypted = try {
+                    cr?.copy(lastMessage = StringCryptoUtil.decrypt(cr.lastMessage))
+                } catch (e: Exception) {
+                    cr
+                }
                 val channel = ParentNeo(
                     key = data.key!!,
-                    value = cr!!
+                    value = crDecrypted!!
                 )
                 list.add(channel)
                 if (data.value != null) {
-                    emit(ApiResult.Success(list.sortedByDescending { it.value.lastOpened }))
+                    emit(ApiResult.Success(
+                        list.sortedByDescending { it.value.lastOpened })
+                    )
                 } else {
                     emit(ApiResult.Error("data null"))
                 }
@@ -66,7 +75,9 @@ class ChatRepositoryImpl: ChatRepository {
         val reference = firebase.getReference("chatroom").child(id).get().await()
         return try {
             val value = reference.getValue(ChatRoom::class.java)
-            ApiResult.Success(value!!)
+                ?: return ApiResult.Error("Chatroom not found or is null")
+
+            ApiResult.Success(value)
         } catch (e: NullPointerException) {
             ApiResult.Error("exception: ${e.message}")
         }
@@ -93,11 +104,11 @@ class ChatRepositoryImpl: ChatRepository {
 
         val event = reqDb.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                val list2 = snapshot.children.mapNotNull { data ->
+                val list = snapshot.children.mapNotNull { data ->
                     val message = data.getValue(Message::class.java)
-                    message
+                    message?.copy(message = StringCryptoUtil.decrypt(message.message))
                 }
-                trySend(list2)
+                trySend(list)
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -110,19 +121,39 @@ class ChatRepositoryImpl: ChatRepository {
     }
 
     override fun sendMessage(chatId: String, message: Message) {
-        firebase.getReference("messages").child(chatId).push().setValue(message)
+        val messageEncrypted = message.copy(message = StringCryptoUtil.encrypt(message.message))
+        firebase.getReference("messages").child(chatId).push().setValue(messageEncrypted)
     }
 
     override suspend fun updateChatroom(chatId: String, chatRoom: ChatRoom) {
         val token = reloadFcmToken()
-        val chatRoomCustom = chatRoom.copy(fcmToken = token)
+        val chatRoomCustom = chatRoom.copy(
+            fcmToken = token,
+            lastMessage = StringCryptoUtil.encrypt(chatRoom.lastMessage)
+        )
 
         val key = firebase.getReference("chatroom").child(chatId).setValue(chatRoomCustom)
         key.await()
     }
 
+    override suspend fun subscribeToTopic(topic: String) {
+        Firebase.messaging.subscribeToTopic(topic).await()
+    }
+
+    override suspend fun sendNotification(isBroadcast: Boolean, messageDto: SendMessageDto) {
+        try {
+
+            if (isBroadcast) {
+                api.sendMessage(messageDto)
+            } //else api.broadcast(messageDto)
+        } catch (e: Exception) {
+            Log.d("sendNotification", e.message.toString())
+        }
+
+    }
+
     private val api: NetworkApiService = Retrofit.Builder()
-        .baseUrl("http://18.141.159.232:8080")
+        .baseUrl(baseUrl)
         .addConverterFactory(MoshiConverterFactory.create())
         .build()
         .create()
@@ -133,22 +164,5 @@ class ChatRepositoryImpl: ChatRepository {
             onRemoteTokenChange(newToken)
             Log.d("FCM Token", "Reloaded token: $newToken")
         }
-    }
-
-    override suspend fun subscribeToTopic(topic: String) {
-        Firebase.messaging.subscribeToTopic(topic).await()
-    }
-
-    override suspend fun sendNotification(isBroadcast: Boolean, messageDto: SendMessageDto) {
-        try {
-            reloadFcmToken()
-            if (isBroadcast) {
-                api.sendMessage(messageDto)
-            } else api.broadcast(messageDto)
-        } catch (e: Exception) {
-
-            Log.d("sendNotif", e.message.toString())
-        }
-
     }
 }

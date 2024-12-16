@@ -1,6 +1,6 @@
 package id.neotica.world.di
 
-import id.neotica.world.feat.game.GameViewModel
+import id.neotica.world.feat.game.TavernViewModel
 import id.neotica.world.feat.inventory.InventoryViewModel
 import id.neotica.world.feat.kanye.KanyeViewModel
 import id.neotica.world.feat.leaderboards.LeaderBoardsViewModel
@@ -16,7 +16,7 @@ import org.koin.dsl.module
 val worldModules = module {
     viewModelOf(::WorldViewModel)
     viewModelOf(::KanyeViewModel)
-    viewModelOf(::GameViewModel)
+    viewModelOf(::TavernViewModel)
     viewModelOf(::MarketViewModel)
     viewModelOf(::ItemDetailViewModel)
     viewModelOf(::MerchantViewModel)

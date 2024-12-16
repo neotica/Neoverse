@@ -32,6 +32,8 @@ import id.neotica.neoverse.presentation.screen.home.HomeViewModel
 import id.neotica.neoverse.presentation.screen.home.addchat.AddChatViewModel
 import id.neotica.neoverse.presentation.screen.main.MainViewModel
 import id.neotica.neoverse.presentation.screen.profile.ProfileViewModel
+import id.neotica.neoverse.utils.connectionchecker.AndroidConnectivityObserver
+import id.neotica.domain.observer.ConnectivityObserver
 import id.neotica.network.AuraRepositoryImpl
 import id.neotica.network.FeedRepositoryImpl
 import id.neotica.network.FirebaseRepositoryImpl
@@ -58,6 +60,7 @@ val repositoryModules = module {
     singleOf(::FirebaseRepositoryImpl) bind FirebaseRepository::class
     singleOf(::FeedRepositoryImpl) bind FeedRepository::class
     singleOf(::SuperAdminRepositoryImpl) bind SuperAdminRepository::class
+    singleOf(::AndroidConnectivityObserver) bind ConnectivityObserver::class
 }
 
 val viewModelModules = module {

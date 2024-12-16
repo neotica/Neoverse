@@ -1,6 +1,7 @@
 package id.neotica.neoverse.presentation.navigation
 
 import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.layout.PaddingValues
@@ -24,7 +25,7 @@ fun NavGraphBuilder.friendNavGraph(
             FriendView(navController, paddingValues) }
         composable<Screen.SearchUserScreen>(
             enterTransition = { fadeIn(tween(100)) },
-            exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End, tween(100)) }
+            exitTransition = { ExitTransition.None }
         ) {
             SearchUser(navController = navController, paddingValues = paddingValues)
         }

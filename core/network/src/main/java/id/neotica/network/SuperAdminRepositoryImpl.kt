@@ -26,8 +26,8 @@ class SuperAdminRepositoryImpl: SuperAdminRepository {
     }
 
     override suspend fun getMinimumVersion(): Flow<ApiResult<Int>> = flow {
-        val reference = firebase.getReference("utils").get().await()
-        val value = reference.child("version").value
+        val reference = firebase.getReference("utils").child("version").get().await()
+        val value = reference.value
         try {
             emit(ApiResult.Success(value.toString().toInt()))
         } catch (e: Exception) {

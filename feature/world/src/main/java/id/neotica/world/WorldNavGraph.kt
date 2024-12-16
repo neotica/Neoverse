@@ -10,7 +10,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.WorldScreen
-import id.neotica.world.feat.game.GameView
+import id.neotica.world.feat.game.TavernView
 import id.neotica.world.feat.inventory.InventoryView
 import id.neotica.world.feat.kanye.KanyeView
 import id.neotica.world.feat.leaderboards.LeaderBoardsView
@@ -40,9 +40,7 @@ fun NavGraphBuilder.worldNavGraph(
             enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start, tween(100)) },
             exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End, tween(100)) }
         ) {
-            GameView(
-                navController, paddingValues
-            )
+            TavernView(navController)
         }
         composable<WorldScreen.KanyeScreen> {
             KanyeView(

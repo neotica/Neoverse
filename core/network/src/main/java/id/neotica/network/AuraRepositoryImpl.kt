@@ -28,8 +28,8 @@ class AuraRepositoryImpl: AuraRepository {
         val ref = firebase.getReference("userdata")
             .child(userId).child("world").get().await()
         try {
-            val aa = ref.child("aura").value
-            val decryptAura = LongCryptoUtil.decrypt(aa.toString())
+            val aura = ref.child("aura").value
+            val decryptAura = LongCryptoUtil.decrypt(aura.toString())
             emit(ApiResult.Success(decryptAura))
         } catch (e: Exception) {
             emit(ApiResult.Error(e.message))

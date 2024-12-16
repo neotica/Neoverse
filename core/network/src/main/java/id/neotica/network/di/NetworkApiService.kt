@@ -6,12 +6,12 @@ import retrofit2.http.POST
 
 interface NetworkApiService {
 
-    @POST("/send")
+    @POST("/notification/send")
     suspend fun sendMessage(
         @Body body: SendMessageDto
     )
 
-    @POST("/broadcast")
+    @POST("/notification/broadcast")
     suspend fun broadcast(
         @Body body: SendMessageDto
     )

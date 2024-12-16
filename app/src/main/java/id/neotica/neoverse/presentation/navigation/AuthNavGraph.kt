@@ -42,13 +42,13 @@ fun NavGraphBuilder.authNavGraph(
             enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start, tween(100)) },
             exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End, tween(100)) }
         ) {
-            PrivacyPolicyView(navController, paddingValues)
+            PrivacyPolicyView(navController)
         }
         composable<Screen.TermsOfServiceScreen>(
             enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start, tween(100)) },
             exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End, tween(100)) }
         ) {
-            TermsOfServiceView(navController, paddingValues)
+            TermsOfServiceView(navController)
         }
         composable<Screen.AccountSettingScreen>(
             enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start, tween(100)) },
@@ -73,7 +73,7 @@ fun NavGraphBuilder.authNavGraph(
             enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start, tween(100)) },
             exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End, tween(100)) }
         ) {
-            AboutView(navController, paddingValues)
+            AboutView(navController)
         }
     }
 }
