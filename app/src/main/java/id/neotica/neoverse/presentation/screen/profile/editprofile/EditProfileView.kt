@@ -29,10 +29,10 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import id.neotica.neoverse.presentation.screen.profile.ProfileViewModel
 import id.neotica.neoverse.utils.compressUri
+import id.neotica.ui.R
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.ImageCoil
 import id.neotica.ui.components.MenuItem
-import id.neotica.ui.components.NeoButton
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.Screen
 import id.neotica.ui.theme.DarkBackground
@@ -125,7 +125,10 @@ fun EditProfileView(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 item {
-                    NeoButton("Change Profile Picture") {
+                    MenuItem(
+                        title = "Change Profile Picture",
+                        leadingIcon = R.drawable.ic_edit
+                    ) {
                         showBottomSheet = true
                     }
                 }
