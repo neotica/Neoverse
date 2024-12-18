@@ -11,9 +11,12 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.minimumInteractiveComponentSize
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -34,19 +37,23 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.User
+import id.neotica.droidcore.component.alert.NeoAlert
+import id.neotica.droidcore.component.icon.AlertEnum
 import id.neotica.ui.R
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.ImageCoil
 import id.neotica.ui.components.LoadingIndicatorBool
 import id.neotica.ui.components.MenuItem
+import id.neotica.ui.components.NeoButton
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.Screen
+import id.neotica.ui.theme.DarkBackground
 import id.neotica.ui.theme.FontSize
 import id.neotica.ui.theme.NegativePrimary
 import id.neotica.ui.theme.TransparentText20
 import org.koin.androidx.compose.koinViewModel
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileView(
     navController: NavController,
@@ -57,6 +64,11 @@ fun ProfileView(
     val isLoading by remember { mutableStateOf(false) }
     val context = LocalContext.current
     val haptic = LocalHapticFeedback.current
+
+    val sheetState = rememberModalBottomSheetState()
+    var showAccountSettingsBottomSheet by remember { mutableStateOf(false) }
+
+    val showLogoutDialog = remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         if (!viewModel.isLoggedIn()) navController.navigate(Screen.LoginScreen) {
@@ -75,6 +87,50 @@ fun ProfileView(
                 }
             }
         }
+    }
+
+    if (showAccountSettingsBottomSheet) {
+        ModalBottomSheet(
+            onDismissRequest = { showAccountSettingsBottomSheet = false },
+            sheetState = sheetState,
+            containerColor = DarkBackground
+        ) {
+            Column(
+                modifier = Modifier.padding(16.dp)
+            ) {
+                MenuItem("Change Password") {
+                    Toast.makeText(context, "Please contact our support email to change password.", Toast.LENGTH_SHORT).show()
+                }
+                MenuItem(
+                    "Delete Account",
+                    textColor = NegativePrimary
+                ) {
+                    navController.navigate(Screen.DeleteAccountScreen)
+                }
+            }
+
+        }
+    }
+
+    if (showLogoutDialog.value) {
+        NeoAlert(
+            openDialog = showLogoutDialog,
+            title = "Do you want to logout?",
+            backButton = "Noo",
+            hasIcon = true,
+            iconType = AlertEnum.WARNING,
+            confirmButton = {
+                NeoButton("Yes, logout", negative = true) {
+                    viewModel.logout()
+                    navController.navigate(Screen.LoginScreen) {
+                        popUpTo(RootScreen.HomeNav) {
+                            inclusive = true
+                        }
+                        launchSingleTop
+                    }
+                }
+            }
+        )
     }
 
     BasicScaffold(
@@ -138,8 +194,6 @@ fun ProfileView(
                             }
                         }
 
-//                        Spacer(Modifier.padding(16.dp))
-
                         Column(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -153,7 +207,7 @@ fun ProfileView(
                             MenuItem(
                                 "Account Settings",
                             ) {
-                                navController.navigate(Screen.AccountSettingScreen)
+                                showAccountSettingsBottomSheet = true
                             }
                             MenuItem(
                                 "Privacy Policy",
@@ -168,16 +222,11 @@ fun ProfileView(
 
                             Spacer(Modifier.padding(16.dp))
                             MenuItem(
-                                "Logout",
-                                textColor = NegativePrimary
+                                title = "Logout",
+                                textColor = NegativePrimary,
+                                leadingIcon = R.drawable.ic_logout,
                             ) {
-                                viewModel.logout()
-                                navController.navigate(Screen.LoginScreen) {
-                                    popUpTo(RootScreen.HomeNav) {
-                                        inclusive = true
-                                    }
-                                    launchSingleTop
-                                }
+                                showLogoutDialog.value = true
                             }
                         }
                     }

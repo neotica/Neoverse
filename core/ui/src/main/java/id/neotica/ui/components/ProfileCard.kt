@@ -26,7 +26,6 @@ import id.neotica.ui.theme.DarkPrimaryTransparent
 fun ProfileCard(
     name: String,
     image: String,
-    modifier: Modifier = Modifier,
     size: Dp = 100.dp,
     paddingValues: PaddingValues = PaddingValues(),
     content: @Composable () -> Unit = {},
@@ -83,6 +82,7 @@ fun ProfileCard(
         ) {
             ImageCoil(
                 url = image,
+                round = true,
                 size = size
             )
             Text(

@@ -2,7 +2,6 @@ package id.neotica.neoverse.presentation.screen.friend.profile
 
 import android.util.Log
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Text
@@ -15,10 +14,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import id.neotica.domain.ApiResult
-import id.neotica.domain.model.chat.ChatRoom
 import id.neotica.domain.model.User
+import id.neotica.domain.model.chat.ChatRoom
 import id.neotica.droidcore.component.alert.NeoAlert
 import id.neotica.neoverse.presentation.screen.friend.FriendViewModel
 import id.neotica.ui.components.BasicScaffold
@@ -31,7 +31,6 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun FriendProfileView(
     navController: NavController,
-    paddingValues: PaddingValues,
     viewModel: FriendViewModel = koinViewModel(),
     userId: String,
 ) {
@@ -118,7 +117,10 @@ fun FriendProfileView(
             LazyColumn {
                 item {
                     friend?.let {
-                        ImageCoil(it.imageUrl, round = true)
+                        ImageCoil(
+                            it.imageUrl, round = true,
+                            size = 100.dp
+                        )
                         Column(
                             Modifier.fillMaxWidth(),
                             horizontalAlignment = Alignment.CenterHorizontally

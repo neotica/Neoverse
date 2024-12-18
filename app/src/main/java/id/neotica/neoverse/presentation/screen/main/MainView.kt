@@ -86,6 +86,7 @@ fun MainView() {
             Screen.AboutScreen,
             Screen.AddChatScreen,
             Screen.UpdateAppScreen,
+            Screen.CameraPreviewScreen,
             Screen.SearchUserScreen,
             WorldScreen.GameScreen,
             WorldScreen.MiningScreen,
@@ -146,7 +147,7 @@ fun MainView() {
                                         onClick = {
                                             navController.navigate(it.screen) {
                                                 navController.graph.startDestinationId.let { route ->
-                                                    popUpTo(route) {
+                                                    popUpTo(Screen.HomeScreen) {
                                                         saveState = true
                                                         inclusive = false
                                                     }
@@ -165,7 +166,6 @@ fun MainView() {
                         }
                     }
                 ) { innerPadding ->
-
                     NavGraph(
                         navController = navController,
                         paddingValues = PaddingValues(

@@ -34,6 +34,7 @@ import id.neotica.neoverse.presentation.screen.main.MainViewModel
 import id.neotica.neoverse.presentation.screen.profile.ProfileViewModel
 import id.neotica.neoverse.utils.connectionchecker.AndroidConnectivityObserver
 import id.neotica.domain.observer.ConnectivityObserver
+import id.neotica.neoverse.presentation.screen.camerax.CameraPreviewViewModel
 import id.neotica.network.AuraRepositoryImpl
 import id.neotica.network.FeedRepositoryImpl
 import id.neotica.network.FirebaseRepositoryImpl
@@ -74,6 +75,7 @@ val viewModelModules = module {
     viewModelOf(::VerifyEmailViewModel)
     viewModelOf(::DumpViewModel)
     viewModelOf(::MainViewModel)
+    viewModelOf(::CameraPreviewViewModel)
 }
 
 val useCaseModules = module {

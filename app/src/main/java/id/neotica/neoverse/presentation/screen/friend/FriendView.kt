@@ -37,6 +37,7 @@ import id.neotica.ui.components.ProfileCard
 import id.neotica.ui.components.droidcore.NeoSearchBar
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.Screen
+import id.neotica.ui.theme.NeoPadding
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -103,11 +104,15 @@ fun FriendView(
 
     BasicScaffold(
         "Friends",
-        paddingValues = paddingValues
+        fullScreen = true
     ) {
         Box(
             Modifier
-                .padding(horizontal = 16.dp)
+                .padding(
+                    top = NeoPadding.topBarPadding,
+                    start = 16.dp,
+                    end = 16.dp
+                )
                 .fillMaxWidth()
         ) {
             Row (
@@ -140,9 +145,16 @@ fun FriendView(
                 Modifier
                     .fillMaxSize()
             ) {
-                Box(Modifier.padding(horizontal = 12.dp, vertical = 16.dp)) {
+                Box(
+                    Modifier.padding(
+                        top = 16.dp,
+                        start = 12.dp,
+                        end = 12.dp
+                    )
+                ) {
                     LazyVerticalGrid(
-                        columns = GridCells.Fixed(3)
+                        columns = GridCells.Fixed(3),
+                        contentPadding = PaddingValues(bottom = NeoPadding.systemBarPadding + paddingValues.calculateBottomPadding())
                     ) {
                         items(
                             if (username.value.isEmpty()) {

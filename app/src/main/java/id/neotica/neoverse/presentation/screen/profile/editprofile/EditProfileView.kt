@@ -5,7 +5,6 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
-import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -15,7 +14,9 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.Text
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -28,16 +29,19 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import id.neotica.neoverse.presentation.screen.profile.ProfileViewModel
 import id.neotica.neoverse.utils.compressUri
+import id.neotica.ui.R
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.ImageCoil
 import id.neotica.ui.components.MenuItem
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.Screen
+import id.neotica.ui.theme.DarkBackground
 import org.koin.androidx.compose.koinViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditProfileView(
-    navController: NavController, paddingValues: PaddingValues, modifier: Modifier = Modifier,
+    navController: NavController, paddingValues: PaddingValues,
     viewModel: ProfileViewModel = koinViewModel(),
     args: Screen.EditProfileScreen,
 ) {
@@ -46,6 +50,8 @@ fun EditProfileView(
     }
 
     val context = LocalContext.current
+    val sheetState = rememberModalBottomSheetState()
+    var showBottomSheet by remember { mutableStateOf(false) }
 
     val singlePhotoPickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia(),
@@ -80,6 +86,27 @@ fun EditProfileView(
             )
         }
 
+        if (showBottomSheet) {
+            ModalBottomSheet(
+                onDismissRequest = { showBottomSheet = false },
+                sheetState = sheetState,
+                containerColor = DarkBackground
+            ) {
+                Column(
+                    modifier = Modifier.padding(16.dp)
+                ) {
+                    MenuItem("Use Gallery") {
+                        launchPhotoPicker()
+                    }
+                    MenuItem("Use Camera") {
+                        cameraPermissionResultLauncher.launch(Manifest.permission.CAMERA)
+                        navController.navigate(Screen.CameraPreviewScreen)
+                    }
+                }
+
+            }
+        }
+
         Column {
             Box(Modifier.padding(32.dp)) {
                 ImageCoil(
@@ -98,13 +125,11 @@ fun EditProfileView(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 item {
-                    Text("Change profile Picture")
-                    MenuItem("Use Gallery") {
-                        launchPhotoPicker()
-                    }
-                    MenuItem("Use Camera") {
-                        Toast.makeText(context, "Not available yet.", Toast.LENGTH_SHORT).show()
-//                        cameraPermissionResultLauncher.launch(Manifest.permission.CAMERA)
+                    MenuItem(
+                        title = "Change Profile Picture",
+                        leadingIcon = R.drawable.ic_edit
+                    ) {
+                        showBottomSheet = true
                     }
                 }
             }

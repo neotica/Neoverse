@@ -5,7 +5,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -30,13 +29,13 @@ import id.neotica.ui.components.LoadingIndicatorBool
 import id.neotica.ui.components.NeoButton
 import id.neotica.ui.navigation.Screen
 import id.neotica.ui.theme.DarkPrimary
+import id.neotica.ui.theme.NegativePrimary
 import org.koin.androidx.compose.koinViewModel
 import java.util.Locale
 
 @Composable
 fun RegisterView(
     navController: NavController,
-    paddingValues: PaddingValues,
     viewModel: RegisterViewModel = koinViewModel()
     ) {
     val nameValue = remember { mutableStateOf("") }
@@ -135,7 +134,7 @@ fun RegisterView(
         true,
         navController = navController
     ) {
-        Box(Modifier.padding(horizontal = 4.dp)) {
+        Box(Modifier.padding(vertical = 4.dp, horizontal = 16.dp)) {
             Column {
                 LoadingIndicatorBool(isLoading = isLoading) {
                     Box(Modifier.weight(1f)) {
@@ -149,7 +148,10 @@ fun RegisterView(
                             when {
                                 blockedWord.any {
                                     nameValue.value.contains(it, ignoreCase = true)
-                                } -> Text("Username contains prohibited words.")
+                                } -> Text(
+                                    "Username contains prohibited words.",
+                                    color = NegativePrimary
+                                )
                                 !isUserExist -> if (!userExistLoading) Text("Username is already used.")
                                 else -> {}
                             }

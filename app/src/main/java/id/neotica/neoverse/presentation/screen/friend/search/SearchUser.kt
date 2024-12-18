@@ -35,7 +35,7 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun SearchUser(
-    navController: NavController, paddingValues: PaddingValues,
+    navController: NavController,
     viewModel: FriendViewModel = koinViewModel()
 ) {
     val username = rememberSaveable { mutableStateOf("") }
@@ -72,7 +72,6 @@ fun SearchUser(
         topBarTitle = "Add Friend",
         true,
         navController = navController,
-        paddingValues = paddingValues,
     ) {
         Box(
             modifier = Modifier
