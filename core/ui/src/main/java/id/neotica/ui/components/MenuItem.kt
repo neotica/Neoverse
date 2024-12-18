@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.Text
 import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
@@ -31,6 +32,8 @@ import id.neotica.ui.R
 fun MenuItem(
     title: String,
     textColor: Color = Unspecified,
+    leadingIcon: Int? = null,
+    iconTint: Color = LocalContentColor.current,
     onClick: () -> Unit = {},
 ) {
     val context = LocalContext.current
@@ -52,14 +55,21 @@ fun MenuItem(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
+        if (leadingIcon != null) {
+            Icon(
+                imageVector = ImageVector.vectorResource(leadingIcon),
+                contentDescription = "Change Profile Picture",
+                modifier = Modifier.padding(end = 8.dp),
+                tint = iconTint
+            )
+        }
         Text(
             text = title,
-            color = textColor
+            color = textColor,
+            modifier = Modifier.weight(1f)
         )
         Icon(
-            modifier = Modifier
-//                                        .minimumInteractiveComponentSize()
-            ,
+            modifier = Modifier,
             imageVector = ImageVector.vectorResource(R.drawable.ic_arrow_forward),
             contentDescription = "",
             tint = White

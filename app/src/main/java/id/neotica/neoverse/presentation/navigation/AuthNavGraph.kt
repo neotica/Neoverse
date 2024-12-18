@@ -30,10 +30,10 @@ fun NavGraphBuilder.authNavGraph(
         startDestination = Screen.ProfileScreen,
     ) {
         composable<Screen.LoginScreen>{
-            LoginView(navController, paddingValues = paddingValues)
+            LoginView(navController)
         }
         composable<Screen.RegisterScreen>{
-            RegisterView(navController, paddingValues = paddingValues)
+            RegisterView(navController)
         }
         composable<Screen.ProfileScreen> { ProfileView(navController, paddingValues = paddingValues) }
         composable<Screen.VerifyEmailScreen> {

@@ -31,7 +31,6 @@ import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
@@ -77,6 +76,7 @@ import id.neotica.ui.theme.DarkPrimaryTransparent80
 import id.neotica.ui.theme.FontSize
 import id.neotica.ui.theme.NeoPadding
 import id.neotica.ui.theme.Transparent
+import id.neotica.ui.theme.TransparentText20
 import id.neotica.ui.theme.TransparentText40
 import kotlinx.coroutines.delay
 import org.koin.androidx.compose.koinViewModel
@@ -184,7 +184,6 @@ fun ChatView(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun ChatMessages(
@@ -215,7 +214,7 @@ fun ChatMessages(
                         .weight(1f),
                     state = listState,
                     contentPadding = PaddingValues(
-                        bottom = NeoPadding.systemBarPadding + 46.dp,
+                        bottom = NeoPadding.systemBarPadding + 46.dp + 8.dp,
                         top = NeoPadding.topBarPadding
                     )
                 ) {
@@ -339,31 +338,32 @@ fun ChatBubble(message: Message) {
             modifier = Modifier
                 .align(alignment),
         ) {
-            Box(
-                modifier = Modifier.fillMaxWidth()
+            Card(
+                colors = CardDefaults.cardColors().copy(containerColor = bubbleColor),
+                shape =  RoundedCornerShape(8.dp),
             ) {
-                Box(
-                    modifier = Modifier
-                        .align(alignment)
-                        .background(color = bubbleColor, shape = RoundedCornerShape(8.dp)),
-
-                    ) {
-                    Text(
-                        text = message.message,
-                        color = textColor,
-                        modifier = Modifier
-                            .padding(8.dp)
-                            .align(alignment),
-                    )
+                Box {
+                    Column {
+                        Row {
+                            Text(
+                                text = message.message,
+                                color = textColor,
+                                modifier = Modifier
+                                    .padding(8.dp)
+                                    .weight(1f, fill = false)
+                            )
+                            Text(
+                                modifier = Modifier
+                                    .padding(end = 8.dp)
+                                    .align(Alignment.Bottom),
+                                fontSize = 12.sp,
+                                maxLines = 1,
+                                color = TransparentText20,
+                                text = convertLongToTime(message.createdAt, true)
+                            )
+                        }
+                    }
                 }
-            }
-
-            Box(Modifier.fillMaxWidth()) {
-                Text(
-                    modifier = Modifier.align(alignment),
-                    fontSize = 12.sp,
-                    text = convertLongToTime(message.createdAt, true)
-                )
             }
         }
     }
