@@ -1,5 +1,6 @@
 package id.neotica.neoversewear.presentation.screen.home
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -20,7 +21,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.wear.compose.foundation.lazy.ScalingLazyColumn
 import androidx.wear.compose.foundation.lazy.items
 import androidx.wear.compose.material.Text
 import id.neotica.domain.ApiResult
@@ -30,6 +30,7 @@ import id.neotica.domain.model.chat.ParentNeo
 import id.neotica.domain.utils.convertLongToTime
 import id.neotica.domain.utils.filteredRoom
 import id.neotica.domain.utils.returnFriendName
+import id.neotica.neoversewear.presentation.components.BasicWearScreen
 import id.neotica.neoversewear.presentation.components.SpacerItem
 import id.neotica.neoversewear.presentation.components.WChatListItem
 import id.neotica.neoversewear.presentation.components.WLoadingIndicator
@@ -107,7 +108,14 @@ fun WearHomeScreen(navController: NavController, viewModel: WHomeViewModel = koi
                     viewModel.chatList.forEach { _ ->
                         parentChatrooms.value = result.data!!
                         viewModel.getFriendsRoom().collect {
-                            friendList = it
+                            if (it.isNotEmpty()) {
+                                friendList = it
+                                isPressed = false
+                            } else {
+                                isPressed = false
+                                viewModel.getFriends()
+                                Log.d("friend", "else")
+                            }
                         }
                     }
                 }
@@ -140,7 +148,7 @@ fun WearHomeScreen(navController: NavController, viewModel: WHomeViewModel = koi
         }
     }
 
-    ScalingLazyColumn {
+    BasicWearScreen {
         item { SpacerItem() }
         if (isLoadingChats) item { WLoadingIndicator() }
         items(parentChatrooms.value.filter { channels ->
@@ -156,6 +164,8 @@ fun WearHomeScreen(navController: NavController, viewModel: WHomeViewModel = koi
             val friendInstance = friendList.firstOrNull {
                 it.username == chatName
             }
+            Log.d("friendinstance", friendList.toString())
+            Log.d("friendinstance2", friendInstance.toString())
             WChatListItem(
                 name = chatName,
                 image = friendInstance?.imageUrl.toString(),

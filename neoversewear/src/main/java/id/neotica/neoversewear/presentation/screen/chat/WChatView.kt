@@ -40,6 +40,7 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import id.neotica.domain.model.chat.Message
 import id.neotica.domain.utils.convertLongToTime
+import id.neotica.neoversewear.presentation.components.NeoScalingLazyColumn
 import id.neotica.neoversewear.presentation.components.SpacerItem
 import id.neotica.neoversewear.presentation.navigation.WearScreen
 import id.neotica.ui.theme.DarkPrimary
@@ -77,52 +78,57 @@ fun ChatMessages(
 
     var enlargeTextField by remember { mutableStateOf(false) }
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        coroutineScope.launch {
-            scrollState.scrollToItem(messages.size + 1)
-        }
-        Column(Modifier.fillMaxSize()) {
-            ScalingLazyColumn(
-                modifier = Modifier.weight(1f),
-                state = scrollState
-            ) {
-                items(messages) { messages ->
-                    ChatBubble(message = messages)
+    NeoScalingLazyColumn(
+        scrollState,
+        inside = {
+            Box(modifier = Modifier.fillMaxSize()) {
+                coroutineScope.launch {
+                    scrollState.scrollToItem(messages.size + 1)
                 }
-            }
-            Surface(
-                modifier = Modifier
-                    .padding(horizontal = 32.dp)
-                    .fillMaxWidth(),
-                shape = RoundedCornerShape(32.dp)
-            ) {
-                Row(
-                    modifier = Modifier
-                        .background(DarkPrimary),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    TextField(
-                        value = msg.value,
-                        onValueChange = { msg.value = it },
+                Column(Modifier.fillMaxSize()) {
+                    ScalingLazyColumn(
                         modifier = Modifier.weight(1f),
-                        placeholder = { Text(text = "Type") },
-                        keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
-                        keyboardActions = KeyboardActions(onDone = {
-                            hideKeyboardController?.hide()
-                        })
-                    )
-                    IconButton(onClick = {
-                        onSendMessage(msg.value)
-                        msg.value = ""
-                    }) {
-                        enlargeTextField = false
-                        Icon(imageVector = Icons.AutoMirrored.Filled.Send, contentDescription = "send")
+                        state = scrollState
+                    ) {
+                        items(messages) { messages ->
+                            ChatBubble(message = messages)
+                        }
                     }
+                    Surface(
+                        modifier = Modifier
+                            .padding(horizontal = 32.dp)
+                            .fillMaxWidth(),
+                        shape = RoundedCornerShape(32.dp)
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .background(DarkPrimary),
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            TextField(
+                                value = msg.value,
+                                onValueChange = { msg.value = it },
+                                modifier = Modifier.weight(1f),
+                                placeholder = { Text(text = "Type") },
+                                keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
+                                keyboardActions = KeyboardActions(onDone = {
+                                    hideKeyboardController?.hide()
+                                })
+                            )
+                            IconButton(onClick = {
+                                onSendMessage(msg.value)
+                                msg.value = ""
+                            }) {
+                                enlargeTextField = false
+                                Icon(imageVector = Icons.AutoMirrored.Filled.Send, contentDescription = "send")
+                            }
+                        }
+                    }
+                    SpacerItem(8.dp)
                 }
             }
-            SpacerItem(8.dp)
         }
-    }
+    ) { }
 }
 
 @Composable

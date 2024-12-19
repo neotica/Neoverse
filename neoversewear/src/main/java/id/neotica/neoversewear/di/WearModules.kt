@@ -7,8 +7,10 @@ import id.neotica.domain.local.FriendDaoRepository
 import id.neotica.domain.remote.AuraRepository
 import id.neotica.domain.remote.AuthRepository
 import id.neotica.domain.remote.ChatRepository
+import id.neotica.domain.remote.FeedRepository
 import id.neotica.domain.remote.UserRepository
 import id.neotica.domain.usecase.GetUserIdUseCase
+import id.neotica.domain.usecase.GetUserNameUseCase
 import id.neotica.neoversewear.presentation.screen.auth.WLoginViewModel
 import id.neotica.neoversewear.presentation.screen.chat.WChatViewModel
 import id.neotica.neoversewear.presentation.screen.home.WHomeViewModel
@@ -17,6 +19,7 @@ import id.neotica.neoversewear.presentation.screen.world.WBarViewModel
 import id.neotica.network.AuraRepositoryImpl
 import id.neotica.network.AuthRepositoryImpl
 import id.neotica.network.ChatRepositoryImpl
+import id.neotica.network.FeedRepositoryImpl
 import id.neotica.network.UserRepositoryImpl
 import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.core.module.dsl.singleOf
@@ -36,6 +39,8 @@ val wearModules = module {
     singleOf(::CurrentUserRepositoryImpl) bind CurrentUserRepository::class
     singleOf(::FriendDaoRepositoryImpl) bind FriendDaoRepository::class
     singleOf(::AuraRepositoryImpl) bind AuraRepository::class
+    singleOf(::FeedRepositoryImpl) bind FeedRepository::class
 
     singleOf(::GetUserIdUseCase)
+    singleOf(::GetUserNameUseCase)
 }

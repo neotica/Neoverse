@@ -14,7 +14,7 @@ android {
         applicationId = "id.neotica.neoverse"
         minSdk = 30
         targetSdk = 34
-        versionCode = 4
+        versionCode = 45
         versionName = "0.3"
 
     }
@@ -22,13 +22,16 @@ android {
     buildTypes {
         debug {
             isMinifyEnabled = false
+//            isMinifyEnabled = true
+//            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
         }
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
