@@ -44,11 +44,27 @@ fun WSlotMachine(modifier: Modifier = Modifier, viewModel: WBarViewModel = koinV
             .padding(20.dp)
             .fillMaxWidth()) {
         val randomNum = viewModel.randomNum.collectAsState()
-        val randomStrings = remember {
+        val randomNum2 = viewModel.randomNum2.collectAsState()
+        val randomNum3 = viewModel.randomNum3.collectAsState()
+        val randomStrings1 = remember {
             mutableStateListOf(
                 randomNum.value,
+                randomNum2.value,
+                randomNum3.value
+            )
+        }
+        val randomStrings2 = remember {
+            mutableStateListOf(
                 randomNum.value,
-                randomNum.value
+                randomNum2.value,
+                randomNum3.value
+            )
+        }
+        val randomStrings3 = remember {
+            mutableStateListOf(
+                randomNum.value,
+                randomNum2.value,
+                randomNum3.value
             )
         }
 
@@ -58,7 +74,7 @@ fun WSlotMachine(modifier: Modifier = Modifier, viewModel: WBarViewModel = koinV
 
         var giveAura by remember { mutableStateOf(false) }
 
-        val numbComb = "${randomStrings[0]}${randomStrings[1]}${randomStrings[2]}"
+        val numbComb = "${randomStrings1[0]}${randomStrings2[1]}${randomStrings3[2]}"
 
         Row(
             Modifier.fillMaxWidth(),
@@ -79,17 +95,17 @@ fun WSlotMachine(modifier: Modifier = Modifier, viewModel: WBarViewModel = koinV
                     ) {
                         Row(Modifier.height(48.dp)) {
                             CircularListWear(
-                                items = randomStrings,
+                                items = randomStrings1,
                                 scroll = onClick,
                                 num1 = 3,
                                 num2 = 2
                             )
                             CircularListWear(
-                                items = randomStrings,
+                                items = randomStrings2,
                                 scroll = onClick
                             )
                             CircularListWear(
-                                items = randomStrings,
+                                items = randomStrings3,
                                 scroll = onClick,
                                 num2 = 3
                             )
@@ -124,8 +140,14 @@ fun WSlotMachine(modifier: Modifier = Modifier, viewModel: WBarViewModel = koinV
                         delayedClick = false
                         giveAura = true
                         stopEnabled = true
-                        randomStrings.forEachIndexed { index, _ ->
-                            randomStrings[index] = generateTranspose(SecureRandom())
+                        randomStrings1.forEachIndexed { index, _ ->
+                            randomStrings1[index] = generateTranspose(SecureRandom())
+                        }
+                        randomStrings2.forEachIndexed { index, _ ->
+                            randomStrings2[index] = generateTranspose(SecureRandom())
+                        }
+                        randomStrings3.forEachIndexed { index, _ ->
+                            randomStrings3[index] = generateTranspose(SecureRandom())
                         }
                     }
                 }

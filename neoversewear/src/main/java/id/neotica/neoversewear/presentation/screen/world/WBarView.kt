@@ -15,7 +15,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
 import androidx.wear.compose.material.Text
 import id.neotica.domain.ApiResult
-import id.neotica.domain.model.World
 import id.neotica.neoversewear.presentation.components.BasicWearScreen
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.Screen
@@ -23,7 +22,7 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun WBarView(navController: NavController, viewModel: WBarViewModel = koinViewModel()) {
-    var currentAuras by remember { mutableStateOf<World?>(null) }
+    var currentAuras by remember { mutableStateOf<Long?>(null) }
     var auraInit by remember { mutableStateOf(false) }
     val context = LocalContext.current
 
@@ -39,10 +38,10 @@ fun WBarView(navController: NavController, viewModel: WBarViewModel = koinViewMo
                 }
                 is ApiResult.Success -> {
                     currentAuras = result.data
-                    if (result.data?.aura == null) auraInit = true
+                    if (result.data == null) auraInit = true
                 }
                 is ApiResult.Error -> {
-                    if (result.data?.aura == null) auraInit = true
+                    if (result.data == null) auraInit = true
                 }
             }
         }
@@ -59,7 +58,7 @@ fun WBarView(navController: NavController, viewModel: WBarViewModel = koinViewMo
 
     BasicWearScreen {
         item {
-            Text("卐${currentAuras?.aura.toString()}")
+            Text("卐${currentAuras}")
         }
         item { WSlotMachine() }
         item { Text("Battery: ${batteryPercentage(context).substringBefore(".")}%") }

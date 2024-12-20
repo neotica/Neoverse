@@ -7,6 +7,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.wear.compose.material.Text
 import id.neotica.domain.ApiResult
@@ -44,7 +45,7 @@ fun WProfileView(navController: NavController, modifier: Modifier = Modifier, vi
     BasicWearScreen {
         item { SpacerItem() }
         user?.let {
-            item { ImageCoil(url = it.imageUrl, round = true) }
+            item { ImageCoil(url = it.imageUrl, round = true, size = 100.dp) }
             item { SpacerItem() }
             item { Text(it.username) }
             item { SpacerItem() }
