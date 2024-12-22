@@ -21,6 +21,7 @@ import id.neotica.world.feat.market.merchant.hero.HeroMakerView
 import id.neotica.world.feat.market.merchant.item.ItemMakerView
 import id.neotica.world.feat.mining.MiningView
 import id.neotica.world.feat.superadmin.SuperAdminView
+import id.neotica.world.feat.terminal.TerminalView
 import id.neotica.world.feat.world.WorldView
 
 fun NavGraphBuilder.worldNavGraph(
@@ -36,7 +37,7 @@ fun NavGraphBuilder.worldNavGraph(
                 paddingValues
             )
         }
-        composable<WorldScreen.GameScreen>(
+        composable<WorldScreen.TavernScreen>(
             enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start, tween(100)) },
             exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End, tween(100)) }
         ) {
@@ -110,6 +111,12 @@ fun NavGraphBuilder.worldNavGraph(
             LeaderBoardsView(
                 navController, paddingValues
             )
+        }
+        composable<WorldScreen.TerminalScreen>(
+            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start, tween(100)) },
+            exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End, tween(100)) }
+        ) {
+            TerminalView(navController)
         }
         composable<WorldScreen.SuperAdminScreen>(
             enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start, tween(100)) },

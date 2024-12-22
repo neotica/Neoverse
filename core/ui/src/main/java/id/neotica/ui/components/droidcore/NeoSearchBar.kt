@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -45,9 +46,10 @@ import id.neotica.ui.theme.TransparentText40
 fun NeoSearchBar(
     value: MutableState<String>,
     onValueChange: ((String) -> Unit)? = null,
-    icon: (@Composable () -> Unit)? = null,
+    leadingIcon: (@Composable () -> Unit)? = null,
     placeHolder: String? = null,
     imeAction: ImeAction = ImeAction.Search,
+    imeSend: (() -> Unit)? = null,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     isError: Boolean? = false,
     focusRequester: FocusRequester? = null,
@@ -84,12 +86,16 @@ fun NeoSearchBar(
             modifier = Modifier,
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Icon(
-                imageVector = ImageVector.vectorResource(R.drawable.ic_search),
-                contentDescription = "",
-                tint = TransparentText40,
-                modifier = Modifier.padding(horizontal =  16.dp)
-            )
+            if (leadingIcon != null) {
+                leadingIcon.invoke()
+            } else {
+                Icon(
+                    imageVector = ImageVector.vectorResource(R.drawable.ic_search),
+                    contentDescription = "",
+                    tint = TransparentText40,
+                    modifier = Modifier.padding(horizontal =  16.dp)
+                )
+            }
             BasicTextField(
                 value = textFieldValue,
                 onValueChange = {
@@ -109,6 +115,9 @@ fun NeoSearchBar(
                 keyboardOptions = KeyboardOptions(
                     imeAction = imeAction
                 ),
+                keyboardActions = if (imeSend!= null) KeyboardActions(
+                    onSend = {imeSend()}
+                ) else KeyboardActions.Default,
                 cursorBrush = SolidColor(White),
             ) { innerTextField ->
 

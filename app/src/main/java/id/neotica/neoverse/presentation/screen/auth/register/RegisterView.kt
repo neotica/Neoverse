@@ -44,7 +44,7 @@ fun RegisterView(
     }
     val blockedWord = listOf(
         "aa5u", "a5uu", "aasu", "ajg", "alay", "ampas", "anus", "anjeng", "anjing", "anjir", "antek", "asem",
-        "asing", "ateis", "autis", "ayam kampus", "awuk", "b1ch", "bab1", "babi", "bacot", "bajang", "bajingan",
+        "asing", "autis", "ayamkampus", "awuk", "b1ch", "bab1", "babi", "bacot", "bajang", "bajingan",
         "banci", "bandot", "bangkai", "bangsat", "bani", "bani kotak", "bego", "bejat", "bencong", "berak",
         "berengsek", "bgsd", "bgst", "bispak", "bisu", "bisyar", "bjat", "bods", "bokep", "bokong", "bong",
         "bodoh", "budek", "burik", "burit", "butt", "cacat", "cawk", "cct", "cebong",
@@ -66,7 +66,7 @@ fun RegisterView(
         "silit", "sinting", "sipit", "sitip", "slut", "songong", "sompret", "sontoloyo", "stfu", "tai", "taek",
         "taik", "taplak", "temp", "tempik", "tepos", "terkutuk", "tetek", "titit", "t1ts", "titt", "tobrut",
         "toket", "tol", "tolol", "transgendertuyul", "twat", "udik", "up1l", "utek", "vags", "wank", "wdus",
-        "xhamster.com"
+        "xhamster.com", "itil"
         ).toSet().toList()
     val emailValue = remember { mutableStateOf("") }
     val passwordValue = remember { mutableStateOf("") }
@@ -152,6 +152,7 @@ fun RegisterView(
                                     "Username contains prohibited words.",
                                     color = NegativePrimary
                                 )
+                                nameValue.value.length < 3 && nameValue.value.isNotEmpty() -> Text("Username must be at least 3 characters")
                                 !isUserExist -> if (!userExistLoading) Text("Username is already used.")
                                 else -> {}
                             }
@@ -200,15 +201,12 @@ fun RegisterView(
                                 enabled = nameValue.value.isNotEmpty()
                                         && emailValue.value.isNotEmpty()
                                         && passwordValue.value.isNotEmpty()
+                                        && nameValue.value.length >= 3
                                         && nameNoWhiteSpace
                                         && isUserExist,
                             ) {
                                 isButtonPressed = true
-                                viewModel.register(nameValue.value.replaceFirstChar {
-                                    it.lowercase(
-                                        Locale.getDefault()
-                                    )
-                                }, emailValue.value, passwordValue.value)
+                                viewModel.register(nameValue.value.lowercase(Locale.getDefault()), emailValue.value, passwordValue.value)
                             }
                         }
                     }

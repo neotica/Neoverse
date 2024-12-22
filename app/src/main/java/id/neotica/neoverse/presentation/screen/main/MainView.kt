@@ -88,9 +88,10 @@ fun MainView() {
             Screen.UpdateAppScreen,
             Screen.CameraPreviewScreen,
             Screen.SearchUserScreen,
-            WorldScreen.GameScreen,
+            WorldScreen.TavernScreen,
             WorldScreen.MiningScreen,
-            WorldScreen.LeaderBoardsScreen
+            WorldScreen.LeaderBoardsScreen,
+            WorldScreen.TerminalScreen
         )
 
         val includeRoute = bottomBarExcludedRoutes.none {

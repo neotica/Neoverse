@@ -63,7 +63,7 @@ fun WorldView(
             title = "Tavern",
             fileName = "bg_tavern$test",
             url = bgTavern,
-            navigateTo = { navController.navigate(WorldScreen.GameScreen) }
+            navigateTo = { navController.navigate(WorldScreen.TavernScreen) }
         ),
         WorldCardItem(
             title = "Mining Cave",

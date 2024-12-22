@@ -15,9 +15,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
@@ -64,6 +67,7 @@ import id.neotica.ui.components.droidcore.NeoSearchBar
 import id.neotica.ui.components.scroll.nestedScrollConnection
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.Screen
+import id.neotica.ui.navigation.WorldScreen
 import id.neotica.ui.theme.DarkPrimaryTransparent2
 import id.neotica.ui.theme.FontSize
 import id.neotica.ui.theme.NeoPadding
@@ -315,12 +319,28 @@ fun HomeView(
                 }
                 NeoSearchBar(
                     value = username,
+                    onValueChange = {
+                        if (username.value == "/terminal") {
+                            username.value = ""
+                            navController.navigate(WorldScreen.TerminalScreen)
+                        }
+                    },
                     label = "Search Chat",
                     padding = PaddingValues(
                         top = 8.dp,
                         start = 16.dp,
                         end = 16.dp
                     ),
+                    trailingIcon = {
+                        if (username.value.isNotEmpty()) {
+                            IconButton(onClick = { username.value = "" }) {
+                                Icon(
+                                    imageVector = Icons.Default.Clear,
+                                    contentDescription = "Clear text",
+                                )
+                            }
+                        }
+                    }
                 )
                 Spacer(Modifier.padding(4.dp))
             }
