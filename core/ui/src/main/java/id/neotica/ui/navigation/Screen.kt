@@ -104,6 +104,8 @@ sealed class WorldScreen {
     data object TerminalScreen: Screen()
     @Serializable
     data object SuperAdminScreen: Screen()
+    @Serializable
+    data object RavenScreen: Screen()
 }
 
 data class NavigationItem(

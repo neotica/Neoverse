@@ -42,6 +42,7 @@ class GotoCommand {
     val tavern = "tavern"
     val leaderboards = "leaderboards"
     val superAdmin = "superadmin"
+    val raven = "raven"
 }
 
 const val helpMath = """Help Math

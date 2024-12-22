@@ -54,7 +54,7 @@ fun TerminalView(navController: NavController,) {
     LaunchedEffect(Unit) { answerList.add(helpCmd) }
 
     LaunchedEffect(onPressed) {
-        listState.scrollToItem(answerList.size - 1)
+        if (answerList.size != 0) listState.scrollToItem(answerList.size - 1)
         if (onPressed) {
             onPressed = false
             when {
@@ -189,7 +189,8 @@ private fun goto(go: String, navController: NavController) {
         GotoCommand().rootWorld to RootScreen.WorldNav,
         GotoCommand().rootAuth to RootScreen.AuthNav,
         GotoCommand().tavern to WorldScreen.TavernScreen,
-        GotoCommand().leaderboards to WorldScreen.LeaderBoardsScreen
+        GotoCommand().leaderboards to WorldScreen.LeaderBoardsScreen,
+        GotoCommand().raven to WorldScreen.RavenScreen
     )
 
     destinations[go]?.let { navController.navigate(it) }
