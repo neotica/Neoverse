@@ -2,9 +2,7 @@ import android.util.Log
 import com.google.firebase.Firebase
 import com.google.firebase.database.database
 import id.neotica.domain.ApiResult
-import id.neotica.domain.model.chat.ParentNeo
 import id.neotica.domain.model.raven.Raven
-import id.neotica.domain.model.raven.RavenWords
 import id.neotica.domain.remote.RavenRepository
 import id.neotica.domain.utils.randomUUID
 import kotlinx.coroutines.flow.Flow
@@ -20,32 +18,20 @@ class RavenRepositoryImpl: RavenRepository {
         reference.await()
     }
 
-    override suspend fun getWords(raven: Raven): Flow<ApiResult<List<ParentNeo<RavenWords>>>> = flow {
-        val list = mutableListOf<ParentNeo<RavenWords>>()
+    override suspend fun getWords(raven: Raven): Flow<ApiResult<List<String>>> = flow {
+        val list = mutableListOf<String>()
         list.clear()
         emit(ApiResult.Loading())
-        val reference = firebase.getReference("world").child("raven").child(raven.word).get().await()
+        val reference = firebase.getReference("world").child("raven").child(raven.word) .get().await()
         Log.d("raven", reference.toString())
         try {
 
-            Log.d("raven", reference.toString())
-//            reference.children.forEach { data ->
-//                val cr = data.getValue(RavenWords::class.java)
-//
-//                val channel = ParentNeo(
-//                    key = data.key!!,
-//                    value = crDecrypted!!
-//                )
-//                list.add(channel)
-//                if (data.value != null) {
-//                    emit(
-//                        ApiResult.Success(
-//                        list.sortedByDescending { it.value.lastOpened })
-//                    )
-//                } else {
-//                    emit(ApiResult.Error("data null"))
-//                }
-//            }
+            reference.children.forEach { data ->
+                val cr = data.value.toString()
+                Log.d("ravenchild", cr)
+                list.add(cr)
+                emit(ApiResult.Success(list))
+            }
         } catch (e: NullPointerException) {
             emit(ApiResult.Error("exception: ${e.message}"))
         }
