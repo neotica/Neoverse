@@ -22,7 +22,7 @@ class RavenRepositoryImpl: RavenRepository {
         val list = mutableListOf<String>()
         list.clear()
         emit(ApiResult.Loading())
-        val reference = firebase.getReference("world").child("raven").child(raven.word) .get().await()
+        val reference = firebase.getReference("world").child("raven").child(raven.word.replace(Regex("[$.#]"), "")) .get().await()
         Log.d("raven", reference.toString())
         try {
 
