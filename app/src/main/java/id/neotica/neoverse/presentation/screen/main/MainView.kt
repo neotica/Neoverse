@@ -91,7 +91,9 @@ fun MainView() {
             WorldScreen.TavernScreen,
             WorldScreen.MiningScreen,
             WorldScreen.LeaderBoardsScreen,
-            WorldScreen.TerminalScreen
+            WorldScreen.TerminalScreen,
+            WorldScreen.RavenScreen,
+            WorldScreen.RavenChatScreen
         )
 
         val includeRoute = bottomBarExcludedRoutes.none {

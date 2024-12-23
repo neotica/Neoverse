@@ -190,7 +190,9 @@ private fun goto(go: String, navController: NavController) {
         GotoCommand().rootAuth to RootScreen.AuthNav,
         GotoCommand().tavern to WorldScreen.TavernScreen,
         GotoCommand().leaderboards to WorldScreen.LeaderBoardsScreen,
-        GotoCommand().raven to WorldScreen.RavenScreen
+        GotoCommand().raven to WorldScreen.RavenScreen,
+        GotoCommand().ravenChat to WorldScreen.RavenChatScreen,
+        GotoCommand().merchant to WorldScreen.MerchantScreen
     )
 
     destinations[go]?.let { navController.navigate(it) }

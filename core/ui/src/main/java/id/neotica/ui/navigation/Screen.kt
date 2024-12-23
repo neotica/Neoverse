@@ -106,6 +106,8 @@ sealed class WorldScreen {
     data object SuperAdminScreen: Screen()
     @Serializable
     data object RavenScreen: Screen()
+    @Serializable
+    data object RavenChatScreen: Screen()
 }
 
 data class NavigationItem(

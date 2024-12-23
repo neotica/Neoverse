@@ -20,6 +20,7 @@ import id.neotica.world.feat.market.merchant.MerchantView
 import id.neotica.world.feat.market.merchant.hero.HeroMakerView
 import id.neotica.world.feat.market.merchant.item.ItemMakerView
 import id.neotica.world.feat.mining.MiningView
+import id.neotica.world.feat.raven.RavenChatView
 import id.neotica.world.feat.raven.RavenView
 import id.neotica.world.feat.superadmin.SuperAdminView
 import id.neotica.world.feat.terminal.TerminalView
@@ -132,6 +133,14 @@ fun NavGraphBuilder.worldNavGraph(
             exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End, tween(100)) }
         ) {
             RavenView(
+                navController
+            )
+        }
+        composable<WorldScreen.RavenChatScreen>(
+            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start, tween(100)) },
+            exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End, tween(100)) }
+        ) {
+            RavenChatView(
                 navController
             )
         }

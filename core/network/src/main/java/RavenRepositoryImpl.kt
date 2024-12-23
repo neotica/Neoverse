@@ -26,11 +26,14 @@ class RavenRepositoryImpl: RavenRepository {
         Log.d("raven", reference.toString())
         try {
 
+            if (reference.value != null)
             reference.children.forEach { data ->
                 val cr = data.value.toString()
-                Log.d("ravenchild", cr)
                 list.add(cr)
                 emit(ApiResult.Success(list))
+                Log.d("ravenchild", cr)
+            } else {
+                emit(ApiResult.Error("Sorry, I don't understand."))
             }
         } catch (e: NullPointerException) {
             emit(ApiResult.Error("exception: ${e.message}"))
