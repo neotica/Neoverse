@@ -21,8 +21,10 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -58,6 +60,7 @@ import id.neotica.domain.model.chat.ParentNeo
 import id.neotica.domain.utils.convertLongToTime
 import id.neotica.domain.utils.filteredRoom
 import id.neotica.domain.utils.returnFriendName
+import id.neotica.neoverse.presentation.screen.home.addchat.AddChatView
 import id.neotica.ui.R
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.ChatListItem
@@ -68,6 +71,7 @@ import id.neotica.ui.components.scroll.nestedScrollConnection
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.Screen
 import id.neotica.ui.navigation.WorldScreen
+import id.neotica.ui.theme.DarkBackground
 import id.neotica.ui.theme.DarkPrimaryTransparent2
 import id.neotica.ui.theme.FontSize
 import id.neotica.ui.theme.NeoPadding
@@ -100,6 +104,9 @@ fun HomeView(
     val username = rememberSaveable { mutableStateOf("") }
 
     val context = LocalContext.current
+
+    val sheetState = rememberModalBottomSheetState()
+    var showFriendListSheet by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
 
@@ -240,6 +247,16 @@ fun HomeView(
     val nestedState = rememberNestedScrollInteropConnection()
     val listState = rememberLazyListState()
     val haptic = LocalHapticFeedback.current
+
+    if (showFriendListSheet) {
+        ModalBottomSheet(
+            onDismissRequest = { showFriendListSheet = false },
+            sheetState = sheetState,
+            containerColor = DarkBackground
+        ) {
+            AddChatView(navController)
+        }
+    }
 
     BasicScaffold (
         topBarTitle = "HomeView",
@@ -471,7 +488,7 @@ fun HomeView(
             ,
             containerColor = DarkPrimaryTransparent2,
             onClick = {
-                navController.navigate(Screen.AddChatScreen)
+                showFriendListSheet = true
             }
         ) {
             Icon(

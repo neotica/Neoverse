@@ -16,9 +16,12 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -36,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.User
+import id.neotica.neoverse.presentation.screen.friend.profile.FriendProfileView
 import id.neotica.ui.R
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.LoadingIndicatorBool
@@ -44,11 +48,13 @@ import id.neotica.ui.components.ProfileCard
 import id.neotica.ui.components.droidcore.NeoSearchBar
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.Screen
+import id.neotica.ui.theme.DarkBackground
 import id.neotica.ui.theme.DarkPrimaryTransparent80
 import id.neotica.ui.theme.NeoPadding
 import kotlinx.coroutines.delay
 import org.koin.androidx.compose.koinViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FriendView(
     navController: NavController,
@@ -63,8 +69,12 @@ fun FriendView(
     var isPressed by remember { mutableStateOf(false) }
 
     val username = rememberSaveable { mutableStateOf("") }
+    var friendId by remember { mutableStateOf("") }
 
     var showCard by remember { mutableStateOf(false) }
+
+    val sheetState = rememberModalBottomSheetState()
+    var showFriendProfileSheet by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         delay(500L)
@@ -115,6 +125,22 @@ fun FriendView(
                     Log.d("neotica", result.errorMessage.toString())
                 }
             }
+        }
+    }
+
+    if (showFriendProfileSheet) {
+        ModalBottomSheet(
+            onDismissRequest = {
+                showFriendProfileSheet = false
+                friendId = ""
+                viewModel.makeFriendNull()
+            },
+            sheetState = sheetState,
+            containerColor = DarkBackground
+        ) {
+            FriendProfileView(
+                navController, userId = friendId
+            )
         }
     }
 
@@ -192,7 +218,6 @@ fun FriendView(
                                         )
                                         NeoButton("Add friends", modifier = Modifier.padding(8.dp)) {navController.navigate(Screen.SearchUserScreen)}
                                     }
-
                                 }
                             }
                         }
@@ -216,9 +241,8 @@ fun FriendView(
                                     alertTitle = "Unfriend ${friends.username}?",
                                     alertButton = "Unfriend",
                                 ) {
-                                    navController.navigate(Screen.FriendProfileScreen(
-                                        userId = friends.userId
-                                    ))
+                                    friendId = friends.userId
+                                    showFriendProfileSheet = true
                                 }
                             }
                         }

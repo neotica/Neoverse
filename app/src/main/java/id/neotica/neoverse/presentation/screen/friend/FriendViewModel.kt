@@ -86,6 +86,10 @@ class FriendViewModel(
         _friendProfile.value = user
     }
 
+    fun makeFriendNull() = viewModelScope.launch {
+        _friendProfile.value = ApiResult.Success(null)
+    }
+
     fun unFriend(friend: User) = CoroutineScope(Dispatchers.IO).launch {
         userRepo.unfriend(friend)
         databaseRepo.unfriend(friend.username)

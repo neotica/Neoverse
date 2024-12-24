@@ -13,9 +13,11 @@ class RavenRepositoryImpl: RavenRepository {
     private val firebase = Firebase.database
 
     override suspend fun addWord(raven: Raven) {
-        val reference = firebase.getReference("world").child("raven").child(raven.word)
-            .child(randomUUID()).setValue(raven.value)
-        reference.await()
+        if (!raven.word.contains(Regex("[$.#]"))) {
+            val reference = firebase.getReference("world").child("raven").child(raven.word)
+                .child(randomUUID()).setValue(raven.value)
+            reference.await()
+        }
     }
 
     override suspend fun getWords(raven: Raven): Flow<ApiResult<List<String>>> = flow {

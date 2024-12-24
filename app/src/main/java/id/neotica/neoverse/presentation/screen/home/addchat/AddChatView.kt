@@ -1,6 +1,9 @@
 package id.neotica.neoverse.presentation.screen.home.addchat
 
 import android.util.Log
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -16,6 +19,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -38,7 +42,6 @@ import id.neotica.domain.model.chat.ChatRoom
 import id.neotica.domain.utils.randomUUID
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.ImagePermanentCache
-import id.neotica.ui.components.LoadingIndicatorBool
 import id.neotica.ui.components.ProfileCard
 import id.neotica.ui.components.droidcore.NeoSearchBar
 import id.neotica.ui.navigation.RootScreen
@@ -53,7 +56,6 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun AddChatView(
     navController: NavController,
-    paddingValues: PaddingValues,
     viewModel: AddChatViewModel = koinViewModel()
 ) {
 
@@ -145,60 +147,75 @@ fun AddChatView(
 
     BasicScaffold(
         "Add Chat",
-        paddingValues = paddingValues
+        topBarVisibility = false,
+        fullScreen = true
     ) {
-        Row (
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            NeoSearchBar(
-                value = username,
-                label = "Search"
-            )
+        Box {
+            Column {
+                Row (
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    NeoSearchBar(
+                        value = username,
+                        label = "Search"
+                    )
+                }
+                androidx.compose.animation.AnimatedVisibility(username.value.isEmpty()) {
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(100.dp)
+                            .padding(horizontal = 16.dp, vertical = 8.dp),
+                        colors = CardDefaults.cardColors().copy(containerColor = DarkPrimaryTransparent80)
+                    ) {
+                        Row(
+                            modifier = Modifier.clickable { navController.navigate(WorldScreen.RavenChatScreen) }
+                        ) {
+                            ImagePermanentCache(
+                                context = LocalContext.current,
+                                contentScale = ContentScale.FillWidth,
+                                fileName = "ch_raven",
+                                url = chRaven,
+                                size = 100.dp
+                            )
+                            Column(
+                                Modifier.padding(4.dp),
+                                verticalArrangement = Arrangement.Center
+                            ) {
+                                Text("Raven")
+                                Text(
+                                    text = ravenDescShort,
+                                    fontSize = FontSize.Smaller,
+                                    fontWeight = FontWeight.Light,
+                                    lineHeight = 14.sp,
+                                )
+                            }
+                        }
+                    }
+                }
+                if (isLoadingChats) {
+                    Box(Modifier.fillMaxWidth().padding(16.dp)) {
+                        CircularProgressIndicator(Modifier.align(Alignment.Center))
+                    }
+
+                }
+            }
         }
-        LoadingIndicatorBool(isLoadingChats) {
+
+        AnimatedVisibility(
+            visible = !isLoadingChats,
+            enter = fadeIn(),
+            exit = fadeOut()
+        ) {
             Column(
                 Modifier
                     .fillMaxSize()
                     .padding(horizontal = 12.dp)
             ) {
-                Card(
-                    modifier = Modifier.fillMaxWidth().height(100.dp).padding(vertical = 8.dp),
-                    colors = CardDefaults.cardColors().copy(containerColor = DarkPrimaryTransparent80)
-                ) {
-                    Row(
-                        modifier = Modifier.clickable { navController.navigate(WorldScreen.RavenChatScreen) }
-                    ) {
-                        ImagePermanentCache(
-                            context = LocalContext.current,
-                            contentScale = ContentScale.FillWidth,
-                            fileName = "ch_raven",
-                            url = chRaven,
-                            size = 100.dp
-                        )
-                        Column(
-                            Modifier.padding(4.dp),
-                            verticalArrangement = Arrangement.Center
-                        ) {
-                            Text("Raven")
-                            Text(
-                                text = ravenDescShort,
-                                fontSize = FontSize.Smaller,
-//                                letterSpacing = TextUnit(1f, TextUnitType.Sp)
-                                fontWeight = FontWeight.Light,
-                                lineHeight = 14.sp,
-//                                style = LocalTextStyle.current.copy(
-//
-//                                )
-                            )
-                        }
-
-                    }
-                }
-
                 Box {
                     if (!isLoadingChats) {
                         LazyVerticalGrid(

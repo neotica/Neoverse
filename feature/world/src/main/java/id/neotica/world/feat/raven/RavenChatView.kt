@@ -111,7 +111,7 @@ fun RavenChatView(
                     messages.add(Message(message = unknownCommand))
                     val lastSecondIndex = messages.size - 2
                     val lastThirdIndex = messages.size - 3
-                    if (messages[lastThirdIndex].message != unknownCommand && messages[lastThirdIndex].message != ravenIntro) {
+                    if (messages[lastThirdIndex].message != unknownCommand && messages[lastThirdIndex].message != ravenIntro && messages.isNotEmpty()) {
 
                         Log.d("2index", messages[lastThirdIndex].message)
                         Log.d("3index", messages[lastSecondIndex].message)
