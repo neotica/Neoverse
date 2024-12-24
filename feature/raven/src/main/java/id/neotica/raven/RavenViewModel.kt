@@ -1,4 +1,4 @@
-package id.neotica.world.feat.raven
+package id.neotica.raven
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

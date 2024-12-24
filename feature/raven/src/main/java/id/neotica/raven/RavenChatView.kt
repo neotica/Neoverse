@@ -1,9 +1,8 @@
-package id.neotica.world.feat.raven
+package id.neotica.raven
 
 import android.annotation.SuppressLint
 import android.util.Log
 import android.widget.Toast
-import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -64,6 +63,8 @@ import id.neotica.domain.ApiResult
 import id.neotica.domain.model.chat.Message
 import id.neotica.domain.model.raven.Raven
 import id.neotica.domain.utils.convertLongToTime
+import id.neotica.raven.utils.ravenIntro
+import id.neotica.raven.utils.unknownCommand
 import id.neotica.ui.R
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.DropdownItem
@@ -79,8 +80,6 @@ import id.neotica.ui.theme.NeoPadding
 import id.neotica.ui.theme.Transparent
 import id.neotica.ui.theme.TransparentText20
 import id.neotica.ui.theme.TransparentText40
-import id.neotica.world.utils.ravenIntro
-import id.neotica.world.utils.unknownCommand
 import kotlinx.coroutines.delay
 import org.koin.androidx.compose.koinViewModel
 
@@ -134,15 +133,6 @@ fun RavenChatView(
         }
     }
 
-    BackHandler {
-        navController.navigate(RootScreen.HomeNav) {
-            popUpTo(RootScreen.HomeNav) {
-                inclusive = true
-            }
-            launchSingleTop
-        }
-    }
-
 
     val layoutInfo by remember { derivedStateOf { listState.layoutInfo } }
 
@@ -158,14 +148,6 @@ fun RavenChatView(
     BasicScaffold(
         topBarTitle = "Raven Chat",
         enableActionBar = true,
-        customActionBar = {
-            navController.navigate(RootScreen.HomeNav) {
-                popUpTo(RootScreen.HomeNav) {
-                    inclusive = true
-                }
-                launchSingleTop
-            }
-        },
         navController = navController,
         topBarVisibility = scrollTrue,
         fullScreen = true,

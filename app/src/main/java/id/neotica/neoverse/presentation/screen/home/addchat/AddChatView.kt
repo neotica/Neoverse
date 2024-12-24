@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,15 +11,11 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -30,27 +25,18 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.User
 import id.neotica.domain.model.chat.ChatRoom
 import id.neotica.domain.utils.randomUUID
 import id.neotica.ui.components.BasicScaffold
-import id.neotica.ui.components.ImagePermanentCache
 import id.neotica.ui.components.ProfileCard
 import id.neotica.ui.components.droidcore.NeoSearchBar
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.Screen
-import id.neotica.ui.navigation.WorldScreen
-import id.neotica.ui.theme.DarkPrimaryTransparent80
-import id.neotica.ui.theme.FontSize
-import id.neotica.world.utils.chRaven
-import id.neotica.world.utils.ravenDescShort
+import id.neotica.world.feat.card.RavenCard
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -165,37 +151,7 @@ fun AddChatView(
                     )
                 }
                 androidx.compose.animation.AnimatedVisibility(username.value.isEmpty()) {
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(100.dp)
-                            .padding(horizontal = 16.dp, vertical = 8.dp),
-                        colors = CardDefaults.cardColors().copy(containerColor = DarkPrimaryTransparent80)
-                    ) {
-                        Row(
-                            modifier = Modifier.clickable { navController.navigate(WorldScreen.RavenChatScreen) }
-                        ) {
-                            ImagePermanentCache(
-                                context = LocalContext.current,
-                                contentScale = ContentScale.FillWidth,
-                                fileName = "ch_raven",
-                                url = chRaven,
-                                size = 100.dp
-                            )
-                            Column(
-                                Modifier.padding(4.dp),
-                                verticalArrangement = Arrangement.Center
-                            ) {
-                                Text("Raven")
-                                Text(
-                                    text = ravenDescShort,
-                                    fontSize = FontSize.Smaller,
-                                    fontWeight = FontWeight.Light,
-                                    lineHeight = 14.sp,
-                                )
-                            }
-                        }
-                    }
+                    RavenCard(navController)
                 }
                 if (isLoadingChats) {
                     Box(Modifier.fillMaxWidth().padding(16.dp)) {

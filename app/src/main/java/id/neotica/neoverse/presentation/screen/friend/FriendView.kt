@@ -24,6 +24,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -128,10 +129,11 @@ fun FriendView(
         }
     }
 
-    if (showFriendProfileSheet) {
+    if (viewModel.sheetState.collectAsState().value) {
         ModalBottomSheet(
             onDismissRequest = {
                 showFriendProfileSheet = false
+                viewModel.setBottomSheetState(false)
                 friendId = ""
                 viewModel.makeFriendNull()
             },
@@ -139,7 +141,7 @@ fun FriendView(
             containerColor = DarkBackground
         ) {
             FriendProfileView(
-                navController, userId = friendId
+                navController, userId = friendId, //sheetState = showFriendProfileSheet
             )
         }
     }
@@ -243,6 +245,7 @@ fun FriendView(
                                 ) {
                                     friendId = friends.userId
                                     showFriendProfileSheet = true
+                                    viewModel.setBottomSheetState(true)
                                 }
                             }
                         }

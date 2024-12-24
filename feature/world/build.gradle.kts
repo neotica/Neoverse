@@ -50,6 +50,7 @@ dependencies {
     implementation(projects.core.ui)
     implementation(projects.core.core)
     implementation(projects.core.domain)
+    implementation(projects.feature.raven)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

@@ -106,8 +106,8 @@ fun FriendProfileView(
                     friend?.let {
                         viewModel.unFriend(it)
                     }
-                    navController.navigateUp()
                     openDialog.value = false
+                    viewModel.setBottomSheetState(false)
                 }
             }
         )

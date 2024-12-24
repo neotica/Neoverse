@@ -60,7 +60,11 @@ fun EditProfileView(
                 val compressedImageUri = compressUri(uri, context)
                 selectedImages = listOf(compressedImageUri)
                 viewModel.changeProfilePic(compressedImageUri.toString())
-                navController.navigate(RootScreen.AuthNav)
+                navController.navigate(RootScreen.AuthNav) {
+                    popUpTo(RootScreen.AuthNav) {
+                        inclusive = true
+                    }
+                }
             }
         }
     )
