@@ -224,7 +224,6 @@ fun FriendView(
                             }
                         }
                     } else {
-
                         LazyVerticalGrid(
                             columns = GridCells.Fixed(3),
                             contentPadding = PaddingValues(bottom = NeoPadding.systemBarPadding + paddingValues.calculateBottomPadding())

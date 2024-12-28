@@ -50,6 +50,7 @@ import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.core.content.pm.PackageInfoCompat
@@ -77,6 +78,7 @@ import id.neotica.ui.navigation.Screen
 import id.neotica.ui.navigation.WorldScreen
 import id.neotica.ui.theme.DarkBackground
 import id.neotica.ui.theme.DarkPrimaryTransparent2
+import id.neotica.ui.theme.DarkPrimaryTransparent80
 import id.neotica.ui.theme.FontSize
 import id.neotica.ui.theme.NeoPadding
 import id.neotica.ui.theme.Transparent
@@ -428,14 +430,39 @@ fun HomeView(
                         )
                     }
                     if(!isLoadingChats) {
+                        val friendFilter = chatItem.filter {
+                            it.value.user1.contains(username.value, true)
+                                    || it.value.user2.contains(username.value)
+                        }
+                        if (friendFilter.isEmpty()) {
+                            item {
+                                Box(
+                                    modifier = Modifier.fillMaxSize(),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Card(
+                                        modifier = Modifier
+                                            .padding(16.dp)
+                                            .align(Alignment.Center),
+                                        colors = CardDefaults.cardColors().copy(containerColor = DarkPrimaryTransparent80)
+                                    ) {
+                                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                            Text(
+                                                modifier = Modifier.padding(8.dp),
+                                                text = "It's so lonely! Try chatting with some friends.",
+                                                textAlign = TextAlign.Center
+                                            )
+//                                            NeoButton("Add friends", modifier = Modifier.padding(8.dp)) {navController.navigate(Screen.SearchUserScreen)}
+                                        }
+                                    }
+                                }
+                            }
+                        }
                         items(
                             if(username.value.isEmpty()) {
                                 chatItem
                             } else {
-                                chatItem.filter {
-                                    it.value.user1.contains(username.value, true)
-                                            || it.value.user2.contains(username.value)
-                                }
+                                friendFilter
                             }
                         ) { channelItemParent ->
                             val chatName = returnFriendName(
