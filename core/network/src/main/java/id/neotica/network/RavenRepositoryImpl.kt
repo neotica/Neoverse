@@ -1,3 +1,5 @@
+package id.neotica.network
+
 import android.util.Log
 import com.google.firebase.Firebase
 import com.google.firebase.database.database

@@ -2,6 +2,7 @@ package id.neotica.neoverse.presentation.screen.home
 
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,8 +16,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -75,7 +79,9 @@ import id.neotica.ui.theme.DarkBackground
 import id.neotica.ui.theme.DarkPrimaryTransparent2
 import id.neotica.ui.theme.FontSize
 import id.neotica.ui.theme.NeoPadding
+import id.neotica.ui.theme.Transparent
 import id.neotica.ui.theme.TransparentText20
+import id.neotica.ui.theme.TransparentText40
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -299,37 +305,66 @@ fun HomeView(
                                 Box(Modifier.size(55.dp)) {
                                     FlipCard(
                                         frontSide = {
-                                            ImageCoil(
-                                                url = it.imageUrl,
-                                                round = true,
-                                                size = 55.dp,
-                                                contentAlignment = Alignment.Center,
-                                                onLongClick = {
-                                                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                                                    Toast
-                                                        .makeText(context, "Go to Profile", Toast.LENGTH_SHORT)
-                                                        .show()
+                                            Box {
+                                                Card(
+                                                    modifier = Modifier.size(55.dp),
+                                                    shape = CircleShape,
+                                                    border = BorderStroke(1.dp, TransparentText40),
+                                                    colors = CardDefaults.cardColors().copy(containerColor = Transparent)
+                                                ) {
+                                                    Column(
+                                                        Modifier.size(55.dp),
+                                                        verticalArrangement = Arrangement.Center,
+                                                        horizontalAlignment = Alignment.CenterHorizontally
+                                                    ) {
+                                                        ImageCoil(
+                                                            url = it.imageUrl,
+                                                            round = true,
+                                                            size = 53.dp,
+                                                            contentAlignment = Alignment.Center,
+                                                            onLongClick = {
+                                                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                                                Toast
+                                                                    .makeText(context, "Go to Profile", Toast.LENGTH_SHORT)
+                                                                    .show()
+                                                            }
+                                                        ) {
+                                                            navController.navigate(RootScreen.AuthNav)
+                                                        }
+                                                    }
                                                 }
-                                            ) {
-                                                navController.navigate(RootScreen.AuthNav)
                                             }
                                         }
                                     ) {
-                                        ImageCoil(
-                                            url = it.imageUrl,
-                                            round = true,
-                                            size = 55.dp,
-                                            contentAlignment = Alignment.CenterEnd,
-                                            onLongClick = {
-                                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                                                Toast.makeText(context, "Go to Profile", Toast.LENGTH_SHORT).show()
-                                            }
+                                        Card(
+                                            modifier = Modifier.size(55.dp),
+                                            shape = CircleShape,
+                                            border = BorderStroke(1.dp, TransparentText40),
+                                            colors = CardDefaults.cardColors().copy(containerColor = Transparent)
                                         ) {
-                                            navController.navigate(RootScreen.AuthNav)
+                                            Column(
+                                                Modifier.size(55.dp),
+                                                verticalArrangement = Arrangement.Center,
+                                                horizontalAlignment = Alignment.CenterHorizontally
+                                            ) {
+                                                ImageCoil(
+                                                    url = it.imageUrl,
+                                                    round = true,
+                                                    size = 53.dp,
+                                                    contentAlignment = Alignment.Center,
+                                                    onLongClick = {
+                                                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                                        Toast
+                                                            .makeText(context, "Go to Profile", Toast.LENGTH_SHORT)
+                                                            .show()
+                                                    }
+                                                ) {
+                                                    navController.navigate(RootScreen.AuthNav)
+                                                }
+                                            }
                                         }
                                     }
                                 }
-
                             }
                         }
                     }
@@ -371,7 +406,6 @@ fun HomeView(
                     viewModel.getChatroom()
                 }
             ) {
-
                 LazyColumn(
                     modifier = Modifier.nestedScroll(
                         nestedScrollConnection(
@@ -412,7 +446,6 @@ fun HomeView(
                             val friendInstance = friendList.firstOrNull {
                                 it.username == chatName
                             }
-
                             ChatListItem(
                                 image = friendInstance?.imageUrl.toString(),
                                 enableLongClick = true,

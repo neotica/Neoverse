@@ -1,6 +1,6 @@
 package id.neotica.neoverse.di
 
-import RavenRepositoryImpl
+import id.neotica.network.RavenRepositoryImpl
 import id.neotica.database.CurrentUserRepositoryImpl
 import id.neotica.database.FriendDaoRepositoryImpl
 import id.neotica.network.AuthRepositoryImpl
