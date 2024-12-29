@@ -81,7 +81,7 @@ sealed class WorldScreen {
     @Serializable
     data object HomeScreen: Screen()
     @Serializable
-    data object GameScreen: Screen()
+    data object TavernScreen: Screen()
     @Serializable
     data object KanyeScreen: Screen()
     @Serializable
@@ -101,7 +101,13 @@ sealed class WorldScreen {
     @Serializable
     data object LeaderBoardsScreen: Screen()
     @Serializable
+    data object TerminalScreen: Screen()
+    @Serializable
     data object SuperAdminScreen: Screen()
+    @Serializable
+    data object RavenScreen: Screen()
+    @Serializable
+    data object RavenChatScreen: Screen()
 }
 
 data class NavigationItem(

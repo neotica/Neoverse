@@ -9,6 +9,8 @@ import id.neotica.domain.local.FriendDaoRepository
 import id.neotica.domain.model.User
 import id.neotica.domain.remote.AuthRepository
 import id.neotica.domain.remote.UserRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -63,7 +65,7 @@ class ProfileViewModel(
         }
     }
 
-    fun changeProfilePic(uri: String) = viewModelScope.launch {
+    fun changeProfilePic(uri: String) = CoroutineScope(Dispatchers.IO).launch {
         getUser()
         userRepo.changeProfilePicture(uri)
         currentUserDatabase.getUser().collect {

@@ -1,6 +1,8 @@
 package id.neotica.neoverse.presentation.screen.friend
 
 import android.util.Log
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,10 +14,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -26,20 +35,27 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.User
+import id.neotica.neoverse.presentation.screen.friend.profile.FriendProfileView
 import id.neotica.ui.R
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.LoadingIndicatorBool
+import id.neotica.ui.components.NeoButton
 import id.neotica.ui.components.ProfileCard
 import id.neotica.ui.components.droidcore.NeoSearchBar
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.Screen
+import id.neotica.ui.theme.DarkBackground
+import id.neotica.ui.theme.DarkPrimaryTransparent80
 import id.neotica.ui.theme.NeoPadding
+import kotlinx.coroutines.delay
 import org.koin.androidx.compose.koinViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FriendView(
     navController: NavController,
@@ -54,6 +70,17 @@ fun FriendView(
     var isPressed by remember { mutableStateOf(false) }
 
     val username = rememberSaveable { mutableStateOf("") }
+    var friendId by remember { mutableStateOf("") }
+
+    var showCard by remember { mutableStateOf(false) }
+
+    val sheetState = rememberModalBottomSheetState()
+    var showFriendProfileSheet by remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        delay(500L)
+        showCard = true
+    }
 
     LaunchedEffect(Unit) {
         if (!viewModel.isLoggedIn()) navController.navigate(Screen.LoginScreen) {
@@ -99,6 +126,23 @@ fun FriendView(
                     Log.d("neotica", result.errorMessage.toString())
                 }
             }
+        }
+    }
+
+    if (viewModel.sheetState.collectAsState().value) {
+        ModalBottomSheet(
+            onDismissRequest = {
+                showFriendProfileSheet = false
+                viewModel.setBottomSheetState(false)
+                friendId = ""
+                viewModel.makeFriendNull()
+            },
+            sheetState = sheetState,
+            containerColor = DarkBackground
+        ) {
+            FriendProfileView(
+                navController, userId = friendId, //sheetState = showFriendProfileSheet
+            )
         }
     }
 
@@ -152,27 +196,56 @@ fun FriendView(
                         end = 12.dp
                     )
                 ) {
-                    LazyVerticalGrid(
-                        columns = GridCells.Fixed(3),
-                        contentPadding = PaddingValues(bottom = NeoPadding.systemBarPadding + paddingValues.calculateBottomPadding())
-                    ) {
-                        items(
-                            if (username.value.isEmpty()) {
-                                friendList
-                            } else {
-                                friendList.filter { it.username.contains(username.value, ignoreCase = true) }
-                            }
-                        ) { friends ->
-                            ProfileCard(
-                                name = friends.username,
-                                image = friends.imageUrl,
-                                paddingValues = PaddingValues(4.dp),
-                                alertTitle = "Unfriend ${friends.username}?",
-                                alertButton = "Unfriend",
+
+                    if(friendList.isEmpty()) {
+                        androidx.compose.animation.AnimatedVisibility(
+                            visible = friendList.isEmpty() && showCard,
+                            enter = fadeIn(tween(500))
+                        ) {
+                            Box(
+                                modifier = Modifier.fillMaxSize(),
+                                contentAlignment = Alignment.Center
                             ) {
-                                navController.navigate(Screen.FriendProfileScreen(
-                                    userId = friends.userId
-                                ))
+                                Card(
+                                    modifier = Modifier
+                                        .padding(16.dp)
+                                        .align(Alignment.Center),
+                                    colors = CardDefaults.cardColors().copy(containerColor = DarkPrimaryTransparent80)
+                                ) {
+                                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                        Text(
+                                            modifier = Modifier.padding(8.dp),
+                                            text = "You've got no friends! try adding some. 😣",
+                                            textAlign = TextAlign.Center
+                                        )
+                                        NeoButton("Add friends", modifier = Modifier.padding(8.dp)) {navController.navigate(Screen.SearchUserScreen)}
+                                    }
+                                }
+                            }
+                        }
+                    } else {
+                        LazyVerticalGrid(
+                            columns = GridCells.Fixed(3),
+                            contentPadding = PaddingValues(bottom = NeoPadding.systemBarPadding + paddingValues.calculateBottomPadding())
+                        ) {
+                            items(
+                                if (username.value.isEmpty()) {
+                                    friendList
+                                } else {
+                                    friendList.filter { it.username.contains(username.value, ignoreCase = true) }
+                                }
+                            ) { friends ->
+                                ProfileCard(
+                                    name = friends.username,
+                                    image = friends.imageUrl,
+                                    paddingValues = PaddingValues(4.dp),
+                                    alertTitle = "Unfriend ${friends.username}?",
+                                    alertButton = "Unfriend",
+                                ) {
+                                    friendId = friends.userId
+                                    showFriendProfileSheet = true
+                                    viewModel.setBottomSheetState(true)
+                                }
                             }
                         }
                     }

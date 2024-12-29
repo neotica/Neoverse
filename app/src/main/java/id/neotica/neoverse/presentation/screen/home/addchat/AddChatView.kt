@@ -1,6 +1,9 @@
 package id.neotica.neoverse.presentation.screen.home.addchat
 
 import android.util.Log
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -28,17 +32,16 @@ import id.neotica.domain.model.User
 import id.neotica.domain.model.chat.ChatRoom
 import id.neotica.domain.utils.randomUUID
 import id.neotica.ui.components.BasicScaffold
-import id.neotica.ui.components.LoadingIndicatorBool
 import id.neotica.ui.components.ProfileCard
 import id.neotica.ui.components.droidcore.NeoSearchBar
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.Screen
+import id.neotica.world.feat.card.RavenCard
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun AddChatView(
     navController: NavController,
-    paddingValues: PaddingValues,
     viewModel: AddChatViewModel = koinViewModel()
 ) {
 
@@ -130,21 +133,40 @@ fun AddChatView(
 
     BasicScaffold(
         "Add Chat",
-        paddingValues = paddingValues
+        topBarVisibility = false,
+        fullScreen = true
     ) {
-        Row (
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            NeoSearchBar(
-                value = username,
-                label = "Search"
-            )
+        Box {
+            Column {
+                Row (
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    NeoSearchBar(
+                        value = username,
+                        label = "Search"
+                    )
+                }
+                androidx.compose.animation.AnimatedVisibility(username.value.isEmpty()) {
+                    RavenCard(navController)
+                }
+                if (isLoadingChats) {
+                    Box(Modifier.fillMaxWidth().padding(16.dp)) {
+                        CircularProgressIndicator(Modifier.align(Alignment.Center))
+                    }
+
+                }
+            }
         }
-        LoadingIndicatorBool(isLoadingChats) {
+
+        AnimatedVisibility(
+            visible = !isLoadingChats,
+            enter = fadeIn(),
+            exit = fadeOut()
+        ) {
             Column(
                 Modifier
                     .fillMaxSize()

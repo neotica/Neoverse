@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -16,6 +17,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -29,6 +31,7 @@ import id.neotica.ui.components.LoadingIndicatorBool
 import id.neotica.ui.components.NeoButton
 import id.neotica.ui.navigation.Screen
 import id.neotica.ui.theme.DarkPrimary
+import id.neotica.ui.theme.FontSize
 import id.neotica.ui.theme.NegativePrimary
 import org.koin.androidx.compose.koinViewModel
 import java.util.Locale
@@ -44,7 +47,7 @@ fun RegisterView(
     }
     val blockedWord = listOf(
         "aa5u", "a5uu", "aasu", "ajg", "alay", "ampas", "anus", "anjeng", "anjing", "anjir", "antek", "asem",
-        "asing", "ateis", "autis", "ayam kampus", "awuk", "b1ch", "bab1", "babi", "bacot", "bajang", "bajingan",
+        "asing", "autis", "ayamkampus", "awuk", "b1ch", "bab1", "babi", "bacot", "bajang", "bajingan",
         "banci", "bandot", "bangkai", "bangsat", "bani", "bani kotak", "bego", "bejat", "bencong", "berak",
         "berengsek", "bgsd", "bgst", "bispak", "bisu", "bisyar", "bjat", "bods", "bokep", "bokong", "bong",
         "bodoh", "budek", "burik", "burit", "butt", "cacat", "cawk", "cct", "cebong",
@@ -66,7 +69,7 @@ fun RegisterView(
         "silit", "sinting", "sipit", "sitip", "slut", "songong", "sompret", "sontoloyo", "stfu", "tai", "taek",
         "taik", "taplak", "temp", "tempik", "tepos", "terkutuk", "tetek", "titit", "t1ts", "titt", "tobrut",
         "toket", "tol", "tolol", "transgendertuyul", "twat", "udik", "up1l", "utek", "vags", "wank", "wdus",
-        "xhamster.com"
+        "xhamster.com", "itil"
         ).toSet().toList()
     val emailValue = remember { mutableStateOf("") }
     val passwordValue = remember { mutableStateOf("") }
@@ -75,6 +78,7 @@ fun RegisterView(
     var isUserExist by remember { mutableStateOf(false) }
     var onValueChange by remember { mutableStateOf(false) }
     var userExistLoading by remember { mutableStateOf(false) }
+    var checkEnabled by remember { mutableStateOf(false) }
 
 
     val context = LocalContext.current
@@ -145,15 +149,19 @@ fun RegisterView(
                                     onValueChange = !onValueChange
                                 }
                             )
-                            when {
-                                blockedWord.any {
-                                    nameValue.value.contains(it, ignoreCase = true)
-                                } -> Text(
-                                    "Username contains prohibited words.",
-                                    color = NegativePrimary
+                            val errorMessage = when {
+                                blockedWord.any { nameValue.value.contains(it, ignoreCase = true) } -> "Username contains prohibited words."
+                                nameValue.value.length < 3 && nameValue.value.isNotEmpty() -> "Username must be at least 3 characters."
+                                !isUserExist && !userExistLoading -> "Username is already used."
+                                else -> null
+                            }
+
+                            errorMessage?.let {
+                                Text(
+                                    it,
+                                    color = NegativePrimary,
+                                    fontSize = FontSize.Small
                                 )
-                                !isUserExist -> if (!userExistLoading) Text("Username is already used.")
-                                else -> {}
                             }
                             NeoTextField(value = emailValue, label = "Email")
                             Spacer(Modifier.padding(4.dp))
@@ -183,6 +191,10 @@ fun RegisterView(
                             }
                             Spacer(Modifier.padding(16.dp))
                             Text("By registering, you are already accepting the Terms and Service and Privacy Policy of this app.")
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Text("Yes, I agree.")
+                                Checkbox(checkEnabled, {checkEnabled = !checkEnabled})
+                            }
                         }
                     }
                     Row(
@@ -190,9 +202,18 @@ fun RegisterView(
                         horizontalArrangement = Arrangement.Center
                     ) {
                         Column {
-                            when {
-                                nameValue.value.isEmpty() -> Text("Please fill all the fields.")
-                                !isUserExist -> Text("Username is already used.")
+                            val nullCheck = when {
+                                nameValue.value.isEmpty() -> "Please fill all the fields."
+                                !isUserExist -> "Username is already used."
+                                !checkEnabled -> "Please agree to the terms and conditions."
+                                else -> null
+                            }
+                            nullCheck?.let {
+                                Text(
+                                    it,
+                                    color = NegativePrimary,
+                                    fontSize = FontSize.Small
+                                )
                             }
                             NeoButton(
                                 "Register",
@@ -200,15 +221,13 @@ fun RegisterView(
                                 enabled = nameValue.value.isNotEmpty()
                                         && emailValue.value.isNotEmpty()
                                         && passwordValue.value.isNotEmpty()
+                                        && nameValue.value.length >= 3
                                         && nameNoWhiteSpace
+                                        && checkEnabled
                                         && isUserExist,
                             ) {
                                 isButtonPressed = true
-                                viewModel.register(nameValue.value.replaceFirstChar {
-                                    it.lowercase(
-                                        Locale.getDefault()
-                                    )
-                                }, emailValue.value, passwordValue.value)
+                                viewModel.register(nameValue.value.lowercase(Locale.getDefault()), emailValue.value, passwordValue.value)
                             }
                         }
                     }

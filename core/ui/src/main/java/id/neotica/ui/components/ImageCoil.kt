@@ -18,10 +18,11 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import coil.annotation.ExperimentalCoilApi
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalCoilApi::class)
 @Composable
 fun ImageCoil(
     url: String,
@@ -36,6 +37,7 @@ fun ImageCoil(
     scaleCustom: Boolean = false,
     contentScale: ContentScale = ContentScale.Fit,
     contentAlignment: Alignment = Alignment.Center,
+    refreshCache: Boolean = false,
     onLongClick: (() -> Unit)? = null,
     onClick: (() -> Unit)? = null,
 ) {
@@ -52,6 +54,8 @@ fun ImageCoil(
     ) {
         SubcomposeAsyncImage(
             model = ImageRequest.Builder(context)
+                .memoryCachePolicy(if (refreshCache) coil.request.CachePolicy.DISABLED else coil.request.CachePolicy.ENABLED)
+                .diskCachePolicy(if (refreshCache) coil.request.CachePolicy.DISABLED else coil.request.CachePolicy.ENABLED)
                 .data(url)
                 .build(),
             contentDescription =  "",

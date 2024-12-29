@@ -26,7 +26,7 @@ fun NavGraphBuilder.homeNavGraph(
             HomeView(navController, paddingValues)
         }
         composable<Screen.AddChatScreen> {
-            AddChatView(navController, paddingValues)
+            AddChatView(navController)
         }
         composable<Screen.Chat>(
             enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start, tween(100)) },

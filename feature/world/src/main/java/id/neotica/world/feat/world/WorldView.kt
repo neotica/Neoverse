@@ -33,6 +33,7 @@ import id.neotica.ui.components.world.WorldCard
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.Screen
 import id.neotica.ui.navigation.WorldScreen
+import id.neotica.world.feat.card.RavenCard
 import id.neotica.world.utils.bgLeaderBoards
 import id.neotica.world.utils.bgMining
 import id.neotica.world.utils.bgTavern
@@ -63,7 +64,7 @@ fun WorldView(
             title = "Tavern",
             fileName = "bg_tavern$test",
             url = bgTavern,
-            navigateTo = { navController.navigate(WorldScreen.GameScreen) }
+            navigateTo = { navController.navigate(WorldScreen.TavernScreen) }
         ),
         WorldCardItem(
             title = "Mining Cave",
@@ -166,27 +167,7 @@ fun WorldView(
                     onClick = item.navigateTo
                 )
             }
-
-            /*Spacer(Modifier.padding(4.dp))
-            NeoButton("SuperAdmin") {
-                navController.navigate(WorldScreen.SuperAdminScreen)
-            }*/
-            /*NeoButton("To Merchant") {
-                navController.navigate(WorldScreen.MerchantScreen)
-            }*/
-            /*Spacer(Modifier.padding(4.dp))
-            Row(
-                Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
-                NeoButton("To Market") {
-                    navController.navigate(WorldScreen.MarketScreen)
-                }
-                NeoButton("To Inventory") {
-                    navController.navigate(WorldScreen.InventoryScreen)
-                }
-            }*/
-
+            RavenCard(navController)
         } else {
             Pocket(
                 title = "Welcome to the Portal!"

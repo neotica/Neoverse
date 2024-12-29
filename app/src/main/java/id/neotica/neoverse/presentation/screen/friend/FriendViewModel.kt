@@ -45,6 +45,9 @@ class FriendViewModel(
     private var _friendProfile: MutableStateFlow<ApiResult<User?>> = MutableStateFlow(ApiResult.Loading())
     val friendProfile = _friendProfile.asStateFlow()
 
+    private var _sheetState: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    val sheetState = _sheetState.asStateFlow()
+
     fun currentUserId(): String = getUserIdUseCase.invoke()
     private fun currentUserName(): String = _userEntity.value.data?.username ?: ""
 
@@ -84,6 +87,14 @@ class FriendViewModel(
         val user = userRepo.getUserDetail(userId)
         _friendProfile.value = ApiResult.Loading()
         _friendProfile.value = user
+    }
+
+    fun makeFriendNull() = viewModelScope.launch {
+        _friendProfile.value = ApiResult.Success(null)
+    }
+
+    fun setBottomSheetState(state: Boolean) {
+        _sheetState.value = state
     }
 
     fun unFriend(friend: User) = CoroutineScope(Dispatchers.IO).launch {

@@ -2,6 +2,7 @@ package id.neotica.neoverse.presentation.screen.home
 
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,11 +16,19 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -41,6 +50,7 @@ import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.core.content.pm.PackageInfoCompat
@@ -55,6 +65,7 @@ import id.neotica.domain.model.chat.ParentNeo
 import id.neotica.domain.utils.convertLongToTime
 import id.neotica.domain.utils.filteredRoom
 import id.neotica.domain.utils.returnFriendName
+import id.neotica.neoverse.presentation.screen.home.addchat.AddChatView
 import id.neotica.ui.R
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.ChatListItem
@@ -64,10 +75,15 @@ import id.neotica.ui.components.droidcore.NeoSearchBar
 import id.neotica.ui.components.scroll.nestedScrollConnection
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.Screen
+import id.neotica.ui.navigation.WorldScreen
+import id.neotica.ui.theme.DarkBackground
 import id.neotica.ui.theme.DarkPrimaryTransparent2
+import id.neotica.ui.theme.DarkPrimaryTransparent80
 import id.neotica.ui.theme.FontSize
 import id.neotica.ui.theme.NeoPadding
+import id.neotica.ui.theme.Transparent
 import id.neotica.ui.theme.TransparentText20
+import id.neotica.ui.theme.TransparentText40
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -96,6 +112,9 @@ fun HomeView(
     val username = rememberSaveable { mutableStateOf("") }
 
     val context = LocalContext.current
+
+    val sheetState = rememberModalBottomSheetState()
+    var showFriendListSheet by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
 
@@ -237,6 +256,16 @@ fun HomeView(
     val listState = rememberLazyListState()
     val haptic = LocalHapticFeedback.current
 
+    if (showFriendListSheet) {
+        ModalBottomSheet(
+            onDismissRequest = { showFriendListSheet = false },
+            sheetState = sheetState,
+            containerColor = DarkBackground
+        ) {
+            AddChatView(navController)
+        }
+    }
+
     BasicScaffold (
         topBarTitle = "HomeView",
         topBarVisibility = false,
@@ -278,49 +307,94 @@ fun HomeView(
                                 Box(Modifier.size(55.dp)) {
                                     FlipCard(
                                         frontSide = {
-                                            ImageCoil(
-                                                url = it.imageUrl,
-                                                round = true,
-                                                size = 55.dp,
-                                                contentAlignment = Alignment.Center,
-                                                onLongClick = {
-                                                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                                                    Toast
-                                                        .makeText(context, "Go to Profile", Toast.LENGTH_SHORT)
-                                                        .show()
+                                            Box {
+                                                Card(
+                                                    modifier = Modifier.size(55.dp),
+                                                    shape = CircleShape,
+                                                    border = BorderStroke(1.dp, TransparentText40),
+                                                    colors = CardDefaults.cardColors().copy(containerColor = Transparent)
+                                                ) {
+                                                    Column(
+                                                        Modifier.size(55.dp),
+                                                        verticalArrangement = Arrangement.Center,
+                                                        horizontalAlignment = Alignment.CenterHorizontally
+                                                    ) {
+                                                        ImageCoil(
+                                                            url = it.imageUrl,
+                                                            round = true,
+                                                            size = 53.dp,
+                                                            contentAlignment = Alignment.Center,
+                                                            onLongClick = {
+                                                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                                                Toast
+                                                                    .makeText(context, "Go to Profile", Toast.LENGTH_SHORT)
+                                                                    .show()
+                                                            }
+                                                        ) {
+                                                            navController.navigate(RootScreen.AuthNav)
+                                                        }
+                                                    }
                                                 }
-                                            ) {
-                                                navController.navigate(RootScreen.AuthNav)
                                             }
                                         }
                                     ) {
-                                        ImageCoil(
-                                            url = it.imageUrl,
-                                            round = true,
-                                            size = 55.dp,
-                                            contentAlignment = Alignment.CenterEnd,
-                                            onLongClick = {
-                                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                                                Toast.makeText(context, "Go to Profile", Toast.LENGTH_SHORT).show()
-                                            }
+                                        Card(
+                                            modifier = Modifier.size(55.dp),
+                                            shape = CircleShape,
+                                            border = BorderStroke(1.dp, TransparentText40),
+                                            colors = CardDefaults.cardColors().copy(containerColor = Transparent)
                                         ) {
-                                            navController.navigate(RootScreen.AuthNav)
+                                            Column(
+                                                Modifier.size(55.dp),
+                                                verticalArrangement = Arrangement.Center,
+                                                horizontalAlignment = Alignment.CenterHorizontally
+                                            ) {
+                                                ImageCoil(
+                                                    url = it.imageUrl,
+                                                    round = true,
+                                                    size = 53.dp,
+                                                    contentAlignment = Alignment.Center,
+                                                    onLongClick = {
+                                                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                                        Toast
+                                                            .makeText(context, "Go to Profile", Toast.LENGTH_SHORT)
+                                                            .show()
+                                                    }
+                                                ) {
+                                                    navController.navigate(RootScreen.AuthNav)
+                                                }
+                                            }
                                         }
                                     }
                                 }
-
                             }
                         }
                     }
                 }
                 NeoSearchBar(
                     value = username,
+                    onValueChange = {
+                        if (username.value == "/terminal") {
+                            username.value = ""
+                            navController.navigate(WorldScreen.TerminalScreen)
+                        }
+                    },
                     label = "Search Chat",
                     padding = PaddingValues(
                         top = 8.dp,
                         start = 16.dp,
                         end = 16.dp
                     ),
+                    trailingIcon = {
+                        if (username.value.isNotEmpty()) {
+                            IconButton(onClick = { username.value = "" }) {
+                                Icon(
+                                    imageVector = Icons.Default.Clear,
+                                    contentDescription = "Clear text",
+                                )
+                            }
+                        }
+                    }
                 )
                 Spacer(Modifier.padding(4.dp))
             }
@@ -334,7 +408,6 @@ fun HomeView(
                     viewModel.getChatroom()
                 }
             ) {
-
                 LazyColumn(
                     modifier = Modifier.nestedScroll(
                         nestedScrollConnection(
@@ -357,14 +430,39 @@ fun HomeView(
                         )
                     }
                     if(!isLoadingChats) {
+                        val friendFilter = chatItem.filter {
+                            it.value.user1.contains(username.value, true)
+                                    || it.value.user2.contains(username.value)
+                        }
+                        if (friendFilter.isEmpty()) {
+                            item {
+                                Box(
+                                    modifier = Modifier.fillMaxSize(),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Card(
+                                        modifier = Modifier
+                                            .padding(16.dp)
+                                            .align(Alignment.Center),
+                                        colors = CardDefaults.cardColors().copy(containerColor = DarkPrimaryTransparent80)
+                                    ) {
+                                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                            Text(
+                                                modifier = Modifier.padding(8.dp),
+                                                text = "It's so lonely! Try chatting with some friends.",
+                                                textAlign = TextAlign.Center
+                                            )
+//                                            NeoButton("Add friends", modifier = Modifier.padding(8.dp)) {navController.navigate(Screen.SearchUserScreen)}
+                                        }
+                                    }
+                                }
+                            }
+                        }
                         items(
                             if(username.value.isEmpty()) {
                                 chatItem
                             } else {
-                                chatItem.filter {
-                                    it.value.user1.contains(username.value, true)
-                                            || it.value.user2.contains(username.value)
-                                }
+                                friendFilter
                             }
                         ) { channelItemParent ->
                             val chatName = returnFriendName(
@@ -375,7 +473,6 @@ fun HomeView(
                             val friendInstance = friendList.firstOrNull {
                                 it.username == chatName
                             }
-
                             ChatListItem(
                                 image = friendInstance?.imageUrl.toString(),
                                 enableLongClick = true,
@@ -451,7 +548,7 @@ fun HomeView(
             ,
             containerColor = DarkPrimaryTransparent2,
             onClick = {
-                navController.navigate(Screen.AddChatScreen)
+                showFriendListSheet = true
             }
         ) {
             Icon(

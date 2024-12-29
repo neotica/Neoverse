@@ -1,5 +1,6 @@
 package id.neotica.neoverse.di
 
+import id.neotica.network.RavenRepositoryImpl
 import id.neotica.database.CurrentUserRepositoryImpl
 import id.neotica.database.FriendDaoRepositoryImpl
 import id.neotica.network.AuthRepositoryImpl
@@ -34,6 +35,7 @@ import id.neotica.neoverse.presentation.screen.main.MainViewModel
 import id.neotica.neoverse.presentation.screen.profile.ProfileViewModel
 import id.neotica.neoverse.utils.connectionchecker.AndroidConnectivityObserver
 import id.neotica.domain.observer.ConnectivityObserver
+import id.neotica.domain.remote.RavenRepository
 import id.neotica.neoverse.presentation.screen.camerax.CameraPreviewViewModel
 import id.neotica.network.AuraRepositoryImpl
 import id.neotica.network.FeedRepositoryImpl
@@ -62,6 +64,7 @@ val repositoryModules = module {
     singleOf(::FeedRepositoryImpl) bind FeedRepository::class
     singleOf(::SuperAdminRepositoryImpl) bind SuperAdminRepository::class
     singleOf(::AndroidConnectivityObserver) bind ConnectivityObserver::class
+    singleOf(::RavenRepositoryImpl) bind RavenRepository::class
 }
 
 val viewModelModules = module {

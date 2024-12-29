@@ -29,7 +29,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -49,7 +48,9 @@ import id.neotica.domain.utils.convertLongToTime
 import id.neotica.neoversewear.presentation.components.NeoScalingLazyColumn
 import id.neotica.neoversewear.presentation.components.SpacerItem
 import id.neotica.neoversewear.presentation.navigation.WearScreen
+import id.neotica.ui.theme.DarkBackground
 import id.neotica.ui.theme.DarkPrimary
+import id.neotica.ui.theme.DarkPrimaryTransparent2
 import id.neotica.ui.theme.FontSize
 import id.neotica.ui.theme.Transparent
 import id.neotica.ui.theme.TransparentText40
@@ -200,9 +201,9 @@ fun ChatMessages(
 fun ChatBubble(message: Message) {
     val isCurrentUser = message.senderId == Firebase.auth.currentUser?.uid
     val bubbleColor = if (isCurrentUser) {
-        Color.Blue
+        DarkPrimaryTransparent2
     } else {
-        Color.Green
+        DarkBackground
     }
     Box(
         modifier = Modifier
