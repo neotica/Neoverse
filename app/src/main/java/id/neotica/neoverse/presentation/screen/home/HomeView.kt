@@ -27,7 +27,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
-import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -50,7 +49,6 @@ import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.core.content.pm.PackageInfoCompat
@@ -66,11 +64,14 @@ import id.neotica.domain.utils.convertLongToTime
 import id.neotica.domain.utils.filteredRoom
 import id.neotica.domain.utils.returnFriendName
 import id.neotica.neoverse.presentation.screen.home.addchat.AddChatView
+import id.neotica.neoverse.utils.buddhaQuotes
 import id.neotica.ui.R
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.ChatListItem
 import id.neotica.ui.components.FlipCard
 import id.neotica.ui.components.ImageCoil
+import id.neotica.ui.components.animation.LoadingText
+import id.neotica.ui.components.animation.NeoRefreshBox
 import id.neotica.ui.components.droidcore.NeoSearchBar
 import id.neotica.ui.components.scroll.nestedScrollConnection
 import id.neotica.ui.navigation.RootScreen
@@ -78,7 +79,6 @@ import id.neotica.ui.navigation.Screen
 import id.neotica.ui.navigation.WorldScreen
 import id.neotica.ui.theme.DarkBackground
 import id.neotica.ui.theme.DarkPrimaryTransparent2
-import id.neotica.ui.theme.DarkPrimaryTransparent80
 import id.neotica.ui.theme.FontSize
 import id.neotica.ui.theme.NeoPadding
 import id.neotica.ui.theme.Transparent
@@ -398,7 +398,7 @@ fun HomeView(
                 )
                 Spacer(Modifier.padding(4.dp))
             }
-            PullToRefreshBox(
+            NeoRefreshBox(
                 modifier = Modifier
                     .fillMaxSize()
                     .nestedScroll(nestedState),
@@ -436,26 +436,7 @@ fun HomeView(
                         }
                         if (friendFilter.isEmpty()) {
                             item {
-                                Box(
-                                    modifier = Modifier.fillMaxSize(),
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    Card(
-                                        modifier = Modifier
-                                            .padding(16.dp)
-                                            .align(Alignment.Center),
-                                        colors = CardDefaults.cardColors().copy(containerColor = DarkPrimaryTransparent80)
-                                    ) {
-                                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                            Text(
-                                                modifier = Modifier.padding(8.dp),
-                                                text = "It's so lonely! Try chatting with some friends.",
-                                                textAlign = TextAlign.Center
-                                            )
-//                                            NeoButton("Add friends", modifier = Modifier.padding(8.dp)) {navController.navigate(Screen.SearchUserScreen)}
-                                        }
-                                    }
-                                }
+                                LoadingText(listOf("It's so lonely! Try chatting with some friends."), false)
                             }
                         }
                         items(
@@ -529,6 +510,10 @@ fun HomeView(
                                     )
                                 }
                             }
+                        }
+                    } else {
+                        item {
+                            LoadingText(buddhaQuotes)
                         }
                     }
                 }
