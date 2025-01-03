@@ -52,9 +52,7 @@ fun ChatListItem(
 
     val longClick: (() -> Unit)? = if (enableLongClick) {
         { openDialog.value = true }
-    } else {
-        null
-    }
+    } else { null }
 
     val haptic = LocalHapticFeedback.current
 
