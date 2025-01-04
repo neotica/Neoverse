@@ -88,6 +88,7 @@ fun MainView() {
             WorldScreen.TerminalScreen,
             WorldScreen.RavenScreen,
             WorldScreen.RavenChatScreen,
+            Screen.FriendScreen
         )
 
         val includeRoute = bottomBarExcludedRoutes.none {

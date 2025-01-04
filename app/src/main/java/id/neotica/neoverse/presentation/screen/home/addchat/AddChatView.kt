@@ -2,6 +2,7 @@ package id.neotica.neoverse.presentation.screen.home.addchat
 
 import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -17,11 +18,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -50,7 +52,6 @@ import id.neotica.neoverse.presentation.screen.friend.FriendViewModel
 import id.neotica.neoverse.presentation.screen.friend.profile.FriendProfileView
 import id.neotica.ui.R
 import id.neotica.ui.components.BasicScaffold
-import id.neotica.ui.components.NeoButton
 import id.neotica.ui.components.ProfileCard
 import id.neotica.ui.components.droidcore.NeoSearchBar
 import id.neotica.ui.navigation.RootScreen
@@ -192,24 +193,36 @@ fun AddChatView(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    NeoSearchBar(
-                        value = username,
-                        label = "Search",
-                        trailingIcon = {
-                            IconButton (
-                                modifier = Modifier.padding(0.dp),
-                                onClick = {
-                                    navController.navigate(Screen.SearchUserScreen)
-                                },
+                    Row {
+                        NeoSearchBar(
+                            modifier = Modifier
+                                .weight(1f)
+                                .animateContentSize(),
+                            value = username,
+                            label = "Search Friends",
+                        )
+                        if (username.value.isEmpty()) {
+                            Button(
+                                onClick = { navController.navigate(Screen.SearchUserScreen) },
+                                modifier = Modifier
+                                    .padding(horizontal = 8.dp)
+                                    .animateContentSize(),
+                                contentPadding = PaddingValues(vertical = 8.dp, horizontal = 4.dp),
+                                colors = ButtonDefaults.buttonColors().copy(containerColor = DarkPrimaryTransparent80)
                             ) {
-                                Icon(
-                                    imageVector = ImageVector.vectorResource(R.drawable.ic_add_friend),
-                                    contentDescription = "",
-                                    tint = White
-                                )
+                                Row {
+                                    if (isFriendEmpty) Text("Add Friend", color = White, modifier = Modifier.padding(horizontal = 8.dp))
+                                    Icon(
+                                        modifier = Modifier
+                                            .then(if (isFriendEmpty) Modifier.padding(end = 4.dp) else Modifier),
+                                        imageVector = ImageVector.vectorResource(R.drawable.ic_add_friend),
+                                        contentDescription = "",
+                                        tint = White
+                                    )
+                                }
                             }
-                        },
-                    )
+                        }
+                    }
                 }
                 androidx.compose.animation.AnimatedVisibility(username.value.isEmpty()) {
                     RavenCard(navController)
@@ -254,14 +267,11 @@ fun AddChatView(
                                     .align(Alignment.TopCenter),
                                 colors = CardDefaults.cardColors().copy(containerColor = DarkPrimaryTransparent80)
                             ) {
-                                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                    Text(
-                                        modifier = Modifier.padding(8.dp),
-                                        text = "You've got no friends! try adding some. 😣",
-                                        textAlign = TextAlign.Center
-                                    )
-                                    NeoButton("Add friends", modifier = Modifier.padding(8.dp)) {navController.navigate(Screen.SearchUserScreen)}
-                                }
+                                Text(
+                                    modifier = Modifier.padding(8.dp),
+                                    text = "You've got no friends! try adding some. 😣",
+                                    textAlign = TextAlign.Center
+                                )
                             }
                         }
                     }

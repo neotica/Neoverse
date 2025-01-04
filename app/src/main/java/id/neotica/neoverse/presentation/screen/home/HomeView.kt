@@ -2,7 +2,9 @@ package id.neotica.neoverse.presentation.screen.home
 
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,7 +24,6 @@ import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ModalBottomSheet
@@ -41,7 +42,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
@@ -65,28 +65,31 @@ import id.neotica.domain.utils.filteredRoom
 import id.neotica.domain.utils.returnFriendName
 import id.neotica.neoverse.presentation.screen.home.addchat.AddChatView
 import id.neotica.neoverse.utils.buddhaQuotes
+import id.neotica.neoverse.utils.marcusAureliusQuotes
 import id.neotica.ui.R
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.ChatListItem
 import id.neotica.ui.components.FlipCard
 import id.neotica.ui.components.ImageCoil
+import id.neotica.ui.components.NeoFAB
 import id.neotica.ui.components.animation.LoadingText
 import id.neotica.ui.components.animation.NeoRefreshBox
 import id.neotica.ui.components.droidcore.NeoSearchBar
 import id.neotica.ui.components.scroll.nestedScrollConnection
+import id.neotica.ui.components.simpleHaptic
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.Screen
 import id.neotica.ui.navigation.WorldScreen
 import id.neotica.ui.theme.DarkBackground
-import id.neotica.ui.theme.DarkPrimaryTransparent2
 import id.neotica.ui.theme.FontSize
 import id.neotica.ui.theme.NeoPadding
 import id.neotica.ui.theme.Transparent
 import id.neotica.ui.theme.TransparentText20
 import id.neotica.ui.theme.TransparentText40
+import kotlinx.coroutines.delay
 import org.koin.androidx.compose.koinViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun HomeView(
     navController: NavController,
@@ -115,6 +118,8 @@ fun HomeView(
 
     val sheetState = rememberModalBottomSheetState()
     var showFriendListSheet by remember { mutableStateOf(false) }
+
+    var isChatEmpty by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
 
@@ -325,7 +330,7 @@ fun HomeView(
                                                             size = 53.dp,
                                                             contentAlignment = Alignment.Center,
                                                             onLongClick = {
-                                                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                                                simpleHaptic(haptic)
                                                                 Toast
                                                                     .makeText(context, "Go to Profile", Toast.LENGTH_SHORT)
                                                                     .show()
@@ -355,7 +360,7 @@ fun HomeView(
                                                     size = 53.dp,
                                                     contentAlignment = Alignment.Center,
                                                     onLongClick = {
-                                                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                                        simpleHaptic(haptic)
                                                         Toast
                                                             .makeText(context, "Go to Profile", Toast.LENGTH_SHORT)
                                                             .show()
@@ -434,6 +439,7 @@ fun HomeView(
                             it.value.user1.contains(username.value, true)
                                     || it.value.user2.contains(username.value)
                         }
+                        isChatEmpty = friendFilter.isEmpty()
                         if (friendFilter.isEmpty()) {
                             item {
                                 LoadingText(listOf("It's so lonely! Try chatting with some friends."), false)
@@ -513,7 +519,7 @@ fun HomeView(
                         }
                     } else {
                         item {
-                            LoadingText(buddhaQuotes)
+                            LoadingText(buddhaQuotes + marcusAureliusQuotes)
                         }
                     }
                 }
@@ -524,23 +530,41 @@ fun HomeView(
         Modifier
             .fillMaxSize()
             .padding(PaddingValues(bottom = NeoPadding.systemBarPadding + paddingValues.calculateBottomPadding()))
-        ,
     ) {
-        FloatingActionButton(
+        var isFabLongPressed by remember { mutableStateOf(false) }
+
+        NeoFAB(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(12.dp)
-            ,
-            containerColor = DarkPrimaryTransparent2,
+                .animateContentSize(),
             onClick = {
                 showFriendListSheet = true
+            },
+            onLongClick = {
+                simpleHaptic(haptic)
+                isFabLongPressed = true
             }
         ) {
-            Icon(
-                imageVector = ImageVector.vectorResource(R.drawable.add_chat),
-                contentDescription = "",
-                tint = White
-            )
+            Row(Modifier.padding(horizontal = 16.dp)) {
+                Icon(
+                    imageVector = ImageVector.vectorResource(R.drawable.add_chat),
+                    contentDescription = "",
+                    tint = White
+                )
+                var isFabExtended by remember { mutableStateOf(false) }
+
+                LaunchedEffect(isFabLongPressed) {
+                    if (isFabLongPressed) {
+                        isFabExtended = true
+                        isFabLongPressed = false
+                    } else {
+                        delay(1000)
+                        isFabExtended = false
+                    }
+                }
+                if (isChatEmpty && !isLoadingChats || isFabExtended) Text(text = "Add new chat", Modifier.padding(start= 8.dp))
+            }
         }
     }
 }

@@ -29,8 +29,7 @@ fun ImageCoil(
     size: Dp? = null,
     height: Dp? = null,
     width: Dp? = null,
-    customModifier: Boolean = false,
-    modifier: Modifier = Modifier,
+    modifier: Modifier? = null,
     fillMaxWidth: Boolean = true,
     context: Context = LocalContext.current,
     round: Boolean = false,
@@ -60,6 +59,7 @@ fun ImageCoil(
                 .build(),
             contentDescription =  "",
             modifier = Modifier
+                .then(modifier ?: Modifier)
                 .then(if (height != null) Modifier.height(height) else Modifier)
                 .then(if (width != null) Modifier.width(width) else Modifier)
                 .then(if (size != null) Modifier.size(size) else Modifier)

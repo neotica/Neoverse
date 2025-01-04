@@ -31,7 +31,7 @@ fun LoadingText(
     list: List<String>,
     loop: Boolean = true
 ) {
-    var currentQuoteIndex by remember { mutableIntStateOf(0) }
+    var currentQuoteIndex by remember { mutableIntStateOf(list.indices.random()) }
     var isVisible by remember { mutableStateOf(true) }
 
     var showCard by remember { mutableStateOf(false) }
@@ -41,14 +41,23 @@ fun LoadingText(
         showCard = true
     }
 
+    fun generateUniqueRandom(current: Int, range: IntRange): Int {
+        var newRandom: Int
+        do {
+            newRandom = range.random()
+        } while (newRandom == current)
+        return newRandom
+    }
+
     // Timer to update the quote periodically
     LaunchedEffect(Unit) {
         delay(1000)
         while (true) {
-            delay(1000) // Delay for 3 seconds (adjust as needed)
+            delay(2000) // Delay for 3 seconds (adjust as needed)
             isVisible = false // Trigger fade-out animation
             delay(500) // Delay for fade-out duration
-            currentQuoteIndex = (currentQuoteIndex + 1) % list.size
+            val newQuoteIndex = generateUniqueRandom(currentQuoteIndex, list.indices)
+            currentQuoteIndex = newQuoteIndex
             isVisible = true // Trigger fade-in animation
         }
     }
