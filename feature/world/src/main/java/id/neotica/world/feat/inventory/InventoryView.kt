@@ -4,7 +4,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -50,7 +49,6 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun InventoryView(
     navController: NavController,
-    paddingValues: PaddingValues,
     viewModel: InventoryViewModel = koinViewModel()
 ) {
     var currentAuras by remember { mutableStateOf<World?>(null) }
@@ -155,7 +153,6 @@ fun InventoryView(
                                         scaleCustom = true,
                                         contentScale = ContentScale.Crop,
                                         fillMaxWidth = true,
-                                        customModifier = true,
                                         modifier = Modifier.fillMaxWidth()
                                     )
                                 }
@@ -207,7 +204,6 @@ fun InventoryView(
                                         scaleCustom = true,
                                         contentScale = ContentScale.Crop,
                                         fillMaxWidth = true,
-                                        customModifier = true,
                                         modifier = Modifier.fillMaxWidth()
                                     )
                                 }

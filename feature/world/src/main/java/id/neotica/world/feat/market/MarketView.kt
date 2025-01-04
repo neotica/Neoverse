@@ -177,7 +177,6 @@ fun MarketView(
                                 contentScale = ContentScale.FillWidth,
                                 fillMaxWidth = true,
                                 size = 200.dp,
-                                customModifier = true,
                                 modifier = Modifier.fillMaxWidth()
                             )
                             Column(
@@ -248,7 +247,6 @@ fun MarketView(
                                         scaleCustom = true,
                                         contentScale = ContentScale.Crop,
                                         fillMaxWidth = true,
-                                        customModifier = true,
                                         modifier = Modifier.fillMaxWidth()
                                     )
                                 }
@@ -324,7 +322,6 @@ fun MarketView(
                                         scaleCustom = true,
                                         contentScale = ContentScale.Crop,
                                         fillMaxWidth = true,
-                                        customModifier = true,
                                         modifier = Modifier.fillMaxWidth()
                                     )
                                 }

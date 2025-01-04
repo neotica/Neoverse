@@ -47,7 +47,6 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun ItemDetailView(
     navController: NavController,
-    paddingValues: PaddingValues,
     viewModel: ItemDetailViewModel = koinViewModel()
 ) {
     var currentAuras by remember { mutableStateOf<World?>(null) }
@@ -175,7 +174,6 @@ fun ItemDetailView(
                                         scaleCustom = true,
                                         contentScale = ContentScale.FillWidth,
                                         fillMaxWidth = true,
-                                        customModifier = true,
                                         modifier = Modifier.fillMaxWidth()
                                     )
                                 }
@@ -234,7 +232,6 @@ fun ItemDetailView(
                                 scaleCustom = true,
                                 contentScale = ContentScale.Inside,
                                 fillMaxWidth = true,
-                                customModifier = true,
                                 modifier = Modifier.fillMaxWidth()
                             )
                         }

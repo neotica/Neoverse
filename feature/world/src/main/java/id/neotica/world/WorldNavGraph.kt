@@ -64,9 +64,7 @@ fun NavGraphBuilder.worldNavGraph(
             enterTransition = { fadeIn(tween(100)) },
             exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End, tween(100)) }
         ) {
-            ItemDetailView(
-                navController, paddingValues
-            )
+            ItemDetailView(navController)
         }
         composable<WorldScreen.MerchantScreen>(
             enterTransition = { fadeIn(tween(100)) },
@@ -80,9 +78,7 @@ fun NavGraphBuilder.worldNavGraph(
             enterTransition = { fadeIn(tween(100)) },
             exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End, tween(100)) }
         ) {
-            InventoryView(
-                navController, paddingValues
-            )
+            InventoryView(navController)
         }
         composable<WorldScreen.MiningScreen>(
             enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start, tween(100)) },
