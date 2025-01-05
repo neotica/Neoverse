@@ -27,7 +27,7 @@ import id.neotica.domain.model.chat.ParentNeo
 import id.neotica.domain.model.User
 import id.neotica.ui.navigation.Screen
 import id.neotica.ui.components.BasicScaffold
-import id.neotica.ui.components.ImageCoil
+import id.neotica.ui.components.image.ImageCoil
 import id.neotica.ui.components.ProfileCard
 import org.koin.androidx.compose.koinViewModel
 

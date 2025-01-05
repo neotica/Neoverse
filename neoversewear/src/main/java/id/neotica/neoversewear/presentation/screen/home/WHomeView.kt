@@ -35,7 +35,7 @@ import id.neotica.neoversewear.presentation.components.SpacerItem
 import id.neotica.neoversewear.presentation.components.WChatListItem
 import id.neotica.neoversewear.presentation.components.WLoadingIndicator
 import id.neotica.neoversewear.presentation.navigation.WearScreen
-import id.neotica.ui.components.ImageCoil
+import id.neotica.ui.components.image.ImageCoil
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.Screen
 import org.koin.androidx.compose.koinViewModel

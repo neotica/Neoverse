@@ -4,7 +4,6 @@ import android.util.Log
 import android.widget.Toast
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -70,13 +69,13 @@ import id.neotica.ui.R
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.ChatListItem
 import id.neotica.ui.components.FlipCard
-import id.neotica.ui.components.ImageCoil
+import id.neotica.ui.components.image.ImageCoil
 import id.neotica.ui.components.NeoFAB
 import id.neotica.ui.components.animation.LoadingText
 import id.neotica.ui.components.animation.NeoRefreshBox
 import id.neotica.ui.components.droidcore.NeoSearchBar
 import id.neotica.ui.components.scroll.nestedScrollConnection
-import id.neotica.ui.components.simpleHaptic
+import id.neotica.ui.components.noncomposable.simpleHaptic
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.Screen
 import id.neotica.ui.navigation.WorldScreen
@@ -89,7 +88,7 @@ import id.neotica.ui.theme.TransparentText40
 import kotlinx.coroutines.delay
 import org.koin.androidx.compose.koinViewModel
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeView(
     navController: NavController,

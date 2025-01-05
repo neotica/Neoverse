@@ -1,4 +1,4 @@
-package id.neotica.ui.components
+package id.neotica.ui.components.image
 
 import android.net.Uri
 import androidx.compose.foundation.layout.fillMaxWidth

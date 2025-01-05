@@ -37,7 +37,7 @@ import id.neotica.domain.model.market.Item
 import id.neotica.droidcore.component.alert.AlertDialogCustomDesc
 import id.neotica.droidcore.component.textfield.NumberField
 import id.neotica.ui.components.BasicScaffold
-import id.neotica.ui.components.ImageCoil
+import id.neotica.ui.components.image.ImageCoil
 import id.neotica.ui.components.LoadingIndicator
 import id.neotica.ui.components.NeoButton
 import id.neotica.ui.state.ScreenState

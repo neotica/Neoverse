@@ -56,7 +56,7 @@ import id.neotica.domain.model.market.Hero
 import id.neotica.domain.model.market.Item
 import id.neotica.droidcore.component.carousel.CarouselCard
 import id.neotica.ui.components.BasicScaffold
-import id.neotica.ui.components.ImageCoil
+import id.neotica.ui.components.image.ImageCoil
 import id.neotica.ui.components.scroll.scrollTopValue
 import id.neotica.ui.navigation.WorldScreen
 import id.neotica.ui.state.ScreenState

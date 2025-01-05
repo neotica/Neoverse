@@ -164,10 +164,7 @@ fun TavernView(
                     ),
                     border = BorderStroke(2.dp, DarkPrimary)
                 ) {
-                    SlotMachine(
-                        Modifier
-                            .fillMaxWidth()
-                            .padding(30.dp))
+                    SlotMachine()
                 }
                 Column(
                     Modifier.padding(vertical = 8.dp, horizontal = 16.dp)

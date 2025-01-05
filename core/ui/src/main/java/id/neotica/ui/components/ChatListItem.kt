@@ -22,6 +22,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.dp
+import id.neotica.ui.components.image.ImageCoil
 import id.neotica.ui.theme.DarkPrimaryTransparent
 import id.neotica.ui.theme.Transparent
 

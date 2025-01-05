@@ -28,7 +28,7 @@ import androidx.wear.compose.material.Text
 import id.neotica.neoversewear.presentation.components.CircularListWear
 import id.neotica.neoversewear.presentation.components.NeoWButton
 import id.neotica.neoversewear.presentation.components.SpacerItem
-import id.neotica.ui.components.SlideInto
+import id.neotica.ui.components.animation.SlideInto
 import id.neotica.ui.theme.DarkPrimaryTransparent
 import id.neotica.world.utils.generateTranspose
 import kotlinx.coroutines.delay

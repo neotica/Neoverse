@@ -1,4 +1,4 @@
-package id.neotica.ui.components
+package id.neotica.ui.components.image
 
 import android.content.Context
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
+import id.neotica.ui.components.LoadingIndicator
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalCoilApi::class)
 @Composable

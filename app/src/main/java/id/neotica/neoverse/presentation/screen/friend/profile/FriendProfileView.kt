@@ -30,7 +30,7 @@ import id.neotica.domain.utils.randomUUID
 import id.neotica.droidcore.component.alert.NeoAlert
 import id.neotica.neoverse.presentation.screen.friend.FriendViewModel
 import id.neotica.ui.components.BasicScaffold
-import id.neotica.ui.components.ImageCoil
+import id.neotica.ui.components.image.ImageCoil
 import id.neotica.ui.components.NeoButton
 import id.neotica.ui.navigation.Screen
 import org.koin.androidx.compose.koinViewModel

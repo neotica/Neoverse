@@ -20,7 +20,7 @@ import androidx.navigation.NavController
 import id.neotica.domain.ApiResult
 import id.neotica.droidcore.component.alert.NeoAlert
 import id.neotica.ui.components.BasicScaffold
-import id.neotica.ui.components.ImagePermanentCache
+import id.neotica.ui.components.image.ImagePermanentCache
 import id.neotica.ui.components.NeoButton
 import id.neotica.ui.navigation.navigateBack
 import id.neotica.world.utils.rockPicture

@@ -18,7 +18,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import id.neotica.ui.components.ImagePermanentCache
+import id.neotica.ui.components.image.ImagePermanentCache
 import id.neotica.ui.navigation.WorldScreen
 import id.neotica.ui.theme.DarkPrimaryTransparent80
 import id.neotica.ui.theme.FontSize

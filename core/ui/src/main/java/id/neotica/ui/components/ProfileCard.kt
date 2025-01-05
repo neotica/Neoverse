@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import id.neotica.droidcore.component.alert.NeoAlert
 import id.neotica.ui.R
+import id.neotica.ui.components.image.ImageCoil
 import id.neotica.ui.theme.DarkPrimaryTransparent
 import id.neotica.ui.theme.DarkPrimaryTransparent80
 import id.neotica.ui.theme.TransparentText40

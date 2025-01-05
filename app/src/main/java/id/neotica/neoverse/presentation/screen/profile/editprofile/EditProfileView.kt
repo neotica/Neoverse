@@ -31,7 +31,7 @@ import id.neotica.neoverse.presentation.screen.profile.ProfileViewModel
 import id.neotica.neoverse.utils.compressUri
 import id.neotica.ui.R
 import id.neotica.ui.components.BasicScaffold
-import id.neotica.ui.components.ImageCoil
+import id.neotica.ui.components.image.ImageCoil
 import id.neotica.ui.components.MenuItem
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.Screen

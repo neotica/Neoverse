@@ -16,7 +16,7 @@ import id.neotica.neoversewear.presentation.components.BasicWearScreen
 import id.neotica.neoversewear.presentation.components.NeoWChip
 import id.neotica.neoversewear.presentation.components.SpacerItem
 import id.neotica.neoversewear.presentation.navigation.WearScreen
-import id.neotica.ui.components.ImageCoil
+import id.neotica.ui.components.image.ImageCoil
 import org.koin.androidx.compose.koinViewModel
 
 @Composable

@@ -32,7 +32,7 @@ import androidx.compose.ui.unit.dp
 import id.neotica.world.feat.game.TavernViewModel
 import id.neotica.world.utils.generateTranspose
 import id.neotica.ui.components.NeoButton
-import id.neotica.ui.components.SlideInto
+import id.neotica.ui.components.animation.SlideInto
 import id.neotica.ui.theme.DarkPrimaryTransparent
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -41,7 +41,7 @@ import java.security.SecureRandom
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
-fun SlotMachine(modifier: Modifier = Modifier, viewModel: TavernViewModel = koinViewModel()) {
+fun SlotMachine(viewModel: TavernViewModel = koinViewModel()) {
     Column(Modifier.padding(20.dp)) {
         val randomNum = viewModel.randomNum.collectAsState()
         val randomNum2 = viewModel.randomNum2.collectAsState()
