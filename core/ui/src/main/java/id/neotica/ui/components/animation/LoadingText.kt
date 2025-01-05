@@ -41,23 +41,14 @@ fun LoadingText(
         showCard = true
     }
 
-    fun generateUniqueRandom(current: Int, range: IntRange): Int {
-        var newRandom: Int
-        do {
-            newRandom = range.random()
-        } while (newRandom == current)
-        return newRandom
-    }
-
     // Timer to update the quote periodically
     LaunchedEffect(Unit) {
         delay(1000)
         while (true) {
-            delay(2000) // Delay for 3 seconds (adjust as needed)
+            delay(1500) // Delay for 3 seconds (adjust as needed)
             isVisible = false // Trigger fade-out animation
             delay(500) // Delay for fade-out duration
-            val newQuoteIndex = generateUniqueRandom(currentQuoteIndex, list.indices)
-            currentQuoteIndex = newQuoteIndex
+            currentQuoteIndex = (currentQuoteIndex + list.indices.random()) % list.size
             isVisible = true // Trigger fade-in animation
         }
     }
