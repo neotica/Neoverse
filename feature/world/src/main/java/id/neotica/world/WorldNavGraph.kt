@@ -10,6 +10,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import id.neotica.alexandria.LibraryView
 import id.neotica.raven.RavenChatView
 import id.neotica.raven.RavenView
 import id.neotica.ui.navigation.RootScreen
@@ -130,17 +131,19 @@ fun NavGraphBuilder.worldNavGraph(
             enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start, tween(100)) },
             exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End, tween(100)) }
         ) {
-            RavenView(
-                navController
-            )
+            RavenView(navController)
         }
         composable<WorldScreen.RavenChatScreen>(
             enterTransition = { EnterTransition.None },
             exitTransition = { ExitTransition.None }
         ) {
-            RavenChatView(
-                navController
-            )
+            RavenChatView(navController)
+        }
+        composable<WorldScreen.LibraryScreen>(
+            enterTransition = { EnterTransition.None },
+            exitTransition = { ExitTransition.None }
+        ) {
+            LibraryView(navController)
         }
     }
 }

@@ -33,6 +33,7 @@ import id.neotica.ui.components.world.WorldCard
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.Screen
 import id.neotica.ui.navigation.WorldScreen
+import id.neotica.world.feat.card.LibraryCard
 import id.neotica.world.feat.card.RavenCard
 import id.neotica.world.utils.bgLeaderBoards
 import id.neotica.world.utils.bgMining
@@ -168,6 +169,7 @@ fun WorldView(
                 )
             }
             RavenCard(navController)
+            LibraryCard(navController)
         } else {
             Pocket(
                 title = "Welcome to the Portal!"

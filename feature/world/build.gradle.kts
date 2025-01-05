@@ -49,6 +49,7 @@ dependencies {
     implementation(projects.core.domain)
     implementation(projects.feature.tavern)
     implementation(projects.feature.raven)
+    implementation(projects.feature.alexandria)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
