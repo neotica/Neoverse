@@ -14,7 +14,7 @@ import id.neotica.raven.RavenChatView
 import id.neotica.raven.RavenView
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.WorldScreen
-import id.neotica.world.feat.game.TavernView
+import id.neotica.tavern.TavernView
 import id.neotica.world.feat.inventory.InventoryView
 import id.neotica.world.feat.kanye.KanyeView
 import id.neotica.world.feat.leaderboards.LeaderBoardsView

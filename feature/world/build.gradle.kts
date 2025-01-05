@@ -34,9 +34,6 @@ android {
     buildFeatures {
         compose = true
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
-    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
@@ -50,6 +47,7 @@ dependencies {
     implementation(projects.core.ui)
     implementation(projects.core.core)
     implementation(projects.core.domain)
+    implementation(projects.feature.tavern)
     implementation(projects.feature.raven)
 
     testImplementation(libs.junit)
