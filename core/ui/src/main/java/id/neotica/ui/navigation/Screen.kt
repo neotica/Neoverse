@@ -74,6 +74,8 @@ sealed class RootScreen {
     object WorldNav
     @Serializable
     object FriendNav
+    @Serializable
+    object AlexandriaNav
 }
 
 @Serializable
@@ -108,8 +110,11 @@ sealed class WorldScreen {
     data object RavenScreen: Screen()
     @Serializable
     data object RavenChatScreen: Screen()
+}
+
+sealed class AlexandriaScreen {
     @Serializable
-    data object LibraryScreen: Screen()
+    data object HomeScreen: AlexandriaScreen()
 }
 
 data class NavigationItem(
