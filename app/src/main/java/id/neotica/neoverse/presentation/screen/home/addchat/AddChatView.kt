@@ -2,6 +2,8 @@ package id.neotica.neoverse.presentation.screen.home.addchat
 
 import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Arrangement
@@ -11,13 +13,21 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -25,24 +35,38 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color.Companion.White
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.User
 import id.neotica.domain.model.chat.ChatRoom
 import id.neotica.domain.utils.randomUUID
+import id.neotica.neoverse.presentation.screen.friend.FriendViewModel
+import id.neotica.neoverse.presentation.screen.friend.profile.FriendProfileView
+import id.neotica.ui.R
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.ProfileCard
 import id.neotica.ui.components.droidcore.NeoSearchBar
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.Screen
+import id.neotica.ui.theme.DarkBackground
+import id.neotica.ui.theme.DarkPrimaryTransparent80
 import id.neotica.world.feat.card.RavenCard
+import kotlinx.coroutines.delay
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun AddChatView(
     navController: NavController,
-    viewModel: AddChatViewModel = koinViewModel()
+    viewModel: AddChatViewModel = koinViewModel(),
+    friendViewModel: FriendViewModel = koinViewModel()
 ) {
 
     var friendList by remember { mutableStateOf<List<User>>(emptyList()) }
@@ -56,6 +80,30 @@ fun AddChatView(
     val chatrooms = remember { mutableStateOf<List<ChatRoom>>(emptyList()) }
 
     val username = rememberSaveable { mutableStateOf("") }
+    var friendId by remember { mutableStateOf("") }
+
+    if (friendViewModel.sheetState.collectAsState().value) {
+        Dialog (
+            onDismissRequest = {
+                friendViewModel.setBottomSheetState(false)
+                friendId = ""
+                friendViewModel.makeFriendNull()
+            }
+        ) {
+            Card(
+                colors = CardDefaults.cardColors().copy(containerColor = DarkBackground),
+                modifier = Modifier
+                    .height(300.dp)
+                    .padding(16.dp)
+            ) {
+                Box(Modifier.padding(16.dp)) {
+                    FriendProfileView(
+                        navController, userId = friendId
+                    )
+                }
+            }
+        }
+    }
 
     LaunchedEffect(Unit) {
         if (!viewModel.isLoggedIn()) navController.navigate(Screen.LoginScreen) {
@@ -145,10 +193,36 @@ fun AddChatView(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    NeoSearchBar(
-                        value = username,
-                        label = "Search"
-                    )
+                    Row {
+                        NeoSearchBar(
+                            modifier = Modifier
+                                .weight(1f)
+                                .animateContentSize(),
+                            value = username,
+                            label = "Search Friends",
+                        )
+                        if (username.value.isEmpty()) {
+                            Button(
+                                onClick = { navController.navigate(Screen.SearchUserScreen) },
+                                modifier = Modifier
+                                    .padding(horizontal = 8.dp)
+                                    .animateContentSize(),
+                                contentPadding = PaddingValues(vertical = 8.dp, horizontal = 4.dp),
+                                colors = ButtonDefaults.buttonColors().copy(containerColor = DarkPrimaryTransparent80)
+                            ) {
+                                Row {
+                                    if (isFriendEmpty) Text("Add Friend", color = White, modifier = Modifier.padding(horizontal = 8.dp))
+                                    Icon(
+                                        modifier = Modifier
+                                            .then(if (isFriendEmpty) Modifier.padding(end = 4.dp) else Modifier),
+                                        imageVector = ImageVector.vectorResource(R.drawable.ic_add_friend),
+                                        contentDescription = "",
+                                        tint = White
+                                    )
+                                }
+                            }
+                        }
+                    }
                 }
                 androidx.compose.animation.AnimatedVisibility(username.value.isEmpty()) {
                     RavenCard(navController)
@@ -157,7 +231,6 @@ fun AddChatView(
                     Box(Modifier.fillMaxWidth().padding(16.dp)) {
                         CircularProgressIndicator(Modifier.align(Alignment.Center))
                     }
-
                 }
             }
         }
@@ -172,7 +245,36 @@ fun AddChatView(
                     .fillMaxSize()
                     .padding(horizontal = 12.dp)
             ) {
+                var showCard by remember { mutableStateOf(false) }
+
+                LaunchedEffect(Unit) {
+                    delay(500)
+                    showCard = true
+                }
+
                 Box {
+                    if (friendList.isEmpty()) androidx.compose.animation.AnimatedVisibility(
+                        visible = friendList.isEmpty() && showCard,
+                        enter = fadeIn(tween(500))
+                    ) {
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Card(
+                                modifier = Modifier
+                                    .padding(16.dp)
+                                    .align(Alignment.TopCenter),
+                                colors = CardDefaults.cardColors().copy(containerColor = DarkPrimaryTransparent80)
+                            ) {
+                                Text(
+                                    modifier = Modifier.padding(8.dp),
+                                    text = "You've got no friends! try adding some. 😣",
+                                    textAlign = TextAlign.Center
+                                )
+                            }
+                        }
+                    }
                     if (!isLoadingChats) {
                         LazyVerticalGrid(
                             columns = GridCells.Fixed(3)
@@ -184,15 +286,21 @@ fun AddChatView(
                                     friendList.filter { it.username.contains(username.value, ignoreCase = true) }
                                 }
                             ) { friends ->
+                                val haptic = LocalHapticFeedback.current
                                 ProfileCard(
                                     name = friends.username,
                                     image = friends.imageUrl,
                                     paddingValues = PaddingValues(4.dp),
                                     alertTitle = "Unfriend ${friends.username}?",
                                     alertButton = "Unfriend",
+                                    onLongClick = {
+                                        friendViewModel.setBottomSheetState(true)
+                                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                        friendId = friends.userId
+                                    }
                                 ) {
                                     val friendUsername = friends.username
-                                    val friendId = friends.userId
+                                    friendId = friends.userId
 
                                     val chatRoomFiltered =
                                         viewModel.getRoomFiltered(friends.userId, chatrooms.value)

@@ -1,4 +1,4 @@
-package id.neotica.world.feat.game
+package id.neotica.tavern
 
 import android.util.Log
 import android.widget.Toast
@@ -56,7 +56,7 @@ import id.neotica.ui.theme.FontSize
 import id.neotica.ui.theme.NeoPadding
 import id.neotica.ui.theme.Transparent
 import id.neotica.ui.theme.TransparentText20
-import id.neotica.world.feat.game.components.SlotMachine
+import id.neotica.tavern.components.SlotMachine
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -164,10 +164,7 @@ fun TavernView(
                     ),
                     border = BorderStroke(2.dp, DarkPrimary)
                 ) {
-                    SlotMachine(
-                        Modifier
-                            .fillMaxWidth()
-                            .padding(30.dp))
+                    SlotMachine()
                 }
                 Column(
                     Modifier.padding(vertical = 8.dp, horizontal = 16.dp)

@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.Icon
@@ -60,11 +59,6 @@ fun MainView() {
                 screen = RootScreen.HomeNav
             ),
             NavigationItem(
-                title = "Friends",
-                icon = Icons.Default.AccountBox,
-                screen = RootScreen.FriendNav
-            ),
-            NavigationItem(
                 title = "World",
                 icon = ImageVector.vectorResource(R.drawable.ic_world),
                 screen = RootScreen.WorldNav
@@ -93,7 +87,8 @@ fun MainView() {
             WorldScreen.LeaderBoardsScreen,
             WorldScreen.TerminalScreen,
             WorldScreen.RavenScreen,
-            WorldScreen.RavenChatScreen
+            WorldScreen.RavenChatScreen,
+            Screen.FriendScreen
         )
 
         val includeRoute = bottomBarExcludedRoutes.none {

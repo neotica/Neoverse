@@ -34,7 +34,6 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import id.neotica.ui.R
@@ -47,15 +46,11 @@ fun NeoSearchBar(
     value: MutableState<String>,
     onValueChange: ((String) -> Unit)? = null,
     leadingIcon: (@Composable () -> Unit)? = null,
-    placeHolder: String? = null,
+    modifier: Modifier? = null,
     imeAction: ImeAction = ImeAction.Search,
     imeSend: (() -> Unit)? = null,
-    visualTransformation: VisualTransformation = VisualTransformation.None,
-    isError: Boolean? = false,
     focusRequester: FocusRequester? = null,
     padding: PaddingValues = PaddingValues(),
-    fillMaxWidth: Boolean = true,
-    customModifier: Modifier? = null,
     trailingIcon: (@Composable () -> Unit)? = null,
     label: String? = null
 ) {
@@ -73,6 +68,7 @@ fun NeoSearchBar(
 
     Card(
         Modifier
+            .then(modifier ?: Modifier)
             .padding(padding)
             .fillMaxWidth()
             .border(

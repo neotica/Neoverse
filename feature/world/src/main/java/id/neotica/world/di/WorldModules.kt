@@ -1,7 +1,7 @@
 package id.neotica.world.di
 
 import id.neotica.raven.RavenViewModel
-import id.neotica.world.feat.game.TavernViewModel
+import id.neotica.tavern.TavernViewModel
 import id.neotica.world.feat.inventory.InventoryViewModel
 import id.neotica.world.feat.kanye.KanyeViewModel
 import id.neotica.world.feat.leaderboards.LeaderBoardsViewModel

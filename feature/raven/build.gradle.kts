@@ -6,10 +6,10 @@ plugins {
 
 android {
     namespace = "id.neotica.raven"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
-        minSdk = 26
+        minSdk = 27
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
@@ -23,9 +23,6 @@ android {
                 "proguard-rules.pro"
             )
         }
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8

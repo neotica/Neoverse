@@ -41,7 +41,7 @@ import id.neotica.droidcore.component.alert.NeoAlert
 import id.neotica.droidcore.component.icon.AlertEnum
 import id.neotica.ui.R
 import id.neotica.ui.components.BasicScaffold
-import id.neotica.ui.components.ImageCoil
+import id.neotica.ui.components.image.ImageCoil
 import id.neotica.ui.components.LoadingIndicatorBool
 import id.neotica.ui.components.MenuItem
 import id.neotica.ui.components.NeoButton

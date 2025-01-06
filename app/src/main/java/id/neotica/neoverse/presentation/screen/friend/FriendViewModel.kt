@@ -12,7 +12,6 @@ import id.neotica.domain.model.User
 import id.neotica.domain.remote.ChatRepository
 import id.neotica.domain.remote.UserRepository
 import id.neotica.domain.usecase.GetUserIdUseCase
-import id.neotica.domain.utils.randomUUID
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -121,10 +120,10 @@ class FriendViewModel(
         }
     }
 
-    fun addChatroom(user2: String, user: User) = viewModelScope.launch {
+    fun addChatroom(user2: String, user: User, roomId: String) = viewModelScope.launch {
         currentUserName().let {
             val chatroomDetail = ChatRoom(
-                id = randomUUID(),
+                id = roomId,
                 name = currentUserId()+ user.userId,
                 user1 = it,
                 user2 = user2,

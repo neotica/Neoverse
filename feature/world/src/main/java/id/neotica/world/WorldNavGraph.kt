@@ -10,11 +10,12 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import id.neotica.alexandria.navigation.alexandriaNavGraph
 import id.neotica.raven.RavenChatView
 import id.neotica.raven.RavenView
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.WorldScreen
-import id.neotica.world.feat.game.TavernView
+import id.neotica.tavern.TavernView
 import id.neotica.world.feat.inventory.InventoryView
 import id.neotica.world.feat.kanye.KanyeView
 import id.neotica.world.feat.leaderboards.LeaderBoardsView
@@ -64,9 +65,7 @@ fun NavGraphBuilder.worldNavGraph(
             enterTransition = { fadeIn(tween(100)) },
             exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End, tween(100)) }
         ) {
-            ItemDetailView(
-                navController, paddingValues
-            )
+            ItemDetailView(navController)
         }
         composable<WorldScreen.MerchantScreen>(
             enterTransition = { fadeIn(tween(100)) },
@@ -80,9 +79,7 @@ fun NavGraphBuilder.worldNavGraph(
             enterTransition = { fadeIn(tween(100)) },
             exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End, tween(100)) }
         ) {
-            InventoryView(
-                navController, paddingValues
-            )
+            InventoryView(navController)
         }
         composable<WorldScreen.MiningScreen>(
             enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start, tween(100)) },
@@ -134,17 +131,14 @@ fun NavGraphBuilder.worldNavGraph(
             enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start, tween(100)) },
             exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End, tween(100)) }
         ) {
-            RavenView(
-                navController
-            )
+            RavenView(navController)
         }
         composable<WorldScreen.RavenChatScreen>(
             enterTransition = { EnterTransition.None },
             exitTransition = { ExitTransition.None }
         ) {
-            RavenChatView(
-                navController
-            )
+            RavenChatView(navController)
         }
+        alexandriaNavGraph(navController)
     }
 }

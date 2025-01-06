@@ -1,4 +1,4 @@
-package id.neotica.world.feat.game
+package id.neotica.tavern
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

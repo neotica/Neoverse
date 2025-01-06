@@ -4,7 +4,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -40,7 +39,7 @@ import id.neotica.domain.model.World
 import id.neotica.domain.model.market.Hero
 import id.neotica.domain.model.market.Item
 import id.neotica.ui.components.BasicScaffold
-import id.neotica.ui.components.ImageCoil
+import id.neotica.ui.components.image.ImageCoil
 import id.neotica.ui.navigation.WorldScreen
 import id.neotica.ui.state.ScreenState
 import id.neotica.ui.theme.DarkPrimaryTransparent2
@@ -50,7 +49,6 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun InventoryView(
     navController: NavController,
-    paddingValues: PaddingValues,
     viewModel: InventoryViewModel = koinViewModel()
 ) {
     var currentAuras by remember { mutableStateOf<World?>(null) }
@@ -155,7 +153,6 @@ fun InventoryView(
                                         scaleCustom = true,
                                         contentScale = ContentScale.Crop,
                                         fillMaxWidth = true,
-                                        customModifier = true,
                                         modifier = Modifier.fillMaxWidth()
                                     )
                                 }
@@ -207,7 +204,6 @@ fun InventoryView(
                                         scaleCustom = true,
                                         contentScale = ContentScale.Crop,
                                         fillMaxWidth = true,
-                                        customModifier = true,
                                         modifier = Modifier.fillMaxWidth()
                                     )
                                 }

@@ -1,4 +1,4 @@
-package id.neotica.ui.components
+package id.neotica.ui.components.animation
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.LinearEasing
@@ -11,7 +11,6 @@ import androidx.compose.ui.Modifier
 @Composable
 fun SlideInto(
     trigger: Boolean = false,
-    modifier: Modifier = Modifier,
     inTime: Int = 500,
     outTime: Int = 500,
     content: @Composable () -> Unit

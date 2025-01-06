@@ -46,6 +46,7 @@ fun RegisterView(
         !nameValue.value.contains(Regex("\\s"))
     }
     val blockedWord = listOf(
+        "nigga", "nigger", "nigguh", "neoverse", "neotica",
         "aa5u", "a5uu", "aasu", "ajg", "alay", "ampas", "anus", "anjeng", "anjing", "anjir", "antek", "asem",
         "asing", "autis", "ayamkampus", "awuk", "b1ch", "bab1", "babi", "bacot", "bajang", "bajingan",
         "banci", "bandot", "bangkai", "bangsat", "bani", "bani kotak", "bego", "bejat", "bencong", "berak",

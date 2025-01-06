@@ -37,7 +37,7 @@ import id.neotica.domain.model.market.Item
 import id.neotica.droidcore.component.alert.AlertDialogCustomDesc
 import id.neotica.droidcore.component.textfield.NumberField
 import id.neotica.ui.components.BasicScaffold
-import id.neotica.ui.components.ImageCoil
+import id.neotica.ui.components.image.ImageCoil
 import id.neotica.ui.components.LoadingIndicator
 import id.neotica.ui.components.NeoButton
 import id.neotica.ui.state.ScreenState
@@ -47,7 +47,6 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun ItemDetailView(
     navController: NavController,
-    paddingValues: PaddingValues,
     viewModel: ItemDetailViewModel = koinViewModel()
 ) {
     var currentAuras by remember { mutableStateOf<World?>(null) }
@@ -175,7 +174,6 @@ fun ItemDetailView(
                                         scaleCustom = true,
                                         contentScale = ContentScale.FillWidth,
                                         fillMaxWidth = true,
-                                        customModifier = true,
                                         modifier = Modifier.fillMaxWidth()
                                     )
                                 }
@@ -234,7 +232,6 @@ fun ItemDetailView(
                                 scaleCustom = true,
                                 contentScale = ContentScale.Inside,
                                 fillMaxWidth = true,
-                                customModifier = true,
                                 modifier = Modifier.fillMaxWidth()
                             )
                         }
