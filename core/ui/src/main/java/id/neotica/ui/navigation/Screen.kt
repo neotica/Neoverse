@@ -112,9 +112,12 @@ sealed class WorldScreen {
     data object RavenChatScreen: Screen()
 }
 
+@Serializable
 sealed class AlexandriaScreen {
     @Serializable
     data object HomeScreen: AlexandriaScreen()
+    @Serializable
+    data object GoetiaScreen: AlexandriaScreen()
 }
 
 data class NavigationItem(
