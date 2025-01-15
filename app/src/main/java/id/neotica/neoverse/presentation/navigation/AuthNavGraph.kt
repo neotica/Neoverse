@@ -1,6 +1,8 @@
 package id.neotica.neoverse.presentation.navigation
 
 import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.navigation.NavController
@@ -18,6 +20,7 @@ import id.neotica.neoverse.presentation.screen.profile.accountsettings.AccountSe
 import id.neotica.neoverse.presentation.screen.profile.deleteaccount.DeleteAccountView
 import id.neotica.neoverse.presentation.screen.profile.editprofile.EditProfileView
 import id.neotica.neoverse.presentation.screen.profile.privacypolicy.PrivacyPolicyView
+import id.neotica.neoverse.presentation.screen.profile.resetpassword.ResetPasswordView
 import id.neotica.neoverse.presentation.screen.profile.termsofsercive.TermsOfServiceView
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.Screen
@@ -81,6 +84,12 @@ fun NavGraphBuilder.authNavGraph(
             exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End, tween(100)) }
         ) {
             AboutView(navController)
+        }
+        composable<Screen.ResetPassword>(
+            enterTransition = { EnterTransition.None },
+            exitTransition = { ExitTransition.None }
+        ) {
+            ResetPasswordView(navController)
         }
     }
 }

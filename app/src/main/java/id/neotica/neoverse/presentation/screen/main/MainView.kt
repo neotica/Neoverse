@@ -91,7 +91,8 @@ fun MainView() {
             WorldScreen.RavenChatScreen,
             Screen.FriendScreen,
             AlexandriaScreen.HomeScreen,
-            AlexandriaScreen.GoetiaScreen
+            AlexandriaScreen.GoetiaScreen,
+            Screen.ResetPassword
         )
 
         val includeRoute = bottomBarExcludedRoutes.none {

@@ -130,4 +130,8 @@ class AuthRepositoryImpl: AuthRepository {
         auth = FirebaseAuth.getInstance()
         auth.signOut()
     }
+
+    override fun resetPassword(email: String) {
+        auth.sendPasswordResetEmail(email)
+    }
 }
