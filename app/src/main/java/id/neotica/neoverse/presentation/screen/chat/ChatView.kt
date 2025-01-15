@@ -11,6 +11,7 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
@@ -18,7 +19,6 @@ import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.lazy.LazyColumn
@@ -87,7 +87,7 @@ import id.neotica.ui.theme.TransparentText40
 import kotlinx.coroutines.delay
 import org.koin.androidx.compose.koinViewModel
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalLayoutApi::class)
 @Composable
 fun ChatView(
     navController: NavController,
@@ -145,7 +145,7 @@ fun ChatView(
                 noiseFactor = 0.15f
                 backgroundColor = DarkPrimaryTransparent80
             }
-            .padding(top = WindowInsets.ime.asPaddingValues().calculateBottomPadding())
+            .padding(top = NeoPadding.topBarImePadding)
             .fillMaxWidth(),
         fullScreen = true,
         trailingIcon = {
@@ -238,7 +238,7 @@ fun ChatMessages(
                         state = listState,
                         contentPadding = PaddingValues(
                             bottom = NeoPadding.systemBarPadding + 46.dp + 8.dp,
-                            top = NeoPadding.topBarPadding
+                            top = NeoPadding.topBarPadding + 8.dp
                         )
                     ) {
                         items(messages) { messages ->
