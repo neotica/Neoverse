@@ -90,6 +90,7 @@ fun MainView() {
             WorldScreen.RavenScreen,
             WorldScreen.RavenChatScreen,
             Screen.FriendScreen,
+            AlexandriaScreen.HomeScreen,
             AlexandriaScreen.GoetiaScreen
         )
 

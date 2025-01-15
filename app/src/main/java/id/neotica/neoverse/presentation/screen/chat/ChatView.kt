@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.lazy.LazyColumn
@@ -61,6 +62,10 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
+import dev.chrisbanes.haze.HazeProgressive
+import dev.chrisbanes.haze.HazeState
+import dev.chrisbanes.haze.hazeEffect
+import dev.chrisbanes.haze.hazeSource
 import id.neotica.domain.model.chat.Message
 import id.neotica.domain.utils.convertLongToTime
 import id.neotica.ui.R
@@ -72,6 +77,7 @@ import id.neotica.ui.navigation.Screen
 import id.neotica.ui.theme.BlackTransparent40
 import id.neotica.ui.theme.DarkPrimary
 import id.neotica.ui.theme.DarkPrimaryTransparent2
+import id.neotica.ui.theme.DarkPrimaryTransparent40
 import id.neotica.ui.theme.DarkPrimaryTransparent80
 import id.neotica.ui.theme.FontSize
 import id.neotica.ui.theme.NeoPadding
@@ -116,6 +122,7 @@ fun ChatView(
     }
     val context = LocalContext.current
     val haptic = LocalHapticFeedback.current
+    val hazeState = remember { HazeState() }
 
     BasicScaffold(
         topBarTitle = args.user2,
@@ -129,7 +136,17 @@ fun ChatView(
             }
         },
         navController = navController,
-        topBarVisibility = scrollTrue,
+        topBarVisibility = true,
+//        topBarBackground = scrollTrue,
+        topBarModifier = Modifier
+            .hazeEffect(hazeState) {
+                blurEnabled = true
+                blurRadius = 10.dp
+                noiseFactor = 0.15f
+                backgroundColor = DarkPrimaryTransparent80
+            }
+            .padding(top = WindowInsets.ime.asPaddingValues().calculateBottomPadding())
+            .fillMaxWidth(),
         fullScreen = true,
         trailingIcon = {
             var expanded by remember { mutableStateOf(false) }
@@ -173,12 +190,15 @@ fun ChatView(
             }
         }
     ) {
-        ChatMessages(
-            messages = messages.value,
-            listState = listState,
-        ) { msg ->
-            if (msg.isNotEmpty() && args.user2.isNotEmpty()) {
-                viewModel.sendMessage(chatId = args.chatId, msg)
+        Box {
+            ChatMessages(
+                messages = messages.value,
+                listState = listState,
+                hazeState
+            ) { msg ->
+                if (msg.isNotEmpty() && args.user2.isNotEmpty()) {
+                    viewModel.sendMessage(chatId = args.chatId, msg)
+                }
             }
         }
     }
@@ -189,6 +209,7 @@ fun ChatView(
 fun ChatMessages(
     messages: List<Message>,
     listState: LazyListState,
+    hazeState: HazeState,
     onSendMessage: (String) -> Unit
 ) {
     val msg = remember { mutableStateOf("") }
@@ -199,49 +220,52 @@ fun ChatMessages(
         showCard = true
     }
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-    ) {
-        Column(
-            Modifier
+    Box {
+        Box(
+            modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 16.dp)
+                .hazeSource(state = hazeState)
         ) {
-            if (messages.isNotEmpty()) {
-                LazyColumn(
-                    modifier = Modifier
-                        .weight(1f),
-                    state = listState,
-                    contentPadding = PaddingValues(
-                        bottom = NeoPadding.systemBarPadding + 46.dp + 8.dp,
-                        top = NeoPadding.topBarPadding
-                    )
-                ) {
-                    items(messages) { messages ->
-                        ChatBubble(message = messages)
-                    }
-                }
-            } else {
-                androidx.compose.animation.AnimatedVisibility(
-                    visible = messages.isEmpty() && showCard,
-                    enter = fadeIn(tween(500))
-                ) {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
+            Column(
+                Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 16.dp)
+            ) {
+                if (messages.isNotEmpty()) {
+                    LazyColumn(
+                        modifier = Modifier
+                            .weight(1f),
+                        state = listState,
+                        contentPadding = PaddingValues(
+                            bottom = NeoPadding.systemBarPadding + 46.dp + 8.dp,
+                            top = NeoPadding.topBarPadding
+                        )
                     ) {
-                        Card(
-                            modifier = Modifier
-                                .padding(16.dp)
-                                .align(Alignment.Center),
-                            colors = CardDefaults.cardColors().copy(containerColor = DarkPrimaryTransparent80)
+                        items(messages) { messages ->
+                            ChatBubble(message = messages)
+                        }
+                    }
+                } else {
+                    androidx.compose.animation.AnimatedVisibility(
+                        visible = messages.isEmpty() && showCard,
+                        enter = fadeIn(tween(500))
+                    ) {
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
                         ) {
-                            Text(
-                                modifier = Modifier.padding(8.dp),
-                                text = "Whoops! It's a bit empty around here. Try sending a message! 😣",
-                                textAlign = TextAlign.Center
-                            )
+                            Card(
+                                modifier = Modifier
+                                    .padding(16.dp)
+                                    .align(Alignment.Center),
+                                colors = CardDefaults.cardColors().copy(containerColor = DarkPrimaryTransparent80)
+                            ) {
+                                Text(
+                                    modifier = Modifier.padding(8.dp),
+                                    text = "Whoops! It's a bit empty around here. Try sending a message! 😣",
+                                    textAlign = TextAlign.Center
+                                )
+                            }
                         }
                     }
                 }
@@ -249,11 +273,18 @@ fun ChatMessages(
         }
         Surface(
             modifier = Modifier
+                .hazeEffect(hazeState) {
+                    blurEnabled = true
+                    blurRadius = 10.dp
+                    noiseFactor = 0.15f
+                    backgroundColor = Transparent
+                    progressive =
+                        HazeProgressive.verticalGradient(startIntensity = 0f, endIntensity = 1f)
+                }
                 .align(Alignment.BottomCenter)
                 .padding(
                     start = 8.dp,
                     end = 8.dp,
-                    top = 4.dp,
                     bottom = WindowInsets.systemBars
                         .asPaddingValues()
                         .calculateBottomPadding()
@@ -263,13 +294,15 @@ fun ChatMessages(
             shape = RoundedCornerShape(32.dp)
         ) {
             Card(
-                Modifier.height(46.dp),
+                Modifier
+                    .height(46.dp),
+                colors = CardDefaults.cardColors().copy(containerColor = Transparent),
                 shape = RoundedCornerShape(32.dp),
                 elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
             ) {
                 Row(
                     modifier = Modifier
-                        .background(DarkPrimary)
+                        .background(DarkPrimaryTransparent40)
                         .fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
@@ -301,11 +334,16 @@ fun ChatMessages(
                             innerTextField()
                         }
                     }
-                    IconButton(onClick = {
-                        onSendMessage(msg.value)
-                        msg.value = ""
-                    }) {
-                        Icon(imageVector = Icons.AutoMirrored.Filled.Send, contentDescription = "send")
+                    Box(Modifier.background(color = DarkPrimary)) {
+                        IconButton(onClick = {
+                            onSendMessage(msg.value)
+                            msg.value = ""
+                        }) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.Send,
+                                contentDescription = "send"
+                            )
+                        }
                     }
                 }
             }

@@ -20,7 +20,11 @@ import id.neotica.ui.theme.DarkPrimaryTransparent80
 fun LibraryView(
     navController: NavController
 ) {
-    BasicScaffold("The Library of Thoth") {
+    BasicScaffold(
+        "The Library of Thoth",
+        navController = navController,
+        enableActionBar = true
+    ) {
         Card(
             modifier = Modifier
                 .clickable { navController.navigate(AlexandriaScreen.GoetiaScreen) }

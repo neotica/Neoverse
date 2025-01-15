@@ -30,6 +30,7 @@ import androidx.compose.ui.res.vectorResource
 import androidx.navigation.NavController
 import id.neotica.ui.R
 import id.neotica.ui.navigation.navigateBack
+import id.neotica.ui.theme.DarkPrimaryTransparent80
 import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -46,6 +47,8 @@ fun BasicScaffold(
     horizontalAlignment: Alignment.Horizontal = Alignment.Start,
     trailingIcon: (@Composable () -> Unit)? = null,
     topBarVisibility: Boolean = true,
+    topBarBackground: Boolean? = null,
+    topBarModifier: Modifier = Modifier,
     content: @Composable () -> Unit
 ) {
     Scaffold(
@@ -56,14 +59,17 @@ fun BasicScaffold(
                 enter = expandVertically(),
                 exit = shrinkVertically(),
             ) {
+                val topBarColor = if (topBarBackground == true) DarkPrimaryTransparent80 else DarkPrimaryTransparent80
+
                 TopAppBar(
                     title = {
                         Text(topBarTitle)
                     },
-                    modifier = Modifier,
+                    modifier = topBarModifier,
                     colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = Transparent,
+                        containerColor = if (topBarBackground!= null) topBarColor else Transparent,
                         titleContentColor = White,
+//                        scrolledContainerColor = Transparent
                     ),
                     navigationIcon = {
                         if (enableActionBar) {
