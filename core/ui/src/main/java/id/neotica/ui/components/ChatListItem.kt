@@ -67,6 +67,7 @@ fun ChatListItem(
                 indication = ripple(bounded = true),
                 onClick = { onClick() },
                 onLongClick = {
+                    onLongClick()
                     haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                     longClick?.invoke()
                 },

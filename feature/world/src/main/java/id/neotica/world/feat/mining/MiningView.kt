@@ -1,5 +1,6 @@
 package id.neotica.world.feat.mining
 
+import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
@@ -74,6 +75,8 @@ fun MiningView(
         customActionBar = { openDialog.value = true },
         enableActionBar = true
     ) {
+        val context = LocalContext.current
+
         LazyColumn(
             modifier = Modifier.padding(horizontal = 16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
@@ -82,25 +85,33 @@ fun MiningView(
                 Text("Your Aura: ${currentAuras ?: ""}")
 
                 ImagePermanentCache(
-                    context = LocalContext.current,
+                    context = context,
                     fileName = "obj_rock",
                     url = rockPicture,
                     size = 200.dp
-                ) { coal += 1 }
+                ) {
+                    if (coal < 500) {
+                        coal += 1
+                    } else {
+                        Toast.makeText(context, "You have reached the maximum coal limit.", Toast.LENGTH_SHORT).show()
+                    }
+                }
+
+                val currentCoalRate = 50
 
                 Text("Coal Mined: $coal")
-                if (coal >= 100) {
-                    val hundredsSum = coal / 100
-                    val coalSum = hundredsSum * 100
+                if (coal >= currentCoalRate) {
+                    val hundredsSum = coal / currentCoalRate
+                    val coalSum = hundredsSum * currentCoalRate
 
                     NeoButton("Exchange $coalSum Coals for $hundredsSum Aura") {
-                        if (coal >= 100 && !isLoading) {
+                        if (coal >= currentCoalRate && !isLoading) {
                             coal -= coalSum
                             viewModel.postAura(hundredsSum)
                         }
                     }
                 } else {
-                    Text("Tap the rock to mine the coal. The current rate for 1 aura is 100 coals.")
+                    Text("Tap the rock to mine the coal. The current rate for 1 aura is $currentCoalRate coals.")
                 }
             }
         }
