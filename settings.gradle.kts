@@ -1,3 +1,4 @@
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 pluginManagement {
     repositories {
         google {
@@ -16,8 +17,23 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        maven { setUrl("https://jitpack.io") }
     }
 }
 
 rootProject.name = "Neoverse"
 include(":app")
+include(":core")
+include(":core:database")
+include(":core:domain")
+include(":core:network")
+include(":core:ui")
+include(":core:core")
+include(":core:retrofit")
+include(":core:camera")
+include(":feature")
+include(":feature:world")
+include(":neoversewear")
+include(":feature:raven")
+include(":feature:tavern")
+include(":feature:alexandria")

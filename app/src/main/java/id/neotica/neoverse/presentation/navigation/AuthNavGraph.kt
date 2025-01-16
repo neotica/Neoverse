@@ -1,30 +1,95 @@
 package id.neotica.neoverse.presentation.navigation
 
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import id.neotica.neoverse.presentation.screen.auth.LoginView
-import id.neotica.neoverse.presentation.screen.auth.RegisterView
+import androidx.navigation.toRoute
+import id.neotica.neoverse.presentation.screen.auth.login.LoginView
+import id.neotica.neoverse.presentation.screen.auth.register.RegisterView
+import id.neotica.neoverse.presentation.screen.auth.verify.VerifyEmailView
+import id.neotica.neoverse.presentation.screen.camerax.CameraPreviewView
+import id.neotica.neoverse.presentation.screen.profile.ProfileView
+import id.neotica.neoverse.presentation.screen.profile.about.AboutView
+import id.neotica.neoverse.presentation.screen.profile.accountsettings.AccountSettingView
+import id.neotica.neoverse.presentation.screen.profile.deleteaccount.DeleteAccountView
+import id.neotica.neoverse.presentation.screen.profile.editprofile.EditProfileView
+import id.neotica.neoverse.presentation.screen.profile.privacypolicy.PrivacyPolicyView
+import id.neotica.neoverse.presentation.screen.profile.resetpassword.ResetPasswordView
+import id.neotica.neoverse.presentation.screen.profile.termsofsercive.TermsOfServiceView
+import id.neotica.ui.navigation.RootScreen
+import id.neotica.ui.navigation.Screen
 
 fun NavGraphBuilder.authNavGraph(
     navController: NavController,
     paddingValues: PaddingValues
 ){
-    navigation(
-        startDestination = Screen.Login.route,
-        route = Screen.Home.route
+    navigation<RootScreen.AuthNav>(
+        startDestination = Screen.ProfileScreen,
     ) {
-        composable(
-            route = Screen.Login.route
-        ) {
-            LoginView(navController, paddingValues = paddingValues)
+        composable<Screen.LoginScreen>{
+            LoginView(navController)
         }
-        composable(
-            route = Screen.Register.route
+        composable<Screen.RegisterScreen>{
+            RegisterView(navController)
+        }
+        composable<Screen.ProfileScreen> { ProfileView(navController, paddingValues = paddingValues) }
+        composable<Screen.VerifyEmailScreen> {
+            VerifyEmailView(navController, paddingValues)
+        }
+        composable<Screen.PrivacyPolicyScreen>(
+            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start, tween(100)) },
+            exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End, tween(100)) }
         ) {
-            RegisterView(navController, paddingValues = paddingValues)
+            PrivacyPolicyView(navController)
+        }
+        composable<Screen.TermsOfServiceScreen>(
+            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start, tween(100)) },
+            exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End, tween(100)) }
+        ) {
+            TermsOfServiceView(navController)
+        }
+        composable<Screen.AccountSettingScreen>(
+            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start, tween(100)) },
+            exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End, tween(100)) }
+        ) {
+            AccountSettingView(navController, paddingValues)
+        }
+        composable<Screen.DeleteAccountScreen>(
+            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start, tween(100)) },
+            exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End, tween(100)) }
+        ) {
+            DeleteAccountView(navController, paddingValues)
+        }
+        composable<Screen.EditProfileScreen>(
+            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start, tween(100)) },
+            exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End, tween(100)) }
+        ) {
+            val args = it.toRoute<Screen.EditProfileScreen>()
+            EditProfileView(navController, paddingValues, args = args)
+        }
+        composable<Screen.CameraPreviewScreen>(
+            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start, tween(100)) },
+            exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End, tween(100)) }
+        ) {
+            CameraPreviewView(navController)
+        }
+        composable<Screen.AboutScreen>(
+            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start, tween(100)) },
+            exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End, tween(100)) }
+        ) {
+            AboutView(navController)
+        }
+        composable<Screen.ResetPassword>(
+            enterTransition = { EnterTransition.None },
+            exitTransition = { ExitTransition.None }
+        ) {
+            ResetPasswordView(navController)
         }
     }
 }
