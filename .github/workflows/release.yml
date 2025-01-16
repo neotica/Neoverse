@@ -51,6 +51,15 @@ jobs:
         env:
           BUILD_TOOLS_VERSION: "33.0.0"
 
+      # Install Build Tools with a different version
+      - name: Install Android SDK
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 32
+          build-tools: "33.0.0"
+          target: google_apis
+          arch: x86_64
+
       # Upload signed APK to Firebase App Distribution
       - name: Upload signed APK to Firebase App Distribution
         uses: wzieba/Firebase-Distribution-Github-Action@v1
