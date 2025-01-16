@@ -35,6 +35,7 @@ import id.neotica.ui.components.navigation.CustomNavBar
 import id.neotica.ui.components.navigation.CustomNavigationSuiteScaffold
 import id.neotica.ui.components.navigation.NavigationSuiteScaffoldDefaults
 import id.neotica.ui.components.navigation.NavigationSuiteType
+import id.neotica.ui.navigation.AlexandriaScreen
 import id.neotica.ui.navigation.NavigationItem
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.Screen
@@ -88,7 +89,10 @@ fun MainView() {
             WorldScreen.TerminalScreen,
             WorldScreen.RavenScreen,
             WorldScreen.RavenChatScreen,
-            Screen.FriendScreen
+            Screen.FriendScreen,
+            AlexandriaScreen.HomeScreen,
+            AlexandriaScreen.GoetiaScreen,
+            Screen.ResetPassword
         )
 
         val includeRoute = bottomBarExcludedRoutes.none {

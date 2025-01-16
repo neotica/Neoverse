@@ -35,6 +35,8 @@ sealed class Screen {
     @Serializable
     data object RegisterScreen: Screen()
     @Serializable
+    data object ResetPassword: Screen()
+    @Serializable
     data object ProfileScreen: Screen()
     @Serializable
     data object AccountSettingScreen: Screen()
@@ -112,9 +114,12 @@ sealed class WorldScreen {
     data object RavenChatScreen: Screen()
 }
 
+@Serializable
 sealed class AlexandriaScreen {
     @Serializable
     data object HomeScreen: AlexandriaScreen()
+    @Serializable
+    data object GoetiaScreen: AlexandriaScreen()
 }
 
 data class NavigationItem(

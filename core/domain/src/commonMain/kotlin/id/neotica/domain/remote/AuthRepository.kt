@@ -8,4 +8,5 @@ interface AuthRepository {
     suspend fun isUsernameExist(username: String): ApiResult<Boolean>
     fun deleteAccount()
     fun logout()
+    fun resetPassword(email: String)
 }

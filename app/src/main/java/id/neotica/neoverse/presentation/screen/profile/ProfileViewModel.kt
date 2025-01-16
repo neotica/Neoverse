@@ -48,7 +48,7 @@ class ProfileViewModel(
         currentUserDatabase.clearCurrent()
     }
 
-    fun getUser() = viewModelScope.launch {
+    private fun getUser() = viewModelScope.launch {
         val user = userRepo.getUserDetail(userRepo.getUserId())
         _user.value = ApiResult.Loading()
         _user.value = user
@@ -92,5 +92,9 @@ class ProfileViewModel(
         if (!isGranted) {
             visiblePermissionQueue.add(0, permission)
         }
+    }
+
+    fun resetPassword(email: String) = viewModelScope.launch {
+        authRepo.resetPassword(email)
     }
 }

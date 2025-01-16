@@ -36,7 +36,7 @@ fun DeleteAccountView(
         val confirmText = "delete account"
 
         Column(
-            Modifier.padding(horizontal = 4.dp)
+            Modifier.padding(horizontal = 16.dp)
         ) {
             Text("To confirm account deletion, please type \"$confirmText\"")
             Spacer(Modifier.weight(1f))

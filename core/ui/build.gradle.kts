@@ -55,6 +55,7 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     api(libs.androidx.material3)
+    api(libs.haze)
 
     //Adaptive
     api(libs.androidx.material3.adaptive.navigation.suite)

@@ -98,8 +98,8 @@ fun ProfileView(
             Column(
                 modifier = Modifier.padding(16.dp)
             ) {
-                MenuItem("Change Password") {
-                    Toast.makeText(context, "Please contact our support email to change password.", Toast.LENGTH_SHORT).show()
+                MenuItem("Reset Password") {
+                    navController.navigate(Screen.ResetPassword)
                 }
                 MenuItem(
                     "Delete Account",

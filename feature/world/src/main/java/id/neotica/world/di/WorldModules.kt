@@ -1,5 +1,6 @@
 package id.neotica.world.di
 
+import id.neotica.alexandria.di.alexandriaModules
 import id.neotica.raven.RavenViewModel
 import id.neotica.tavern.TavernViewModel
 import id.neotica.world.feat.inventory.InventoryViewModel
@@ -26,4 +27,5 @@ val worldModules = module {
     viewModelOf(::LeaderBoardsViewModel)
     viewModelOf(::SuperAdminViewModel)
     viewModelOf(::RavenViewModel)
+    includes(alexandriaModules)
 }
