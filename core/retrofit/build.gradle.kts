@@ -8,7 +8,7 @@ android {
     compileSdk = 35
 
     defaultConfig {
-        minSdk = 27
+        minSdk = 26
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
@@ -31,11 +31,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "11"
     }
 }
 
@@ -44,10 +44,10 @@ dependencies {
     implementation(projects.core.domain)
 
     // Retrofit for network operations
-    api("com.squareup.retrofit2:retrofit:2.11.0")
-    api("com.squareup.retrofit2:converter-gson:2.11.0")
-    api("com.squareup.okhttp3:logging-interceptor:4.9.0")
-    api("com.squareup.retrofit2:converter-moshi:2.9.0")
+    api(libs.retrofit)
+    api(libs.converter.gson)
+    api(libs.logging.interceptor)
+    api(libs.converter.moshi)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

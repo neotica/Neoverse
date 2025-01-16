@@ -12,7 +12,7 @@ android {
 
     defaultConfig {
         applicationId = "id.neotica.neoverse"
-        minSdk = 27
+        minSdk = 26
         targetSdk = 35
         versionCode = 59
         versionName = "1.0.1"
@@ -43,11 +43,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "11"
     }
     buildFeatures {
         compose = true
