@@ -37,11 +37,12 @@ jobs:
           mv "$ANDROID_HOME/cmdline-tools/cmdline-tools" "$ANDROID_HOME/cmdline-tools/latest"
           rm sdk-tools.zip
 
-      # Install required Android SDK components
+      # Install Android SDK Components (29.0.3 and 33.0.0)
       - name: Install Android SDK Components
         run: |
           yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses
-          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platform-tools" "build-tools;33.0.0" "platforms;android-33"
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platform-tools" \
+            "build-tools;29.0.3" "build-tools;33.0.0" "platforms;android-33"
 
       # Grant execute permissions to Gradle wrapper
       - name: Grant execute permissions for Gradle wrapper
@@ -55,7 +56,7 @@ jobs:
       - name: Debug Build Tools
         run: |
           echo "Checking Build Tools directory:"
-          ls -al $ANDROID_HOME/build-tools/33.0.0
+          ls -al $ANDROID_HOME/build-tools
           echo "Checking PATH variable:"
           echo $PATH
 
