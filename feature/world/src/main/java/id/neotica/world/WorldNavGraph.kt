@@ -43,8 +43,8 @@ fun NavGraphBuilder.worldNavGraph(
             )
         }
         composable<WorldScreen.TavernScreen>(
-            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start, tween(100)) },
-            exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End, tween(100)) }
+            enterTransition = { EnterTransition.None },
+            exitTransition = { ExitTransition.None }
         ) {
             TavernView(navController)
         }
@@ -76,14 +76,14 @@ fun NavGraphBuilder.worldNavGraph(
             )
         }
         composable<WorldScreen.InventoryScreen>(
-            enterTransition = { fadeIn(tween(100)) },
-            exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End, tween(100)) }
+            enterTransition = { EnterTransition.None },
+            exitTransition = { ExitTransition.None }
         ) {
             InventoryView(navController)
         }
         composable<WorldScreen.MiningScreen>(
-            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start, tween(100)) },
-            exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End, tween(100)) }
+            enterTransition = { EnterTransition.None },
+            exitTransition = { ExitTransition.None }
         ) {
             MiningView(
                 navController, paddingValues
@@ -106,8 +106,8 @@ fun NavGraphBuilder.worldNavGraph(
             )
         }
         composable<WorldScreen.LeaderBoardsScreen>(
-            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start, tween(100)) },
-            exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End, tween(100)) }
+            enterTransition = { EnterTransition.None },
+            exitTransition = { ExitTransition.None }
         ) {
             LeaderBoardsView(
                 navController, paddingValues

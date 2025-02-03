@@ -1,9 +1,7 @@
 package id.neotica.neoverse.presentation.navigation
 
-import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -32,10 +30,10 @@ fun NavGraphBuilder.authNavGraph(
     navigation<RootScreen.AuthNav>(
         startDestination = Screen.ProfileScreen,
     ) {
-        composable<Screen.LoginScreen>{
+        composable<Screen.LoginScreen> {
             LoginView(navController)
         }
-        composable<Screen.RegisterScreen>{
+        composable<Screen.RegisterScreen> {
             RegisterView(navController)
         }
         composable<Screen.ProfileScreen> { ProfileView(navController, paddingValues = paddingValues) }
@@ -43,45 +41,45 @@ fun NavGraphBuilder.authNavGraph(
             VerifyEmailView(navController, paddingValues)
         }
         composable<Screen.PrivacyPolicyScreen>(
-            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start, tween(100)) },
-            exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End, tween(100)) }
+            enterTransition = { EnterTransition.None },
+            exitTransition = { ExitTransition.None }
         ) {
             PrivacyPolicyView(navController)
         }
         composable<Screen.TermsOfServiceScreen>(
-            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start, tween(100)) },
-            exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End, tween(100)) }
+            enterTransition = { EnterTransition.None },
+            exitTransition = { ExitTransition.None }
         ) {
             TermsOfServiceView(navController)
         }
         composable<Screen.AccountSettingScreen>(
-            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start, tween(100)) },
-            exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End, tween(100)) }
+            enterTransition = { EnterTransition.None },
+            exitTransition = { ExitTransition.None }
         ) {
             AccountSettingView(navController, paddingValues)
         }
         composable<Screen.DeleteAccountScreen>(
-            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start, tween(100)) },
-            exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End, tween(100)) }
+            enterTransition = { EnterTransition.None },
+            exitTransition = { ExitTransition.None }
         ) {
             DeleteAccountView(navController, paddingValues)
         }
         composable<Screen.EditProfileScreen>(
-            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start, tween(100)) },
-            exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End, tween(100)) }
+            enterTransition = { EnterTransition.None },
+            exitTransition = { ExitTransition.None }
         ) {
             val args = it.toRoute<Screen.EditProfileScreen>()
             EditProfileView(navController, paddingValues, args = args)
         }
         composable<Screen.CameraPreviewScreen>(
-            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start, tween(100)) },
-            exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End, tween(100)) }
+            enterTransition = { EnterTransition.None },
+            exitTransition = { ExitTransition.None }
         ) {
             CameraPreviewView(navController)
         }
         composable<Screen.AboutScreen>(
-            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start, tween(100)) },
-            exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End, tween(100)) }
+            enterTransition = { EnterTransition.None },
+            exitTransition = { ExitTransition.None }
         ) {
             AboutView(navController)
         }

@@ -8,14 +8,14 @@ plugins {
 
 android {
     namespace = "id.neotica.neoverse"
-    compileSdk = 35
+    compileSdkPreview = "Baklava"
 
     defaultConfig {
         applicationId = "id.neotica.neoverse"
         minSdk = 26
-        targetSdk = 35
-        versionCode = 59
-        versionName = "1.0.1"
+        targetSdkPreview = "Baklava"
+        versionCode = 60
+        versionName = "1.0.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
