@@ -42,9 +42,10 @@ import com.google.firebase.initialize
 import id.neotica.neoverse.presentation.screen.main.MainView
 import id.neotica.neoverse.presentation.screen.main.MainViewModel
 import kotlinx.coroutines.delay
-import org.koin.androidx.compose.koinViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity: ComponentActivity() {
+    private val viewModel: MainViewModel by viewModel()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         installSplashScreen()
@@ -60,7 +61,7 @@ class MainActivity: ComponentActivity() {
         notificationManager.cancelAll() // Clear all notification when user clicked on it.
 
         setContent {
-            val viewModel = koinViewModel<MainViewModel>()
+//            val viewModel = koinViewModel<MainViewModel>()
             val isConnectedState = viewModel.isConnected.collectAsState().value
 
             var showCard by remember { mutableStateOf(false) }

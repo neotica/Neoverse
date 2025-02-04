@@ -20,6 +20,7 @@ import com.google.firebase.ktx.Firebase
 import id.neotica.neoverse.R
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.Screen
+import id.neotica.ui.theme.DarkBackground
 
 @Composable
 fun SplashView(navController: NavController) {
@@ -29,7 +30,7 @@ fun SplashView(navController: NavController) {
                 painter = painterResource(id = R.drawable.splash_screen),
                 contentScale = ContentScale.Crop
             )*/
-            .background(Color.Black)
+            .background(DarkBackground)
             .fillMaxSize(),
         contentAlignment = Alignment.Center,
     ) {
