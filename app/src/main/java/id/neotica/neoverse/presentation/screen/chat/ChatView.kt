@@ -1,17 +1,20 @@
 package id.neotica.neoverse.presentation.screen.chat
 
 import android.annotation.SuppressLint
+import android.content.Intent
+import android.net.Uri
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
@@ -27,6 +30,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material3.Card
@@ -52,11 +56,17 @@ import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -87,7 +97,7 @@ import id.neotica.ui.theme.TransparentText40
 import kotlinx.coroutines.delay
 import org.koin.androidx.compose.koinViewModel
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalLayoutApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ChatView(
     navController: NavController,
@@ -214,13 +224,18 @@ fun ChatMessages(
 ) {
     val msg = remember { mutableStateOf("") }
     var showCard by remember { mutableStateOf(false) }
+    val focusManager = LocalFocusManager.current
 
     LaunchedEffect(Unit) {
         delay(500L)
         showCard = true
     }
 
-    Box {
+    Box(
+        Modifier.pointerInput(Unit) {
+            detectTapGestures { focusManager.clearFocus() }
+        }
+    ) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -383,13 +398,53 @@ fun ChatBubble(message: Message) {
                 Box {
                     Column {
                         Row {
-                            Text(
-                                text = message.message,
-                                color = textColor,
-                                modifier = Modifier
-                                    .padding(8.dp)
-                                    .weight(1f, fill = false)
-                            )
+                            val context = LocalContext.current
+
+                            // Function to detect URLs and apply clickable styling
+                            val annotatedText = buildAnnotatedString {
+                                val regex = "(https?://\\S+)".toRegex()
+                                var lastIndex = 0
+
+                                regex.findAll(message.message).forEach { matchResult ->
+                                    val url = matchResult.value
+                                    val start = matchResult.range.first
+                                    val end = matchResult.range.last + 1
+
+                                    // Add regular text before the URL
+                                    append(message.message.substring(lastIndex, start))
+
+                                    // Apply color to URL
+                                    pushStringAnnotation(tag = "URL", annotation = url)
+                                    withStyle(style = SpanStyle(color = TransparentText40, textDecoration = TextDecoration.Underline)) {
+                                        append(url)
+                                    }
+                                    pop()
+
+                                    lastIndex = end
+                                }
+
+                                if (lastIndex < message.message.length) {
+                                    append(message.message.substring(lastIndex))
+                                }
+                            }
+
+                            SelectionContainer {
+                                Text(
+                                    text = annotatedText,
+                                    color = textColor,
+                                    modifier = Modifier
+                                        .padding(8.dp)
+                                        .weight(1f, fill = false)
+                                        .clickable {
+                                            val filteredUrls = "(https?://\\S+)".toRegex().findAll(message.message)
+                                                .map { it.value }
+                                                .joinToString(" ")
+                                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(filteredUrls))
+                                            if (filteredUrls.isNotEmpty()) context.startActivity(intent)
+                                        }
+                                )
+                            }
+
                             Text(
                                 modifier = Modifier
                                     .padding(end = 8.dp)
