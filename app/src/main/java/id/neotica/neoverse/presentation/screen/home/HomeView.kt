@@ -335,7 +335,7 @@ fun HomeView(
                                                                     .show()
                                                             }
                                                         ) {
-                                                            navController.navigate(RootScreen.AuthNav)
+                                                            navController.navigate(RootScreen.ProfileNav)
                                                         }
                                                     }
                                                 }
@@ -365,7 +365,7 @@ fun HomeView(
                                                             .show()
                                                     }
                                                 ) {
-                                                    navController.navigate(RootScreen.AuthNav)
+                                                    navController.navigate(RootScreen.ProfileNav)
                                                 }
                                             }
                                         }

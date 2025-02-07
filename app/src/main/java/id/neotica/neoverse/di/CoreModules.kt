@@ -23,7 +23,7 @@ import id.neotica.domain.usecase.BuyItemUseCase
 import id.neotica.domain.usecase.GetAuraUseCase
 import id.neotica.domain.usecase.GetUserIdUseCase
 import id.neotica.domain.usecase.GetUserNameUseCase
-import id.neotica.neoverse.presentation.screen.auth.login.LoginViewModel
+import id.neotica.auth.login.LoginViewModel
 import id.neotica.neoverse.presentation.screen.auth.register.RegisterViewModel
 import id.neotica.neoverse.presentation.screen.auth.verify.VerifyEmailViewModel
 import id.neotica.neoverse.presentation.screen.chat.ChatViewModel

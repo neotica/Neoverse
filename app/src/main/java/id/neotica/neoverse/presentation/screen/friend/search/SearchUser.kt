@@ -144,7 +144,7 @@ fun SearchUser(
                                                             }
                                                             navController.navigateUp()
                                                         } else {
-                                                            navController.navigate(RootScreen.AuthNav)
+                                                            navController.navigate(RootScreen.ProfileNav)
                                                         }
                                                     }
                                                 }

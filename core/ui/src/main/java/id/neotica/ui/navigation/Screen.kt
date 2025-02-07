@@ -71,6 +71,8 @@ sealed class RootScreen {
     @Serializable
     object AuthNav
     @Serializable
+    object ProfileNav
+    @Serializable
     object HomeNav
     @Serializable
     object WorldNav

@@ -1,4 +1,4 @@
-package id.neotica.neoverse.presentation.screen.profile.termsofsercive
+package id.neotica.neoverse.presentation.screen.profile.termsofservice
 
 import android.content.Intent
 import android.graphics.Bitmap

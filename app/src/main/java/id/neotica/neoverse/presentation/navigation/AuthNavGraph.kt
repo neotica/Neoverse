@@ -8,7 +8,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
-import id.neotica.neoverse.presentation.screen.auth.login.LoginView
+import id.neotica.auth.authNavGraph2
 import id.neotica.neoverse.presentation.screen.auth.register.RegisterView
 import id.neotica.neoverse.presentation.screen.auth.verify.VerifyEmailView
 import id.neotica.neoverse.presentation.screen.camerax.CameraPreviewView
@@ -19,7 +19,7 @@ import id.neotica.neoverse.presentation.screen.profile.deleteaccount.DeleteAccou
 import id.neotica.neoverse.presentation.screen.profile.editprofile.EditProfileView
 import id.neotica.neoverse.presentation.screen.profile.privacypolicy.PrivacyPolicyView
 import id.neotica.neoverse.presentation.screen.profile.resetpassword.ResetPasswordView
-import id.neotica.neoverse.presentation.screen.profile.termsofsercive.TermsOfServiceView
+import id.neotica.neoverse.presentation.screen.profile.termsofservice.TermsOfServiceView
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.Screen
 
@@ -27,12 +27,10 @@ fun NavGraphBuilder.authNavGraph(
     navController: NavController,
     paddingValues: PaddingValues
 ){
-    navigation<RootScreen.AuthNav>(
+    navigation<RootScreen.ProfileNav>(
         startDestination = Screen.ProfileScreen,
     ) {
-        composable<Screen.LoginScreen> {
-            LoginView(navController)
-        }
+        authNavGraph2(navController, paddingValues)
         composable<Screen.RegisterScreen> {
             RegisterView(navController)
         }

@@ -67,7 +67,7 @@ fun MainView() {
             NavigationItem(
                 title = "Profile",
                 icon = Icons.Default.AccountCircle,
-                screen = RootScreen.AuthNav
+                screen = RootScreen.ProfileNav
             )
         )
         val bottomBarExcludedRoutes = setOf(

@@ -1,4 +1,4 @@
-package id.neotica.neoverse.presentation.screen.auth.login
+package id.neotica.auth.login
 
 import android.util.Log
 import android.widget.Toast
@@ -35,7 +35,6 @@ import androidx.navigation.NavController
 import id.neotica.droidcore.component.textfield.NeoTextField
 import id.neotica.droidcore.component.textfield.PasswordTextField
 import id.neotica.domain.ApiResult
-import id.neotica.neoverse.R
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.Screen
 import id.neotica.ui.components.BasicScaffold
@@ -96,7 +95,7 @@ fun LoginView(
     BasicScaffold("Login") {
         Image(
             painterResource(
-            R.drawable.ic_launcher_foreground),
+            id.neotica.ui.R.drawable.logo_app),
             contentDescription = "Neoverse Logo",
             modifier = Modifier.fillMaxWidth().size(200.dp)
                 .graphicsLayer(rotationZ = rotationAngle)
