@@ -1,9 +1,7 @@
-package id.neotica.neoverse.presentation.screen.auth.verify
+package id.neotica.auth.verify
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.Firebase
-import com.google.firebase.auth.auth
 import id.neotica.domain.local.CurrentUserRepository
 import id.neotica.domain.local.FriendDaoRepository
 import id.neotica.domain.remote.AuthRepository
@@ -16,10 +14,9 @@ class VerifyEmailViewModel(
     private val friendDatabase: FriendDaoRepository,
     private val currentUserDatabase: CurrentUserRepository
 ): ViewModel() {
-    private val auth = Firebase.auth
 
     fun isUserVerified() = userRepo.isUserVerified()
-    fun sendEmailVerification() = auth.currentUser?.sendEmailVerification()
+    fun sendEmailVerification() = authRepo.sendEmailVerification()
     fun logout() = viewModelScope.launch {
         currentUserDatabase.clearCurrent()
         friendDatabase.clearFriends()

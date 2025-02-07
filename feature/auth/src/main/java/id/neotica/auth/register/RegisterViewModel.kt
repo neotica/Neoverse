@@ -1,4 +1,4 @@
-package id.neotica.neoverse.presentation.screen.auth.register
+package id.neotica.auth.register
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

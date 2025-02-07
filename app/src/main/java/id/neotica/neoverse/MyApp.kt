@@ -1,10 +1,9 @@
 package id.neotica.neoverse
 
 import android.app.Application
-import id.neotica.auth.di.authModules
 import id.neotica.database.databaseModule
-import id.neotica.neoverse.di.repositoryModules
 import id.neotica.neoverse.di.domainModules
+import id.neotica.neoverse.di.repositoryModules
 import id.neotica.neoverse.di.useCaseModules
 import id.neotica.neoverse.di.viewModelModules
 import id.neotica.world.di.worldModules
@@ -24,7 +23,6 @@ class MyApp: Application() {
                 domainModules,
                 useCaseModules,
                 worldModules,
-                authModules
             )
         }
     }

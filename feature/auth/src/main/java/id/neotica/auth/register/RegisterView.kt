@@ -1,4 +1,4 @@
-package id.neotica.neoverse.presentation.screen.auth.register
+package id.neotica.auth.register
 
 import android.widget.Toast
 import androidx.compose.foundation.clickable

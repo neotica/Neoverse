@@ -6,6 +6,8 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import id.neotica.auth.login.LoginView
+import id.neotica.auth.register.RegisterView
+import id.neotica.auth.verify.VerifyEmailView
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.Screen
 
@@ -18,6 +20,12 @@ fun NavGraphBuilder.authNavGraph2(
     ) {
         composable<Screen.LoginScreen> {
             LoginView(navController)
+        }
+        composable<Screen.RegisterScreen> {
+            RegisterView(navController)
+        }
+        composable<Screen.VerifyEmailScreen> {
+            VerifyEmailView(navController, paddingValues)
         }
     }
 }
