@@ -1,4 +1,4 @@
-package id.neotica.neoverse.presentation.screen.profile.deleteaccount
+package id.neotica.profile.deleteaccount
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import id.neotica.droidcore.component.textfield.NeoTextField
-import id.neotica.neoverse.presentation.screen.profile.ProfileViewModel
+import id.neotica.profile.ProfileViewModel
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.NeoButton
 import org.koin.androidx.compose.koinViewModel

@@ -1,4 +1,4 @@
-package id.neotica.neoverse.presentation.screen.profile
+package id.neotica.profile
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel

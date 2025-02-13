@@ -10,12 +10,12 @@ import androidx.navigation.navigation
 import androidx.navigation.toRoute
 import id.neotica.auth.authNavGraph2
 import id.neotica.neoverse.presentation.screen.camerax.CameraPreviewView
-import id.neotica.neoverse.presentation.screen.profile.ProfileView
 import id.neotica.neoverse.presentation.screen.profile.about.AboutView
 import id.neotica.neoverse.presentation.screen.profile.accountsettings.AccountSettingView
-import id.neotica.neoverse.presentation.screen.profile.deleteaccount.DeleteAccountView
-import id.neotica.neoverse.presentation.screen.profile.editprofile.EditProfileView
 import id.neotica.neoverse.presentation.screen.profile.privacypolicy.PrivacyPolicyView
+import id.neotica.profile.ProfileView
+import id.neotica.profile.deleteaccount.DeleteAccountView
+import id.neotica.profile.editprofile.EditProfileView
 import id.neotica.neoverse.presentation.screen.profile.resetpassword.ResetPasswordView
 import id.neotica.neoverse.presentation.screen.profile.termsofservice.TermsOfServiceView
 import id.neotica.ui.navigation.RootScreen
@@ -30,7 +30,12 @@ fun NavGraphBuilder.authNavGraph(
     ) {
         authNavGraph2(navController, paddingValues)
 
-        composable<Screen.ProfileScreen> { ProfileView(navController, paddingValues = paddingValues) }
+        composable<Screen.ProfileScreen> {
+            ProfileView(
+                navController,
+                paddingValues = paddingValues
+            )
+        }
         composable<Screen.PrivacyPolicyScreen>(
             enterTransition = { EnterTransition.None },
             exitTransition = { ExitTransition.None }

@@ -1,4 +1,4 @@
-package id.neotica.neoverse.presentation.screen.profile.editprofile
+package id.neotica.profile.editprofile
 
 import android.Manifest
 import android.app.Activity
@@ -27,8 +27,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import id.neotica.neoverse.presentation.screen.profile.ProfileViewModel
-import id.neotica.neoverse.utils.compressUri
+import id.neotica.profile.ProfileViewModel
+import id.neotica.profile.utils.compressUri
 import id.neotica.ui.R
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.image.ImageCoil

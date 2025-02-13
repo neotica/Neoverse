@@ -1,4 +1,4 @@
-package id.neotica.neoverse.presentation.screen.profile
+package id.neotica.profile
 
 import android.util.Log
 import android.widget.Toast
@@ -39,7 +39,6 @@ import id.neotica.domain.ApiResult
 import id.neotica.domain.model.User
 import id.neotica.droidcore.component.alert.NeoAlert
 import id.neotica.droidcore.component.icon.AlertEnum
-import id.neotica.ui.R
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.image.ImageCoil
 import id.neotica.ui.components.LoadingIndicatorBool
@@ -154,7 +153,7 @@ fun ProfileView(
                                 .show()
                         },
                     ),
-                imageVector = ImageVector.vectorResource(R.drawable.ic_info),
+                imageVector = ImageVector.vectorResource(id.neotica.ui.R.drawable.ic_info),
                 contentDescription = "",
                 tint = White
             )
@@ -224,7 +223,7 @@ fun ProfileView(
                             MenuItem(
                                 title = "Logout",
                                 textColor = NegativePrimary,
-                                leadingIcon = R.drawable.ic_logout,
+                                leadingIcon = id.neotica.ui.R.drawable.ic_logout,
                             ) {
                                 showLogoutDialog.value = true
                             }

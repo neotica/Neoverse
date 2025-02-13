@@ -22,7 +22,7 @@ import coil.annotation.ExperimentalCoilApi
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import id.neotica.ui.components.LoadingIndicator
-
+//hey
 @OptIn(ExperimentalFoundationApi::class, ExperimentalCoilApi::class)
 @Composable
 fun ImageCoil(

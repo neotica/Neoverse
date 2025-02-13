@@ -68,6 +68,7 @@ dependencies {
     implementation(projects.feature.world)
     implementation(projects.core.camera)
     implementation(projects.feature.auth)
+    implementation(projects.feature.profile)
 
     // Testing
     testImplementation(libs.junit)
