@@ -1,4 +1,4 @@
-package id.neotica.neoverse.presentation.screen.profile.resetpassword
+package id.neotica.profile.resetpassword
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
@@ -22,7 +22,6 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun ResetPasswordView(
     navController: NavController,
-    modifier: Modifier = Modifier,
     viewModel: ProfileViewModel = koinViewModel()
     ) {
     BasicScaffold(

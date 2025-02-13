@@ -1,4 +1,4 @@
-package id.neotica.neoverse.presentation.screen.profile.about
+package id.neotica.profile.about
 
 import android.content.Intent
 import android.net.Uri

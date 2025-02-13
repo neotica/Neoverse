@@ -1,4 +1,4 @@
-package id.neotica.neoverse.presentation.screen.profile.accountsettings
+package id.neotica.profile.accountsettings
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column

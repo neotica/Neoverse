@@ -10,13 +10,13 @@ import androidx.navigation.navigation
 import androidx.navigation.toRoute
 import id.neotica.auth.authNavGraph2
 import id.neotica.neoverse.presentation.screen.camerax.CameraPreviewView
-import id.neotica.neoverse.presentation.screen.profile.about.AboutView
-import id.neotica.neoverse.presentation.screen.profile.accountsettings.AccountSettingView
+import id.neotica.profile.about.AboutView
+import id.neotica.profile.accountsettings.AccountSettingView
 import id.neotica.neoverse.presentation.screen.profile.privacypolicy.PrivacyPolicyView
 import id.neotica.profile.ProfileView
 import id.neotica.profile.deleteaccount.DeleteAccountView
 import id.neotica.profile.editprofile.EditProfileView
-import id.neotica.neoverse.presentation.screen.profile.resetpassword.ResetPasswordView
+import id.neotica.profile.resetpassword.ResetPasswordView
 import id.neotica.neoverse.presentation.screen.profile.termsofservice.TermsOfServiceView
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.Screen
