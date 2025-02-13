@@ -1,4 +1,4 @@
-package id.neotica.neoverse.presentation.screen.profile.privacypolicy
+package id.neotica.profile.privacypolicy
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -20,7 +20,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavController
-import id.neotica.network.utils.privacyPolicy
+import id.neotica.neoverse.utils.privacyPolicy
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.LoadingIndicator
 import id.neotica.ui.theme.NeoPadding

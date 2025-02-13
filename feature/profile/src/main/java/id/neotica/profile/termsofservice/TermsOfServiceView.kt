@@ -1,4 +1,4 @@
-package id.neotica.neoverse.presentation.screen.profile.termsofservice
+package id.neotica.profile.termsofservice
 
 import android.content.Intent
 import android.graphics.Bitmap
@@ -19,7 +19,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavController
-import id.neotica.network.utils.termsOfService
+import id.neotica.neoverse.utils.termsOfService
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.LoadingIndicator
 import id.neotica.ui.theme.NeoPadding
