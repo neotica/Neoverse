@@ -1,19 +1,16 @@
-package id.neotica.neoverse.presentation.screen.chat
+package id.neotica.chat
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.google.firebase.Firebase
-import com.google.firebase.auth.auth
-import com.google.firebase.database.database
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.chat.ChatRoom
 import id.neotica.domain.model.chat.Message
 import id.neotica.domain.model.chat.notification.NotificationBody
 import id.neotica.domain.model.chat.notification.SendMessageDto
 import id.neotica.domain.remote.ChatRepository
-import id.neotica.domain.remote.UserRepository
+import id.neotica.domain.usecase.GetUserIdUseCase
 import id.neotica.domain.usecase.GetUserNameUseCase
 import id.neotica.ui.navigation.Screen
 import kotlinx.coroutines.CoroutineScope
@@ -22,17 +19,15 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import java.util.UUID
 
 class ChatViewModel(
-    private val userRepo: UserRepository,
     private val chatRepo: ChatRepository,
     private val getUserNameUseCase: GetUserNameUseCase,
+    private val getUserIdUseCase: GetUserIdUseCase,
     savedStateHandle: SavedStateHandle
 ): ViewModel() {
     private val args = savedStateHandle.toRoute<Screen.Chat>()
     val message = chatRepo.getMessages(args.chatId).stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
-    private val db = Firebase.database
 
     private val _chatroom: MutableStateFlow<ApiResult<ChatRoom>> = MutableStateFlow(ApiResult.Loading())
 
@@ -43,6 +38,8 @@ class ChatViewModel(
         }
     }
 
+    fun getUserId() = getUserIdUseCase.invoke()
+
     private fun getChatroom() = viewModelScope.launch {
         val get = chatRepo.getChatroom(args.chatroomId.toString())
         _chatroom.value = get
@@ -50,9 +47,8 @@ class ChatViewModel(
 
     fun sendMessage(chatId: String, chat: String) {
         val messageValue = Message(
-            id = db.reference.push().key ?: UUID.randomUUID().toString(),
-            senderId = userRepo.getUserId(),
-            receiverId = Firebase.auth.currentUser?.uid ?: "",
+            id = chatRepo.pushReferenceKey(),
+            senderId = getUserIdUseCase.invoke(),
             message = chat,
             createdAt = System.currentTimeMillis(),
             senderImage = null,

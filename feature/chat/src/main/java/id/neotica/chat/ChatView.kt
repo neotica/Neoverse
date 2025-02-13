@@ -1,4 +1,4 @@
-package id.neotica.neoverse.presentation.screen.chat
+package id.neotica.chat
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -70,8 +70,6 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.google.firebase.Firebase
-import com.google.firebase.auth.auth
 import dev.chrisbanes.haze.HazeProgressive
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.hazeEffect
@@ -367,8 +365,8 @@ fun ChatMessages(
 }
 
 @Composable
-fun ChatBubble(message: Message) {
-    val isCurrentUser = message.senderId == Firebase.auth.currentUser?.uid
+fun ChatBubble(message: Message, viewModel: ChatViewModel = koinViewModel()) {
+    val isCurrentUser = message.senderId == viewModel.getUserId()
     val bubbleColor = if (isCurrentUser) {
         DarkPrimaryTransparent2
     } else {

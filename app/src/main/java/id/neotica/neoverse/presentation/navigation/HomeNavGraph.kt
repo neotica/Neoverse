@@ -8,7 +8,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
-import id.neotica.neoverse.presentation.screen.chat.ChatView
+import id.neotica.chat.ChatView
 import id.neotica.neoverse.presentation.screen.home.HomeView
 import id.neotica.neoverse.presentation.screen.home.addchat.AddChatView
 import id.neotica.neoverse.presentation.screen.home.updateapp.UpdateAppView

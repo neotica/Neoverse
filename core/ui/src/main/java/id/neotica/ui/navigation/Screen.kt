@@ -25,8 +25,6 @@ sealed class Screen {
     @Serializable
     data object Setting: Screen()
     @Serializable
-    data object ChatFromHome: Screen()
-    @Serializable
     data object DumpScreen: Screen()
 
     // Auth Navigation

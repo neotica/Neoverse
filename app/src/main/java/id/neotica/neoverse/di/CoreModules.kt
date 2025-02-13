@@ -23,7 +23,7 @@ import id.neotica.domain.usecase.GetAuraUseCase
 import id.neotica.domain.usecase.GetUserIdUseCase
 import id.neotica.domain.usecase.GetUserNameUseCase
 import id.neotica.neoverse.presentation.screen.camerax.CameraPreviewViewModel
-import id.neotica.neoverse.presentation.screen.chat.ChatViewModel
+import id.neotica.chat.ChatViewModel
 import id.neotica.neoverse.presentation.screen.dump.DumpViewModel
 import id.neotica.neoverse.presentation.screen.friend.FriendViewModel
 import id.neotica.neoverse.presentation.screen.home.HomeViewModel
@@ -49,8 +49,8 @@ import org.koin.dsl.bind
 import org.koin.dsl.module
 
 val repositoryModules = module {
-    singleOf(::AuthRepositoryImpl) { bind<AuthRepository>()}
-    singleOf(::UserRepositoryImpl) { bind<UserRepository>()}
+    singleOf(::AuthRepositoryImpl) { bind<AuthRepository>() }
+    singleOf(::UserRepositoryImpl) { bind<UserRepository>() }
     singleOf(::ChatRepositoryImpl) bind ChatRepository::class
     singleOf(::AuraRepositoryImpl) bind AuraRepository::class
     singleOf(::FriendDaoRepositoryImpl) bind FriendDaoRepository::class
