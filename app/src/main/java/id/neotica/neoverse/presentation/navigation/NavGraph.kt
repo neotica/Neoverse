@@ -36,7 +36,7 @@ fun NavGraph(
         composable<Screen.DumpScreen> { DumpView(navController, paddingValues = paddingValues) }
 
         homeNavGraph(navController, paddingValues)
-        authNavGraph(navController, paddingValues)
+        profileNavGraph(navController, paddingValues)
         worldNavGraph(navController, paddingValues)
         friendNavGraph(navController, paddingValues)
     }

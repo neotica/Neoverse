@@ -65,10 +65,12 @@ dependencies {
     implementation(projects.core.network)
     implementation(projects.core.ui)
     implementation(projects.core.core)
-    implementation(projects.feature.world)
     implementation(projects.core.camera)
+    implementation(projects.feature.world)
     implementation(projects.feature.auth)
     implementation(projects.feature.profile)
+    implementation(projects.feature.home)
+    implementation(projects.feature.chat)
 
     // Testing
     testImplementation(libs.junit)

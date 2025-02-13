@@ -8,7 +8,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
-import id.neotica.auth.authNavGraph2
+import id.neotica.auth.authNavGraph
 import id.neotica.neoverse.presentation.screen.camerax.CameraPreviewView
 import id.neotica.profile.about.AboutView
 import id.neotica.profile.accountsettings.AccountSettingView
@@ -21,14 +21,14 @@ import id.neotica.profile.termsofservice.TermsOfServiceView
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.Screen
 
-fun NavGraphBuilder.authNavGraph(
+fun NavGraphBuilder.profileNavGraph(
     navController: NavController,
     paddingValues: PaddingValues
 ){
     navigation<RootScreen.ProfileNav>(
         startDestination = Screen.ProfileScreen,
     ) {
-        authNavGraph2(navController, paddingValues)
+        authNavGraph(navController, paddingValues)
 
         composable<Screen.ProfileScreen> {
             ProfileView(

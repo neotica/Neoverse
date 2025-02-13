@@ -11,7 +11,7 @@ import id.neotica.auth.verify.VerifyEmailView
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.Screen
 
-fun NavGraphBuilder.authNavGraph2(
+fun NavGraphBuilder.authNavGraph(
     navController: NavController,
     paddingValues: PaddingValues
 ){
