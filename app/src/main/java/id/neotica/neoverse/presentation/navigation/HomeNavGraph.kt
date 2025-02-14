@@ -9,9 +9,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
 import id.neotica.chat.ChatView
-import id.neotica.neoverse.presentation.screen.home.HomeView
-import id.neotica.neoverse.presentation.screen.home.addchat.AddChatView
-import id.neotica.neoverse.presentation.screen.home.updateapp.UpdateAppView
+import id.neotica.home.HomeView
+import id.neotica.home.addchat.AddChatView
+import id.neotica.home.updateapp.UpdateAppView
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.Screen
 

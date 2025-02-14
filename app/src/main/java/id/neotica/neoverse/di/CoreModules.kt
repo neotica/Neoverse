@@ -25,9 +25,9 @@ import id.neotica.domain.usecase.GetUserNameUseCase
 import id.neotica.neoverse.presentation.screen.camerax.CameraPreviewViewModel
 import id.neotica.chat.ChatViewModel
 import id.neotica.neoverse.presentation.screen.dump.DumpViewModel
-import id.neotica.neoverse.presentation.screen.friend.FriendViewModel
-import id.neotica.neoverse.presentation.screen.home.HomeViewModel
-import id.neotica.neoverse.presentation.screen.home.addchat.AddChatViewModel
+import id.neotica.friend.FriendViewModel
+import id.neotica.home.HomeViewModel
+import id.neotica.home.addchat.AddChatViewModel
 import id.neotica.neoverse.presentation.screen.main.MainViewModel
 import id.neotica.profile.ProfileViewModel
 import id.neotica.neoverse.utils.connectionchecker.AndroidConnectivityObserver

@@ -1,4 +1,4 @@
-package id.neotica.neoverse.presentation.screen.home.addchat
+package id.neotica.home.addchat
 
 import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
@@ -48,8 +48,8 @@ import id.neotica.domain.ApiResult
 import id.neotica.domain.model.User
 import id.neotica.domain.model.chat.ChatRoom
 import id.neotica.domain.utils.randomUUID
-import id.neotica.neoverse.presentation.screen.friend.FriendViewModel
-import id.neotica.neoverse.presentation.screen.friend.profile.FriendProfileView
+import id.neotica.friend.FriendViewModel
+import id.neotica.friend.profile.FriendProfileView
 import id.neotica.ui.R
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.ProfileCard

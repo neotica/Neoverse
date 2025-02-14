@@ -1,4 +1,4 @@
-package id.neotica.neoverse.presentation.screen.home
+package id.neotica.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

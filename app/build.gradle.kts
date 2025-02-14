@@ -71,6 +71,7 @@ dependencies {
     implementation(projects.feature.profile)
     implementation(projects.feature.home)
     implementation(projects.feature.chat)
+    implementation(projects.feature.friend)
 
     // Testing
     testImplementation(libs.junit)

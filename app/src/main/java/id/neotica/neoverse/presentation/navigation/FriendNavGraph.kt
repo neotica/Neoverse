@@ -10,9 +10,9 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
-import id.neotica.neoverse.presentation.screen.friend.profile.FriendProfileView
-import id.neotica.neoverse.presentation.screen.friend.FriendView
-import id.neotica.neoverse.presentation.screen.friend.search.SearchUser
+import id.neotica.friend.profile.FriendProfileView
+import id.neotica.friend.FriendView
+import id.neotica.friend.search.SearchUser
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.Screen
 

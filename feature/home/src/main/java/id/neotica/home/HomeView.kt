@@ -1,4 +1,4 @@
-package id.neotica.neoverse.presentation.screen.home
+package id.neotica.home
 
 import android.util.Log
 import android.widget.Toast
@@ -62,7 +62,7 @@ import id.neotica.domain.model.chat.ParentNeo
 import id.neotica.domain.utils.convertLongToTime
 import id.neotica.domain.utils.filteredRoom
 import id.neotica.domain.utils.returnFriendName
-import id.neotica.neoverse.presentation.screen.home.addchat.AddChatView
+import id.neotica.home.addchat.AddChatView
 import id.neotica.neoverse.utils.buddhaQuotes
 import id.neotica.neoverse.utils.marcusAureliusQuotes
 import id.neotica.ui.R

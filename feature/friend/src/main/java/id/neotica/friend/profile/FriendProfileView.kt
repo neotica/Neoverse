@@ -1,4 +1,4 @@
-package id.neotica.neoverse.presentation.screen.friend.profile
+package id.neotica.friend.profile
 
 import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
@@ -28,7 +28,7 @@ import id.neotica.domain.model.User
 import id.neotica.domain.model.chat.ChatRoom
 import id.neotica.domain.utils.randomUUID
 import id.neotica.droidcore.component.alert.NeoAlert
-import id.neotica.neoverse.presentation.screen.friend.FriendViewModel
+import id.neotica.friend.FriendViewModel
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.image.ImageCoil
 import id.neotica.ui.components.NeoButton

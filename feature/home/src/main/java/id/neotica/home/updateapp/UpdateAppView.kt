@@ -1,4 +1,4 @@
-package id.neotica.neoverse.presentation.screen.home.updateapp
+package id.neotica.home.updateapp
 
 import android.content.Intent
 import android.net.Uri
@@ -16,7 +16,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import id.neotica.neoverse.R
+import id.neotica.ui.R
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.NeoButton
 import id.neotica.ui.theme.FontSize
@@ -36,7 +36,8 @@ fun UpdateAppView() {
         ) {
             Image(
                 painter = painterResource(
-                    id = R.drawable.ic_launcher_foreground),
+                    id = R.drawable.logo_app
+                ),
                 contentScale = ContentScale.Crop,
                 contentDescription = "")
             Text(

@@ -1,4 +1,4 @@
-package id.neotica.neoverse.presentation.screen.friend
+package id.neotica.friend
 
 import android.util.Log
 import androidx.compose.animation.core.tween
@@ -40,7 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.User
-import id.neotica.neoverse.presentation.screen.friend.profile.FriendProfileView
+import id.neotica.friend.profile.FriendProfileView
 import id.neotica.ui.R
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.LoadingIndicatorBool
