@@ -108,17 +108,7 @@ fun ChatView(
     val listState = rememberLazyListState()
     val activity = LocalContext.current as? Activity
 
-    LaunchedEffect(messages.value) {
-        if (messages.value.isNotEmpty()) {
-            listState.scrollToItem(messages.value.size - 1)
-        }
-    }
-
-    LaunchedEffect(Unit) {
-        if (defaultText.isNotEmpty()) viewModel.sendMessage(chatId = args.chatId, defaultText)
-    }
-
-    BackHandler {
+    fun finishApp() {
         if (defaultText.isEmpty()) {
             navController.navigate(RootScreen.HomeNav) {
                 popUpTo(RootScreen.HomeNav) {
@@ -130,6 +120,20 @@ fun ChatView(
         } else {
             activity?.finish()
         }
+    }
+
+    LaunchedEffect(messages.value) {
+        if (messages.value.isNotEmpty()) {
+            listState.scrollToItem(messages.value.size - 1)
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        if (defaultText.isNotEmpty()) viewModel.sendMessage(chatId = args.chatId, defaultText)
+    }
+
+    BackHandler {
+        finishApp()
     }
 
     val layoutInfo by remember { derivedStateOf { listState.layoutInfo } }
@@ -148,12 +152,7 @@ fun ChatView(
         topBarTitle = args.user2,
         enableActionBar = true,
         customActionBar = {
-            navController.navigate(RootScreen.HomeNav) {
-                popUpTo(RootScreen.HomeNav) {
-                    inclusive = true
-                }
-                launchSingleTop
-            }
+            finishApp()
         },
         navController = navController,
         topBarVisibility = true,
