@@ -45,25 +45,35 @@ class ChatViewModel(
         _chatroom.value = get
     }
 
-    fun sendMessage(chatId: String, chat: String) {
+    fun sendMessage(chatId: String, chat: String) = viewModelScope.launch {
         val messageValue = Message(
             id = chatRepo.pushReferenceKey(),
             senderId = getUserIdUseCase.invoke(),
             message = chat,
             createdAt = System.currentTimeMillis(),
             senderImage = null,
-            imageUrl = null
+            imageUrl = null,
         )
         chatRepo.sendMessage(chatId, messageValue)
-        updateLastMessage(messageValue)
-        val sendMessageDto = SendMessageDto(
-            to = if (_chatroom.value.data == null) null else _chatroom.value.data?.fcmToken,
-            notification = NotificationBody(
-                title = getUserNameUseCase.invoke(),
-                body = chat
-            )
-        )
-        sendNotification(sendMessageDto)
+        _chatroom.collect { result ->
+            if (result is ApiResult.Success) {
+                if (result.data?.id != "") {
+                    val chatNow = result.data?.copy(
+                        lastOpened = messageValue.createdAt,
+                        lastMessage = "${getUserNameUseCase.invoke()}: ${messageValue.message}",
+                    )
+                    chatRepo.updateChatroom(result.data?.id!!, chatNow!!)
+                }
+                val sendMessageDto = SendMessageDto(
+                    to = if (_chatroom.value.data == null) null else _chatroom.value.data?.fcmToken,
+                    notification = NotificationBody(
+                        title = getUserNameUseCase.invoke(),
+                        body = chat
+                    )
+                )
+                sendNotification(sendMessageDto)
+            }
+        }
     }
 
     fun deleteChatroom() = CoroutineScope(Dispatchers.IO).launch {
@@ -75,17 +85,5 @@ class ChatViewModel(
             isBroadcast = messageDto.to != null,
             messageDto = messageDto
         )
-    }
-
-    private fun updateLastMessage(message: Message) = viewModelScope.launch {
-        _chatroom.value.data?.let {
-            if (it.id != "") {
-                val chat = it.copy(
-                    lastOpened = message.createdAt,
-                    lastMessage = "${getUserNameUseCase.invoke()}: ${message.message}",
-                )
-                chatRepo.updateChatroom(it.id, chat)
-            }
-        }
     }
 }

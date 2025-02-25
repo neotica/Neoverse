@@ -281,5 +281,9 @@ fun TavernView(
             }
         }
     }
-    if (isLoading) Box(Modifier.fillMaxSize()) { LoadingIndicator() }
+    if (isLoading) Box(
+        Modifier
+            .fillMaxSize()
+            .clickable(enabled = true) {  },
+    ) { LoadingIndicator() }
 }
