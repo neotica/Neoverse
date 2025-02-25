@@ -1,6 +1,7 @@
 package id.neotica.chat
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.widget.Toast
@@ -100,10 +101,12 @@ import org.koin.androidx.compose.koinViewModel
 fun ChatView(
     navController: NavController,
     args: Screen.Chat,
+    defaultText: String = "",
     viewModel: ChatViewModel = koinViewModel()
 ) {
     val messages = viewModel.message.collectAsState()
     val listState = rememberLazyListState()
+    val activity = LocalContext.current as? Activity
 
     LaunchedEffect(messages.value) {
         if (messages.value.isNotEmpty()) {
@@ -111,12 +114,21 @@ fun ChatView(
         }
     }
 
+    LaunchedEffect(Unit) {
+        if (defaultText.isNotEmpty()) viewModel.sendMessage(chatId = args.chatId, defaultText)
+    }
+
     BackHandler {
-        navController.navigate(RootScreen.HomeNav) {
-            popUpTo(RootScreen.HomeNav) {
-                inclusive = true
+        if (defaultText.isEmpty()) {
+            navController.navigate(RootScreen.HomeNav) {
+                popUpTo(RootScreen.HomeNav) {
+                    inclusive = true
+                }
+                launchSingleTop
+
             }
-            launchSingleTop
+        } else {
+            activity?.finish()
         }
     }
 
@@ -434,11 +446,15 @@ fun ChatBubble(message: Message, viewModel: ChatViewModel = koinViewModel()) {
                                         .padding(8.dp)
                                         .weight(1f, fill = false)
                                         .clickable {
-                                            val filteredUrls = "(https?://\\S+)".toRegex().findAll(message.message)
-                                                .map { it.value }
-                                                .joinToString(" ")
-                                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(filteredUrls))
-                                            if (filteredUrls.isNotEmpty()) context.startActivity(intent)
+                                            val filteredUrls =
+                                                "(https?://\\S+)".toRegex().findAll(message.message)
+                                                    .map { it.value }
+                                                    .joinToString(" ")
+                                            val intent =
+                                                Intent(Intent.ACTION_VIEW, Uri.parse(filteredUrls))
+                                            if (filteredUrls.isNotEmpty()) context.startActivity(
+                                                intent
+                                            )
                                         }
                                 )
                             }
