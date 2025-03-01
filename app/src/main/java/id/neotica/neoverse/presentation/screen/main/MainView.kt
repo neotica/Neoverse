@@ -92,22 +92,17 @@ fun MainView() {
             Screen.FriendScreen,
             AlexandriaScreen.HomeScreen,
             AlexandriaScreen.GoetiaScreen,
-            Screen.ResetPassword
+            Screen.ResetPassword,
+            Screen.Chat(),
+            Screen.EditProfileScreen(),
+            WorldScreen.ItemDetailScreen()
         )
 
         val includeRoute = bottomBarExcludedRoutes.none {
             if (navBackStackEntry?.destination?.route == null) true else
                 navBackStackEntry?.destination?.hasRoute(it::class) == true
         }
-        val specificRoutes = setOf(
-            "id.neotica.ui.navigation.Screen.Chat/{chatId}/{user2}?chatroomId={chatroomId}",
-            "id.neotica.ui.navigation.WorldScreen.ItemDetailScreen/{id}/{type}",
-            "id.neotica.ui.navigation.Screen.EditProfileScreen/{profPic}"
-        )
-        val currentRoute = navBackStackEntry?.destination?.route
         Log.d("currentScreen", navBackStackEntry?.destination?.route.toString())
-
-        val includeRoute3 = includeRoute && currentRoute !in specificRoutes
 
         val mapAdaptive = AdaptiveState.from(currentWindowAdaptiveInfo())
         val customNavSuiteType = when (mapAdaptive) {
@@ -125,7 +120,7 @@ fun MainView() {
                         .fillMaxSize(),
                     bottomBar = {
                         AnimatedVisibility (
-                            visible = includeRoute3,
+                            visible = includeRoute,
                             enter = slideInVertically(initialOffsetY = { it }),
                             exit = slideOutVertically(targetOffsetY = { it }),
                         ) {
@@ -180,7 +175,7 @@ fun MainView() {
             else -> {
                 CustomNavigationSuiteScaffold(
                     layoutType = customNavSuiteType,
-                    navigationVisibility = includeRoute3,
+                    navigationVisibility = includeRoute,
                     navigationSuiteItems = {
                         navItems.map { navMap ->
                             item(
