@@ -1,21 +1,20 @@
 package id.neotica.neoverse.di
 
-import id.neotica.network.RavenRepositoryImpl
+import id.neotica.auth.di.authModules
 import id.neotica.database.CurrentUserRepositoryImpl
 import id.neotica.database.FriendDaoRepositoryImpl
-import id.neotica.network.AuthRepositoryImpl
-import id.neotica.network.ChatRepositoryImpl
-import id.neotica.network.UserRepositoryImpl
 import id.neotica.domain.local.CurrentUserRepository
 import id.neotica.domain.local.FriendDaoRepository
+import id.neotica.domain.observer.ConnectivityObserver
+import id.neotica.domain.remote.AuraRepository
 import id.neotica.domain.remote.AuthRepository
 import id.neotica.domain.remote.ChatRepository
-import id.neotica.domain.remote.AuraRepository
 import id.neotica.domain.remote.FeedRepository
 import id.neotica.domain.remote.FirebaseRepository
 import id.neotica.domain.remote.InventoryRepository
 import id.neotica.domain.remote.MarketRepository
 import id.neotica.domain.remote.MerchantRepository
+import id.neotica.domain.remote.RavenRepository
 import id.neotica.domain.remote.SuperAdminRepository
 import id.neotica.domain.remote.UserRepository
 import id.neotica.domain.usecase.BuyHeroUseCase
@@ -23,27 +22,27 @@ import id.neotica.domain.usecase.BuyItemUseCase
 import id.neotica.domain.usecase.GetAuraUseCase
 import id.neotica.domain.usecase.GetUserIdUseCase
 import id.neotica.domain.usecase.GetUserNameUseCase
-import id.neotica.neoverse.presentation.screen.auth.login.LoginViewModel
-import id.neotica.neoverse.presentation.screen.auth.register.RegisterViewModel
-import id.neotica.neoverse.presentation.screen.auth.verify.VerifyEmailViewModel
-import id.neotica.neoverse.presentation.screen.chat.ChatViewModel
-import id.neotica.neoverse.presentation.screen.friend.FriendViewModel
-import id.neotica.neoverse.presentation.screen.dump.DumpViewModel
-import id.neotica.neoverse.presentation.screen.home.HomeViewModel
-import id.neotica.neoverse.presentation.screen.home.addchat.AddChatViewModel
-import id.neotica.neoverse.presentation.screen.main.MainViewModel
-import id.neotica.neoverse.presentation.screen.profile.ProfileViewModel
-import id.neotica.neoverse.utils.connectionchecker.AndroidConnectivityObserver
-import id.neotica.domain.observer.ConnectivityObserver
-import id.neotica.domain.remote.RavenRepository
 import id.neotica.neoverse.presentation.screen.camerax.CameraPreviewViewModel
+import id.neotica.chat.ChatViewModel
+import id.neotica.neoverse.presentation.screen.dump.DumpViewModel
+import id.neotica.friend.FriendViewModel
+import id.neotica.home.HomeViewModel
+import id.neotica.home.addchat.AddChatViewModel
+import id.neotica.neoverse.presentation.screen.main.MainViewModel
+import id.neotica.neoverse.presentation.screen.sharing.SharingViewModel
+import id.neotica.profile.ProfileViewModel
+import id.neotica.neoverse.utils.connectionchecker.AndroidConnectivityObserver
 import id.neotica.network.AuraRepositoryImpl
+import id.neotica.network.AuthRepositoryImpl
+import id.neotica.network.ChatRepositoryImpl
 import id.neotica.network.FeedRepositoryImpl
 import id.neotica.network.FirebaseRepositoryImpl
 import id.neotica.network.InventoryRepositoryImpl
 import id.neotica.network.MarketRepositoryImpl
 import id.neotica.network.MerchantRepositoryImpl
+import id.neotica.network.RavenRepositoryImpl
 import id.neotica.network.SuperAdminRepositoryImpl
+import id.neotica.network.UserRepositoryImpl
 import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.singleOf
@@ -51,8 +50,8 @@ import org.koin.dsl.bind
 import org.koin.dsl.module
 
 val repositoryModules = module {
-    singleOf(::AuthRepositoryImpl) { bind<AuthRepository>()}
-    singleOf(::UserRepositoryImpl) { bind<UserRepository>()}
+    singleOf(::AuthRepositoryImpl) { bind<AuthRepository>() }
+    singleOf(::UserRepositoryImpl) { bind<UserRepository>() }
     singleOf(::ChatRepositoryImpl) bind ChatRepository::class
     singleOf(::AuraRepositoryImpl) bind AuraRepository::class
     singleOf(::FriendDaoRepositoryImpl) bind FriendDaoRepository::class
@@ -68,16 +67,15 @@ val repositoryModules = module {
 }
 
 val viewModelModules = module {
-    viewModelOf(::LoginViewModel)
+    includes(authModules)
     viewModelOf(::ProfileViewModel)
     viewModelOf(::HomeViewModel)
     viewModelOf(::AddChatViewModel)
-    viewModelOf(::RegisterViewModel)
     viewModelOf(::ChatViewModel)
     viewModelOf(::FriendViewModel)
-    viewModelOf(::VerifyEmailViewModel)
     viewModelOf(::DumpViewModel)
     viewModelOf(::MainViewModel)
+    viewModelOf(::SharingViewModel)
     viewModelOf(::CameraPreviewViewModel)
 }
 

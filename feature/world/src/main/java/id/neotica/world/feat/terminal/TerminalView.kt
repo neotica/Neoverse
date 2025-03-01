@@ -187,7 +187,7 @@ private fun goto(go: String, navController: NavController) {
         GotoCommand().addChat to Screen.AddChatScreen,
         GotoCommand().rootHome to RootScreen.HomeNav,
         GotoCommand().rootWorld to RootScreen.WorldNav,
-        GotoCommand().rootAuth to RootScreen.AuthNav,
+        GotoCommand().rootAuth to RootScreen.ProfileNav,
         GotoCommand().tavern to WorldScreen.TavernScreen,
         GotoCommand().leaderboards to WorldScreen.LeaderBoardsScreen,
         GotoCommand().raven to WorldScreen.RavenScreen,

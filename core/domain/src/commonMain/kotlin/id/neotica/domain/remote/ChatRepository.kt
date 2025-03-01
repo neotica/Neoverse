@@ -17,4 +17,5 @@ interface ChatRepository {
     suspend fun deleteChatroom(chatroom: ChatRoom)
     suspend fun subscribeToTopic(topic: String)
     suspend fun sendNotification(isBroadcast: Boolean, messageDto: SendMessageDto)
+    fun pushReferenceKey(): String
 }

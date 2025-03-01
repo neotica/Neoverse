@@ -134,19 +134,21 @@ class TavernViewModel(
     }
 
     fun sendPost(message: String) = viewModelScope.launch {
-        val post = TavernPost(
-            id = randomUUID(),
-            creatorId = currentUserId(),
-            creatorName = currentUsername(),
-            message = message
-        )
-        val tot = _totalAuras.value.data
-        if (tot != null) {
-            feedRepo.postWhisper(post)
-            sendAuraPoints(-5)
-            fetchAuras()
+        if (currentUsername() != "tarakh") {
+            val post = TavernPost(
+                id = randomUUID(),
+                creatorId = currentUserId(),
+                creatorName = currentUsername(),
+                message = message
+            )
+            val tot = _totalAuras.value.data
+            if (tot != null) {
+                feedRepo.postWhisper(post)
+                sendAuraPoints(-5)
+                fetchAuras()
+            }
+            getWhispers()
         }
-        getWhispers()
     }
 
     private fun sendScore(aura: Long) = viewModelScope.launch {

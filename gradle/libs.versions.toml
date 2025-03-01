@@ -1,5 +1,5 @@
 [versions]
-agp = "8.8.0"
+agp = "8.8.2"
 cameraxVersion = "1.4.1"
 converterGson = "2.11.0"
 converterMoshi = "2.9.0"
@@ -11,8 +11,8 @@ junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
 lifecycleRuntimeKtx = "2.8.7"
-activityCompose = "1.9.3"
-composeBom = "2024.10.00"
+activityCompose = "1.10.1"
+composeBom = "2025.02.00"
 firebaseBom = "33.6.0"
 firebaseFirestoreKtx = "25.1.0"
 loggingInterceptor = "4.9.0"
@@ -31,7 +31,6 @@ coreSplashscreen = "1.0.1"
 androidx-wear-compose = "1.5.0-alpha07"
 junitJupiter = "5.11.1"
 coroutines = "1.9.0"
-appcompat = "1.7.0"
 material = "1.12.0"
 ktor = "3.0.3"
 
@@ -114,8 +113,6 @@ koin-core = { module = "io.insert-koin:koin-core", version.ref = "koinAndroidxCo
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 #KMP Coroutine
 coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines"}
-androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
-material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

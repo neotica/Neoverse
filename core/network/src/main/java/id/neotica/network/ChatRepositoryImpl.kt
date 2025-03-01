@@ -17,9 +17,9 @@ import id.neotica.domain.model.chat.ParentNeo
 import id.neotica.domain.model.chat.notification.ChatState
 import id.neotica.domain.model.chat.notification.SendMessageDto
 import id.neotica.domain.remote.ChatRepository
+import id.neotica.neoverse.utils.baseUrl
 import id.neotica.network.di.NetworkApiService
 import id.neotica.network.utils.StringCryptoUtil
-import id.neotica.network.utils.baseUrl
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -28,6 +28,7 @@ import kotlinx.coroutines.tasks.await
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.create
+import java.util.UUID
 
 class ChatRepositoryImpl: ChatRepository {
     private val firebase = Firebase.database
@@ -124,6 +125,8 @@ class ChatRepositoryImpl: ChatRepository {
         val messageEncrypted = message.copy(message = StringCryptoUtil.encrypt(message.message))
         firebase.getReference("messages").child(chatId).push().setValue(messageEncrypted)
     }
+
+    override fun pushReferenceKey(): String = firebase.reference.push().key ?: UUID.randomUUID().toString()
 
     override suspend fun updateChatroom(chatId: String, chatRoom: ChatRoom) {
         val token = reloadFcmToken()

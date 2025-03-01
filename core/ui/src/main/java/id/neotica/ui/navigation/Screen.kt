@@ -15,8 +15,8 @@ sealed class Screen {
     data object AddChatScreen: Screen()
     @Serializable
     data class Chat(
-        val chatId: String,
-        val user2: String,
+        val chatId: String = "",
+        val user2: String = "",
         val chatroomId: String ?= ""
     )
     @Serializable
@@ -24,8 +24,6 @@ sealed class Screen {
 
     @Serializable
     data object Setting: Screen()
-    @Serializable
-    data object ChatFromHome: Screen()
     @Serializable
     data object DumpScreen: Screen()
 
@@ -41,7 +39,7 @@ sealed class Screen {
     @Serializable
     data object AccountSettingScreen: Screen()
     @Serializable
-    data class EditProfileScreen(val profPic: String)
+    data class EditProfileScreen(val profPic: String = "")
     @Serializable
     data object VerifyEmailScreen: Screen()
     @Serializable
@@ -71,6 +69,8 @@ sealed class RootScreen {
     @Serializable
     object AuthNav
     @Serializable
+    object ProfileNav
+    @Serializable
     object HomeNav
     @Serializable
     object WorldNav
@@ -91,7 +91,7 @@ sealed class WorldScreen {
     @Serializable
     data object MarketScreen: Screen()
     @Serializable
-    data class ItemDetailScreen(val id: String, val type: String)
+    data class ItemDetailScreen(val id: String = "", val type: String = "")
     @Serializable
     data object MerchantScreen: Screen()
     @Serializable

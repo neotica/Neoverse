@@ -126,6 +126,10 @@ class AuthRepositoryImpl: AuthRepository {
         }
     }
 
+    override fun sendEmailVerification() {
+        auth.currentUser?.sendEmailVerification()
+    }
+
     override fun logout() {
         auth = FirebaseAuth.getInstance()
         auth.signOut()
