@@ -42,31 +42,24 @@ class ChatRepositoryImpl: ChatRepository {
     }
 
     override suspend fun getAllChatrooms(): Flow<ApiResult<List<ParentNeo<ChatRoom>>>> = flow {
-        val list = mutableListOf<ParentNeo<ChatRoom>>()
-        list.clear()
         emit(ApiResult.Loading())
         try {
-            val reference = firebase.getReference("chatroom").get().await()
-            reference.children.forEach { data ->
-                val cr = data.getValue(ChatRoom::class.java)
-                val crDecrypted = try {
-                    cr?.copy(lastMessage = StringCryptoUtil.decrypt(cr.lastMessage))
-                } catch (e: Exception) {
-                    cr
-                }
-                val channel = ParentNeo(
-                    key = data.key!!,
-                    value = crDecrypted!!
-                )
-                list.add(channel)
-                if (data.value != null) {
-                    emit(ApiResult.Success(
-                        list.sortedByDescending { it.value.lastOpened })
+            val snapshot = firebase.getReference("chatroom").get().await()
+            val chatRooms = snapshot.children.mapNotNull { data ->
+                data.getValue(ChatRoom::class.java)?.let { chatRoom ->
+                    val decryptedChatRoom = try {
+                        chatRoom.copy(lastMessage = StringCryptoUtil.decrypt(chatRoom.lastMessage))
+                    } catch (e: Exception) {
+                        chatRoom
+                    }
+                    ParentNeo(
+                        key = data.key ?: return@mapNotNull null,
+                        value = decryptedChatRoom
                     )
-                } else {
-                    emit(ApiResult.Error("data null"))
                 }
-            }
+            }.sortedByDescending { it.value.lastOpened }
+            emit(ApiResult.Success(chatRooms))
+
         } catch (e: NullPointerException) {
             emit(ApiResult.Error("exception: ${e.message}"))
         }
@@ -84,7 +77,6 @@ class ChatRepositoryImpl: ChatRepository {
         }
     }
 
-
     override suspend fun addChatroom(chatRoom: ChatRoom) {
         val reference = firebase.getReference("chatroom").child(chatRoom.id).setValue(chatRoom)
         reference.await()
@@ -100,16 +92,16 @@ class ChatRepositoryImpl: ChatRepository {
     }
 
     override fun getMessages(chatId: String): Flow<List<Message>> = callbackFlow {
-        val reqDb = firebase.getReference("messages").child(chatId)
+        val messagesReference = firebase.getReference("messages").child(chatId)
             .orderByChild("createdAt")
 
-        val event = reqDb.addValueEventListener(object : ValueEventListener {
+        val event = messagesReference.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                val list = snapshot.children.mapNotNull { data ->
+                val messages = snapshot.children.mapNotNull { data ->
                     val message = data.getValue(Message::class.java)
                     message?.copy(message = StringCryptoUtil.decrypt(message.message))
                 }
-                trySend(list)
+                trySend(messages)
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -117,7 +109,7 @@ class ChatRepositoryImpl: ChatRepository {
             }
         })
         awaitClose {
-            reqDb.removeEventListener(event)
+            messagesReference.removeEventListener(event)
         }
     }
 
@@ -145,14 +137,10 @@ class ChatRepositoryImpl: ChatRepository {
 
     override suspend fun sendNotification(isBroadcast: Boolean, messageDto: SendMessageDto) {
         try {
-
-            if (isBroadcast) {
-                api.sendMessage(messageDto)
-            } //else api.broadcast(messageDto)
+            if (isBroadcast) api.sendMessage(messageDto)
         } catch (e: Exception) {
             Log.d("sendNotification", e.message.toString())
         }
-
     }
 
     private val api: NetworkApiService = Retrofit.Builder()
