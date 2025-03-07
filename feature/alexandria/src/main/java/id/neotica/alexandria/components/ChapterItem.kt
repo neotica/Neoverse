@@ -30,14 +30,15 @@ fun ChapterItem(
 ) {
     Card(
         modifier = Modifier
-            .clickable {
-                onClick()
-            }
+
             .padding(horizontal = 16.dp, vertical = 8.dp),
         colors = CardDefaults.cardColors().copy(containerColor = DarkPrimaryTransparent80)
     ) {
         Row(
             modifier = Modifier
+                .clickable {
+                    onClick()
+                }
                 .padding(horizontal = 16.dp, vertical = 8.dp)
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
