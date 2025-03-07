@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import id.neotica.domain.ApiResult
-import id.neotica.domain.model.alexandria.Spirits
+import id.neotica.domain.model.alexandria.BloodyAgeChapters
 import id.neotica.domain.remote.AlexandriaRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -13,17 +13,27 @@ import kotlinx.coroutines.launch
 class BloodyAgeViewModel(
     private val alexandriaRepo: AlexandriaRepository
 ): ViewModel() {
-    private var _spirits: MutableStateFlow<ApiResult<List<Spirits>>> = MutableStateFlow(ApiResult.Loading())
-    val spirits = _spirits.asStateFlow()
+    private var _chapters: MutableStateFlow<ApiResult<List<BloodyAgeChapters>>> = MutableStateFlow(ApiResult.Loading())
+    val chapters = _chapters.asStateFlow()
+
+    private var _chapterDetail: MutableStateFlow<ApiResult<String>> = MutableStateFlow(ApiResult.Loading())
+    val chapterDetail = _chapterDetail.asStateFlow()
 
     init {
-        getSpirits()
+        getChapters()
     }
 
-    private fun getSpirits() = viewModelScope.launch {
-        alexandriaRepo.getSpirits().collect {
+    private fun getChapters() = viewModelScope.launch {
+        alexandriaRepo.getBloodyAge().collect {
             Log.d("spirit", it.toString())
-            _spirits.value = it
+            _chapters.value = it
+        }
+    }
+
+    fun getChapterDetail(chapter: String) = viewModelScope.launch {
+        alexandriaRepo.getBloodyAgeChapter(chapter).collect {
+            Log.d("spirit", it.toString())
+            _chapterDetail.value = it
         }
     }
 }
