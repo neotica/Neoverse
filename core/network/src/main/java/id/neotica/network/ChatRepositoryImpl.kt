@@ -18,7 +18,7 @@ import id.neotica.domain.model.chat.notification.ChatState
 import id.neotica.domain.model.chat.notification.SendMessageDto
 import id.neotica.domain.remote.ChatRepository
 import id.neotica.neoverse.utils.baseUrl
-import id.neotica.network.di.NetworkApiService
+import id.neotica.network.micro.NetworkApiService
 import id.neotica.network.utils.StringCryptoUtil
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow

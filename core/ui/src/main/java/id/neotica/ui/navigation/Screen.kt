@@ -120,6 +120,8 @@ sealed class AlexandriaScreen {
     data object HomeScreen: AlexandriaScreen()
     @Serializable
     data object GoetiaScreen: AlexandriaScreen()
+    @Serializable
+    data object BloodyAgeScreen: AlexandriaScreen()
 }
 
 data class NavigationItem(
