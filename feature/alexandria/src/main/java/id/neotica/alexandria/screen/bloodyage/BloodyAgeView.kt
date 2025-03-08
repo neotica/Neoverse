@@ -26,6 +26,7 @@ import id.neotica.alexandria.components.ChapterContent
 import id.neotica.alexandria.components.ChapterItem
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.alexandria.BloodyAgeChapters
+import id.neotica.model.alexandria.bloodyage.ImageList
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.LoadingIndicator
 import id.neotica.ui.components.droidcore.NeoSearchBar
@@ -106,7 +107,8 @@ fun BloodyAgeView(
                     item {
                         ChapterContent(
                             title = chapter.chapter,
-                            content = chapterDetail.value
+                            content = chapterDetail.value,
+                            imageList = chapter.images
                         )
                     }
                 }
@@ -144,6 +146,7 @@ fun BloodyAgeView(
                         it.id,
                         it.chapter,
                         it.url,
+                        it.images
                     )
                 }
             }

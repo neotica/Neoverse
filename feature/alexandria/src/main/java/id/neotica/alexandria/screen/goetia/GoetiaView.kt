@@ -1,12 +1,16 @@
 package id.neotica.alexandria.screen.goetia
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -18,6 +22,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import id.neotica.alexandria.components.ChapterContent
@@ -27,7 +32,9 @@ import id.neotica.domain.model.alexandria.Spirits
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.LoadingIndicator
 import id.neotica.ui.components.droidcore.NeoSearchBar
+import id.neotica.ui.components.image.ImageCoil
 import id.neotica.ui.theme.DarkBackground
+import id.neotica.ui.theme.DarkPrimary
 import id.neotica.ui.theme.NeoPadding
 import org.koin.androidx.compose.koinViewModel
 
@@ -81,10 +88,22 @@ fun GoetiaView(
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 item {
+                    Box(
+                        Modifier
+                            .clip(CircleShape)
+                            .background(DarkPrimary)
+                            .size(100.dp)
+                    ) {
+                        ImageCoil(
+                            url = spiritDetail.imageUrl,
+                            size = 100.dp
+                        )
+                    }
+                }
+                item {
                     ChapterContent(
                         title = "${spiritDetail.id}. ${spiritDetail.name}",
                         content = spiritDetail.desc,
-                        imageUrl = spiritDetail.imageUrl
                     )
                 }
             }
