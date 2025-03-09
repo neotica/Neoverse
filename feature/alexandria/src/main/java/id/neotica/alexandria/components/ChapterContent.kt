@@ -8,7 +8,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import id.neotica.model.alexandria.bloodyage.ImageList
+import id.neotica.domain.model.alexandria.ChapterImage
 import id.neotica.ui.components.droidcore.CustomCarousel
 import id.neotica.ui.components.image.ImageCoil
 import id.neotica.ui.theme.FontSize
@@ -17,7 +17,7 @@ import id.neotica.ui.theme.FontSize
 fun ChapterContent(
     title: String,
     content: String,
-    imageList: List<ImageList>? = null
+    imageList: List<ChapterImage>? = null
 ) {
 
     Text(

@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -26,7 +27,7 @@ import id.neotica.alexandria.components.ChapterContent
 import id.neotica.alexandria.components.ChapterItem
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.alexandria.BloodyAgeChapters
-import id.neotica.model.alexandria.bloodyage.ImageList
+import id.neotica.domain.model.alexandria.ChapterDetail
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.LoadingIndicator
 import id.neotica.ui.components.droidcore.NeoSearchBar
@@ -41,7 +42,6 @@ fun BloodyAgeView(
     viewModel: BloodyAgeViewModel = koinViewModel()
 ) {
     val chapterList = remember { mutableStateOf<List<BloodyAgeChapters>>(emptyList()) }
-    val chapterDetail = remember { mutableStateOf("") }
 
     var isLoading by remember { mutableStateOf(false) }
     var isLoadingChapter by remember { mutableStateOf(false) }
@@ -60,6 +60,9 @@ fun BloodyAgeView(
             )
         )
     }
+    var chapterDetail by remember { mutableStateOf<List<ChapterDetail>?>(null) }
+    var chapterDetailStat by remember { mutableStateOf("") }
+
 
     LaunchedEffect(Unit) {
         viewModel.chapters.collect { result ->
@@ -77,13 +80,16 @@ fun BloodyAgeView(
     LaunchedEffect(showChapterSheet) {
         viewModel.getChapterDetail(chapter.url)
         viewModel.chapterDetail.collect { result ->
-            when(result) {
+            when (result) {
                 is ApiResult.Loading -> isLoadingChapter = true
                 is ApiResult.Success -> {
                     isLoadingChapter = false
-                    chapterDetail.value = result.data!!
+                    chapterDetail = result.data
                 }
-                is ApiResult.Error -> isLoadingChapter = false
+                is ApiResult.Error -> {
+                    isLoadingChapter = false
+                    chapterDetailStat = result.errorMessage.toString()
+                }
             }
         }
     }
@@ -91,7 +97,11 @@ fun BloodyAgeView(
 
     if (showChapterSheet) {
         ModalBottomSheet(
-            onDismissRequest = { showChapterSheet = false },
+            onDismissRequest = {
+                showChapterSheet = false
+                chapterDetail = null
+                chapter = BloodyAgeChapters(0,"", "")
+            },
             sheetState = sheetState,
             containerColor = DarkBackground
         ) {
@@ -105,11 +115,19 @@ fun BloodyAgeView(
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     item {
-                        ChapterContent(
-                            title = chapter.chapter,
-                            content = chapterDetail.value,
-                            imageList = chapter.images
-                        )
+                        chapterDetail.let {
+                            if (it == null) {
+                                Text(chapterDetailStat)
+                            } else {
+                                chapterDetail?.forEach { detail ->
+                                    ChapterContent(
+                                        title = chapter.chapter,
+                                        content = detail.content,
+                                        imageList = detail.images
+                                    )
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -146,7 +164,6 @@ fun BloodyAgeView(
                         it.id,
                         it.chapter,
                         it.url,
-                        it.images
                     )
                 }
             }

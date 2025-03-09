@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.alexandria.BloodyAgeChapters
+import id.neotica.domain.model.alexandria.ChapterDetail
 import id.neotica.domain.remote.AlexandriaRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -16,7 +17,7 @@ class BloodyAgeViewModel(
     private var _chapters: MutableStateFlow<ApiResult<List<BloodyAgeChapters>>> = MutableStateFlow(ApiResult.Loading())
     val chapters = _chapters.asStateFlow()
 
-    private var _chapterDetail: MutableStateFlow<ApiResult<String>> = MutableStateFlow(ApiResult.Loading())
+    private var _chapterDetail: MutableStateFlow<ApiResult<List<ChapterDetail>>> = MutableStateFlow(ApiResult.Loading())
     val chapterDetail = _chapterDetail.asStateFlow()
 
     init {
