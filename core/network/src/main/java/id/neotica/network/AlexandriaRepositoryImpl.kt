@@ -2,6 +2,7 @@ package id.neotica.network
 
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.alexandria.BloodyAgeChapters
+import id.neotica.domain.model.alexandria.Books
 import id.neotica.domain.model.alexandria.ChapterDetail
 import id.neotica.domain.model.alexandria.Spirits
 import id.neotica.domain.remote.AlexandriaRepository
@@ -27,6 +28,20 @@ class AlexandriaRepositoryImpl: AlexandriaRepository {
         val result = ktorClient
             .get("${baseUrl}/alexandria/bloody-age")
             .body<List<BloodyAgeChapters>>()
+        emit(ApiResult.Success(result))
+    }
+
+    override fun getChapters(url: String): Flow<ApiResult<BloodyAgeChapters>> = flow {
+        val result = ktorClient
+            .get("${baseUrl}/alexandria/$url")
+            .body<BloodyAgeChapters>()
+        emit(ApiResult.Success(result))
+    }
+
+    override fun getBooks(): Flow<ApiResult<List<Books>>> = flow {
+        val result = ktorClient
+            .get("${baseUrl}/alexandria")
+            .body<List<Books>>()
         emit(ApiResult.Success(result))
     }
 

@@ -122,6 +122,8 @@ sealed class AlexandriaScreen {
     data object GoetiaScreen: AlexandriaScreen()
     @Serializable
     data object BloodyAgeScreen: AlexandriaScreen()
+    @Serializable
+    data class BookScreen(val url: String = ""): AlexandriaScreen()
 }
 
 data class NavigationItem(

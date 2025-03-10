@@ -93,6 +93,7 @@ fun MainView() {
             AlexandriaScreen.HomeScreen,
             AlexandriaScreen.GoetiaScreen,
             AlexandriaScreen.BloodyAgeScreen,
+            AlexandriaScreen.BookScreen(),
             Screen.ResetPassword,
             Screen.Chat(),
             Screen.EditProfileScreen(),

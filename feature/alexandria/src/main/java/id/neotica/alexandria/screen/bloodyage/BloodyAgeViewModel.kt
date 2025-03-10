@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 class BloodyAgeViewModel(
     private val alexandriaRepo: AlexandriaRepository
 ): ViewModel() {
-    private var _chapters: MutableStateFlow<ApiResult<List<BloodyAgeChapters>>> = MutableStateFlow(ApiResult.Loading())
+    private var _chapters: MutableStateFlow<ApiResult<BloodyAgeChapters>> = MutableStateFlow(ApiResult.Loading())
     val chapters = _chapters.asStateFlow()
 
     private var _chapterDetail: MutableStateFlow<ApiResult<List<ChapterDetail>>> = MutableStateFlow(ApiResult.Loading())
@@ -25,7 +25,7 @@ class BloodyAgeViewModel(
     }
 
     private fun getChapters() = viewModelScope.launch {
-        alexandriaRepo.getBloodyAge().collect {
+        alexandriaRepo.getChapters("bloody-age").collect {
             Log.d("spirit", it.toString())
             _chapters.value = it
         }

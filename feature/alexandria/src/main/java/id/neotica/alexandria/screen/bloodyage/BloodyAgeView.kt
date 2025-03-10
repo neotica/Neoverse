@@ -28,6 +28,7 @@ import id.neotica.alexandria.components.ChapterItem
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.alexandria.BloodyAgeChapters
 import id.neotica.domain.model.alexandria.ChapterDetail
+import id.neotica.domain.model.alexandria.ChapterItem
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.LoadingIndicator
 import id.neotica.ui.components.droidcore.NeoSearchBar
@@ -41,7 +42,7 @@ fun BloodyAgeView(
     navController: NavController,
     viewModel: BloodyAgeViewModel = koinViewModel()
 ) {
-    val chapterList = remember { mutableStateOf<List<BloodyAgeChapters>>(emptyList()) }
+    val chapterList = remember { mutableStateOf<BloodyAgeChapters?>(null) }
 
     var isLoading by remember { mutableStateOf(false) }
     var isLoadingChapter by remember { mutableStateOf(false) }
@@ -53,7 +54,7 @@ fun BloodyAgeView(
     var showChapterSheet by remember { mutableStateOf(false) }
     var chapter by remember {
         mutableStateOf(
-            BloodyAgeChapters(
+            ChapterItem(
             id = 0,
             chapter = "",
             url = "",
@@ -100,7 +101,7 @@ fun BloodyAgeView(
             onDismissRequest = {
                 showChapterSheet = false
                 chapterDetail = null
-                chapter = BloodyAgeChapters(0,"", "")
+                chapter = ChapterItem(0,"", "")
             },
             sheetState = sheetState,
             containerColor = DarkBackground
@@ -143,7 +144,7 @@ fun BloodyAgeView(
         Column(
             modifier = Modifier.padding(horizontal = 16.dp)
         ) {
-            NeoSearchBar(searchBar, label = "Search Spirits")
+            NeoSearchBar(searchBar, label = "Search Chapters")
         }
 
 
@@ -152,21 +153,24 @@ fun BloodyAgeView(
                 bottom = NeoPadding.systemBarPadding
             )
         ) {
-            val spiritsFilter = chapterList.value.filter {
-                it.chapter .contains(searchBar.value, ignoreCase = true)
+            val spiritsFilter = chapterList.value?.chapter?.filter {
+                it.chapter.contains(searchBar.value, ignoreCase = true)
             }
-            items(spiritsFilter) {
-                ChapterItem(
-                    title = it.chapter,
-                ) {
-                    showChapterSheet = true
-                    chapter = BloodyAgeChapters(
-                        it.id,
-                        it.chapter,
-                        it.url,
-                    )
+            spiritsFilter?.let {
+                items(it) {
+                    ChapterItem(
+                        title = it.chapter,
+                    ) {
+                        showChapterSheet = true
+                        chapter = ChapterItem(
+                            it.id,
+                            it.chapter,
+                            it.url,
+                        )
+                    }
                 }
             }
+
         }
     }
 }
