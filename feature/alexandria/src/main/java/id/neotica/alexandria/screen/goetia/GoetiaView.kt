@@ -28,7 +28,7 @@ import androidx.navigation.NavController
 import id.neotica.alexandria.components.ChapterContent
 import id.neotica.alexandria.components.ChapterItem
 import id.neotica.domain.ApiResult
-import id.neotica.domain.model.alexandria.Spirits
+import id.neotica.domain.model.alexandria.legacy.Spirits
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.LoadingIndicator
 import id.neotica.ui.components.droidcore.NeoSearchBar

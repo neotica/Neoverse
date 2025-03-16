@@ -5,6 +5,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
@@ -42,6 +43,8 @@ class ChatRepositoryImpl: ChatRepository {
     }
 
     override suspend fun getAllChatrooms(): Flow<ApiResult<List<ParentNeo<ChatRoom>>>> = flow {
+        val fb = FirebaseAuth.getInstance().currentUser?.getIdToken(true)?.await()?.token
+        Log.d("AnjingKontol", fb?:"")
         emit(ApiResult.Loading())
         try {
             val snapshot = firebase.getReference("chatroom").get().await()

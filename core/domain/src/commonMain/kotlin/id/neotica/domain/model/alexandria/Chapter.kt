@@ -3,9 +3,10 @@ package id.neotica.domain.model.alexandria
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Books(
+data class Chapter(
     val id: Int,
-    val name: String,
-    val url: String,
-    val imageUrl: String? = null
+    val title: String,
+    val bookId: String,
+    val createdAt: Long,
+    val modifiedAt: Long
 )

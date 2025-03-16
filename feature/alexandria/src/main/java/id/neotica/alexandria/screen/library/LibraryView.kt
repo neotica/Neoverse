@@ -14,7 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import id.neotica.alexandria.components.BookItem
 import id.neotica.domain.ApiResult
-import id.neotica.domain.model.alexandria.Books
+import id.neotica.domain.model.alexandria.Book
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.LoadingIndicator
 import id.neotica.ui.navigation.AlexandriaScreen
@@ -26,7 +26,7 @@ fun LibraryView(
     viewModel: LibraryViewModel = koinViewModel()
 ) {
     var isLoading by remember { mutableStateOf(false) }
-    var books by remember { mutableStateOf(emptyList<Books>()) }
+    var books by remember { mutableStateOf(emptyList<Book>()) }
 
     LaunchedEffect(Unit) {
         viewModel.books.collect { result ->
@@ -50,8 +50,8 @@ fun LibraryView(
             item {
                 books.forEach {
                     BookItem(
-                        title = it.name,
-                        route = AlexandriaScreen.BookScreen(url = it.url),
+                        title = it.title,
+                        route = AlexandriaScreen.BookScreen(url = it.id),
                         navController = navController
                     )
                 }

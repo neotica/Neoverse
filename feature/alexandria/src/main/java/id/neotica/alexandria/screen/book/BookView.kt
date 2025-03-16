@@ -26,9 +26,9 @@ import androidx.navigation.NavController
 import id.neotica.alexandria.components.ChapterContent
 import id.neotica.alexandria.components.ChapterItem
 import id.neotica.domain.ApiResult
-import id.neotica.domain.model.alexandria.BloodyAgeChapters
-import id.neotica.domain.model.alexandria.ChapterDetail
-import id.neotica.domain.model.alexandria.ChapterItem
+import id.neotica.domain.model.alexandria.Book
+import id.neotica.domain.model.alexandria.Chapter
+import id.neotica.domain.model.alexandria.ChapterContent
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.LoadingIndicator
 import id.neotica.ui.components.droidcore.NeoSearchBar
@@ -42,7 +42,7 @@ fun BookView(
     navController: NavController,
     viewModel: BookViewModel = koinViewModel()
 ) {
-    val chapterList = remember { mutableStateOf<BloodyAgeChapters?>(null) }
+    val chapterList = remember { mutableStateOf<Book?>(null) }
 
     var isLoading by remember { mutableStateOf(false) }
     var isLoadingChapter by remember { mutableStateOf(false) }
@@ -54,14 +54,16 @@ fun BookView(
     var showChapterSheet by remember { mutableStateOf(false) }
     var chapter by remember {
         mutableStateOf(
-            ChapterItem(
-            id = 0,
-            chapter = "",
-            url = "",
+            Chapter(
+                id = 0,
+                title = "",
+                bookId = "",
+                createdAt = 0,
+                modifiedAt = 0,
             )
         )
     }
-    var chapterDetail by remember { mutableStateOf<List<ChapterDetail>?>(null) }
+    var chapterDetail by remember { mutableStateOf<List<ChapterContent>?>(null) }
     var chapterDetailStat by remember { mutableStateOf("") }
 
 
@@ -79,7 +81,7 @@ fun BookView(
     }
 
     LaunchedEffect(showChapterSheet) {
-        viewModel.getChapterDetail(chapter.url)
+        viewModel.getChapterDetail(chapter.id)
         viewModel.chapterDetail.collect { result ->
             when (result) {
                 is ApiResult.Loading -> isLoadingChapter = true
@@ -100,8 +102,14 @@ fun BookView(
         ModalBottomSheet(
             onDismissRequest = {
                 showChapterSheet = false
-                chapterDetail = null
-                chapter = ChapterItem(0,"", "")
+//                chapterDetail = null
+                chapter = Chapter(
+                    id = 0,
+                    title = "",
+                    bookId = "",
+                    createdAt = 0,
+                    modifiedAt = 0,
+                )
             },
             sheetState = sheetState,
             containerColor = DarkBackground
@@ -116,15 +124,16 @@ fun BookView(
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     item {
+                        chapterList.let {  }
                         chapterDetail.let {
                             if (it == null) {
                                 Text(chapterDetailStat)
                             } else {
                                 chapterDetail?.forEach { detail ->
                                     ChapterContent(
-                                        title = chapter.chapter,
+                                        title = chapter.title,
                                         content = detail.content,
-                                        imageList = detail.images
+//                                        imageList = detail.
                                     )
                                 }
                             }
@@ -153,19 +162,21 @@ fun BookView(
                 bottom = NeoPadding.systemBarPadding
             )
         ) {
-            val spiritsFilter = chapterList.value?.chapter?.filter {
-                it.chapter.contains(searchBar.value, ignoreCase = true)
+            val spiritsFilter = chapterList.value?.chapters?.filter {
+                it.title.contains(searchBar.value, ignoreCase = true)
             }
-            spiritsFilter?.let {
-                items(it) {
+            spiritsFilter?.let { chap ->
+                items(chap) { item ->
                     ChapterItem(
-                        title = it.chapter,
+                        title = item.title,
                     ) {
                         showChapterSheet = true
-                        chapter = ChapterItem(
-                            it.id,
-                            it.chapter,
-                            it.url,
+                        chapter = Chapter(
+                            id = item.id,
+                            title = item.title,
+                            bookId = item.bookId,
+                            createdAt = item.createdAt,
+                            modifiedAt = item.modifiedAt,
                         )
                     }
                 }

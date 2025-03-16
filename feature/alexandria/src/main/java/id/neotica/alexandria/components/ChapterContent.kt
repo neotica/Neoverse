@@ -8,7 +8,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import id.neotica.domain.model.alexandria.ChapterImage
+import id.neotica.domain.model.alexandria.legacy.ChapterImage
 import id.neotica.ui.components.droidcore.CustomCarousel
 import id.neotica.ui.components.image.ImageCoil
 import id.neotica.ui.theme.FontSize

@@ -4,8 +4,8 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import id.neotica.domain.ApiResult
-import id.neotica.domain.model.alexandria.BloodyAgeChapters
-import id.neotica.domain.model.alexandria.ChapterDetail
+import id.neotica.domain.model.alexandria.legacy.BloodyAgeChapters
+import id.neotica.domain.model.alexandria.legacy.ChapterDetail
 import id.neotica.domain.remote.AlexandriaRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -25,7 +25,7 @@ class BloodyAgeViewModel(
     }
 
     private fun getChapters() = viewModelScope.launch {
-        alexandriaRepo.getChapters("bloody-age").collect {
+        alexandriaRepo.getChaptersOld("bloody-age").collect {
             Log.d("spirit", it.toString())
             _chapters.value = it
         }

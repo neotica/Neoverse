@@ -26,9 +26,9 @@ import androidx.navigation.NavController
 import id.neotica.alexandria.components.ChapterContent
 import id.neotica.alexandria.components.ChapterItem
 import id.neotica.domain.ApiResult
-import id.neotica.domain.model.alexandria.BloodyAgeChapters
-import id.neotica.domain.model.alexandria.ChapterDetail
-import id.neotica.domain.model.alexandria.ChapterItem
+import id.neotica.domain.model.alexandria.legacy.BloodyAgeChapters
+import id.neotica.domain.model.alexandria.legacy.ChapterDetail
+import id.neotica.domain.model.alexandria.legacy.ChapterItem
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.LoadingIndicator
 import id.neotica.ui.components.droidcore.NeoSearchBar
