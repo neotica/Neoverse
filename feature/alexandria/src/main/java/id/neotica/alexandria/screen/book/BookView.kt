@@ -21,6 +21,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import id.neotica.alexandria.components.ChapterContent
@@ -33,6 +34,7 @@ import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.LoadingIndicator
 import id.neotica.ui.components.droidcore.NeoSearchBar
 import id.neotica.ui.theme.DarkBackground
+import id.neotica.ui.theme.FontSize
 import id.neotica.ui.theme.NeoPadding
 import org.koin.androidx.compose.koinViewModel
 
@@ -102,7 +104,6 @@ fun BookView(
         ModalBottomSheet(
             onDismissRequest = {
                 showChapterSheet = false
-//                chapterDetail = null
                 chapter = Chapter(
                     id = 0,
                     title = "",
@@ -129,6 +130,12 @@ fun BookView(
                             if (it == null) {
                                 Text(chapterDetailStat)
                             } else {
+                                Text(
+                                    text = chapter.title,
+                                    fontSize = FontSize.Medium,
+                                    fontWeight = FontWeight.Bold,
+                                    modifier = Modifier.padding(vertical = 8.dp)
+                                )
                                 chapterDetail?.forEach { detail ->
                                     ChapterContent(
                                         title = chapter.title,

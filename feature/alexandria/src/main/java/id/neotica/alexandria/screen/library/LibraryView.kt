@@ -1,5 +1,6 @@
 package id.neotica.alexandria.screen.library
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -36,9 +37,11 @@ fun LibraryView(
                     isLoading = false
                     books = result.data!!
                 }
-                is ApiResult.Error -> isLoading = false
+                is ApiResult.Error -> {
+                    isLoading = false
+                    Log.e("library", result.errorMessage.toString())
+                }
             }
-
         }
     }
     BasicScaffold(
@@ -55,13 +58,13 @@ fun LibraryView(
                         navController = navController
                     )
                 }
-                if (!isLoading) {
-                    BookItem(
-                        title = "Goetia",
-                        route = AlexandriaScreen.GoetiaScreen,
-                        navController = navController
-                    )
-                }
+//                if (!isLoading) {
+//                    BookItem(
+//                        title = "Goetia",
+//                        route = AlexandriaScreen.GoetiaScreen,
+//                        navController = navController
+//                    )
+//                }
             }
         }
     }

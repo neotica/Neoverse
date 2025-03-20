@@ -91,8 +91,6 @@ fun MainView() {
             WorldScreen.RavenChatScreen,
             Screen.FriendScreen,
             AlexandriaScreen.HomeScreen,
-            AlexandriaScreen.GoetiaScreen,
-            AlexandriaScreen.BloodyAgeScreen,
             AlexandriaScreen.BookScreen(),
             Screen.ResetPassword,
             Screen.Chat(),

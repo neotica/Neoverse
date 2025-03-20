@@ -1,50 +1,72 @@
 package id.neotica.network
 
+import com.google.firebase.auth.FirebaseAuth
 import id.neotica.domain.ApiResult
-import id.neotica.domain.model.alexandria.legacy.BloodyAgeChapters
 import id.neotica.domain.model.alexandria.Book
 import id.neotica.domain.model.alexandria.Chapter
 import id.neotica.domain.model.alexandria.ChapterContent
+import id.neotica.domain.model.alexandria.legacy.BloodyAgeChapters
 import id.neotica.domain.model.alexandria.legacy.ChapterDetail
 import id.neotica.domain.model.alexandria.legacy.Spirits
 import id.neotica.domain.remote.AlexandriaRepository
 import id.neotica.neoverse.utils.baseUrl
 import id.neotica.network.micro.ktorClient
+import id.neotica.network.utils.safeApiCall
 import io.ktor.client.call.body
 import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.request.get
+import io.ktor.client.request.headers
 import io.ktor.http.HttpStatusCode
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 
 class AlexandriaRepositoryImpl: AlexandriaRepository {
 
-    override fun getBooks(): Flow<ApiResult<List<Book>>> = flow {
-        val result = ktorClient
-            .get("${baseUrl}/alexandria")
-            .body<List<Book>>()
-        emit(ApiResult.Success(result))
+    override fun getBooks(): Flow<ApiResult<List<Book>>> = safeApiCall {
+        val token = withContext(Dispatchers.IO) {
+            FirebaseAuth.getInstance().currentUser?.getIdToken(true)?.await()?.token
+        }
+        ktorClient.get("${baseUrl}/alexandria"){
+            headers {
+                token?.let { append("Authorization", "Bearer $it") }
+            }
+        }.body<List<Book>>()
     }
 
-    override fun getBook(bookId: String): Flow<ApiResult<Book>> = flow {
-        val result = ktorClient
-            .get("${baseUrl}/alexandria/$bookId")
-            .body<Book>()
-        emit(ApiResult.Success(result))
+    override fun getBook(bookId: String): Flow<ApiResult<Book>> = safeApiCall {
+        val token = withContext(Dispatchers.IO) {
+            FirebaseAuth.getInstance().currentUser?.getIdToken(true)?.await()?.token
+        }
+        ktorClient.get("${baseUrl}/alexandria/$bookId"){
+            headers {
+                token?.let { append("Authorization", "Bearer $it") }
+            }
+        }.body<Book>()
     }
 
-    override fun getChapters(bookId: String): Flow<ApiResult<List<Chapter>>> = flow {
-        val result = ktorClient
-            .get("${baseUrl}/alexandria/$bookId")
-            .body<List<Chapter>>()
-        emit(ApiResult.Success(result))
+    override fun getChapters(bookId: String): Flow<ApiResult<List<Chapter>>> = safeApiCall {
+        val token = withContext(Dispatchers.IO) {
+            FirebaseAuth.getInstance().currentUser?.getIdToken(true)?.await()?.token
+        }
+        ktorClient.get("${baseUrl}/alexandria/$bookId"){
+            headers {
+                token?.let { append("Authorization", "Bearer $it") }
+            }
+        }.body<List<Chapter>>()
     }
 
-    override fun getContents(chapterId: Int): Flow<ApiResult<List<ChapterContent>>> = flow {
-        val result = ktorClient
-            .get("${baseUrl}/alexandria/chapters/$chapterId")
-            .body<List<ChapterContent>>()
-        emit(ApiResult.Success(result))
+    override fun getContents(chapterId: Int): Flow<ApiResult<List<ChapterContent>>> = safeApiCall {
+        val token = withContext(Dispatchers.IO) {
+            FirebaseAuth.getInstance().currentUser?.getIdToken(true)?.await()?.token
+        }
+        ktorClient.get("${baseUrl}/alexandria/chapters/contents/filter/$chapterId"){
+            headers {
+                token?.let { append("Authorization", "Bearer $it") }
+            }
+        }.body<List<ChapterContent>>()
     }
 
     override fun getSpirits(): Flow<ApiResult<List<Spirits>>> = flow {
