@@ -18,6 +18,7 @@ import id.neotica.domain.ApiResult
 import id.neotica.domain.model.alexandria.Book
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.LoadingIndicator
+import id.neotica.ui.components.NeoButton
 import id.neotica.ui.navigation.AlexandriaScreen
 import org.koin.androidx.compose.koinViewModel
 
@@ -51,6 +52,7 @@ fun LibraryView(
     ) {
         LazyColumn {
             item {
+                NeoButton("Admin") { navController.navigate(AlexandriaScreen.UserLibraryScreen) }
                 books.forEach {
                     BookItem(
                         title = it.title,

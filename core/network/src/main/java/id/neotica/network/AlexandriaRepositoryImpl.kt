@@ -16,6 +16,8 @@ import io.ktor.client.call.body
 import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.request.get
 import io.ktor.client.request.headers
+import io.ktor.client.request.put
+import io.ktor.client.request.setBody
 import io.ktor.http.HttpStatusCode
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -26,13 +28,19 @@ import kotlinx.coroutines.withContext
 class AlexandriaRepositoryImpl: AlexandriaRepository {
 
     override fun getBooks(): Flow<ApiResult<List<Book>>> = safeApiCall {
+        ktorClient.get("${baseUrl}/alexandria"){
+        }.body<List<Book>>()
+    }
+
+    override fun getUserBooks(username: String): Flow<ApiResult<List<Book>>> = safeApiCall {
         val token = withContext(Dispatchers.IO) {
             FirebaseAuth.getInstance().currentUser?.getIdToken(true)?.await()?.token
         }
-        ktorClient.get("${baseUrl}/alexandria"){
+        ktorClient.get("${baseUrl}/alexandria/book"){
             headers {
                 token?.let { append("Authorization", "Bearer $it") }
             }
+            url { parameters.append("author", username) }
         }.body<List<Book>>()
     }
 
@@ -44,6 +52,19 @@ class AlexandriaRepositoryImpl: AlexandriaRepository {
             headers {
                 token?.let { append("Authorization", "Bearer $it") }
             }
+        }.body<Book>()
+    }
+
+    override fun editBook(book: Book): Flow<ApiResult<Book>> = safeApiCall {
+        val token = withContext(Dispatchers.IO) {
+            FirebaseAuth.getInstance().currentUser?.getIdToken(true)?.await()?.token
+        }
+        ktorClient.put("${baseUrl}/alexandria/${book.id}"){
+            headers {
+                token?.let { append("Authorization", "Bearer $it") }
+                append("Content-Type", "application/json")
+            }
+            setBody(book)
         }.body<Book>()
     }
 

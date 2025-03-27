@@ -4,6 +4,8 @@ import id.neotica.alexandria.screen.bloodyage.BloodyAgeViewModel
 import id.neotica.alexandria.screen.book.BookViewModel
 import id.neotica.alexandria.screen.goetia.GoetiaViewModel
 import id.neotica.alexandria.screen.library.LibraryViewModel
+import id.neotica.alexandria.screen.user.UserLibraryViewModel
+import id.neotica.alexandria.screen.user.editbook.EditBookViewModel
 import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.dsl.module
 
@@ -12,4 +14,6 @@ val alexandriaModules = module {
     viewModelOf(::BloodyAgeViewModel)
     viewModelOf(::LibraryViewModel)
     viewModelOf(::BookViewModel)
+    viewModelOf(::UserLibraryViewModel)
+    viewModelOf(::EditBookViewModel)
 }

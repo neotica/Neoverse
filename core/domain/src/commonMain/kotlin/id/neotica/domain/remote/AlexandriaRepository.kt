@@ -15,6 +15,8 @@ interface AlexandriaRepository {
     fun getBloodyAgeChapter(chapter: String): Flow<ApiResult<List<ChapterDetail>>>
     fun getChaptersOld(url: String): Flow<ApiResult<BloodyAgeChapters>>
     fun getBooks(): Flow<ApiResult<List<Book>>>
+    fun editBook(book: Book): Flow<ApiResult<Book>>
+    fun getUserBooks(username: String): Flow<ApiResult<List<Book>>>
     fun getChapters(bookId: String): Flow<ApiResult<List<Chapter>>>
     fun getBook(bookId: String): Flow<ApiResult<Book>>
     fun getContents(chapterId: Int): Flow<ApiResult<List<ChapterContent>>>

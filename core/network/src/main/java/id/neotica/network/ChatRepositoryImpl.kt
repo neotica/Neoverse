@@ -44,7 +44,7 @@ class ChatRepositoryImpl: ChatRepository {
 
     override suspend fun getAllChatrooms(): Flow<ApiResult<List<ParentNeo<ChatRoom>>>> = flow {
         val fb = FirebaseAuth.getInstance().currentUser?.getIdToken(true)?.await()?.token
-        Log.d("AnjingKontol", fb?:"")
+        Log.d("firebase token: ", fb?:"")
         emit(ApiResult.Loading())
         try {
             val snapshot = firebase.getReference("chatroom").get().await()
