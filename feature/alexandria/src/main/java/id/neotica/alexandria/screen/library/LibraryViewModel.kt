@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.alexandria.Book
+import id.neotica.domain.pagination.Pagination
 import id.neotica.domain.remote.AlexandriaRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -12,7 +13,7 @@ import kotlinx.coroutines.launch
 class LibraryViewModel(
     private val alexandriaRepo: AlexandriaRepository
 ): ViewModel() {
-    private var _booksOld: MutableStateFlow<ApiResult<List<Book>>> = MutableStateFlow(
+    private var _booksOld: MutableStateFlow<ApiResult<Pagination<Book>>> = MutableStateFlow(
         ApiResult.Loading())
     val books = _booksOld.asStateFlow()
 

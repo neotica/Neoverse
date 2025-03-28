@@ -7,6 +7,7 @@ import id.neotica.domain.model.alexandria.Chapter
 import id.neotica.domain.model.alexandria.ChapterContent
 import id.neotica.domain.model.alexandria.legacy.ChapterDetail
 import id.neotica.domain.model.alexandria.legacy.Spirits
+import id.neotica.domain.pagination.Pagination
 import kotlinx.coroutines.flow.Flow
 
 interface AlexandriaRepository {
@@ -14,7 +15,7 @@ interface AlexandriaRepository {
     fun getBloodyAgeOld(): Flow<ApiResult<List<BloodyAgeChapters>>>
     fun getBloodyAgeChapter(chapter: String): Flow<ApiResult<List<ChapterDetail>>>
     fun getChaptersOld(url: String): Flow<ApiResult<BloodyAgeChapters>>
-    fun getBooks(): Flow<ApiResult<List<Book>>>
+    fun getBooks(): Flow<ApiResult<Pagination<Book>>>
     fun editBook(book: Book): Flow<ApiResult<Book>>
     fun getUserBooks(username: String): Flow<ApiResult<List<Book>>>
     fun getChapters(bookId: String): Flow<ApiResult<List<Chapter>>>

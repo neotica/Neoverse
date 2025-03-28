@@ -8,6 +8,7 @@ import id.neotica.domain.model.alexandria.ChapterContent
 import id.neotica.domain.model.alexandria.legacy.BloodyAgeChapters
 import id.neotica.domain.model.alexandria.legacy.ChapterDetail
 import id.neotica.domain.model.alexandria.legacy.Spirits
+import id.neotica.domain.pagination.Pagination
 import id.neotica.domain.remote.AlexandriaRepository
 import id.neotica.neoverse.utils.baseUrl
 import id.neotica.network.micro.ktorClient
@@ -27,9 +28,9 @@ import kotlinx.coroutines.withContext
 
 class AlexandriaRepositoryImpl: AlexandriaRepository {
 
-    override fun getBooks(): Flow<ApiResult<List<Book>>> = safeApiCall {
+    override fun getBooks(): Flow<ApiResult<Pagination<Book>>> = safeApiCall {
         ktorClient.get("${baseUrl}/alexandria"){
-        }.body<List<Book>>()
+        }.body<Pagination<Book>>()
     }
 
     override fun getUserBooks(username: String): Flow<ApiResult<List<Book>>> = safeApiCall {

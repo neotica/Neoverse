@@ -36,7 +36,7 @@ fun LibraryView(
                 is ApiResult.Loading -> isLoading = true
                 is ApiResult.Success -> {
                     isLoading = false
-                    books = result.data!!
+                    books = result.data!!.content
                 }
                 is ApiResult.Error -> {
                     isLoading = false
