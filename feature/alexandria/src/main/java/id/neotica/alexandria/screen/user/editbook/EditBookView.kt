@@ -1,6 +1,7 @@
 package id.neotica.alexandria.screen.user.editbook
 
 import android.util.Log
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,6 +15,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -166,10 +168,41 @@ fun EditBookView(
                                 Text("Created at: " + convertLongToTime(chapter.createdAt))
                                 Text("Modified at: " + convertLongToTime(chapter.modifiedAt))
                                 chapterDetail?.let { detail ->
-                                    ChapterContent(
-                                        title = chapter.title,
-                                        content = detail.content,
-                                    )
+                                    NeoButton("Delete content") { viewModel.deleteContent(detail.id) }
+                                    NeoButton("Delete Chapter") { viewModel.deleteChapter(chapter.id) }
+
+                                    var contentText by remember { mutableStateOf(detail.content) }
+                                    var editState by remember { mutableStateOf(false) }
+
+                                    LaunchedEffect(detail.content) {
+                                        contentText = detail.content
+                                    }
+
+                                    NeoButton("Edit") {
+                                        editState = !editState
+                                    }
+
+                                    if (!editState) {
+                                        ChapterContent(
+                                            title = chapter.title,
+                                            content = detail.content,
+                                        )
+                                    } else {
+                                        OutlinedTextField(
+                                            value = contentText,
+                                            onValueChange = { textt ->
+                                                contentText = textt
+                                            }
+                                        )
+                                    }
+
+                                    NeoButton("Update content") {
+                                        viewModel.editContent(
+                                            content = contentText,
+                                            id = detail.id,
+                                            page = detail.page
+                                        )
+                                    }
                                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                                         if (detail.hasPrevious) NeoButton("<") {
                                             viewModel.getChapterDetail(chapter.id, page = detail.page - 1)
@@ -187,7 +220,14 @@ fun EditBookView(
                                             Text(
                                                 text = (pageNum + 1).toString(),
                                                 fontWeight = if (pageNum + 1 == detail.page) FontWeight.Bold else FontWeight.Normal,
-                                                modifier = Modifier.padding(horizontal = 4.dp, vertical = 8.dp) // Add padding per item
+                                                modifier = Modifier
+                                                    .padding(horizontal = 4.dp, vertical = 8.dp) // Add padding per item
+                                                    .clickable {
+                                                        viewModel.getChapterDetail(
+                                                            chapter.id,
+                                                            page = pageNum + 1
+                                                        )
+                                                    }
                                             )
                                         }
                                     }

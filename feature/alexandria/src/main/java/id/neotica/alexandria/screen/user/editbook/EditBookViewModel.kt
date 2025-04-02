@@ -9,6 +9,7 @@ import id.neotica.domain.ApiResult
 import id.neotica.domain.model.alexandria.Book
 import id.neotica.domain.model.alexandria.ContentRequest
 import id.neotica.domain.model.alexandria.chapter.ChapterRequest
+import id.neotica.domain.model.alexandria.content.NewContentRequest
 import id.neotica.domain.pagination.PaginatedContent
 import id.neotica.domain.remote.AlexandriaRepository
 import id.neotica.ui.navigation.AlexandriaScreen
@@ -58,7 +59,23 @@ class EditBookViewModel(
         alexandriaRepo.createChapter(chapterRequest).collect { Log.d("chapter req", it.toString()) }
     }
 
+    fun deleteChapter(chapterId: Int) = viewModelScope.launch {
+        alexandriaRepo.deleteChapter(chapterId).collect { Log.d("chapter req", it.toString()) }
+    }
+
     fun createContent(contentRequest: ContentRequest) = viewModelScope.launch {
         alexandriaRepo.createContent(contentRequest).collect { Log.d("chapter req", it.toString()) }
+    }
+
+    fun editContent(content: String, id: Int, page: Int) = viewModelScope.launch {
+        alexandriaRepo.editContent(
+            content = NewContentRequest(newContent = content),
+            id = id,
+            page = page
+        ).collect { Log.d("edit content req", it.toString()) }
+    }
+
+    fun deleteContent(contentId: Int) = viewModelScope.launch {
+        alexandriaRepo.deleteContent(contentId).collect { Log.d("chapter req", it.toString()) }
     }
 }

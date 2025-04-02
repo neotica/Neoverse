@@ -37,9 +37,8 @@ class BookViewModel(
         }
     }
 
-    fun getChapterDetail(chapterId: Int) = viewModelScope.launch {
-
-        alexandriaRepo.getContents(chapterId).collect {
+    fun getChapterDetail(chapterId: Int, page: Int? = 1) = viewModelScope.launch {
+        alexandriaRepo.getContents(chapterId, page).collect {
             Log.d("spirit", it.toString())
             _chapterDetail.value = it
         }

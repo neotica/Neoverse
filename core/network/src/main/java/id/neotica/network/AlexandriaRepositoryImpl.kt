@@ -7,6 +7,7 @@ import id.neotica.domain.model.alexandria.Chapter
 import id.neotica.domain.model.alexandria.ChapterContent
 import id.neotica.domain.model.alexandria.ContentRequest
 import id.neotica.domain.model.alexandria.chapter.ChapterRequest
+import id.neotica.domain.model.alexandria.content.NewContentRequest
 import id.neotica.domain.model.alexandria.legacy.BloodyAgeChapters
 import id.neotica.domain.pagination.PaginatedContent
 import id.neotica.domain.pagination.Pagination
@@ -16,6 +17,7 @@ import id.neotica.network.micro.ktorClient
 import id.neotica.network.utils.safeApiCall
 import io.ktor.client.call.body
 import io.ktor.client.plugins.ClientRequestException
+import io.ktor.client.request.delete
 import io.ktor.client.request.get
 import io.ktor.client.request.headers
 import io.ktor.client.request.post
@@ -81,6 +83,18 @@ class AlexandriaRepositoryImpl: AlexandriaRepository {
         }.body()
     }
 
+    override fun deleteChapter(chapterId: Int): Flow<ApiResult<String>> = safeApiCall {
+        val token = withContext(Dispatchers.IO) {
+            FirebaseAuth.getInstance().currentUser?.getIdToken(true)?.await()?.token
+        }
+        ktorClient.delete("${baseUrl}/alexandria/chapters/$chapterId") {
+            headers {
+                append("Content-Type", "application/json")
+                token?.let { append("Authorization", "Bearer $it") }
+            }
+        }.body<String>()
+    }
+
     override fun getContents(chapterId: Int, page: Int?): Flow<ApiResult<PaginatedContent>> = safeApiCall {
         ktorClient.get("${baseUrl}/alexandria/chapters/contents/$chapterId"){
             url {
@@ -115,9 +129,34 @@ class AlexandriaRepositoryImpl: AlexandriaRepository {
                 append("Content-Type", "application/json")
                 token?.let { append("Authorization", "Bearer $it") }
             }
-//            accept(ContentType.Application.Json)
             setBody(content)
         }.body<ChapterContent>()
+    }
+
+    override fun editContent(content: NewContentRequest, id: Int, page: Int): Flow<ApiResult<String>> = safeApiCall {
+        val token = withContext(Dispatchers.IO) {
+            FirebaseAuth.getInstance().currentUser?.getIdToken(true)?.await()?.token
+        }
+        ktorClient.put("${baseUrl}/alexandria/chapters/contents/${id}?page=$page") {
+            headers {
+                append("Content-Type", "application/json")
+                token?.let { append("Authorization", "Bearer $it") }
+            }
+            setBody(content)
+        }.body()
+    }
+
+    override fun deleteContent(contentId: Int): Flow<ApiResult<String>> = safeApiCall {
+        val token = withContext(Dispatchers.IO) {
+            FirebaseAuth.getInstance().currentUser?.getIdToken(true)?.await()?.token
+        }
+
+        ktorClient.delete("${baseUrl}/alexandria/chapters/contents/$contentId") {
+            headers {
+                append("Content-Type", "application/json")
+                token?.let { append("Authorization", "Bearer $it") }
+            }
+        }.body<String>()
     }
 
 }

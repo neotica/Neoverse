@@ -1,14 +1,17 @@
 package id.neotica.alexandria.screen.book
 
 import android.util.Log
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
@@ -33,6 +36,7 @@ import id.neotica.domain.model.alexandria.Chapter
 import id.neotica.domain.pagination.PaginatedContent
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.LoadingIndicator
+import id.neotica.ui.components.NeoButton
 import id.neotica.ui.components.droidcore.NeoSearchBar
 import id.neotica.ui.theme.DarkBackground
 import id.neotica.ui.theme.FontSize
@@ -122,11 +126,10 @@ fun BookView(
                 LazyColumn(
                     modifier = Modifier
                         .padding(horizontal = 16.dp, vertical = 8.dp)
-                        .fillMaxWidth(),
+                        .fillMaxSize(),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     item {
-                        chapterList.let {  }
                         chapterDetail.let {
                             if (it == null) {
                                 Text(chapterDetailStat)
@@ -137,13 +140,37 @@ fun BookView(
                                     fontWeight = FontWeight.Bold,
                                     modifier = Modifier.padding(vertical = 8.dp)
                                 )
-                                chapterDetail?.content?.let { detail ->
+                                chapterDetail?.let { detail ->
                                     Log.d("contenttt", detail.toString())
                                     ChapterContent(
                                         title = chapter.title,
-                                        content = detail,
+                                        content = detail.content,
 //                                        imageList = detail.
                                     )
+                                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                        if (detail.hasPrevious) NeoButton("<") {
+                                            viewModel.getChapterDetail(chapter.id, page = detail.page - 1)
+                                        }
+                                        if (detail.hasNext) NeoButton(">") {
+                                            Log.d("detailpage", detail.page.toString())
+                                            viewModel.getChapterDetail(chapter.id, page = detail.page + 1)
+                                        }
+                                    }
+
+                                    LazyRow(
+                                        horizontalArrangement = Arrangement.spacedBy(8.dp) // Add margin between items
+                                    ) {
+                                        items(detail.totalPages) { pageNum ->
+                                            Text(
+                                                text = (pageNum + 1).toString(),
+                                                fontWeight = if (pageNum + 1 == detail.page) FontWeight.Bold else FontWeight.Normal,
+                                                modifier = Modifier.padding(horizontal = 4.dp, vertical = 8.dp) // Add padding per item
+                                                    .clickable {
+                                                        viewModel.getChapterDetail(chapter.id, page = pageNum + 1)
+                                                    }
+                                            )
+                                        }
+                                    }
                                 }
                             }
                         }
