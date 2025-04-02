@@ -49,7 +49,7 @@ fun UserLibraryView(
     }
 
     BasicScaffold(
-        "User Library",
+        "Author's Page",
         navController = navController,
         enableActionBar = true
     ) {

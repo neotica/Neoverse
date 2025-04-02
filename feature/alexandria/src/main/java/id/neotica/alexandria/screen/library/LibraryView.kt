@@ -18,7 +18,8 @@ import id.neotica.domain.ApiResult
 import id.neotica.domain.model.alexandria.Book
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.LoadingIndicator
-import id.neotica.ui.components.NeoButton
+import id.neotica.ui.components.topbar.DotsMenuDropDown
+import id.neotica.ui.components.topbar.DotsMenuItem
 import id.neotica.ui.navigation.AlexandriaScreen
 import org.koin.androidx.compose.koinViewModel
 
@@ -48,11 +49,22 @@ fun LibraryView(
     BasicScaffold(
         "The Library of Thoth",
         navController = navController,
-        enableActionBar = true
+        enableActionBar = true,
+        trailingIcon = {
+            var expanded = remember { mutableStateOf(false) }
+
+            DotsMenuDropDown(
+                item = listOf(
+                    DotsMenuItem("Author's Page") {
+                        navController.navigate(AlexandriaScreen.UserLibraryScreen)
+                    }
+                ),
+                expanded = expanded,
+            )
+        }
     ) {
         LazyColumn {
             item {
-                NeoButton("Admin") { navController.navigate(AlexandriaScreen.UserLibraryScreen) }
                 books.forEach {
                     BookItem(
                         title = it.title,
@@ -60,13 +72,6 @@ fun LibraryView(
                         navController = navController
                     )
                 }
-//                if (!isLoading) {
-//                    BookItem(
-//                        title = "Goetia",
-//                        route = AlexandriaScreen.GoetiaScreen,
-//                        navController = navController
-//                    )
-//                }
             }
         }
     }
