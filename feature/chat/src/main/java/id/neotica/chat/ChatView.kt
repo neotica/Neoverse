@@ -1,19 +1,16 @@
 package id.neotica.chat
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Intent
-import android.net.Uri
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
+import androidx.activity.compose.LocalActivity
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -36,13 +33,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.minimumInteractiveComponentSize
-import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -55,13 +49,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalHapticFeedback
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -77,10 +69,10 @@ import dev.chrisbanes.haze.hazeEffect
 import dev.chrisbanes.haze.hazeSource
 import id.neotica.domain.model.chat.Message
 import id.neotica.domain.utils.convertLongToTime
-import id.neotica.ui.R
 import id.neotica.ui.components.BasicScaffold
-import id.neotica.ui.components.DropdownItem
 import id.neotica.ui.components.scroll.scrollBottomValue
+import id.neotica.ui.components.topbar.DotsMenuDropDown
+import id.neotica.ui.components.topbar.DotsMenuItem
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.Screen
 import id.neotica.ui.theme.BlackTransparent40
@@ -95,6 +87,7 @@ import id.neotica.ui.theme.TransparentText20
 import id.neotica.ui.theme.TransparentText40
 import kotlinx.coroutines.delay
 import org.koin.androidx.compose.koinViewModel
+import androidx.core.net.toUri
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -106,7 +99,7 @@ fun ChatView(
 ) {
     val messages = viewModel.message.collectAsState()
     val listState = rememberLazyListState()
-    val activity = LocalContext.current as? Activity
+    val activity = LocalActivity.current
 
     fun finishApp() {
         if (defaultText.isEmpty()) {
@@ -168,45 +161,31 @@ fun ChatView(
             .fillMaxWidth(),
         fullScreen = true,
         trailingIcon = {
-            var expanded by remember { mutableStateOf(false) }
+            var expanded = remember { mutableStateOf(false) }
 
-            Box {
-                Icon(
-                    modifier = Modifier
-                        .minimumInteractiveComponentSize()
-                        .combinedClickable(
-                            interactionSource = remember { MutableInteractionSource() },
-                            indication = ripple(bounded = true, color = White),
-                            onClick = {
-                                expanded = !expanded
-                            },
-                            onLongClick = {
-                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                                Toast
-                                    .makeText(context, "More", Toast.LENGTH_SHORT)
-                                    .show()
-                            },
-                        ),
-                    imageVector = ImageVector.vectorResource(R.drawable.three_dots),
-                    contentDescription = "",
-                    tint = White
-                )
-                DropdownMenu(
-                    expanded = expanded,
-                    onDismissRequest = { expanded = false },
-                    containerColor = DarkPrimaryTransparent2,
-                ) {
-                    DropdownItem("Delete Chat", White) {
-                        viewModel.deleteChatroom()
-                        navController.navigate(RootScreen.HomeNav) {
-                            popUpTo(RootScreen.HomeNav) {
-                                inclusive = true
+            DotsMenuDropDown(
+                item = listOf(
+                    DotsMenuItem(
+                        "Delete Chat",
+                        {
+                            viewModel.deleteChatroom()
+                            navController.navigate(RootScreen.HomeNav) {
+                                popUpTo(RootScreen.HomeNav) {
+                                    inclusive = true
+                                }
+                                launchSingleTop
                             }
-                            launchSingleTop
                         }
-                    }
+                    )
+                ),
+                expanded = expanded,
+                onLongClick = {
+                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                    Toast
+                        .makeText(context, "More", Toast.LENGTH_SHORT)
+                        .show()
                 }
-            }
+            )
         }
     ) {
         Box {
@@ -450,7 +429,7 @@ fun ChatBubble(message: Message, viewModel: ChatViewModel = koinViewModel()) {
                                                     .map { it.value }
                                                     .joinToString(" ")
                                             val intent =
-                                                Intent(Intent.ACTION_VIEW, Uri.parse(filteredUrls))
+                                                Intent(Intent.ACTION_VIEW, filteredUrls.toUri())
                                             if (filteredUrls.isNotEmpty()) context.startActivity(
                                                 intent
                                             )

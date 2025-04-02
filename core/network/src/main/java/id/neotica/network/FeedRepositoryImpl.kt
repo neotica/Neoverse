@@ -18,32 +18,22 @@ class FeedRepositoryImpl: FeedRepository {
     private val firebase = Firebase.database
 
     override fun getAllUserData(): Flow<ApiResult<List<ParentNeo<UserData>>>> = flow {
-        val list = mutableListOf<ParentNeo<UserData>>()
-        list.clear()
         emit(ApiResult.Loading())
         val ref = firebase.getReference("userdata").get().await()
-
         try {
-            ref.children.forEach {
-                val value = it.getValue(UserDataFirebase::class.java)
-                val parentValue = ParentNeo(
-                    key = it.key!!,
-                    value = value!!
-                )
-                val aura = it.child("world").child("aura").value
-                if (aura != null && aura.toString() != "null" && aura.toString() != "") {
-                    val userDataLong = userDataToLong(parentValue)
-                    list.add(userDataLong)
-                }
+            val result = ref.children.mapNotNull { dataSnapshot ->
+                val value = dataSnapshot.getValue(UserDataFirebase::class.java)
+                val aura = dataSnapshot.child("world").child("aura").value?.toString()
+                if (value != null && aura != null && aura != "null" && aura.isNotEmpty()) {
+                    val parentValue = ParentNeo(key = dataSnapshot.key!!, value = value)
+                    userDataToLong(parentValue)
+                } else null
+            }.filter {
+                it.value.world.username.isNotEmpty() && it.value.world.username != "laetuz"
+            }.sortedByDescending {
+                it.value.world.aura
             }
-
-            emit(ApiResult.Success(
-                list.filter {
-                    it.value.world.username!= "" &&
-                            it.value.world.username!= "laetuz"
-                }
-                    .sortedByDescending { it.value.world.aura }
-            ))
+            emit(ApiResult.Success(result))
         } catch (e: Exception) {
             emit(ApiResult.Error(e.message))
         }

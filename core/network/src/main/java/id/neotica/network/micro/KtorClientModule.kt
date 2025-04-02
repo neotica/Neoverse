@@ -1,4 +1,4 @@
-package id.neotica.alexandria.ktor
+package id.neotica.network.micro
 
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -9,7 +9,7 @@ import io.ktor.client.plugins.logging.Logging
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
-val httpClient = HttpClient {
+val ktorClient = HttpClient {
     install(ContentNegotiation) {
         json(
             Json {

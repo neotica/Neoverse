@@ -1,5 +1,6 @@
 package id.neotica.network
 
+import android.util.Log
 import androidx.core.net.toUri
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
@@ -40,6 +41,11 @@ class UserRepositoryImpl: UserRepository {
 
     override fun getUserId(): String {
         return if (isLoggedIn()) auth.currentUser!!.uid else ""
+    }
+
+    fun getToken() {
+        Log.d("id firebase", FirebaseAuth.getInstance().currentUser?.uid?: "")
+        Log.d("token firebase", FirebaseAuth.getInstance().currentUser?.getIdToken(true)?.result?.token?: "")
     }
 
     override suspend fun getUserDetail(user: String): ApiResult<User?> {

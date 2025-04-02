@@ -1,4 +1,4 @@
-package id.neotica.domain.model.alexandria
+package id.neotica.domain.model.alexandria.legacy
 
 import kotlinx.serialization.Serializable
 

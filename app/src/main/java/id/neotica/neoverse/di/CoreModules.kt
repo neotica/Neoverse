@@ -24,6 +24,7 @@ import id.neotica.domain.usecase.GetUserIdUseCase
 import id.neotica.domain.usecase.GetUserNameUseCase
 import id.neotica.neoverse.presentation.screen.camerax.CameraPreviewViewModel
 import id.neotica.chat.ChatViewModel
+import id.neotica.domain.remote.AlexandriaRepository
 import id.neotica.neoverse.presentation.screen.dump.DumpViewModel
 import id.neotica.friend.FriendViewModel
 import id.neotica.home.HomeViewModel
@@ -32,6 +33,7 @@ import id.neotica.neoverse.presentation.screen.main.MainViewModel
 import id.neotica.neoverse.presentation.screen.sharing.SharingViewModel
 import id.neotica.profile.ProfileViewModel
 import id.neotica.neoverse.utils.connectionchecker.AndroidConnectivityObserver
+import id.neotica.network.AlexandriaRepositoryImpl
 import id.neotica.network.AuraRepositoryImpl
 import id.neotica.network.AuthRepositoryImpl
 import id.neotica.network.ChatRepositoryImpl
@@ -64,6 +66,7 @@ val repositoryModules = module {
     singleOf(::SuperAdminRepositoryImpl) bind SuperAdminRepository::class
     singleOf(::AndroidConnectivityObserver) bind ConnectivityObserver::class
     singleOf(::RavenRepositoryImpl) bind RavenRepository::class
+    singleOf(::AlexandriaRepositoryImpl) bind AlexandriaRepository::class
 }
 
 val viewModelModules = module {
