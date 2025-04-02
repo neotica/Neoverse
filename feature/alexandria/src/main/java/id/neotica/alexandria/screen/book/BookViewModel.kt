@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.alexandria.Book
-import id.neotica.domain.model.alexandria.ChapterContent
+import id.neotica.domain.pagination.PaginatedContent
 import id.neotica.domain.remote.AlexandriaRepository
 import id.neotica.ui.navigation.AlexandriaScreen
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,7 +21,7 @@ class BookViewModel(
     private var _chapters: MutableStateFlow<ApiResult<Book>> = MutableStateFlow(ApiResult.Loading())
     val chapters = _chapters.asStateFlow()
 
-    private var _chapterDetail: MutableStateFlow<ApiResult<List<ChapterContent>>> = MutableStateFlow(ApiResult.Loading())
+    private var _chapterDetail: MutableStateFlow<ApiResult<PaginatedContent>> = MutableStateFlow(ApiResult.Loading())
     val chapterDetail = _chapterDetail.asStateFlow()
 
     private val args = savedStateHandle.toRoute<AlexandriaScreen.BookScreen>()

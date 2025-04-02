@@ -1,5 +1,6 @@
 package id.neotica.alexandria.screen.book
 
+import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -29,7 +30,7 @@ import id.neotica.alexandria.components.ChapterItem
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.alexandria.Book
 import id.neotica.domain.model.alexandria.Chapter
-import id.neotica.domain.model.alexandria.ChapterContent
+import id.neotica.domain.pagination.PaginatedContent
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.LoadingIndicator
 import id.neotica.ui.components.droidcore.NeoSearchBar
@@ -65,7 +66,7 @@ fun BookView(
             )
         )
     }
-    var chapterDetail by remember { mutableStateOf<List<ChapterContent>?>(null) }
+    var chapterDetail by remember { mutableStateOf<PaginatedContent?>(null) }
     var chapterDetailStat by remember { mutableStateOf("") }
 
 
@@ -136,10 +137,11 @@ fun BookView(
                                     fontWeight = FontWeight.Bold,
                                     modifier = Modifier.padding(vertical = 8.dp)
                                 )
-                                chapterDetail?.forEach { detail ->
+                                chapterDetail?.content?.let { detail ->
+                                    Log.d("contenttt", detail.toString())
                                     ChapterContent(
                                         title = chapter.title,
-                                        content = detail.content,
+                                        content = detail,
 //                                        imageList = detail.
                                     )
                                 }

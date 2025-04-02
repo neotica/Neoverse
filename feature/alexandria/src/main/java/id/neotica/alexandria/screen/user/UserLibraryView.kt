@@ -60,7 +60,9 @@ fun UserLibraryView(
                     isLoading = true
                     viewModel.getBooks()
                 }
-                books.forEach {
+                books
+                    .sortedBy { it.createdAt }
+                    .forEach {
                     BookItem(
                         title = it.title,
                         route = AlexandriaScreen.EditBookScreen(url = it.id),

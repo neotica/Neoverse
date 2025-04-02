@@ -1,13 +1,16 @@
 package id.neotica.alexandria.screen.user.editbook
 
+import android.util.Log
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
@@ -26,16 +29,17 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import id.neotica.alexandria.components.ChapterContent
 import id.neotica.alexandria.components.ChapterItem
-import id.neotica.alexandria.screen.book.BookViewModel
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.alexandria.Book
 import id.neotica.domain.model.alexandria.Chapter
-import id.neotica.domain.model.alexandria.ChapterContent
+import id.neotica.domain.model.alexandria.ContentRequest
+import id.neotica.domain.model.alexandria.chapter.ChapterRequest
+import id.neotica.domain.pagination.PaginatedContent
+import id.neotica.domain.utils.convertLongToTime
 import id.neotica.droidcore.component.textfield.NeoTextField
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.LoadingIndicator
 import id.neotica.ui.components.NeoButton
-import id.neotica.ui.components.droidcore.NeoSearchBar
 import id.neotica.ui.theme.DarkBackground
 import id.neotica.ui.theme.FontSize
 import id.neotica.ui.theme.NeoPadding
@@ -68,7 +72,7 @@ fun EditBookView(
             )
         )
     }
-    var chapterDetail by remember { mutableStateOf<List<ChapterContent>?>(null) }
+    var chapterDetail by remember { mutableStateOf<PaginatedContent?>(null) }
     var chapterDetailStat by remember { mutableStateOf("") }
 
 
@@ -85,11 +89,20 @@ fun EditBookView(
         }
     }
 
+    LaunchedEffect(chapter.id) {
+        Log.d("EditBookView", "Fetching chapter details for id: ${chapter.id}")
+
+//        viewModel.getChapterDetail(chapter.id)
+    }
+
     LaunchedEffect(showChapterSheet) {
         viewModel.getChapterDetail(chapter.id)
         viewModel.chapterDetail.collect { result ->
             when (result) {
-                is ApiResult.Loading -> isLoadingChapter = true
+                is ApiResult.Loading -> {
+                    chapterDetail = null
+                    isLoadingChapter = true
+                }
                 is ApiResult.Success -> {
                     isLoadingChapter = false
                     chapterDetail = result.data
@@ -114,6 +127,7 @@ fun EditBookView(
                     createdAt = 0,
                     modifiedAt = 0,
                 )
+                chapterDetail = null
             },
             sheetState = sheetState,
             containerColor = DarkBackground
@@ -124,13 +138,23 @@ fun EditBookView(
                 LazyColumn(
                     modifier = Modifier
                         .padding(horizontal = 16.dp, vertical = 8.dp)
-                        .fillMaxWidth(),
+                        .fillMaxSize(),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     item {
-                        chapterList.let {  }
                         chapterDetail.let {
                             if (it == null) {
+                                val contentText = remember { mutableStateOf("") }
+                                Text("Content: ")
+                                NeoTextField(contentText)
+                                NeoButton("Create") {
+                                    viewModel.createContent(
+                                        ContentRequest(
+                                            content = contentText.value,
+                                            chapterId = chapter.id
+                                        )
+                                    )
+                                }
                                 Text(chapterDetailStat)
                             } else {
                                 Text(
@@ -139,13 +163,37 @@ fun EditBookView(
                                     fontWeight = FontWeight.Bold,
                                     modifier = Modifier.padding(vertical = 8.dp)
                                 )
-                                chapterDetail?.forEach { detail ->
+                                Text("Created at: " + convertLongToTime(chapter.createdAt))
+                                Text("Modified at: " + convertLongToTime(chapter.modifiedAt))
+                                chapterDetail?.let { detail ->
                                     ChapterContent(
                                         title = chapter.title,
                                         content = detail.content,
-//                                        imageList = detail.
                                     )
+                                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                        if (detail.hasPrevious) NeoButton("<") {
+                                            viewModel.getChapterDetail(chapter.id, page = detail.page - 1)
+                                        }
+                                        if (detail.hasNext) NeoButton(">") {
+                                            Log.d("detailpage", detail.page.toString())
+                                            viewModel.getChapterDetail(chapter.id, page = detail.page + 1)
+                                        }
+                                    }
+
+                                    LazyRow(
+                                        horizontalArrangement = Arrangement.spacedBy(8.dp) // Add margin between items
+                                    ) {
+                                        items(detail.totalPages) { pageNum ->
+                                            Text(
+                                                text = (pageNum + 1).toString(),
+                                                fontWeight = if (pageNum + 1 == detail.page) FontWeight.Bold else FontWeight.Normal,
+                                                modifier = Modifier.padding(horizontal = 4.dp, vertical = 8.dp) // Add padding per item
+                                            )
+                                        }
+                                    }
+
                                 }
+
                             }
                         }
                     }
@@ -164,17 +212,7 @@ fun EditBookView(
             modifier = Modifier.padding(horizontal = 16.dp)
         ) {
             var title = remember { mutableStateOf("") }
-            var author = remember { mutableStateOf("") }
-            var imageUrl = remember { mutableStateOf("") }
-
-
-//            LaunchedEffect(chapterList.value) {
-//                chapterList.value?.let { book ->
-//                    title.value = book.title
-//                    author.value = book.author
-//                    imageUrl.value = book.imageUrl ?: ""
-//                }
-//            }
+            var chapterTitle = remember { mutableStateOf("") }
 
             chapterList.value?.let {
 
@@ -182,15 +220,24 @@ fun EditBookView(
                 title.value = it.title
                 NeoTextField(title)
                 Text("Author: ${it.author}")
-                imageUrl.value = it.imageUrl.toString()
-                Text("ImageUrl:")
-                NeoTextField(imageUrl)
-                Text("Created at: ${it.createdAt}")
+                val createdAt = convertLongToTime(it.createdAt)
+                Text("Created at: ${createdAt}")
                 NeoButton("Edit Book") {
                     val updatedBook = it.copy(
                         title = title.value
                     )
                     viewModel.editBook(updatedBook)
+                }
+                Text("Chapter title: ")
+//                chapterTitle.value = chapter.title
+                NeoTextField(chapterTitle)
+                NeoButton("Create chapter") {
+                    viewModel.createChapter(
+                        ChapterRequest(
+                            title = chapterTitle.value,
+                            bookId = it.id
+                        )
+                    )
                 }
             }
 
