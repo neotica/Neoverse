@@ -1,6 +1,7 @@
 package id.neotica.alexandria.screen.user.editbook
 
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -26,6 +27,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -42,6 +44,7 @@ import id.neotica.droidcore.component.textfield.NeoTextField
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.LoadingIndicator
 import id.neotica.ui.components.NeoButton
+import id.neotica.ui.navigation.AlexandriaScreen
 import id.neotica.ui.theme.DarkBackground
 import id.neotica.ui.theme.FontSize
 import id.neotica.ui.theme.NeoPadding
@@ -60,6 +63,8 @@ fun EditBookView(
 
 
     val searchBar = remember { mutableStateOf("") }
+
+    val context = LocalContext.current
 
     val sheetState = rememberModalBottomSheetState()
     var showChapterSheet by remember { mutableStateOf(false) }
@@ -93,8 +98,19 @@ fun EditBookView(
 
     LaunchedEffect(chapter.id) {
         Log.d("EditBookView", "Fetching chapter details for id: ${chapter.id}")
+    }
 
-//        viewModel.getChapterDetail(chapter.id)
+    LaunchedEffect(Unit) {
+        viewModel.editContent.collect {
+            when (it) {
+                is ApiResult.Loading -> isLoadingChapter = true
+                is ApiResult.Success -> {
+                    isLoadingChapter = false
+                    Toast.makeText(context, it.data, Toast.LENGTH_SHORT).show()
+                }
+                is ApiResult.Error -> isLoadingChapter = false
+            }
+        }
     }
 
     LaunchedEffect(showChapterSheet) {
@@ -165,22 +181,12 @@ fun EditBookView(
                                     fontWeight = FontWeight.Bold,
                                     modifier = Modifier.padding(vertical = 8.dp)
                                 )
-                                Text("Created at: " + convertLongToTime(chapter.createdAt))
-                                Text("Modified at: " + convertLongToTime(chapter.modifiedAt))
+
                                 chapterDetail?.let { detail ->
-                                    NeoButton("Delete content") { viewModel.deleteContent(detail.id) }
-                                    NeoButton("Delete Chapter") { viewModel.deleteChapter(chapter.id) }
+
 
                                     var contentText by remember { mutableStateOf(detail.content) }
                                     var editState by remember { mutableStateOf(false) }
-
-                                    LaunchedEffect(detail.content) {
-                                        contentText = detail.content
-                                    }
-
-                                    NeoButton("Edit") {
-                                        editState = !editState
-                                    }
 
                                     if (!editState) {
                                         ChapterContent(
@@ -192,11 +198,28 @@ fun EditBookView(
                                             value = contentText,
                                             onValueChange = { textt ->
                                                 contentText = textt
-                                            }
+                                            },
                                         )
                                     }
 
+                                    Text("Created at: " + convertLongToTime(chapter.createdAt))
+                                    Text("Modified at: " + convertLongToTime(chapter.modifiedAt))
+
+                                    NeoButton("Delete content") { viewModel.deleteContent(detail.id) }
+                                    NeoButton("Delete Chapter") { viewModel.deleteChapter(chapter.id) }
+
+                                    LaunchedEffect(detail.content) {
+                                        contentText = detail.content
+                                    }
+
+                                    NeoButton("Edit") {
+                                        editState = !editState
+                                    }
+
+
+
                                     NeoButton("Update content") {
+                                        isLoadingChapter = true
                                         viewModel.editContent(
                                             content = contentText,
                                             id = detail.id,
@@ -256,13 +279,22 @@ fun EditBookView(
 
             chapterList.value?.let {
 
-                Text("Title:")
-                title.value = it.title
-                NeoTextField(title)
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text("Title:")
+//                    title.value = it.title
+                    NeoTextField(value = title, label = it.title)
+                }
+
                 Text("Author: ${it.author}")
-                val createdAt = convertLongToTime(it.createdAt)
-                Text("Created at: ${createdAt}")
-                NeoButton("Edit Book") {
+                val createdAt = convertLongToTime(it.createdAt, clean = true)
+                Text("Created at $createdAt")
+                NeoButton(
+                    "Change title",
+                    enabled = title.value.isNotEmpty()
+                ) {
                     val updatedBook = it.copy(
                         title = title.value
                     )
@@ -271,7 +303,11 @@ fun EditBookView(
                 Text("Chapter title: ")
 //                chapterTitle.value = chapter.title
                 NeoTextField(chapterTitle)
-                NeoButton("Create chapter") {
+                NeoButton(
+                    "Create chapter",
+                    enabled = chapterTitle.value.isNotEmpty(),
+                    modifier = Modifier.padding(vertical = 8.dp)
+                ) {
                     viewModel.createChapter(
                         ChapterRequest(
                             title = chapterTitle.value,
@@ -299,7 +335,8 @@ fun EditBookView(
                     ChapterItem(
                         title = item.title,
                     ) {
-                        showChapterSheet = true
+//                        showChapterSheet = true
+                        navController.navigate(AlexandriaScreen.EditChapterScreen(chapterId = item.id))
                         chapter = Chapter(
                             id = item.id,
                             title = item.title,

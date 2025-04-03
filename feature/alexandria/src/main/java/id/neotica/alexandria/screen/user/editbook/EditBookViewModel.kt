@@ -27,6 +27,9 @@ class EditBookViewModel(
     private var _chapterDetail: MutableStateFlow<ApiResult<PaginatedContent>> = MutableStateFlow(ApiResult.Loading())
     val chapterDetail = _chapterDetail.asStateFlow()
 
+    private var _editContent: MutableStateFlow<ApiResult<String>> = MutableStateFlow(ApiResult.Loading())
+    val editContent = _editContent.asStateFlow()
+
     private val args = savedStateHandle.toRoute<AlexandriaScreen.BookScreen>()
 
     init {
@@ -72,7 +75,10 @@ class EditBookViewModel(
             content = NewContentRequest(newContent = content),
             id = id,
             page = page
-        ).collect { Log.d("edit content req", it.toString()) }
+        ).collect {
+            Log.d("edit content req", it.toString())
+            _editContent.value = it
+        }
     }
 
     fun deleteContent(contentId: Int) = viewModelScope.launch {

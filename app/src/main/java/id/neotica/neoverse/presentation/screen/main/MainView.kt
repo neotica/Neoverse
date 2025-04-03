@@ -96,6 +96,8 @@ fun MainView() {
             Screen.Chat(),
             Screen.EditProfileScreen(),
             WorldScreen.ItemDetailScreen(),
+            AlexandriaScreen.EditBookScreen(),
+            AlexandriaScreen.EditChapterScreen()
         )
 
         val includeRoute = bottomBarExcludedRoutes.none {
