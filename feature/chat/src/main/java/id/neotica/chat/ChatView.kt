@@ -161,8 +161,6 @@ fun ChatView(
             .fillMaxWidth(),
         fullScreen = true,
         trailingIcon = {
-            var expanded = remember { mutableStateOf(false) }
-
             DotsMenuDropDown(
                 item = listOf(
                     DotsMenuItem(
@@ -178,7 +176,6 @@ fun ChatView(
                         }
                     )
                 ),
-                expanded = expanded,
                 onLongClick = {
                     haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                     Toast

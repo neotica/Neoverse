@@ -51,15 +51,12 @@ fun LibraryView(
         navController = navController,
         enableActionBar = true,
         trailingIcon = {
-            var expanded = remember { mutableStateOf(false) }
-
             DotsMenuDropDown(
                 item = listOf(
                     DotsMenuItem("Author's Page") {
                         navController.navigate(AlexandriaScreen.UserLibraryScreen)
                     }
                 ),
-                expanded = expanded,
             )
         }
     ) {

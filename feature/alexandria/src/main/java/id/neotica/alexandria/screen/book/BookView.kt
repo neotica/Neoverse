@@ -38,6 +38,7 @@ import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.LoadingIndicator
 import id.neotica.ui.components.NeoButton
 import id.neotica.ui.components.droidcore.NeoSearchBar
+import id.neotica.ui.page.PageDropdown
 import id.neotica.ui.theme.DarkBackground
 import id.neotica.ui.theme.FontSize
 import id.neotica.ui.theme.NeoPadding
@@ -154,6 +155,9 @@ fun BookView(
                                         if (detail.hasNext) NeoButton(">") {
                                             Log.d("detailpage", detail.page.toString())
                                             viewModel.getChapterDetail(chapter.id, page = detail.page + 1)
+                                        }
+                                        PageDropdown(detail.page, detail.totalPages) {
+                                            viewModel.getChapterDetail(chapter.id, page = it.toInt() + 1)
                                         }
                                     }
 
