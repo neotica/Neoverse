@@ -1,6 +1,7 @@
 package id.neotica.alexandria.screen.library
 
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,6 +13,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
 import id.neotica.alexandria.components.BookItem
 import id.neotica.domain.ApiResult
@@ -21,6 +23,7 @@ import id.neotica.ui.components.LoadingIndicator
 import id.neotica.ui.components.topbar.DotsMenuDropDown
 import id.neotica.ui.components.topbar.DotsMenuItem
 import id.neotica.ui.navigation.AlexandriaScreen
+import kotlinx.coroutines.flow.collectLatest
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -30,6 +33,7 @@ fun LibraryView(
 ) {
     var isLoading by remember { mutableStateOf(false) }
     var books by remember { mutableStateOf(emptyList<Book>()) }
+    val context = LocalContext.current
 
     LaunchedEffect(Unit) {
         viewModel.books.collect { result ->
@@ -46,16 +50,30 @@ fun LibraryView(
             }
         }
     }
+
     BasicScaffold(
         "The Library of Thoth",
         navController = navController,
         enableActionBar = true,
         trailingIcon = {
+            var gotoAuthor by remember { mutableStateOf(false) }
+
+            LaunchedEffect(gotoAuthor) {
+                if (gotoAuthor) {
+                    viewModel.permission.collectLatest {
+                        gotoAuthor = false
+                        if (it) {
+                            navController.navigate(AlexandriaScreen.UserLibraryScreen)
+                        } else {
+                            Toast.makeText(context, "You did not have an author's account.", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+
+            }
             DotsMenuDropDown(
                 item = listOf(
-                    DotsMenuItem("Author's Page") {
-                        navController.navigate(AlexandriaScreen.UserLibraryScreen)
-                    }
+                    DotsMenuItem("Author's Page") { gotoAuthor = true }
                 ),
             )
         }
