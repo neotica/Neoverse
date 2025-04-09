@@ -13,7 +13,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -32,7 +31,7 @@ fun PageDropdown(
     onValueChange: (Int) -> Unit
 ) {
     var dropDown by remember { mutableStateOf(false) }
-    var dropDownValue by remember { mutableIntStateOf(0) }
+//    var dropDownValue by remember { mutableIntStateOf(0) }
 
     Card {
         Row(
@@ -66,7 +65,7 @@ fun PageDropdown(
                             DropdownItem("${it + 1}") {
                                 onValueChange(it)
                                 dropDown = false
-                                dropDownValue = it
+//                                dropDownValue = it
                             }
                         }
                     }

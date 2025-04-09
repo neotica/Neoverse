@@ -126,6 +126,8 @@ sealed class AlexandriaScreen {
     data class EditBookScreen(val url: String = ""): AlexandriaScreen()
     @Serializable
     data class EditChapterScreen(val chapterId: Int = 0): AlexandriaScreen()
+    @Serializable
+    data class BookContentScreen(val chapterId: Int = 0, val chapterTitle: String = ""): AlexandriaScreen()
 }
 
 data class NavigationItem(

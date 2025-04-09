@@ -26,6 +26,7 @@ class BookViewModel(
 
     private val args = savedStateHandle.toRoute<AlexandriaScreen.BookScreen>()
 
+
     init {
         getChapters()
     }

@@ -1,6 +1,7 @@
 package id.neotica.alexandria.di
 
 import id.neotica.alexandria.screen.book.BookViewModel
+import id.neotica.alexandria.screen.book.content.BookContentViewModel
 import id.neotica.alexandria.screen.library.LibraryViewModel
 import id.neotica.alexandria.screen.user.UserLibraryViewModel
 import id.neotica.alexandria.screen.user.editbook.EditBookViewModel
@@ -14,4 +15,5 @@ val alexandriaModules = module {
     viewModelOf(::UserLibraryViewModel)
     viewModelOf(::EditBookViewModel)
     viewModelOf(::EditChapterViewModel)
+    viewModelOf(::BookContentViewModel)
 }

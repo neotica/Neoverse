@@ -5,6 +5,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import id.neotica.alexandria.screen.book.BookView
+import id.neotica.alexandria.screen.book.content.BookContentView
 import id.neotica.alexandria.screen.library.LibraryView
 import id.neotica.alexandria.screen.user.UserLibraryView
 import id.neotica.alexandria.screen.user.editbook.EditBookView
@@ -30,6 +31,9 @@ fun NavGraphBuilder.alexandriaNavGraph(navController: NavController) {
         }
         composable<AlexandriaScreen.EditChapterScreen> {
             EditChapterView(navController)
+        }
+        composable<AlexandriaScreen.BookContentScreen> {
+            BookContentView(navController)
         }
     }
 }

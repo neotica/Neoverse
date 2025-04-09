@@ -47,7 +47,6 @@ fun EditChapterView(
     viewModel: EditChapterViewModel = koinViewModel()
 ) {
 
-    var isLoading by remember { mutableStateOf(false) }
     var isLoadingChapter by remember { mutableStateOf(false) }
 
     val context = LocalContext.current
@@ -88,11 +87,6 @@ fun EditChapterView(
             }
         }
     }
-
-    Box(Modifier.fillMaxSize()) {
-
-    }
-
 
     BasicScaffold(
         topBarTitle = "Content",

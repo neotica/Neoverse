@@ -1,18 +1,14 @@
 package id.neotica.alexandria.screen.book
 
-import android.util.Log
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
@@ -20,15 +16,15 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import id.neotica.alexandria.components.ChapterContent
 import id.neotica.alexandria.components.ChapterItem
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.alexandria.Book
@@ -36,11 +32,9 @@ import id.neotica.domain.model.alexandria.Chapter
 import id.neotica.domain.pagination.PaginatedContent
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.LoadingIndicator
-import id.neotica.ui.components.NeoButton
 import id.neotica.ui.components.droidcore.NeoSearchBar
-import id.neotica.ui.page.PageDropdown
+import id.neotica.ui.navigation.AlexandriaScreen
 import id.neotica.ui.theme.DarkBackground
-import id.neotica.ui.theme.FontSize
 import id.neotica.ui.theme.NeoPadding
 import org.koin.androidx.compose.koinViewModel
 
@@ -57,6 +51,8 @@ fun BookView(
 
 
     val searchBar = remember { mutableStateOf("") }
+
+    val contentChunks = remember { mutableStateListOf<String>() }
 
     val sheetState = rememberModalBottomSheetState()
     var showChapterSheet by remember { mutableStateOf(false) }
@@ -88,7 +84,7 @@ fun BookView(
         }
     }
 
-    LaunchedEffect(showChapterSheet) {
+    LaunchedEffect(Unit) {
         viewModel.getChapterDetail(chapter.id)
         viewModel.chapterDetail.collect { result ->
             when (result) {
@@ -96,6 +92,7 @@ fun BookView(
                 is ApiResult.Success -> {
                     isLoadingChapter = false
                     chapterDetail = result.data
+                    contentChunks.add(result.data!!.content)
                 }
                 is ApiResult.Error -> {
                     isLoadingChapter = false
@@ -124,60 +121,34 @@ fun BookView(
             if (isLoadingChapter) {
                 Box(Modifier.fillMaxSize()) { LoadingIndicator() }
             } else {
-                LazyColumn(
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp, vertical = 8.dp)
-                        .fillMaxSize(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
-                    item {
-                        chapterDetail.let {
-                            if (it == null) {
-                                Text(chapterDetailStat)
-                            } else {
-                                Text(
-                                    text = chapter.title,
-                                    fontSize = FontSize.Medium,
-                                    fontWeight = FontWeight.Bold,
-                                    modifier = Modifier.padding(vertical = 8.dp)
-                                )
-                                chapterDetail?.let { detail ->
-                                    Log.d("contenttt", detail.toString())
-                                    ChapterContent(
-                                        title = chapter.title,
-                                        content = detail.content,
-//                                        imageList = detail.
-                                    )
-                                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                                        if (detail.hasPrevious) NeoButton("<") {
-                                            viewModel.getChapterDetail(chapter.id, page = detail.page - 1)
-                                        }
-                                        if (detail.hasNext) NeoButton(">") {
-                                            Log.d("detailpage", detail.page.toString())
-                                            viewModel.getChapterDetail(chapter.id, page = detail.page + 1)
-                                        }
-                                        PageDropdown(detail.page, detail.totalPages) {
-                                            viewModel.getChapterDetail(chapter.id, page = it.toInt() + 1)
-                                        }
-                                    }
+                val listState = rememberLazyListState()
 
-                                    LazyRow(
-                                        horizontalArrangement = Arrangement.spacedBy(8.dp) // Add margin between items
-                                    ) {
-                                        items(detail.totalPages) { pageNum ->
-                                            Text(
-                                                text = (pageNum + 1).toString(),
-                                                fontWeight = if (pageNum + 1 == detail.page) FontWeight.Bold else FontWeight.Normal,
-                                                modifier = Modifier.padding(horizontal = 4.dp, vertical = 8.dp) // Add padding per item
-                                                    .clickable {
-                                                        viewModel.getChapterDetail(chapter.id, page = pageNum + 1)
-                                                    }
-                                            )
-                                        }
-                                    }
+                LaunchedEffect(listState) {
+                    chapterDetail?.let {
+                        snapshotFlow {
+                            val lastVisible = listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index
+                            val totalItems = listState.layoutInfo.totalItemsCount
+                            lastVisible == totalItems - 1
+                        }.collect { reachedBottom ->
+                            if (reachedBottom) {
+                                if (it.hasNext == true) {
+                                    viewModel.getChapterDetail(it.page + 1)
                                 }
                             }
                         }
+                    }
+
+                }
+
+                LazyColumn(
+                    state= listState,
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp, vertical = 8.dp)
+                        ,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    items(contentChunks.size) { index ->
+                        Text(contentChunks[index])
                     }
                 }
             }
@@ -210,14 +181,7 @@ fun BookView(
                     ChapterItem(
                         title = item.title,
                     ) {
-                        showChapterSheet = true
-                        chapter = Chapter(
-                            id = item.id,
-                            title = item.title,
-                            bookId = item.bookId,
-                            createdAt = item.createdAt,
-                            modifiedAt = item.modifiedAt,
-                        )
+                        navController.navigate(AlexandriaScreen.BookContentScreen(item.id, item.title))
                     }
                 }
             }
