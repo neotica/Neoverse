@@ -60,12 +60,15 @@ fun UserLibraryView(
                     isLoading = true
                     viewModel.getBooks()
                 }
+                NeoButton("Add New Book") {
+                    navController.navigate(AlexandriaScreen.AddBookScreen)
+                }
                 books
                     .sortedBy { it.createdAt }
                     .forEach {
                     BookItem(
                         title = it.title,
-                        route = AlexandriaScreen.EditBookScreen(url = it.id),
+                        route = AlexandriaScreen.EditBookScreen(id = it.id),
                         navController = navController
                     )
                 }

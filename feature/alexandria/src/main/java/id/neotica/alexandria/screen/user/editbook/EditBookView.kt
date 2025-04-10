@@ -44,7 +44,10 @@ import id.neotica.droidcore.component.textfield.NeoTextField
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.LoadingIndicator
 import id.neotica.ui.components.NeoButton
+import id.neotica.ui.components.topbar.DotsMenuDropDown
+import id.neotica.ui.components.topbar.DotsMenuItem
 import id.neotica.ui.navigation.AlexandriaScreen
+import id.neotica.ui.navigation.navigateBack
 import id.neotica.ui.theme.DarkBackground
 import id.neotica.ui.theme.FontSize
 import id.neotica.ui.theme.NeoPadding
@@ -267,7 +270,34 @@ fun EditBookView(
 
     BasicScaffold(
         chapterList.value?.title ?: "",
-        fullScreen = true
+        fullScreen = true,
+        trailingIcon = {
+            LaunchedEffect(Unit) {
+                viewModel.bookDeleted.collect { result ->
+                    when (result) {
+                        is ApiResult.Loading -> {
+                            chapterDetail = null
+                            isLoadingChapter = true
+                        }
+                        is ApiResult.Success -> {
+                            isLoadingChapter = false
+                            Toast.makeText(context, result.data, Toast.LENGTH_SHORT).show()
+                            navController.navigateBack()
+                        }
+                        is ApiResult.Error -> {
+                            isLoadingChapter = false
+                            chapterDetailStat = result.errorMessage.toString()
+                        }
+                    }
+                }
+            }
+
+            DotsMenuDropDown(
+                item = listOf(
+                    DotsMenuItem("Delete Book") { viewModel.deleteBook() }
+                ),
+            )
+        }
     ) {
         if (isLoading) LoadingIndicator()
         Spacer(modifier = Modifier.padding(top = NeoPadding.topBarPadding))

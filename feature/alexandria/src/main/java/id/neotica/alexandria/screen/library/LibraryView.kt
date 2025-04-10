@@ -83,7 +83,7 @@ fun LibraryView(
                 books.forEach {
                     BookItem(
                         title = it.title,
-                        route = AlexandriaScreen.BookScreen(url = it.id),
+                        route = AlexandriaScreen.BookScreen(id = it.id),
                         navController = navController
                     )
                 }

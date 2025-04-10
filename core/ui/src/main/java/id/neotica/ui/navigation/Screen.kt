@@ -119,11 +119,13 @@ sealed class AlexandriaScreen {
     @Serializable
     data object HomeScreen: AlexandriaScreen()
     @Serializable
-    data class BookScreen(val url: String = ""): AlexandriaScreen()
+    data class BookScreen(val id: String = ""): AlexandriaScreen()
     @Serializable
     data object UserLibraryScreen: AlexandriaScreen()
     @Serializable
-    data class EditBookScreen(val url: String = ""): AlexandriaScreen()
+    data object AddBookScreen: AlexandriaScreen()
+    @Serializable
+    data class EditBookScreen(val id: String = ""): AlexandriaScreen()
     @Serializable
     data class EditChapterScreen(val chapterId: Int = 0): AlexandriaScreen()
     @Serializable

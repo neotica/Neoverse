@@ -8,6 +8,7 @@ import id.neotica.alexandria.screen.book.BookView
 import id.neotica.alexandria.screen.book.content.BookContentView
 import id.neotica.alexandria.screen.library.LibraryView
 import id.neotica.alexandria.screen.user.UserLibraryView
+import id.neotica.alexandria.screen.user.addbook.AddBookView
 import id.neotica.alexandria.screen.user.editbook.EditBookView
 import id.neotica.alexandria.screen.user.editbook.chapter.EditChapterView
 import id.neotica.ui.navigation.AlexandriaScreen
@@ -25,6 +26,9 @@ fun NavGraphBuilder.alexandriaNavGraph(navController: NavController) {
         }
         composable<AlexandriaScreen.UserLibraryScreen> {
             UserLibraryView(navController)
+        }
+        composable<AlexandriaScreen.AddBookScreen> {
+            AddBookView(navController)
         }
         composable<AlexandriaScreen.EditBookScreen> {
             EditBookView(navController)

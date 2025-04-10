@@ -32,7 +32,7 @@ class BookViewModel(
     }
 
     private fun getChapters() = viewModelScope.launch {
-        alexandriaRepo.getBook(args.url).collect {
+        alexandriaRepo.getBook(args.id).collect {
             Log.d("spirit", it.toString())
             _chapters.value = it
         }

@@ -6,6 +6,7 @@ import id.neotica.domain.model.alexandria.Book
 import id.neotica.domain.model.alexandria.Chapter
 import id.neotica.domain.model.alexandria.ChapterContent
 import id.neotica.domain.model.alexandria.ContentRequest
+import id.neotica.domain.model.alexandria.book.BookRequest
 import id.neotica.domain.model.alexandria.chapter.ChapterRequest
 import id.neotica.domain.model.alexandria.content.NewContentRequest
 import id.neotica.domain.model.alexandria.legacy.BloodyAgeChapters
@@ -37,6 +38,19 @@ class AlexandriaRepositoryImpl: AlexandriaRepository {
         }.body<Pagination<Book>>()
     }
 
+    override fun addBook(book: BookRequest): Flow<ApiResult<Book>> = safeApiCall {
+        val token = withContext(Dispatchers.IO) {
+            FirebaseAuth.getInstance().currentUser?.getIdToken(true)?.await()?.token
+        }
+        ktorClient.post("$baseUrl/alexandria") {
+            headers {
+                append("Content-Type", "application/json")
+                token?.let { append("Authorization", "Bearer $it") }
+            }
+            setBody(book)
+        }.body<Book>()
+    }
+
     override fun getUserBooks(username: String): Flow<ApiResult<List<Book>>> = safeApiCall {
         val token = withContext(Dispatchers.IO) {
             FirebaseAuth.getInstance().currentUser?.getIdToken(true)?.await()?.token
@@ -64,6 +78,18 @@ class AlexandriaRepositoryImpl: AlexandriaRepository {
             }
             setBody(book)
         }.body<Book>()
+    }
+
+    override fun deleteBook(bookId: String): Flow<ApiResult<String>> = safeApiCall {
+        val token = withContext(Dispatchers.IO) {
+            FirebaseAuth.getInstance().currentUser?.getIdToken(true)?.await()?.token
+        }
+        ktorClient.delete("${baseUrl}/alexandria/$bookId") {
+            headers {
+                append("Content-Type", "application/json")
+                token?.let { append("Authorization", "Bearer $it") }
+            }
+        }.body<String>()
     }
 
     override fun getChapters(bookId: String): Flow<ApiResult<List<Chapter>>> = safeApiCall {

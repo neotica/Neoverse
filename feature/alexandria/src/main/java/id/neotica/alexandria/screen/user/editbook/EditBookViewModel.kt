@@ -30,7 +30,10 @@ class EditBookViewModel(
     private var _editContent: MutableStateFlow<ApiResult<String>> = MutableStateFlow(ApiResult.Loading())
     val editContent = _editContent.asStateFlow()
 
-    private val args = savedStateHandle.toRoute<AlexandriaScreen.BookScreen>()
+    private var _bookDeleted: MutableStateFlow<ApiResult<String>> = MutableStateFlow(ApiResult.Loading())
+    val bookDeleted = _bookDeleted.asStateFlow()
+
+    private val args = savedStateHandle.toRoute<AlexandriaScreen.EditBookScreen>()
 
     init {
         getChapters()
@@ -43,8 +46,15 @@ class EditBookViewModel(
         }
     }
 
+    fun deleteBook() = viewModelScope.launch {
+        alexandriaRepo.deleteBook(args.id).collect {
+            Log.d("spirit", it.toString())
+            _bookDeleted.value = it
+        }
+    }
+
     private fun getChapters() = viewModelScope.launch {
-        alexandriaRepo.getBook(args.url).collect {
+        alexandriaRepo.getBook(args.id).collect {
             Log.d("spirit", it.toString())
             _chapters.value = it
         }
