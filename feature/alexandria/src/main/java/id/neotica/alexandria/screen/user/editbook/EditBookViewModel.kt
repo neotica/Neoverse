@@ -7,13 +7,16 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.alexandria.Book
+import id.neotica.domain.model.alexandria.Chapter
 import id.neotica.domain.model.alexandria.ContentRequest
 import id.neotica.domain.model.alexandria.chapter.ChapterRequest
 import id.neotica.domain.model.alexandria.content.NewContentRequest
 import id.neotica.domain.pagination.PaginatedContent
 import id.neotica.domain.remote.AlexandriaRepository
 import id.neotica.ui.navigation.AlexandriaScreen
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
@@ -32,6 +35,9 @@ class EditBookViewModel(
 
     private var _bookDeleted: MutableStateFlow<ApiResult<String>> = MutableStateFlow(ApiResult.Loading())
     val bookDeleted = _bookDeleted.asStateFlow()
+
+    private val _chapterCreated = MutableSharedFlow<ApiResult<Chapter>>()
+    val chapterCreated = _chapterCreated.asSharedFlow()
 
     private val args = savedStateHandle.toRoute<AlexandriaScreen.EditBookScreen>()
 
@@ -60,16 +66,13 @@ class EditBookViewModel(
         }
     }
 
-    fun getChapterDetail(chapterId: Int, page: Int? = 1) = viewModelScope.launch {
-
-        alexandriaRepo.getContents(chapterId, page).collect {
-            Log.d("spirit", it.toString())
-            _chapterDetail.value = it
-        }
-    }
-
     fun createChapter(chapterRequest: ChapterRequest) = viewModelScope.launch {
-        alexandriaRepo.createChapter(chapterRequest).collect { Log.d("chapter req", it.toString()) }
+        _chapterCreated.emit(ApiResult.Loading())
+        alexandriaRepo.createChapter(chapterRequest).collect {
+            _chapterCreated.emit(it)
+            getChapters()
+            if (it is ApiResult.Success) { getChapters() }
+        }
     }
 
     fun deleteChapter(chapterId: Int) = viewModelScope.launch {
