@@ -23,7 +23,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import id.neotica.alexandria.components.ChapterContent
@@ -35,8 +34,8 @@ import id.neotica.ui.components.LoadingIndicator
 import id.neotica.ui.components.NeoButton
 import id.neotica.ui.components.topbar.DotsMenuDropDown
 import id.neotica.ui.components.topbar.DotsMenuItem
+import id.neotica.ui.navigation.navigateBack
 import id.neotica.ui.page.PageDropdown
-import id.neotica.ui.theme.FontSize
 import id.neotica.ui.theme.NeoPadding
 import org.koin.androidx.compose.koinViewModel
 
@@ -68,7 +67,6 @@ fun EditChapterView(
         }
     }
 
-
     LaunchedEffect(Unit) {
         viewModel.chapterDetail.collect { result ->
             when (result) {
@@ -89,99 +87,119 @@ fun EditChapterView(
     }
 
     BasicScaffold(
-        topBarTitle = "Content",
+        topBarTitle = viewModel.chapterTitle,
         fullScreen = true,
         enableActionBar = true,
         navController = navController,
         trailingIcon = {
+            LaunchedEffect(Unit) {
+                viewModel.chapterDeleted.collect {
+                    when (it) {
+                        is ApiResult.Loading -> isLoadingChapter = true
+                        is ApiResult.Success -> {
+                            isLoadingChapter = false
+                            navController.navigateBack()
+                            Toast.makeText(context, it.data.toString(), Toast.LENGTH_SHORT).show()
+                        }
+                        is ApiResult.Error -> isLoadingChapter = false
+                    }
+                }
+            }
             DotsMenuDropDown(
                 item = listOf(
-                    DotsMenuItem("Delete Content") {
-                        chapterDetail?.let { viewModel.deleteContent(it.id) }
+                    DotsMenuItem("Delete Chapter") {
+                        chapterDetail?.let { viewModel.deleteChapter(it.chapterId) }
                     }
                 ),
             )
         }
     ) {
-        if (isLoadingChapter) {
-            Box(Modifier.fillMaxSize()) { LoadingIndicator() }
-        } else {
-            Box(Modifier.fillMaxSize()) {
-                LazyColumn(
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp)
-                        .align(Alignment.TopCenter)
-                        .fillMaxSize(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    contentPadding = PaddingValues(
-                        top = NeoPadding.topBarPadding,
-                        bottom = NeoPadding.systemBarPadding + 50.dp
-                    )
-                ) {
-                    item {
-                        chapterDetail.let {
-                            if (it == null) {
-                                val contentText = remember { mutableStateOf("") }
-                                Text("Content: ")
-                                NeoTextField(contentText)
-                                NeoButton("Create") { viewModel.createContent(contentText.value) }
-                                Text(chapterDetailStat)
-                            } else {
-                                Text(
-                                    text = "chapterDetail.title",
-                                    fontSize = FontSize.Medium,
-                                    fontWeight = FontWeight.Bold,
-                                    modifier = Modifier.padding(vertical = 8.dp)
-                                )
+        Box(Modifier.fillMaxSize()) {
+            if (isLoadingChapter) { Box(Modifier.fillMaxSize()) { LoadingIndicator() } }
+            LazyColumn(
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+                    .align(Alignment.TopCenter)
+                    .fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                contentPadding = PaddingValues(
+                    top = NeoPadding.topBarPadding,
+                    bottom = NeoPadding.systemBarPadding + 50.dp
+                )
+            ) {
+                item {
+                    chapterDetail.let {
+                        LaunchedEffect(Unit) {
+                            viewModel.contentCreated.collect {
+                                when (it) {
+                                    is ApiResult.Loading -> isLoadingChapter = true
+                                    is ApiResult.Success -> {
+                                        isLoadingChapter = false
+                                        navController.navigateBack()
+                                        Toast.makeText(context, "Content successfully created.", Toast.LENGTH_SHORT).show()
+                                    }
+                                    is ApiResult.Error -> {
+                                        Toast.makeText(context, it.errorMessage.toString(), Toast.LENGTH_SHORT).show()
+                                        isLoadingChapter = false
+                                    }
+                                }
+                            }
+                        }
 
-                                chapterDetail?.let { detail ->
+                        if (it == null) {
+                            val contentText = remember { mutableStateOf("") }
+                            Text("Content: ")
+                            NeoTextField(contentText)
+                            NeoButton("Create") { viewModel.createContent(contentText.value) }
+                            Text(chapterDetailStat)
+                        } else {
 
+                            chapterDetail?.let { detail ->
+                                var editState by remember { mutableStateOf(false) }
 
-                                    var editState by remember { mutableStateOf(false) }
+                                if (!editState) {
+                                    ChapterContent(
+                                        "title = cha.title",
+                                        content = detail.content,
+                                    )
+                                } else {
+                                    OutlinedTextField(
+                                        value = contentText,
+                                        onValueChange = { textt ->
+                                            contentText = textt
+                                        },
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .height(500.dp)
+                                    )
+                                }
+                                Row(
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                ) {
+                                    LaunchedEffect(detail.content) {
+                                        contentText = detail.content
+                                    }
 
                                     if (!editState) {
-                                        ChapterContent(
-                                            "title = cha.title",
-                                            content = detail.content,
-                                        )
+                                        NeoButton("Edit") {
+                                            editState = true
+                                        }
                                     } else {
-                                        OutlinedTextField(
-                                            value = contentText,
-                                            onValueChange = { textt ->
-                                                contentText = textt
-                                            },
-                                            modifier = Modifier
-                                                .fillMaxWidth()
-                                                .height(500.dp)
-                                        )
-                                    }
-                                    Row(
-                                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                                    ) {
-                                        LaunchedEffect(detail.content) {
-                                            contentText = detail.content
-                                        }
-
-                                        if (!editState) {
-                                            NeoButton("Edit") {
-                                                editState = true
-                                            }
-                                        } else {
-                                            NeoButton(
-                                                "Cancel",
-                                                negative = true
-                                            ) { editState = false }
-                                            NeoButton("Update content") {
-                                                isLoadingChapter = true
-                                                editState = false
-                                                viewModel.editContent(
-                                                    content = contentText,
-                                                    id = detail.id,
-                                                    page = detail.page
-                                                )
-                                            }
+                                        NeoButton(
+                                            "Cancel",
+                                            negative = true
+                                        ) { editState = false }
+                                        NeoButton("Update content") {
+                                            isLoadingChapter = true
+                                            editState = false
+                                            viewModel.editContent(
+                                                content = contentText,
+                                                id = detail.id,
+                                                page = detail.page
+                                            )
                                         }
                                     }
+                                }
 
 
 
@@ -190,34 +208,33 @@ fun EditChapterView(
 //                                    currentPage = detail.page
 //                                ) { viewModel.getChapterDetail(it + 1) }
 
-                                }
                             }
                         }
                     }
                 }
-                Row(
-                    modifier= Modifier
-                        .align(Alignment.BottomCenter)
-                        .padding(bottom = NeoPadding.systemBarPadding)
-                    ,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                ) {
-                    chapterDetail?.let { detail ->
-                        if (detail.hasPrevious) NeoButton("<") {
-                            viewModel.getChapterDetail(page = detail.page - 1)
-                        }
-                        if (detail.hasNext) NeoButton(">") {
-                            Log.d("detailpage", detail.page.toString())
-                            viewModel.getChapterDetail(page = detail.page + 1)
-                        }
-                        val pageCount = detail.totalPages
-
-                        PageDropdown(
-                            currentValue = detail.page,
-                            count = pageCount
-                        ) { viewModel.getChapterDetail(page = it.toInt() + 1) }
-
+            }
+            Row(
+                modifier= Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(bottom = NeoPadding.systemBarPadding)
+                ,
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                chapterDetail?.let { detail ->
+                    if (detail.hasPrevious) NeoButton("<") {
+                        viewModel.getChapterDetail(page = detail.page - 1)
                     }
+                    if (detail.hasNext) NeoButton(">") {
+                        Log.d("detailpage", detail.page.toString())
+                        viewModel.getChapterDetail(page = detail.page + 1)
+                    }
+                    val pageCount = detail.totalPages
+
+                    PageDropdown(
+                        currentValue = detail.page,
+                        count = pageCount
+                    ) { viewModel.getChapterDetail(page = it.toInt() + 1) }
+
                 }
             }
         }

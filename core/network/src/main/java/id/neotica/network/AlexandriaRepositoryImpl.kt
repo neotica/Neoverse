@@ -126,7 +126,7 @@ class AlexandriaRepositoryImpl: AlexandriaRepository {
             url {
                 parameters.append("page", page?.toString() ?: "1")
             }
-        }.body<PaginatedContent>()
+        }.body()
     }
 
     override fun getChaptersOld(url: String): Flow<ApiResult<BloodyAgeChapters>> = flow {

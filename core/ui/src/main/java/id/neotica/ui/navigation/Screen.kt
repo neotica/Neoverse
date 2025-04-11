@@ -127,7 +127,7 @@ sealed class AlexandriaScreen {
     @Serializable
     data class EditBookScreen(val id: String = ""): AlexandriaScreen()
     @Serializable
-    data class EditChapterScreen(val chapterId: Int = 0): AlexandriaScreen()
+    data class EditChapterScreen(val chapterId: Int = 0, val chapterTitle: String = ""): AlexandriaScreen()
     @Serializable
     data class BookContentScreen(val chapterId: Int = 0, val chapterTitle: String = ""): AlexandriaScreen()
 }

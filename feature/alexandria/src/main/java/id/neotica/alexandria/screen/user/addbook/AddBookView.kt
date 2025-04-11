@@ -1,6 +1,5 @@
 package id.neotica.alexandria.screen.user.addbook
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,6 +21,7 @@ import id.neotica.domain.ApiResult
 import id.neotica.domain.model.alexandria.Book
 import id.neotica.droidcore.component.textfield.NeoTextField
 import id.neotica.ui.components.BasicScaffold
+import id.neotica.ui.components.LoadingIndicatorBool
 import id.neotica.ui.components.NeoButton
 import id.neotica.ui.navigation.AlexandriaScreen
 import id.neotica.ui.theme.NeoPadding
@@ -40,7 +40,6 @@ fun AddBookView(
 
     LaunchedEffect(Unit) {
         viewModel.book.collect {
-            Log.d("addbookview", it.toString())
             when (it) {
                 is ApiResult.Loading -> isLoading = true
                 is ApiResult.Success -> {
@@ -74,14 +73,16 @@ fun AddBookView(
             )
         ){
             item {
-                Text("Title: ")
-                NeoTextField(title)
+                LoadingIndicatorBool(isLoading) {
+                    Text("Title: ")
+                    NeoTextField(title)
 
-                Text("imageUrl: ")
-                NeoTextField(title)
+                    Text("imageUrl: ")
+                    NeoTextField(title)
 
-                NeoButton("Create Book") {
-                    viewModel.addBook(title.value)
+                    NeoButton("Create Book") {
+                        viewModel.addBook(title.value)
+                    }
                 }
             }
         }

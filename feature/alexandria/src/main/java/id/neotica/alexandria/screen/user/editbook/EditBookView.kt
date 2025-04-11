@@ -168,13 +168,16 @@ fun EditBookView(
                 NeoTextField(chapterTitle)
 
                 LaunchedEffect(Unit) {
-                    viewModel.chapterCreated.collect {chapterResult ->
+                    viewModel.chapterCreated.collect { chapterResult ->
                         when(chapterResult) {
                             is ApiResult.Loading -> {
                                 isLoadingChapter = true
                             }
                             is ApiResult.Success -> {
                                 isLoadingChapter = false
+                                navController.navigate(AlexandriaScreen.EditChapterScreen(
+                                    chapterResult.data!!.id, chapterResult.data!!.title)
+                                )
                                 Toast.makeText(context, "Chapter created.", Toast.LENGTH_SHORT).show()
                             }
                             is ApiResult.Error -> {
@@ -219,7 +222,9 @@ fun EditBookView(
                         ChapterItem(
                             title = item.title,
                         ) {
-                            navController.navigate(AlexandriaScreen.EditChapterScreen(chapterId = item.id))
+                            navController.navigate(AlexandriaScreen.EditChapterScreen(
+                                item.id, item.title)
+                            )
                             chapter = Chapter(
                                 id = item.id,
                                 title = item.title,
