@@ -2,17 +2,16 @@ package id.neotica.alexandria.screen.user.editbook.chapter
 
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -25,18 +24,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import id.neotica.alexandria.components.ChapterContent
 import id.neotica.domain.ApiResult
 import id.neotica.domain.pagination.PaginatedContent
-import id.neotica.droidcore.component.textfield.NeoTextField
 import id.neotica.ui.components.BasicScaffold
-import id.neotica.ui.components.LoadingIndicator
 import id.neotica.ui.components.NeoButton
+import id.neotica.ui.components.edittext.EditContentBox
 import id.neotica.ui.components.topbar.DotsMenuDropDown
 import id.neotica.ui.components.topbar.DotsMenuItem
 import id.neotica.ui.navigation.navigateBack
 import id.neotica.ui.page.PageDropdown
-import id.neotica.ui.theme.NeoPadding
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -88,9 +84,9 @@ fun EditChapterView(
 
     BasicScaffold(
         topBarTitle = viewModel.chapterTitle,
-        fullScreen = true,
         enableActionBar = true,
         navController = navController,
+        isLoading = isLoadingChapter,
         trailingIcon = {
             LaunchedEffect(Unit) {
                 viewModel.chapterDeleted.collect {
@@ -105,110 +101,93 @@ fun EditChapterView(
                     }
                 }
             }
-            DotsMenuDropDown(
-                item = listOf(
-                    DotsMenuItem("Delete Chapter") {
-                        chapterDetail?.let { viewModel.deleteChapter(it.chapterId) }
-                    }
-                ),
-            )
+            Row(
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    modifier = Modifier.clickable {
+                        if (chapterDetail!= null) {
+                            isLoadingChapter = true
+                            viewModel.editContent(
+                                content = contentText,
+                                id = chapterDetail!!.id,
+                                page = chapterDetail!!.page
+                            )
+                        } else {
+                            Toast.makeText(context, "Chapter is null!", Toast.LENGTH_SHORT).show()
+                        }
+                    },
+                    text = "SAVE"
+                )
+                DotsMenuDropDown(
+                    item = listOf(
+                        DotsMenuItem("Delete Chapter") {
+                            chapterDetail?.let { viewModel.deleteChapter(it.chapterId) }
+                        }
+                    ),
+                )
+            }
         }
     ) {
-        Box(Modifier.fillMaxSize()) {
-            if (isLoadingChapter) { Box(Modifier.fillMaxSize()) { LoadingIndicator() } }
-            LazyColumn(
-                modifier = Modifier
-                    .padding(horizontal = 16.dp)
-                    .align(Alignment.TopCenter)
-                    .fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                contentPadding = PaddingValues(
-                    top = NeoPadding.topBarPadding,
-                    bottom = NeoPadding.systemBarPadding + 50.dp
-                )
-            ) {
-                item {
-                    chapterDetail.let {
-                        LaunchedEffect(Unit) {
-                            viewModel.contentCreated.collect {
-                                when (it) {
-                                    is ApiResult.Loading -> isLoadingChapter = true
-                                    is ApiResult.Success -> {
-                                        isLoadingChapter = false
-                                        navController.navigateBack()
-                                        Toast.makeText(context, "Content successfully created.", Toast.LENGTH_SHORT).show()
-                                    }
-                                    is ApiResult.Error -> {
-                                        Toast.makeText(context, it.errorMessage.toString(), Toast.LENGTH_SHORT).show()
-                                        isLoadingChapter = false
-                                    }
-                                }
+        Box(
+            Modifier
+                .fillMaxSize()
+                .imePadding()
+        ) {
+
+//            if (isLoadingChapter) { LoadingIndicator() }
+
+            chapterDetail.let {
+                LaunchedEffect(Unit) {
+                    viewModel.contentCreated.collect {
+                        when (it) {
+                            is ApiResult.Loading -> isLoadingChapter = true
+                            is ApiResult.Success -> {
+                                isLoadingChapter = false
+                                navController.navigateBack()
+                                Toast.makeText(context, "Content successfully created.", Toast.LENGTH_SHORT).show()
+                            }
+                            is ApiResult.Error -> {
+                                Toast.makeText(context, it.errorMessage.toString(), Toast.LENGTH_SHORT).show()
+                                isLoadingChapter = false
                             }
                         }
+                    }
+                }
 
-                        if (it == null) {
-                            val contentText = remember { mutableStateOf("") }
-                            Text("Content: ")
-                            NeoTextField(contentText)
-                            NeoButton("Create") { viewModel.createContent(contentText.value) }
-                            Text(chapterDetailStat)
-                        } else {
+                if (it == null) {
+                    Text("Content: ")
 
-                            chapterDetail?.let { detail ->
-                                var editState by remember { mutableStateOf(false) }
+                    EditContentBox(
+                        contentText = contentText,
+                        onContentChange = { contentText = it }
+                    )
+                    NeoButton("Create") { viewModel.createContent(contentText) }
+                    Text(chapterDetailStat)
+                } else {
 
-                                if (!editState) {
-                                    ChapterContent(
-                                        "title = cha.title",
-                                        content = detail.content,
-                                    )
-                                } else {
-                                    OutlinedTextField(
-                                        value = contentText,
-                                        onValueChange = { textt ->
-                                            contentText = textt
-                                        },
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .height(500.dp)
-                                    )
-                                }
-                                Row(
-                                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                                ) {
-                                    LaunchedEffect(detail.content) {
-                                        contentText = detail.content
-                                    }
+                    chapterDetail?.let { detail ->
 
-                                    if (!editState) {
-                                        NeoButton("Edit") {
-                                            editState = true
-                                        }
-                                    } else {
-                                        NeoButton(
-                                            "Cancel",
-                                            negative = true
-                                        ) { editState = false }
-                                        NeoButton("Update content") {
-                                            isLoadingChapter = true
-                                            editState = false
-                                            viewModel.editContent(
-                                                content = contentText,
-                                                id = detail.id,
-                                                page = detail.page
-                                            )
-                                        }
-                                    }
-                                }
-
-
-
-//                                PagesRow(
-//                                    pages = detail.totalPages,
-//                                    currentPage = detail.page
-//                                ) { viewModel.getChapterDetail(it + 1) }
-
+                        LazyColumn(
+                            modifier = Modifier
+                                .padding(horizontal = 16.dp)
+                                .fillMaxSize(),
+//                                horizontalAlignment = Alignment.CenterHorizontally,
+                            contentPadding = PaddingValues(
+//                                    top = NeoPadding.topBarPadding,
+                                bottom = 50.dp
+                            )
+                        ) {
+                            item {
+                                EditContentBox(
+                                    contentText = contentText,
+                                    onContentChange = { contentText = it }
+                                )
                             }
+                        }
+                        LaunchedEffect(detail.content) {
+                            contentText = detail.content
                         }
                     }
                 }
@@ -216,10 +195,10 @@ fun EditChapterView(
             Row(
                 modifier= Modifier
                     .align(Alignment.BottomCenter)
-                    .padding(bottom = NeoPadding.systemBarPadding)
                 ,
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
+
                 chapterDetail?.let { detail ->
                     if (detail.hasPrevious) NeoButton("<") {
                         viewModel.getChapterDetail(page = detail.page - 1)
@@ -234,7 +213,6 @@ fun EditChapterView(
                         currentValue = detail.page,
                         count = pageCount
                     ) { viewModel.getChapterDetail(page = it.toInt() + 1) }
-
                 }
             }
         }

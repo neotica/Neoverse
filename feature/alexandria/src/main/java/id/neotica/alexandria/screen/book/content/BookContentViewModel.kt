@@ -1,6 +1,8 @@
 package id.neotica.alexandria.screen.book.content
 
-import android.util.Log
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,6 +12,7 @@ import id.neotica.domain.pagination.PaginatedContent
 import id.neotica.domain.remote.AlexandriaRepository
 import id.neotica.ui.navigation.AlexandriaScreen
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
@@ -18,23 +21,52 @@ class BookContentViewModel(
     savedStateHandle: SavedStateHandle
 ): ViewModel() {
 
-    private var _chapterDetail: MutableStateFlow<ApiResult<PaginatedContent>> = MutableStateFlow(ApiResult.Loading())
-    val chapterDetail = _chapterDetail.asStateFlow()
-
-
     private val args = savedStateHandle.toRoute<AlexandriaScreen.BookContentScreen>()
 
     val chapterTitle = args.chapterTitle
 
+    private var _currentPage = MutableStateFlow(1)
+    val currentPage: StateFlow<Int> = _currentPage.asStateFlow()
+
+    var loading by mutableStateOf(false)
+    var hasNext by mutableStateOf(false)
+    var paginatedContent by mutableStateOf<Map<Int, PaginatedContent>>(emptyMap())
+
     init {
-        getChapterDetail()
+        getPage()
     }
 
-    fun getChapterDetail(page: Int? = 1) = viewModelScope.launch {
+    fun setCurrentPage(page: Int) {
+        _currentPage.value = page
+    }
 
+    fun getPage(refresh: Boolean = true) {
+        viewModelScope.launch {
+            if (loading) return@launch
+            if (refresh) {
+                loading = true
+                _currentPage.value = 1
+                paginatedContent = emptyMap()
+            }
+            if (hasNext || refresh) {
+                loadPage(if (refresh) 1 else _currentPage.value + 1)
+            }
+        }
+    }
+
+    fun loadPage(page: Int) = viewModelScope.launch {
+        loading = true
         alexandriaRepo.getContents(args.chapterId, page).collect {
-            Log.d("spirit", it.toString())
-            _chapterDetail.value = it
+            when (it) {
+                is ApiResult.Success -> {
+                    paginatedContent = paginatedContent + (page to it.data!!)
+                    hasNext = it.data!!.hasNext
+                    _currentPage.value = page
+                    loading = false
+                }
+                is ApiResult.Error -> { loading = false }
+                is ApiResult.Loading -> { loading = true }
+            }
         }
     }
 

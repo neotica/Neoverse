@@ -43,6 +43,7 @@ fun BasicScaffold(
     paddingValues: PaddingValues = PaddingValues(),
     paddingValuesBottomOnly: Boolean = true,
     fullScreen: Boolean = false,
+    isLoading: Boolean = false,
     enableEye: Boolean = false,
     horizontalAlignment: Alignment.Horizontal = Alignment.Start,
     trailingIcon: (@Composable () -> Unit)? = null,
@@ -60,6 +61,8 @@ fun BasicScaffold(
                 exit = shrinkVertically(),
             ) {
                 val topBarColor = if (topBarBackground == true) DarkPrimaryTransparent80 else DarkPrimaryTransparent80
+
+                if (isLoading) LoadingIndicator()
 
                 TopAppBar(
                     title = {

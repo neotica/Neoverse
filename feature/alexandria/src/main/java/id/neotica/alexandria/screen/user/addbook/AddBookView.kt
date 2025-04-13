@@ -45,7 +45,9 @@ fun AddBookView(
                 is ApiResult.Success -> {
                     isLoading = false
                     bookState = it.data
-                    navController.navigate(AlexandriaScreen.EditBookScreen(it.data!!.id))
+                    navController.navigate(AlexandriaScreen.EditBookScreen(it.data!!.id)) {
+                        popUpTo(AlexandriaScreen.AddBookScreen) { inclusive = true }
+                    }
                     Toast.makeText(context, it.data.toString(), Toast.LENGTH_SHORT).show()
                 }
                 is ApiResult.Error -> isLoading = false
@@ -64,7 +66,6 @@ fun AddBookView(
         LazyColumn(
             modifier = Modifier
                 .padding(horizontal = 16.dp)
-//                .align(Alignment.TopCenter)
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
             contentPadding = PaddingValues(
@@ -75,9 +76,6 @@ fun AddBookView(
             item {
                 LoadingIndicatorBool(isLoading) {
                     Text("Title: ")
-                    NeoTextField(title)
-
-                    Text("imageUrl: ")
                     NeoTextField(title)
 
                     NeoButton("Create Book") {
