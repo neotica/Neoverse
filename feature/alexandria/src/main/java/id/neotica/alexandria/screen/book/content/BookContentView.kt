@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -18,17 +20,24 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import androidx.navigation.NavController
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.LoadingIndicator
 import id.neotica.ui.components.NeoButton
+import id.neotica.ui.components.topbar.DotsMenuDropDown
+import id.neotica.ui.components.topbar.DotsMenuItem
+import id.neotica.ui.page.PageDropdown
+import id.neotica.ui.theme.DarkPrimaryTransparent2
 import id.neotica.ui.theme.NeoPadding
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
@@ -50,6 +59,8 @@ fun BookContentView(
 
 
     val listState = rememberLazyListState()
+
+    var openPageSelector by remember { mutableStateOf(false) }
 
     val isMoreLoadingVisible by remember {
         derivedStateOf {
@@ -93,9 +104,43 @@ fun BookContentView(
         topBarTitle = viewModel.chapterTitle,
         fullScreen = true,
         enableActionBar = true,
+        trailingIcon = {
+            Row(
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                DotsMenuDropDown(
+                    item = listOf(
+                        DotsMenuItem(
+                            "Goto Page: "
+                        ) {
+                            openPageSelector = true
+                        }
+                    )
+                )
+            }
+        },
         navController = navController,
     ) {
         Box(Modifier.fillMaxSize()) {
+            if (openPageSelector) {
+                PageSelectorOverlay(
+                    modifier = Modifier.align(Alignment.Center),
+                    currentPage = currentPage,
+                    totalPage = viewModel.totalPage,
+                    onDismiss = { openPageSelector = false }
+                ) { selectedPage ->
+                    scope.launch {
+                        viewModel.ensurePagesUpTo(selectedPage)
+
+                        val sortedPages = viewModel.paginatedContent.toSortedMap().keys.toList()
+                        val targetIndex = sortedPages.indexOf(selectedPage).coerceAtLeast(0)
+
+                        listState.animateScrollToItem(targetIndex + 1)
+                        viewModel.setCurrentPage(selectedPage + 1)
+                    }
+                }
+            }
 
             LazyColumn(
                 state = listState,
@@ -138,11 +183,10 @@ fun BookContentView(
 
                 NeoButton(
                     text = "<",
-                    enabled = currentPage > 1 // Enable based on dynamic currentPage
+                    enabled = currentPage > 1
                 ) {
                     val prevPage = currentPage - 1
 
-                    // Scroll to the first item of the previous page (if loaded)
                     scope.launch {
                         if (!viewModel.paginatedContent.containsKey(prevPage)) {
                             viewModel.loadPage(prevPage)
@@ -185,7 +229,41 @@ fun BookContentView(
                         listState.animateScrollToItem(targetIndex)
                     }
                 }
-                Text("Page ${currentPage}", modifier = Modifier.padding(horizontal = 8.dp))
+                Text("Page $currentPage", modifier = Modifier.padding(horizontal = 8.dp))
+            }
+        }
+    }
+}
+
+@Composable
+private fun PageSelectorOverlay(
+    modifier: Modifier,
+    currentPage: Int,
+    totalPage: Int,
+    onDismiss: () -> Unit,
+    onPageSelected: (Int) -> Unit
+) {
+    Card(
+        modifier = modifier
+            .zIndex(5f),
+        colors = CardDefaults.cardColors().copy(containerColor = DarkPrimaryTransparent2)
+    ) {
+        Row(
+            modifier = Modifier.padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Text("Go to page: ")
+            if (totalPage > 0) {
+                PageDropdown(
+                    top = true,
+                    currentValue = currentPage,
+                    count = totalPage,
+                    onValueChange = { selectedPage ->
+                        onDismiss()
+                        onPageSelected(selectedPage)
+                    }
+                )
             }
         }
     }

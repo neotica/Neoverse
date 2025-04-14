@@ -1,6 +1,7 @@
 package id.neotica.alexandria.screen.book.content
 
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
@@ -11,6 +12,7 @@ import id.neotica.domain.ApiResult
 import id.neotica.domain.pagination.PaginatedContent
 import id.neotica.domain.remote.AlexandriaRepository
 import id.neotica.ui.navigation.AlexandriaScreen
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -31,6 +33,9 @@ class BookContentViewModel(
     var loading by mutableStateOf(false)
     var hasNext by mutableStateOf(false)
     var paginatedContent by mutableStateOf<Map<Int, PaginatedContent>>(emptyMap())
+
+    var totalPage by mutableIntStateOf(0)
+        private set
 
     init {
         getPage()
@@ -63,9 +68,21 @@ class BookContentViewModel(
                     hasNext = it.data!!.hasNext
                     _currentPage.value = page
                     loading = false
+                    totalPage = it.data!!.totalPages
                 }
                 is ApiResult.Error -> { loading = false }
                 is ApiResult.Loading -> { loading = true }
+            }
+        }
+    }
+
+    suspend fun ensurePagesUpTo(targetPage: Int) {
+        for (page in 1..targetPage) {
+            if (!paginatedContent.containsKey(page)) {
+                loadPage(page)
+                while (!paginatedContent.containsKey(page)) {
+                    delay(100)
+                }
             }
         }
     }

@@ -164,17 +164,16 @@ fun ChatView(
             DotsMenuDropDown(
                 item = listOf(
                     DotsMenuItem(
-                        "Delete Chat",
-                        {
-                            viewModel.deleteChatroom()
-                            navController.navigate(RootScreen.HomeNav) {
-                                popUpTo(RootScreen.HomeNav) {
-                                    inclusive = true
-                                }
-                                launchSingleTop
+                        "Delete Chat"
+                    ) {
+                        viewModel.deleteChatroom()
+                        navController.navigate(RootScreen.HomeNav) {
+                            popUpTo(RootScreen.HomeNav) {
+                                inclusive = true
                             }
+                            launchSingleTop
                         }
-                    )
+                    }
                 ),
                 onLongClick = {
                     haptic.performHapticFeedback(HapticFeedbackType.LongPress)

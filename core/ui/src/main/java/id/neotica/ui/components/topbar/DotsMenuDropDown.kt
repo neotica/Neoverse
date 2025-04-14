@@ -45,7 +45,8 @@ fun DotsMenuDropDown(item: List<DotsMenuItem>, onLongClick: () -> Unit? = {}) {
             containerColor = DarkPrimaryTransparent2,
         ) {
             item.forEach {
-                DropdownItem(it.title, White) {
+                DropdownItem(it.title, White, it.custom) {
+                    expanded.value = false
                     it.action()
                 }
             }
@@ -55,5 +56,6 @@ fun DotsMenuDropDown(item: List<DotsMenuItem>, onLongClick: () -> Unit? = {}) {
 
 data class DotsMenuItem(
     val title: String,
+    val custom: (@Composable () -> Unit)? = null,
     val action: () -> Unit
 )

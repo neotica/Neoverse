@@ -5,6 +5,7 @@ import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -157,25 +158,21 @@ fun EditChapterView(
                 }
 
                 if (it == null) {
-                    Text("Content: ")
-
-                    EditContentBox(
-                        contentText = contentText,
-                        onContentChange = { contentText = it }
-                    )
-                    NeoButton("Create") { viewModel.createContent(contentText) }
-                    Text(chapterDetailStat)
+                    Column {
+                        EditContentBox(
+                            contentText = contentText,
+                            onContentChange = { contentText = it }
+                        )
+                        NeoButton("Create") { viewModel.createContent(contentText) }
+                    }
                 } else {
-
                     chapterDetail?.let { detail ->
 
                         LazyColumn(
                             modifier = Modifier
                                 .padding(horizontal = 16.dp)
                                 .fillMaxSize(),
-//                                horizontalAlignment = Alignment.CenterHorizontally,
                             contentPadding = PaddingValues(
-//                                    top = NeoPadding.topBarPadding,
                                 bottom = 50.dp
                             )
                         ) {

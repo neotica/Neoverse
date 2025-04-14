@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 fun DropdownItem(
     title: String,
     textColor: Color = Unspecified,
+    custom: (@Composable () -> Unit)? = null,
     onClick: () -> Unit = {},
 ) {
     val context = LocalContext.current
@@ -47,9 +48,11 @@ fun DropdownItem(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(
-            text = title,
-            color = textColor
-        )
+        if (custom != null) custom() else {
+            Text(
+                text = title,
+                color = textColor
+            )
+        }
     }
 }

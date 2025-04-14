@@ -23,17 +23,19 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 import id.neotica.ui.R
 import id.neotica.ui.components.DropdownItem
+import id.neotica.ui.theme.DarkPrimary
 import id.neotica.ui.theme.DarkPrimaryTransparent2
 
 @Composable
 fun PageDropdown(
-    currentValue: Int, count: Int,
+    currentValue: Int, count: Int, top: Boolean = false,
     onValueChange: (Int) -> Unit
 ) {
     var dropDown by remember { mutableStateOf(false) }
-//    var dropDownValue by remember { mutableIntStateOf(0) }
 
-    Card {
+    Card(
+        colors = CardDefaults.cardColors().copy(containerColor = DarkPrimary),
+    ) {
         Row(
             modifier= Modifier
                 .clickable { dropDown = true }
@@ -42,7 +44,12 @@ fun PageDropdown(
         ) {
             Text("$currentValue")
             Icon(painterResource(
-                if (dropDown) R.drawable.ic_arrow_drop_down else R.drawable.ic_arrow_drop_up),
+                if (dropDown != top) {
+                    R.drawable.ic_arrow_drop_down
+                } else {
+                    R.drawable.ic_arrow_drop_up
+                }
+            ),
                 contentDescription = "Dropdown to select page"
             )
         }
@@ -65,7 +72,6 @@ fun PageDropdown(
                             DropdownItem("${it + 1}") {
                                 onValueChange(it)
                                 dropDown = false
-//                                dropDownValue = it
                             }
                         }
                     }
