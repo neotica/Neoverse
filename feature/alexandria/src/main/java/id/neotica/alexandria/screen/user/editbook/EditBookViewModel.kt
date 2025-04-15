@@ -8,10 +8,7 @@ import androidx.navigation.toRoute
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.alexandria.Book
 import id.neotica.domain.model.alexandria.Chapter
-import id.neotica.domain.model.alexandria.ContentRequest
 import id.neotica.domain.model.alexandria.chapter.ChapterRequest
-import id.neotica.domain.model.alexandria.content.NewContentRequest
-import id.neotica.domain.pagination.PaginatedContent
 import id.neotica.domain.remote.AlexandriaRepository
 import id.neotica.ui.navigation.AlexandriaScreen
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -27,17 +24,14 @@ class EditBookViewModel(
     private var _chapters: MutableStateFlow<ApiResult<Book>> = MutableStateFlow(ApiResult.Loading())
     val chapters = _chapters.asStateFlow()
 
-    private var _chapterDetail: MutableStateFlow<ApiResult<PaginatedContent>> = MutableStateFlow(ApiResult.Loading())
-    val chapterDetail = _chapterDetail.asStateFlow()
-
-    private var _editContent: MutableStateFlow<ApiResult<String>> = MutableStateFlow(ApiResult.Loading())
-    val editContent = _editContent.asStateFlow()
-
-    private var _bookDeleted: MutableStateFlow<ApiResult<String>> = MutableStateFlow(ApiResult.Loading())
-    val bookDeleted = _bookDeleted.asStateFlow()
-
     private val _chapterCreated = MutableSharedFlow<ApiResult<Chapter>>()
     val chapterCreated = _chapterCreated.asSharedFlow()
+
+    private var _isLoading = MutableStateFlow(false)
+    val isLoading = _isLoading.asStateFlow()
+
+    private var _message = MutableSharedFlow<String>()
+    val message = _message.asSharedFlow()
 
     private val args = savedStateHandle.toRoute<AlexandriaScreen.EditBookScreen>()
 
@@ -46,16 +40,36 @@ class EditBookViewModel(
     }
 
     fun editBook(book: Book) = viewModelScope.launch {
+        _isLoading.value = true
         alexandriaRepo.editBook(book).collect {
-            Log.d("spirit", it.toString())
-            _chapters.value = it
+            when (it) {
+                is ApiResult.Loading -> _isLoading.value = true
+                is ApiResult.Success -> {
+                    _isLoading.value = false
+                    _message.emit("Success.")
+                }
+                is ApiResult.Error -> {
+                    _isLoading.value = false
+                    _message.emit(it.errorMessage.toString())
+                }
+            }
         }
     }
 
     fun deleteBook() = viewModelScope.launch {
+        _isLoading.value = true
         alexandriaRepo.deleteBook(args.id).collect {
-            Log.d("spirit", it.toString())
-            _bookDeleted.value = it
+            when (it) {
+                is ApiResult.Loading -> _isLoading.value = true
+                is ApiResult.Success -> {
+                    _isLoading.value = false
+                    _message.emit("Success deleting book.")
+                }
+                is ApiResult.Error -> {
+                    _isLoading.value = false
+                    _message.emit(it.errorMessage.toString())
+                }
+            }
         }
     }
 
@@ -68,33 +82,21 @@ class EditBookViewModel(
 
     fun createChapter(chapterRequest: ChapterRequest) = viewModelScope.launch {
         _chapterCreated.emit(ApiResult.Loading())
+        _isLoading.value = true
         alexandriaRepo.createChapter(chapterRequest).collect {
             _chapterCreated.emit(it)
-            getChapters()
-            if (it is ApiResult.Success) { getChapters() }
+            when (it) {
+                is ApiResult.Loading -> _isLoading.value = true
+                is ApiResult.Success -> {
+                    getChapters()
+                    _isLoading.value = false
+                    _message.emit("Created chapter.")
+                }
+                else -> {
+                    _isLoading.value = false
+                    _message.emit(it.errorMessage.toString())
+                }
+            }
         }
-    }
-
-    fun deleteChapter(chapterId: Int) = viewModelScope.launch {
-        alexandriaRepo.deleteChapter(chapterId).collect { Log.d("chapter req", it.toString()) }
-    }
-
-    fun createContent(contentRequest: ContentRequest) = viewModelScope.launch {
-        alexandriaRepo.createContent(contentRequest).collect { Log.d("chapter req", it.toString()) }
-    }
-
-    fun editContent(content: String, id: Int, page: Int) = viewModelScope.launch {
-        alexandriaRepo.editContent(
-            content = NewContentRequest(newContent = content),
-            id = id,
-            page = page
-        ).collect {
-            Log.d("edit content req", it.toString())
-            _editContent.value = it
-        }
-    }
-
-    fun deleteContent(contentId: Int) = viewModelScope.launch {
-        alexandriaRepo.deleteContent(contentId).collect { Log.d("chapter req", it.toString()) }
     }
 }

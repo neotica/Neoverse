@@ -9,6 +9,8 @@ data class Book(
     val id: String,
     val title: String,
     val author: String,
+    val isPublished: Boolean,
+    val summary: String? = null,
     val imageUrl: String? = null,
     val createdAt: Long,
     val chapters: List<Chapter>? = null
