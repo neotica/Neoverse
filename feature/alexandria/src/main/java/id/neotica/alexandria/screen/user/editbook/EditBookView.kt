@@ -1,6 +1,5 @@
 package id.neotica.alexandria.screen.user.editbook
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -38,6 +37,7 @@ import id.neotica.ui.components.edittext.CustomNeoTextField
 import id.neotica.ui.components.topbar.DotsMenuDropDown
 import id.neotica.ui.components.topbar.DotsMenuItem
 import id.neotica.ui.navigation.AlexandriaScreen
+import id.neotica.ui.navigation.navigateBack
 import id.neotica.ui.theme.NeoPadding
 import org.koin.androidx.compose.koinViewModel
 
@@ -71,6 +71,16 @@ fun EditBookView(
 
     var isChecked by remember { mutableStateOf(false) }
 
+    val navBackStackEntry = remember { navController.currentBackStackEntry }
+
+    LaunchedEffect(Unit) {
+        val refresh = navBackStackEntry?.savedStateHandle?.get<Boolean>("refresh") == true
+        if (refresh) {
+            viewModel.getChapters()
+            navBackStackEntry.savedStateHandle["refresh"] = false
+        }
+    }
+
     LaunchedEffect(Unit) {
         viewModel.message.collect {
             Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
@@ -88,6 +98,12 @@ fun EditBookView(
                 }
                 is ApiResult.Error -> isLoadingChapter = false
             }
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.navigateBack.collect{
+            navController.navigateBack()
         }
     }
 
@@ -113,7 +129,6 @@ fun EditBookView(
             chapterList.value?.let {
 
                 LaunchedEffect(Unit) { title.value = it.title }
-                Log.d("checked?", it.isPublished.toString())
                 var editTitle by remember { mutableStateOf(false) }
                 CustomNeoTextField(
                     value = title,

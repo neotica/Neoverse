@@ -18,15 +18,34 @@ class AddBookViewModel(
     private var _book = MutableSharedFlow<ApiResult<Book>>()
     val book = _book.asSharedFlow()
 
+    private var _toastMessage = MutableSharedFlow<String>()
+    val toastMessage = _toastMessage.asSharedFlow()
+
+    private var _isLoading = MutableSharedFlow<Boolean>()
+    val isLoading = _isLoading.asSharedFlow()
+
     fun username() = getUserNameUseCase.invoke()
 
-    fun addBook(title: String) = viewModelScope.launch {
-        _book.emit(ApiResult.Loading())
+    fun addBook(title: String, language: String) = viewModelScope.launch {
+        _isLoading.emit(true)
         val book = BookRequest(
             title = title,
-            author = username()
+            author = username(),
+            language = language,
+            isPublished = false
         )
         alexandriaRepo.addBook(book).collect {
+            when(it) {
+                is ApiResult.Loading -> _isLoading.emit(true)
+                is ApiResult.Success -> {
+                    _isLoading.emit(false)
+                    _toastMessage.emit("$title created!")
+                }
+                is ApiResult.Error -> {
+                    _isLoading.emit(false)
+                    _toastMessage.emit(it.errorMessage.toString())
+                }
+            }
             _book.emit(it)
         }
     }

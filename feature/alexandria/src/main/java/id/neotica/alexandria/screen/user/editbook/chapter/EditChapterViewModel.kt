@@ -1,5 +1,6 @@
 package id.neotica.alexandria.screen.user.editbook.chapter
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -43,13 +44,14 @@ class EditChapterViewModel(
 
     fun getChapterDetail(page: Int? = 1) = viewModelScope.launch {
         alexandriaRepo.getContents(args.chapterId, page).collect {
+            Log.d("chapterdetailvm", it.toString())
             _chapterDetail.value = it
         }
     }
 
-    fun deleteChapter(chapterId: Int) = viewModelScope.launch {
+    fun deleteChapter() = viewModelScope.launch {
         _chapterDeleted.emit(ApiResult.Loading())
-        alexandriaRepo.deleteChapter(chapterId).collect {
+        alexandriaRepo.deleteChapter(args.chapterId).collect {
             _chapterDeleted.emit(it)
         }
     }

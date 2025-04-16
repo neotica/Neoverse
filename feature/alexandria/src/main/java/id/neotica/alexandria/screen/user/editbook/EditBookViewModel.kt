@@ -33,6 +33,9 @@ class EditBookViewModel(
     private var _message = MutableSharedFlow<String>()
     val message = _message.asSharedFlow()
 
+    private var _navigateBack = MutableSharedFlow<Boolean>()
+    val navigateBack = _navigateBack.asSharedFlow()
+
     private val args = savedStateHandle.toRoute<AlexandriaScreen.EditBookScreen>()
 
     init {
@@ -63,6 +66,7 @@ class EditBookViewModel(
                 is ApiResult.Loading -> _isLoading.value = true
                 is ApiResult.Success -> {
                     _isLoading.value = false
+                    _navigateBack.emit(true)
                     _message.emit("Success deleting book.")
                 }
                 is ApiResult.Error -> {
@@ -73,7 +77,7 @@ class EditBookViewModel(
         }
     }
 
-    private fun getChapters() = viewModelScope.launch {
+    fun getChapters() = viewModelScope.launch {
         alexandriaRepo.getBook(args.id).collect {
             Log.d("spirit", it.toString())
             _chapters.value = it

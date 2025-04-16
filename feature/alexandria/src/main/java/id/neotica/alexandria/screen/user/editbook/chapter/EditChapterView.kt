@@ -5,7 +5,6 @@ import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -95,6 +94,7 @@ fun EditChapterView(
                         is ApiResult.Loading -> isLoadingChapter = true
                         is ApiResult.Success -> {
                             isLoadingChapter = false
+                            navController.previousBackStackEntry?.savedStateHandle?.set("refresh", true)
                             navController.navigateBack()
                             Toast.makeText(context, it.data.toString(), Toast.LENGTH_SHORT).show()
                         }
@@ -116,7 +116,7 @@ fun EditChapterView(
                                 page = chapterDetail!!.page
                             )
                         } else {
-                            Toast.makeText(context, "Chapter is null!", Toast.LENGTH_SHORT).show()
+                            viewModel.createContent(contentText)
                         }
                     },
                     text = "SAVE"
@@ -124,7 +124,8 @@ fun EditChapterView(
                 DotsMenuDropDown(
                     item = listOf(
                         DotsMenuItem("Delete Chapter") {
-                            chapterDetail?.let { viewModel.deleteChapter(it.chapterId) }
+                            Log.d("delete chapter", "Yeah, $chapterDetail")
+                            viewModel.deleteChapter()
                         }
                     ),
                 )
@@ -136,8 +137,6 @@ fun EditChapterView(
                 .fillMaxSize()
                 .imePadding()
         ) {
-
-//            if (isLoadingChapter) { LoadingIndicator() }
 
             chapterDetail.let {
                 LaunchedEffect(Unit) {
@@ -156,36 +155,24 @@ fun EditChapterView(
                         }
                     }
                 }
-
-                if (it == null) {
-                    Column {
+                LazyColumn(
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .fillMaxSize(),
+                    contentPadding = PaddingValues(
+                        bottom = 50.dp
+                    )
+                ) {
+                    item {
                         EditContentBox(
                             contentText = contentText,
                             onContentChange = { contentText = it }
                         )
-                        NeoButton("Create") { viewModel.createContent(contentText) }
                     }
-                } else {
-                    chapterDetail?.let { detail ->
-
-                        LazyColumn(
-                            modifier = Modifier
-                                .padding(horizontal = 16.dp)
-                                .fillMaxSize(),
-                            contentPadding = PaddingValues(
-                                bottom = 50.dp
-                            )
-                        ) {
-                            item {
-                                EditContentBox(
-                                    contentText = contentText,
-                                    onContentChange = { contentText = it }
-                                )
-                            }
-                        }
-                        LaunchedEffect(detail.content) {
-                            contentText = detail.content
-                        }
+                }
+                chapterDetail?.let { detail ->
+                    LaunchedEffect(detail.content) {
+                        contentText = detail.content
                     }
                 }
             }
