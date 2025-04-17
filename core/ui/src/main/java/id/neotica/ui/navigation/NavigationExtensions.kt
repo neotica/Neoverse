@@ -11,3 +11,15 @@ fun NavController.navigateBack() {
         popBackStack()
     }
 }
+
+fun NavController.refreshOnBack() {
+    this.previousBackStackEntry?.savedStateHandle?.set("refresh", true)
+}
+
+fun NavController.onRefresh(block: () -> Unit) {
+    val refresh = this.currentBackStackEntry?.savedStateHandle?.get<Boolean>("refresh") == true
+    if (refresh) {
+        block()
+        this.currentBackStackEntry?.savedStateHandle["refresh"] = false
+    }
+}

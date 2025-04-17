@@ -32,6 +32,7 @@ import id.neotica.ui.components.edittext.EditContentBox
 import id.neotica.ui.components.topbar.DotsMenuDropDown
 import id.neotica.ui.components.topbar.DotsMenuItem
 import id.neotica.ui.navigation.navigateBack
+import id.neotica.ui.navigation.refreshOnBack
 import id.neotica.ui.page.PageDropdown
 import org.koin.androidx.compose.koinViewModel
 
@@ -94,7 +95,7 @@ fun EditChapterView(
                         is ApiResult.Loading -> isLoadingChapter = true
                         is ApiResult.Success -> {
                             isLoadingChapter = false
-                            navController.previousBackStackEntry?.savedStateHandle?.set("refresh", true)
+                            navController.refreshOnBack()
                             navController.navigateBack()
                             Toast.makeText(context, it.data.toString(), Toast.LENGTH_SHORT).show()
                         }

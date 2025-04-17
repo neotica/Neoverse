@@ -38,6 +38,8 @@ import id.neotica.ui.components.topbar.DotsMenuDropDown
 import id.neotica.ui.components.topbar.DotsMenuItem
 import id.neotica.ui.navigation.AlexandriaScreen
 import id.neotica.ui.navigation.navigateBack
+import id.neotica.ui.navigation.onRefresh
+import id.neotica.ui.navigation.refreshOnBack
 import id.neotica.ui.theme.NeoPadding
 import org.koin.androidx.compose.koinViewModel
 
@@ -71,14 +73,8 @@ fun EditBookView(
 
     var isChecked by remember { mutableStateOf(false) }
 
-    val navBackStackEntry = remember { navController.currentBackStackEntry }
-
     LaunchedEffect(Unit) {
-        val refresh = navBackStackEntry?.savedStateHandle?.get<Boolean>("refresh") == true
-        if (refresh) {
-            viewModel.getChapters()
-            navBackStackEntry.savedStateHandle["refresh"] = false
-        }
+        navController.onRefresh { viewModel.getChapters() }
     }
 
     LaunchedEffect(Unit) {
@@ -103,6 +99,7 @@ fun EditBookView(
 
     LaunchedEffect(Unit) {
         viewModel.navigateBack.collect{
+            navController.refreshOnBack()
             navController.navigateBack()
         }
     }

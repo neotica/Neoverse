@@ -20,6 +20,7 @@ import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.LoadingIndicator
 import id.neotica.ui.components.NeoButton
 import id.neotica.ui.navigation.AlexandriaScreen
+import id.neotica.ui.navigation.onRefresh
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -30,6 +31,10 @@ fun UserLibraryView(
     var isLoading by remember { mutableStateOf(false) }
     var books by remember { mutableStateOf(emptyList<Book>()) }
     var reload by remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        navController.onRefresh { viewModel.getBooks() }
+    }
 
     LaunchedEffect(Unit) {
         viewModel.books.collect { result ->

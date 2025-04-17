@@ -25,8 +25,6 @@ class UserLibraryViewModel(
         getBooks()
     }
 
-
-
     fun getBooks() = viewModelScope.launch {
         alexandriaRepo.getUserBooks(username()).collect {
             _booksOld.value = it
