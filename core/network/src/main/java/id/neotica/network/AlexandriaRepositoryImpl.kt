@@ -14,8 +14,8 @@ import id.neotica.domain.pagination.PaginatedContent
 import id.neotica.domain.pagination.Pagination
 import id.neotica.domain.remote.AlexandriaRepository
 import id.neotica.neoverse.utils.baseUrl
-import id.neotica.network.micro.ktorClient
 import id.neotica.network.utils.safeApiCall
+import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.request.delete
@@ -31,10 +31,12 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
-class AlexandriaRepositoryImpl: AlexandriaRepository {
+class AlexandriaRepositoryImpl(
+    private val client: HttpClient
+): AlexandriaRepository {
 
     override fun getBooks(): Flow<ApiResult<Pagination<Book>>> = safeApiCall {
-        ktorClient.get("${baseUrl}/alexandria"){
+        client.get("${baseUrl}/alexandria"){
         }.body<Pagination<Book>>()
     }
 
@@ -42,7 +44,7 @@ class AlexandriaRepositoryImpl: AlexandriaRepository {
         val token = withContext(Dispatchers.IO) {
             FirebaseAuth.getInstance().currentUser?.getIdToken(true)?.await()?.token
         }
-        ktorClient.post("$baseUrl/alexandria") {
+        client.post("$baseUrl/alexandria") {
             headers {
                 append("Content-Type", "application/json")
                 token?.let { append("Authorization", "Bearer $it") }
@@ -55,7 +57,7 @@ class AlexandriaRepositoryImpl: AlexandriaRepository {
         val token = withContext(Dispatchers.IO) {
             FirebaseAuth.getInstance().currentUser?.getIdToken(true)?.await()?.token
         }
-        ktorClient.get("${baseUrl}/alexandria/book"){
+        client.get("${baseUrl}/alexandria/book"){
             headers {
                 token?.let { append("Authorization", "Bearer $it") }
             }
@@ -64,14 +66,14 @@ class AlexandriaRepositoryImpl: AlexandriaRepository {
     }
 
     override fun getBook(bookId: String): Flow<ApiResult<Book>> = safeApiCall {
-        ktorClient.get("${baseUrl}/alexandria/$bookId").body<Book>()
+        client.get("${baseUrl}/alexandria/$bookId").body<Book>()
     }
 
     override fun editBook(book: Book): Flow<ApiResult<Book>> = safeApiCall {
         val token = withContext(Dispatchers.IO) {
             FirebaseAuth.getInstance().currentUser?.getIdToken(true)?.await()?.token
         }
-        ktorClient.put("${baseUrl}/alexandria/${book.id}"){
+        client.put("${baseUrl}/alexandria/${book.id}"){
             headers {
                 token?.let { append("Authorization", "Bearer $it") }
                 append("Content-Type", "application/json")
@@ -84,7 +86,7 @@ class AlexandriaRepositoryImpl: AlexandriaRepository {
         val token = withContext(Dispatchers.IO) {
             FirebaseAuth.getInstance().currentUser?.getIdToken(true)?.await()?.token
         }
-        ktorClient.delete("${baseUrl}/alexandria/$bookId") {
+        client.delete("${baseUrl}/alexandria/$bookId") {
             headers {
                 append("Content-Type", "application/json")
                 token?.let { append("Authorization", "Bearer $it") }
@@ -93,14 +95,14 @@ class AlexandriaRepositoryImpl: AlexandriaRepository {
     }
 
     override fun getChapters(bookId: String): Flow<ApiResult<List<Chapter>>> = safeApiCall {
-        ktorClient.get("${baseUrl}/alexandria/$bookId").body<List<Chapter>>()
+        client.get("${baseUrl}/alexandria/$bookId").body<List<Chapter>>()
     }
 
     override fun createChapter(chapter: ChapterRequest): Flow<ApiResult<Chapter>> = safeApiCall {
         val token = withContext(Dispatchers.IO) {
             FirebaseAuth.getInstance().currentUser?.getIdToken(true)?.await()?.token
         }
-        ktorClient.post("${baseUrl}/alexandria/chapters") {
+        client.post("${baseUrl}/alexandria/chapters") {
             headers {
                 append("Content-Type", "application/json")
                 token?.let { append("Authorization", "Bearer $it") }
@@ -113,7 +115,7 @@ class AlexandriaRepositoryImpl: AlexandriaRepository {
         val token = withContext(Dispatchers.IO) {
             FirebaseAuth.getInstance().currentUser?.getIdToken(true)?.await()?.token
         }
-        ktorClient.delete("${baseUrl}/alexandria/chapters/$chapterId") {
+        client.delete("${baseUrl}/alexandria/chapters/$chapterId") {
             headers {
                 append("Content-Type", "application/json")
                 token?.let { append("Authorization", "Bearer $it") }
@@ -122,7 +124,7 @@ class AlexandriaRepositoryImpl: AlexandriaRepository {
     }
 
     override fun getContents(chapterId: Int, page: Int?): Flow<ApiResult<PaginatedContent>> = safeApiCall {
-        ktorClient.get("${baseUrl}/alexandria/chapters/contents/$chapterId"){
+        client.get("${baseUrl}/alexandria/chapters/contents/$chapterId"){
             url {
                 parameters.append("page", page?.toString() ?: "1")
             }
@@ -131,7 +133,7 @@ class AlexandriaRepositoryImpl: AlexandriaRepository {
 
     override fun getChaptersOld(url: String): Flow<ApiResult<BloodyAgeChapters>> = flow {
         try {
-            val result = ktorClient
+            val result = client
                 .get("${baseUrl}/alexandria-old/$url")
                 .body<BloodyAgeChapters>()
             emit(ApiResult.Success(result))
@@ -150,7 +152,7 @@ class AlexandriaRepositoryImpl: AlexandriaRepository {
         val token = withContext(Dispatchers.IO) {
             FirebaseAuth.getInstance().currentUser?.getIdToken(true)?.await()?.token
         }
-        ktorClient.post("${baseUrl}/alexandria/chapters/contents") {
+        client.post("${baseUrl}/alexandria/chapters/contents") {
             headers {
                 append("Content-Type", "application/json")
                 token?.let { append("Authorization", "Bearer $it") }
@@ -163,7 +165,7 @@ class AlexandriaRepositoryImpl: AlexandriaRepository {
         val token = withContext(Dispatchers.IO) {
             FirebaseAuth.getInstance().currentUser?.getIdToken(true)?.await()?.token
         }
-        ktorClient.put("${baseUrl}/alexandria/chapters/contents/${id}?page=$page") {
+        client.put("${baseUrl}/alexandria/chapters/contents/${id}?page=$page") {
             headers {
                 append("Content-Type", "application/json")
                 token?.let { append("Authorization", "Bearer $it") }
@@ -177,7 +179,7 @@ class AlexandriaRepositoryImpl: AlexandriaRepository {
             FirebaseAuth.getInstance().currentUser?.getIdToken(true)?.await()?.token
         }
 
-        ktorClient.delete("${baseUrl}/alexandria/chapters/contents/$contentId") {
+        client.delete("${baseUrl}/alexandria/chapters/contents/$contentId") {
             headers {
                 append("Content-Type", "application/json")
                 token?.let { append("Authorization", "Bearer $it") }

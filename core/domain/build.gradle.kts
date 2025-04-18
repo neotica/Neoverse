@@ -6,7 +6,7 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     id("de.mannodermaus.android-junit5") version "1.11.2.0"
 //    id("dev.icerock.moko.kswift") version "0.7.0"
-    id("co.touchlab.skie") version "0.9.5"
+//    id("co.touchlab.skie") version "0.9.5"
 }
 
 /*kswift {
