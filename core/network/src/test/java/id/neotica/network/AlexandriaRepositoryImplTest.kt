@@ -19,6 +19,30 @@ class AlexandriaRepositoryImplTest {
 
     private lateinit var repository: AlexandriaRepositoryImpl
 
+    private fun createMockClient(
+        status: HttpStatusCode = HttpStatusCode.OK,
+        content: String = "",
+        contentType: String = "application/json"
+    ): HttpClient {
+        val mockEngine = MockEngine { request ->
+            assertEquals("GET", request.method.value)
+            assertEquals("/alexandria", request.url.encodedPath)
+            respond(
+                content = content,
+                status = status,
+                headers = headersOf(HttpHeaders.ContentType, contentType)
+            )
+        }
+
+        return HttpClient(mockEngine) {
+            install(ContentNegotiation) {
+                json(Json {
+                    ignoreUnknownKeys = true
+                })
+            }
+        }
+    }
+
     @Before
     fun setup() {
         MockitoAnnotations.openMocks(this)
@@ -48,23 +72,7 @@ class AlexandriaRepositoryImplTest {
             }
         """.trimIndent()
 
-        val mockEngine = MockEngine { request ->
-            assertEquals("GET", request.method.value)
-            assertEquals("/alexandria", request.url.encodedPath)
-            respond(
-                content = mockResponse,
-                status = HttpStatusCode.OK,
-                headers = headersOf(HttpHeaders.ContentType, "application/json")
-            )
-        }
-
-        val client = HttpClient(mockEngine) {
-            install(ContentNegotiation) {
-                json(Json {
-                    ignoreUnknownKeys = true
-                })
-            }
-        }
+        val client = createMockClient(content = mockResponse)
         repository = AlexandriaRepositoryImpl(client)
 
         repository.getBooks().collect { result ->
@@ -88,17 +96,58 @@ class AlexandriaRepositoryImplTest {
     }
 
     @Test
-    fun `Empty book list`() {
+    fun `Empty book list`() = runBlocking {
         // Verify that the method returns a Flow emitting ApiResult.Success
         // containing a Pagination object with an empty list of books.
-        // TODO implement test
+        val mockResponse = """
+        {
+            "content": [],
+            "currentPage": 1,
+            "totalPages": 1,
+            "pageSize": 10,
+            "hasNextPage": false,
+            "hasPreviousPage": false
+        }
+    """.trimIndent()
+
+        val client = createMockClient(content = mockResponse)
+
+        repository = AlexandriaRepositoryImpl(client)
+
+        repository.getBooks().collect { result ->
+            assertTrue(result is ApiResult.Success)
+
+            val pagination = (result as ApiResult.Success).data
+            assertNotNull(pagination)
+            assertTrue(pagination?.content?.isEmpty() == true)
+            assertEquals(1, pagination?.currentPage)
+            assertEquals(1L, pagination?.totalPages)
+            assertEquals(10, pagination?.pageSize)
+            assertFalse(pagination?.hasNextPage != false)
+            assertFalse(pagination?.hasPreviousPage != false)
+        }
     }
 
     @Test
-    fun `API returns an error`() {
+    fun `API returns an error`() = runBlocking {
         // Verify that the method returns a Flow emitting ApiResult.Error
         // when the API call fails, and check the error message.
-        // TODO implement test
+        val errorMessage = "Internal Server Error"
+
+        val client = createMockClient(
+            status = HttpStatusCode.InternalServerError,
+            content = errorMessage,
+            contentType = "text/plain"
+        )
+
+        repository = AlexandriaRepositoryImpl(client)
+
+        repository.getBooks().collect { result ->
+            assertTrue(result is ApiResult.Error)
+
+            val error = result as ApiResult.Error
+            assertTrue(error.errorMessage?.contains("Internal Server Error", ignoreCase = true) == true)
+        }
     }
 
     @Test
