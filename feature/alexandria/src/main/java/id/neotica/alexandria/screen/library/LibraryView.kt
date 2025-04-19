@@ -63,7 +63,7 @@ fun LibraryView(
                     viewModel.permission.collectLatest {
                         gotoAuthor = false
                         if (it) {
-                            navController.navigate(AlexandriaScreen.UserLibraryScreen)
+                            navController.navigate(AlexandriaScreen.AdminScreen)
                         } else {
                             Toast.makeText(context, "You did not have an author's account.", Toast.LENGTH_SHORT).show()
                         }
@@ -73,7 +73,8 @@ fun LibraryView(
             }
             DotsMenuDropDown(
                 item = listOf(
-                    DotsMenuItem("Author's Page") { gotoAuthor = true }
+                    DotsMenuItem("Author's Page") { navController.navigate(AlexandriaScreen.UserLibraryScreen) },
+                    DotsMenuItem("Admin Page") { gotoAuthor = true }
                 ),
             )
         }
