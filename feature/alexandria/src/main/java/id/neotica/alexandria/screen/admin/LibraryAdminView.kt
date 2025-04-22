@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -26,9 +27,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import id.neotica.alexandria.screen.library.LibraryViewModel
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.alexandria.Book
+import id.neotica.domain.utils.convertLongToTime
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.LoadingIndicator
 import id.neotica.ui.navigation.AlexandriaScreen
@@ -40,13 +41,11 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun LibraryAdminView(
     navController: NavController,
-    viewModel: LibraryViewModel = koinViewModel()
+    viewModel: LibraryAdminViewModel = koinViewModel()
 ) {
     var isLoading by remember { mutableStateOf(false) }
     var books by remember { mutableStateOf(emptyList<Book>()) }
     val context = LocalContext.current
-
-    var isChecked by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         viewModel.books.collect { result ->
@@ -87,20 +86,25 @@ fun LibraryAdminView(
                         ,
                         colors = CardDefaults.cardColors().copy(containerColor = DarkPrimaryTransparent80)
                     ) {
-                        Row(
+                        Column(
                             modifier = Modifier
                                 .clickable { AlexandriaScreen.BookScreen(id = it.id) }
+                                .padding(16.dp)
                                 .fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceEvenly,
-                            verticalAlignment = Alignment.CenterVertically
+                            verticalArrangement = Arrangement.SpaceEvenly
                         ) {
                             Text(
                                 text = it.title,
-                                modifier = Modifier.padding(vertical = 16.dp)
+//                                modifier = Modifier.padding(vertical = 16.dp)
                             )
+                            Text("Author: ${it.author}")
                             Row(
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
+                                var isChecked by remember { mutableStateOf(false) }
+                                LaunchedEffect(Unit) { isChecked = it.isPublished }
+
+
                                 Text("Published: ")
                                 Checkbox(
                                     checked = isChecked,
@@ -113,6 +117,10 @@ fun LibraryAdminView(
                                     }
                                 )
                             }
+                            Text("Language: ${it.language}")
+                            Text("Created at: ${ convertLongToTime(time = it.createdAt) }")
+                            Text("Genre: ${it.genre?: "N/A"}")
+//                            Text("Summary: ${it.summary}")
                         }
                     }
                 }

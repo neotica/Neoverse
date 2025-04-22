@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.alexandria.Book
 import id.neotica.domain.pagination.Pagination
-import id.neotica.domain.remote.AlexandriaRepository
+import id.neotica.domain.remote.AlexandriaAdminRepository
 import id.neotica.domain.remote.PermissionRepository
 import id.neotica.domain.usecase.GetUserNameUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class LibraryAdminViewModel(
-    private val alexandriaRepo: AlexandriaRepository,
+    private val adminRepo: AlexandriaAdminRepository,
     private val permissionRepository: PermissionRepository,
     private val getUserNameUseCase: GetUserNameUseCase
 ): ViewModel() {
@@ -33,7 +33,7 @@ class LibraryAdminViewModel(
     }
 
     private fun getBooks() = viewModelScope.launch {
-        alexandriaRepo.getBooks().collect {
+        adminRepo.getBooks().collect {
             _booksOld.value = it
         }
     }

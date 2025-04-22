@@ -15,7 +15,7 @@ data class Book(
     val isPublished: Boolean,
     val imageUrl: String? = null,
     val createdAt: Long,
-    //val rejectionHistory: List<RejectionHistory>? = null,
+    //val warning: List<AdministratorWarning>? = null,
     val chapters: List<Chapter>? = null
 )
 
@@ -23,7 +23,7 @@ data class Book(
 // limit chapter by 5 per day. or user could appeal.
 
 @Serializable
-data class RejectionHistory(
+data class AdministratorWarning(
     val id: String,
     val isApproved: Boolean,
     val message: String,

@@ -8,6 +8,27 @@ import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
+import org.koin.dsl.module
+
+val ktorModule = module {
+    single {
+        HttpClient {
+            install(ContentNegotiation) {
+                json(
+                    Json {
+                        prettyPrint = true
+                        isLenient = true
+                        ignoreUnknownKeys = true
+                    }
+                )
+            }
+            install(Logging) {
+                logger = Logger.DEFAULT
+                level = LogLevel.HEADERS
+            }
+        }
+    }
+}
 
 val ktorClient = HttpClient {
     install(ContentNegotiation) {
