@@ -57,24 +57,37 @@ fun LibraryView(
         enableActionBar = true,
         trailingIcon = {
             var gotoAuthor by remember { mutableStateOf(false) }
+            var gotoAdmin by remember { mutableStateOf(false) }
 
-            LaunchedEffect(gotoAuthor) {
-                if (gotoAuthor) {
-                    viewModel.permission.collectLatest {
-                        gotoAuthor = false
-                        if (it) {
-                            navController.navigate(AlexandriaScreen.AdminScreen)
-                        } else {
-                            Toast.makeText(context, "You did not have an author's account.", Toast.LENGTH_SHORT).show()
+            LaunchedEffect(gotoAuthor, gotoAdmin) {
+                when {
+                    gotoAuthor -> {
+                        viewModel.permission.collectLatest {
+                            gotoAuthor = false
+                            if (it) {
+                                navController.navigate(AlexandriaScreen.UserLibraryScreen)
+                            } else {
+                                Toast.makeText(context, "You did not have an author's account.", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    }
+                    gotoAdmin -> {
+                        viewModel.permission.collectLatest {
+                            gotoAdmin = false
+                            if (it) {
+                                navController.navigate(AlexandriaScreen.AdminScreen)
+                            } else {
+                                Toast.makeText(context, "You did not have an admin's account.", Toast.LENGTH_SHORT).show()
+                            }
                         }
                     }
                 }
-
             }
+
             DotsMenuDropDown(
                 item = listOf(
-                    DotsMenuItem("Author's Page") { navController.navigate(AlexandriaScreen.UserLibraryScreen) },
-                    DotsMenuItem("Admin Page") { gotoAuthor = true }
+                    DotsMenuItem("Author's Page") { gotoAuthor = true },
+                    DotsMenuItem("Admin Page") { gotoAdmin = true }
                 ),
             )
         }
