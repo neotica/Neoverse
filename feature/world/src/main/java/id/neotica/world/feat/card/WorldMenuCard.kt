@@ -1,6 +1,7 @@
 package id.neotica.world.feat.card
 
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -21,13 +22,14 @@ import id.neotica.ui.components.image.ImagePermanentCache
 import id.neotica.ui.theme.DarkPrimaryTransparent80
 import id.neotica.ui.theme.FontSize
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun WorldMenuCard(
     title: String,
     desc: String,
     fileName: String,
     url: String,
-
+    onLongClick: () -> Unit = {},
     onClick: () -> Unit = {}
 ) {
     Card(
@@ -38,7 +40,10 @@ fun WorldMenuCard(
         colors = CardDefaults.cardColors().copy(containerColor = DarkPrimaryTransparent80)
     ) {
         Row(
-            modifier = Modifier.clickable { onClick() }
+            modifier = Modifier.combinedClickable(
+                onClick = onClick,
+                onLongClick = onLongClick
+            )
         ) {
             ImagePermanentCache(
                 context = LocalContext.current,

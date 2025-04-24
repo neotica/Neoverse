@@ -161,24 +161,20 @@ fun ChatView(
             .fillMaxWidth(),
         fullScreen = true,
         trailingIcon = {
-            var expanded = remember { mutableStateOf(false) }
-
             DotsMenuDropDown(
                 item = listOf(
                     DotsMenuItem(
-                        "Delete Chat",
-                        {
-                            viewModel.deleteChatroom()
-                            navController.navigate(RootScreen.HomeNav) {
-                                popUpTo(RootScreen.HomeNav) {
-                                    inclusive = true
-                                }
-                                launchSingleTop
+                        "Delete Chat"
+                    ) {
+                        viewModel.deleteChatroom()
+                        navController.navigate(RootScreen.HomeNav) {
+                            popUpTo(RootScreen.HomeNav) {
+                                inclusive = true
                             }
+                            launchSingleTop
                         }
-                    )
+                    }
                 ),
-                expanded = expanded,
                 onLongClick = {
                     haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                     Toast

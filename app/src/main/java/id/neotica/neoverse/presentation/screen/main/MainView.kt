@@ -70,7 +70,8 @@ fun MainView() {
                 screen = RootScreen.ProfileNav
             )
         )
-        val bottomBarExcludedRoutes = setOf(
+
+        val screenSet = setOf(
             Screen.Splash,
             Screen.LoginScreen,
             Screen.RegisterScreen,
@@ -83,20 +84,33 @@ fun MainView() {
             Screen.UpdateAppScreen,
             Screen.CameraPreviewScreen,
             Screen.SearchUserScreen,
+            Screen.FriendScreen,
+            Screen.ResetPassword,
+            Screen.Chat(),
+            Screen.EditProfileScreen(),
+        )
+
+        val worldScreen = setOf(
             WorldScreen.TavernScreen,
             WorldScreen.MiningScreen,
             WorldScreen.LeaderBoardsScreen,
             WorldScreen.TerminalScreen,
             WorldScreen.RavenScreen,
             WorldScreen.RavenChatScreen,
-            Screen.FriendScreen,
-            AlexandriaScreen.HomeScreen,
-            AlexandriaScreen.BookScreen(),
-            Screen.ResetPassword,
-            Screen.Chat(),
-            Screen.EditProfileScreen(),
             WorldScreen.ItemDetailScreen(),
         )
+
+        val alexandriaSet = setOf(
+            AlexandriaScreen.HomeScreen,
+            AlexandriaScreen.BookScreen(),
+            AlexandriaScreen.UserLibraryScreen,
+            AlexandriaScreen.EditBookScreen(),
+            AlexandriaScreen.EditChapterScreen(),
+            AlexandriaScreen.BookContentScreen(),
+            AlexandriaScreen.AdminScreen
+        )
+
+        val bottomBarExcludedRoutes = screenSet + worldScreen + alexandriaSet
 
         val includeRoute = bottomBarExcludedRoutes.none {
             if (navBackStackEntry?.destination?.route == null) true else

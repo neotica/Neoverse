@@ -6,7 +6,6 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.material3.ripple
@@ -27,6 +26,7 @@ import androidx.compose.ui.unit.dp
 fun DropdownItem(
     title: String,
     textColor: Color = Unspecified,
+    custom: (@Composable () -> Unit)? = null,
     onClick: () -> Unit = {},
 ) {
     val context = LocalContext.current
@@ -34,7 +34,7 @@ fun DropdownItem(
 
     Row(
         modifier = Modifier
-            .fillMaxWidth()
+//            .fillMaxWidth()
             .combinedClickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = ripple(bounded = true, color = White),
@@ -48,9 +48,11 @@ fun DropdownItem(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(
-            text = title,
-            color = textColor
-        )
+        if (custom != null) custom() else {
+            Text(
+                text = title,
+                color = textColor
+            )
+        }
     }
 }

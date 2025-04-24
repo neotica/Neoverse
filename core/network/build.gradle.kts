@@ -54,9 +54,10 @@ dependencies {
     api(libs.firebase.firestore.ktx)
     api(libs.firebase.appcheck.playintegrity)
     api(libs.firebase.appcheck.debug)
-    implementation(libs.bundles.ktor)
+    api(libs.bundles.ktor)
 
     testImplementation(libs.junit)
+    testImplementation(libs.mockito.core)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 }

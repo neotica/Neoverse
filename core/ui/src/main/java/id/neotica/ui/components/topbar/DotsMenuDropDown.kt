@@ -9,7 +9,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.White
@@ -21,7 +21,8 @@ import id.neotica.ui.theme.DarkPrimaryTransparent2
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun DotsMenuDropDown(item: List<DotsMenuItem>, expanded: MutableState<Boolean>, onLongClick: () -> Unit? = {}) {
+fun DotsMenuDropDown(item: List<DotsMenuItem>, onLongClick: () -> Unit? = {}) {
+    val expanded = remember { mutableStateOf(false) }
     Box {
         Icon(
             modifier = Modifier
@@ -44,7 +45,8 @@ fun DotsMenuDropDown(item: List<DotsMenuItem>, expanded: MutableState<Boolean>, 
             containerColor = DarkPrimaryTransparent2,
         ) {
             item.forEach {
-                DropdownItem(it.title, White) {
+                DropdownItem(it.title, White, it.custom) {
+                    expanded.value = false
                     it.action()
                 }
             }
@@ -54,5 +56,6 @@ fun DotsMenuDropDown(item: List<DotsMenuItem>, expanded: MutableState<Boolean>, 
 
 data class DotsMenuItem(
     val title: String,
+    val custom: (@Composable () -> Unit)? = null,
     val action: () -> Unit
 )

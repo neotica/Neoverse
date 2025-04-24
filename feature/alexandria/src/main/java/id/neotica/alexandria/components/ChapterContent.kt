@@ -27,5 +27,7 @@ fun ChapterContent(
         }
     }
 
-    Text(content)
+    Text(
+        text = content
+    )
 }

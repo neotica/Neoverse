@@ -7,12 +7,13 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.alexandria.Book
-import id.neotica.domain.model.alexandria.ContentRequest
+import id.neotica.domain.model.alexandria.Chapter
 import id.neotica.domain.model.alexandria.chapter.ChapterRequest
-import id.neotica.domain.pagination.PaginatedContent
 import id.neotica.domain.remote.AlexandriaRepository
 import id.neotica.ui.navigation.AlexandriaScreen
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
@@ -23,42 +24,83 @@ class EditBookViewModel(
     private var _chapters: MutableStateFlow<ApiResult<Book>> = MutableStateFlow(ApiResult.Loading())
     val chapters = _chapters.asStateFlow()
 
-    private var _chapterDetail: MutableStateFlow<ApiResult<PaginatedContent>> = MutableStateFlow(ApiResult.Loading())
-    val chapterDetail = _chapterDetail.asStateFlow()
+    private val _chapterCreated = MutableSharedFlow<ApiResult<Chapter>>()
+    val chapterCreated = _chapterCreated.asSharedFlow()
 
-    private val args = savedStateHandle.toRoute<AlexandriaScreen.BookScreen>()
+    private var _isLoading = MutableStateFlow(false)
+    val isLoading = _isLoading.asStateFlow()
+
+    private var _message = MutableSharedFlow<String>()
+    val message = _message.asSharedFlow()
+
+    private var _navigateBack = MutableSharedFlow<Boolean>()
+    val navigateBack = _navigateBack.asSharedFlow()
+
+    private val args = savedStateHandle.toRoute<AlexandriaScreen.EditBookScreen>()
 
     init {
         getChapters()
     }
 
     fun editBook(book: Book) = viewModelScope.launch {
+        _isLoading.value = true
         alexandriaRepo.editBook(book).collect {
-            Log.d("spirit", it.toString())
-            _chapters.value = it
+            when (it) {
+                is ApiResult.Loading -> _isLoading.value = true
+                is ApiResult.Success -> {
+                    _isLoading.value = false
+                    _message.emit("Success.")
+                }
+                is ApiResult.Error -> {
+                    _isLoading.value = false
+                    _message.emit(it.errorMessage.toString())
+                }
+            }
         }
     }
 
-    private fun getChapters() = viewModelScope.launch {
-        alexandriaRepo.getBook(args.url).collect {
-            Log.d("spirit", it.toString())
-            _chapters.value = it
+    fun deleteBook() = viewModelScope.launch {
+        _isLoading.value = true
+        alexandriaRepo.deleteBook(args.id).collect {
+            when (it) {
+                is ApiResult.Loading -> _isLoading.value = true
+                is ApiResult.Success -> {
+                    _isLoading.value = false
+                    _navigateBack.emit(true)
+                    _message.emit("Success deleting book.")
+                }
+                is ApiResult.Error -> {
+                    _isLoading.value = false
+                    _message.emit(it.errorMessage.toString())
+                }
+            }
         }
     }
 
-    fun getChapterDetail(chapterId: Int, page: Int? = 1) = viewModelScope.launch {
-
-        alexandriaRepo.getContents(chapterId, page).collect {
+    fun getChapters() = viewModelScope.launch {
+        alexandriaRepo.getBook(args.id).collect {
             Log.d("spirit", it.toString())
-            _chapterDetail.value = it
+            _chapters.value = it
         }
     }
 
     fun createChapter(chapterRequest: ChapterRequest) = viewModelScope.launch {
-        alexandriaRepo.createChapter(chapterRequest).collect { Log.d("chapter req", it.toString()) }
-    }
-
-    fun createContent(contentRequest: ContentRequest) = viewModelScope.launch {
-        alexandriaRepo.createContent(contentRequest).collect { Log.d("chapter req", it.toString()) }
+        _chapterCreated.emit(ApiResult.Loading())
+        _isLoading.value = true
+        alexandriaRepo.createChapter(chapterRequest).collect {
+            _chapterCreated.emit(it)
+            when (it) {
+                is ApiResult.Loading -> _isLoading.value = true
+                is ApiResult.Success -> {
+                    getChapters()
+                    _isLoading.value = false
+                    _message.emit("Created chapter.")
+                }
+                else -> {
+                    _isLoading.value = false
+                    _message.emit(it.errorMessage.toString())
+                }
+            }
+        }
     }
 }

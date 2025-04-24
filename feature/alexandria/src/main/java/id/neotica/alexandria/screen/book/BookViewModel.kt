@@ -26,20 +26,20 @@ class BookViewModel(
 
     private val args = savedStateHandle.toRoute<AlexandriaScreen.BookScreen>()
 
+
     init {
         getChapters()
     }
 
     private fun getChapters() = viewModelScope.launch {
-        alexandriaRepo.getBook(args.url).collect {
+        alexandriaRepo.getBook(args.id).collect {
             Log.d("spirit", it.toString())
             _chapters.value = it
         }
     }
 
-    fun getChapterDetail(chapterId: Int) = viewModelScope.launch {
-
-        alexandriaRepo.getContents(chapterId).collect {
+    fun getChapterDetail(chapterId: Int, page: Int? = 1) = viewModelScope.launch {
+        alexandriaRepo.getContents(chapterId, page).collect {
             Log.d("spirit", it.toString())
             _chapterDetail.value = it
         }

@@ -6,6 +6,7 @@ import id.neotica.neoverse.di.domainModules
 import id.neotica.neoverse.di.repositoryModules
 import id.neotica.neoverse.di.useCaseModules
 import id.neotica.neoverse.di.viewModelModules
+import id.neotica.network.micro.ktorModule
 import id.neotica.world.di.worldModules
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
@@ -17,6 +18,7 @@ class MyApp: Application() {
         startKoin {
             androidContext(this@MyApp)
             modules(
+                ktorModule,
                 databaseModule,
                 repositoryModules,
                 viewModelModules,
