@@ -1,6 +1,6 @@
 package id.neotica.alexandria.di
 
-import id.neotica.alexandria.R as mpreg
+import id.neotica.alexandria.R
 import id.neotica.auth.di.authModules
 import id.neotica.database.CurrentUserRepositoryImpl
 import id.neotica.database.FriendDaoRepositoryImpl
@@ -54,7 +54,7 @@ val appVariantModule = module {
     single {
         AppVariant(
             appName = "Alexandria",
-            logo = mpreg.drawable.ic_launcher_foreground
+            logo = R.drawable.logo_alexandria
         )
     }
 }

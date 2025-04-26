@@ -29,8 +29,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import id.neotica.droidcore.component.textfield.NeoTextField
 import id.neotica.droidcore.component.textfield.PasswordTextField
@@ -41,6 +41,7 @@ import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.NeoButton
 import id.neotica.ui.state.AppVariant
 import id.neotica.ui.theme.DarkPrimary
+import id.neotica.ui.theme.FontSize
 import org.koin.androidx.compose.koinViewModel
 import androidx.compose.animation.core.rememberInfiniteTransition as rememberInfiniteTransition1
 
@@ -106,12 +107,21 @@ fun LoginView(
         )
     )
 
-    BasicScaffold("Login") {
+    BasicScaffold("Login", topBarVisibility = false, navController = navController) {
+
         Image(
             painterResource(appVariant.logo),
             contentDescription = "${appVariant.appName} Logo",
-            modifier = Modifier.fillMaxWidth().size(200.dp)
-                .graphicsLayer(rotationZ = rotationAngle)
+            modifier = when(appVariant.appName){
+                "Neoverse" -> {
+                    Modifier.fillMaxWidth().size(200.dp)
+                        .graphicsLayer(rotationZ = rotationAngle)
+                }
+                "Alexandria" -> {
+                    Modifier.fillMaxWidth().size(180.dp)
+                }
+                else -> { Modifier }
+            }
         )
         Box(Modifier.padding(horizontal = 16.dp, vertical = 4.dp)) {
             Column {
@@ -136,16 +146,20 @@ fun LoginView(
                         viewModel.login(emailValue.value, passwordValue.value)
                     }
                     Row(
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
                         horizontalArrangement = Arrangement.Center
                     ) {
                         Text(
                             text = "Haven't made an account? ",
-                            fontSize = 14.sp,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            fontSize = FontSize.Smaller,
                             )
                         Text(
                             color = DarkPrimary,
-                            fontSize = 14.sp,
+                            fontSize = FontSize.Smaller,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
                             text = "Register.",
                             modifier = Modifier.clickable {
                                 navController.navigate(Screen.RegisterScreen)
@@ -158,11 +172,12 @@ fun LoginView(
                     ) {
                         Text(
                             text = "Forgot Password? ",
-                            fontSize = 14.sp,
+                            overflow = TextOverflow.Ellipsis,
+                            fontSize = FontSize.Smaller,
                         )
                         Text(
                             color = DarkPrimary,
-                            fontSize = 14.sp,
+                            fontSize = FontSize.Smaller,
                             text = "Reset Password.",
                             modifier = Modifier.clickable {
                                 navController.navigate(Screen.ResetPassword)
