@@ -49,6 +49,8 @@ import id.neotica.network.RavenRepositoryImpl
 import id.neotica.network.SuperAdminRepositoryImpl
 import id.neotica.network.UserRepositoryImpl
 import id.neotica.profile.ProfileViewModel
+import id.neotica.ui.R
+import id.neotica.ui.state.AppVariant
 import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.singleOf
@@ -94,6 +96,15 @@ val useCaseModules = module {
     singleOf(::BuyHeroUseCase)
     singleOf(::GetAuraUseCase)
     singleOf(::BuyItemUseCase)
+}
+
+val appVariantModule = module {
+    single {
+        AppVariant(
+            appName = "Neoverse",
+            logo = R.drawable.logo_app
+        )
+    }
 }
 
 val domainModules = module {

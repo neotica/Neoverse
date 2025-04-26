@@ -46,6 +46,7 @@ import id.neotica.ui.components.MenuItem
 import id.neotica.ui.components.NeoButton
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.Screen
+import id.neotica.ui.state.AppVariant
 import id.neotica.ui.theme.DarkBackground
 import id.neotica.ui.theme.FontSize
 import id.neotica.ui.theme.NegativePrimary
@@ -57,6 +58,7 @@ import org.koin.androidx.compose.koinViewModel
 fun ProfileView(
     navController: NavController,
     paddingValues: PaddingValues,
+    appVariant: AppVariant,
     viewModel: ProfileViewModel = koinViewModel()
 ) {
     var user by remember { mutableStateOf<User?>(null) }
@@ -70,11 +72,27 @@ fun ProfileView(
     val showLogoutDialog = remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
-        if (!viewModel.isLoggedIn()) navController.navigate(Screen.LoginScreen) {
-            popUpTo(RootScreen.HomeNav) {
-                inclusive = true
+        if (!viewModel.isLoggedIn()) {
+            when(appVariant.appName) {
+                "Neoverse" -> {
+                    navController.navigate(Screen.LoginScreen) {
+                        popUpTo(RootScreen.HomeNav) {
+                            inclusive = true
+                        }
+                        launchSingleTop
+                    }
+                }
+                "Alexandria" -> {
+                    navController.navigate(Screen.LoginScreen) {
+                        popUpTo(0) {
+                            inclusive = true
+                        }
+                        launchSingleTop = true
+                    }
+                }
+                else -> {}
             }
-            launchSingleTop
+
         } else {
             viewModel.currentUser.collect { result ->
                 Log.d("profileView", "result $result")
@@ -168,7 +186,8 @@ fun ProfileView(
                     item {
                         user?.let {
                             Column(
-                                Modifier.fillMaxWidth()
+                                Modifier
+                                    .fillMaxWidth()
                                     .padding(vertical = 32.dp),
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {

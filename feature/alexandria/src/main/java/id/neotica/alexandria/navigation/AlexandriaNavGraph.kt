@@ -14,13 +14,17 @@ import id.neotica.alexandria.screen.user.editbook.EditBookView
 import id.neotica.alexandria.screen.user.editbook.chapter.EditChapterView
 import id.neotica.ui.navigation.AlexandriaScreen
 import id.neotica.ui.navigation.RootScreen
+import id.neotica.ui.state.AppVariant
 
-fun NavGraphBuilder.alexandriaNavGraph(navController: NavController) {
+fun NavGraphBuilder.alexandriaNavGraph(
+    navController: NavController,
+    appVariant: AppVariant,
+) {
     navigation<RootScreen.AlexandriaNav>(
         startDestination = AlexandriaScreen.HomeScreen
     ) {
         composable<AlexandriaScreen.HomeScreen> {
-            LibraryView(navController)
+            LibraryView(navController, appVariant)
         }
         composable<AlexandriaScreen.BookScreen> {
             BookView(navController)

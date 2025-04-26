@@ -23,14 +23,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.vectorResource
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import id.neotica.alexandria.presentation.navigation.NavGraph
-import id.neotica.ui.R
 import id.neotica.ui.components.navigation.CustomNavBar
 import id.neotica.ui.components.navigation.CustomNavigationSuiteScaffold
 import id.neotica.ui.components.navigation.NavigationSuiteScaffoldDefaults
@@ -40,6 +37,7 @@ import id.neotica.ui.navigation.NavigationItem
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.Screen
 import id.neotica.ui.navigation.WorldScreen
+import id.neotica.ui.navigation.showExcept
 import id.neotica.ui.state.AdaptiveState
 import id.neotica.ui.theme.DarkBackground
 import id.neotica.ui.theme.DarkPrimary
@@ -57,17 +55,17 @@ fun MainView() {
             NavigationItem(
                 title = "Home",
                 icon = Icons.Default.Home,
-                screen = RootScreen.HomeNav
+                screen = RootScreen.AlexandriaNav
             ),
-            NavigationItem(
-                title = "World",
-                icon = ImageVector.vectorResource(R.drawable.ic_world),
-                screen = RootScreen.WorldNav
-            ),
+//            NavigationItem(
+//                title = "World",
+//                icon = ImageVector.vectorResource(R.drawable.ic_world),
+//                screen = RootScreen.WorldNav
+//            ),
             NavigationItem(
                 title = "Profile",
                 icon = Icons.Default.AccountCircle,
-                screen = RootScreen.ProfileNav
+                screen = Screen.ProfileScreen
             )
         )
 
@@ -101,7 +99,6 @@ fun MainView() {
         )
 
         val alexandriaSet = setOf(
-            AlexandriaScreen.HomeScreen,
             AlexandriaScreen.BookScreen(),
             AlexandriaScreen.UserLibraryScreen,
             AlexandriaScreen.EditBookScreen(),
@@ -112,10 +109,8 @@ fun MainView() {
 
         val bottomBarExcludedRoutes = screenSet + worldScreen + alexandriaSet
 
-        val includeRoute = bottomBarExcludedRoutes.none {
-            if (navBackStackEntry?.destination?.route == null) true else
-                navBackStackEntry?.destination?.hasRoute(it::class) == true
-        }
+        val includeRoute = navBackStackEntry.showExcept(bottomBarExcludedRoutes)
+
         Log.d("currentScreen", navBackStackEntry?.destination?.route.toString())
 
         val mapAdaptive = AdaptiveState.from(currentWindowAdaptiveInfo())
@@ -158,7 +153,7 @@ fun MainView() {
                                         onClick = {
                                             navController.navigate(it.screen) {
                                                 navController.graph.startDestinationId.let { route ->
-                                                    popUpTo(Screen.HomeScreen) {
+                                                    popUpTo(AlexandriaScreen.HomeScreen) {
                                                         saveState = true
                                                         inclusive = false
                                                     }
@@ -182,7 +177,7 @@ fun MainView() {
                         paddingValues = PaddingValues(
                             top = innerPadding.calculateTopPadding(),
                             bottom = innerPadding.calculateBottomPadding() - WindowInsets.systemBars.asPaddingValues().calculateBottomPadding()
-                        ),
+                        )
                     )
                 }
             }

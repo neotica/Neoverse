@@ -39,6 +39,7 @@ import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.Screen
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.NeoButton
+import id.neotica.ui.state.AppVariant
 import id.neotica.ui.theme.DarkPrimary
 import org.koin.androidx.compose.koinViewModel
 import androidx.compose.animation.core.rememberInfiniteTransition as rememberInfiniteTransition1
@@ -46,6 +47,7 @@ import androidx.compose.animation.core.rememberInfiniteTransition as rememberInf
 @Composable
 fun LoginView(
     navController: NavController,
+    appVariant: AppVariant,
     viewModel: LoginViewModel = koinViewModel()) {
 
     var isButtonPressed by remember { mutableStateOf(false) }
@@ -64,11 +66,23 @@ fun LoginView(
                     is ApiResult.Success -> {
                         Log.d("neotica", "success ${result.data}")
                         Toast.makeText(context, result.data, Toast.LENGTH_SHORT).show()
-                        navController.navigate(RootScreen.HomeNav) {
-                            popUpTo(RootScreen.HomeNav) {
-                                inclusive = true
+                        when {
+                            appVariant.appName == "Alexandria" -> {
+                                navController.navigate(RootScreen.AlexandriaNav) {
+                                    popUpTo(0) {
+                                        inclusive = true
+                                    }
+                                    launchSingleTop
+                                }
                             }
-                            launchSingleTop
+                            else -> {
+                                navController.navigate(RootScreen.HomeNav) {
+                                    popUpTo(RootScreen.HomeNav) {
+                                        inclusive = true
+                                    }
+                                    launchSingleTop
+                                }
+                            }
                         }
                     }
                     is ApiResult.Error -> {
@@ -94,9 +108,8 @@ fun LoginView(
 
     BasicScaffold("Login") {
         Image(
-            painterResource(
-            id.neotica.ui.R.drawable.logo_app),
-            contentDescription = "Neoverse Logo",
+            painterResource(appVariant.logo),
+            contentDescription = "${appVariant.appName} Logo",
             modifier = Modifier.fillMaxWidth().size(200.dp)
                 .graphicsLayer(rotationZ = rotationAngle)
         )

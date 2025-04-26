@@ -11,12 +11,16 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import id.neotica.alexandria.navigation.alexandriaNavGraph
 import id.neotica.ui.navigation.RootScreen
+import id.neotica.ui.state.AppVariant
+import org.koin.compose.getKoin
 
 @Composable
 fun NavGraph(
     navController: NavHostController,
     paddingValues: PaddingValues,
 ) {
+    val appVariant: AppVariant = getKoin().get()
+
     NavHost(
         navController,
         startDestination = RootScreen.AlexandriaNav,
@@ -29,7 +33,8 @@ fun NavGraph(
 //        composable<Screen.Setting> { SettingView(paddingValues) }
 //        composable<Screen.DumpScreen> { DumpView(navController, paddingValues = paddingValues) }
 
-        alexandriaNavGraph(navController)
+        alexandriaNavGraph(navController, appVariant)
+        profileNavGraph(navController, paddingValues, appVariant)
 
 //        profileNavGraph(navController, paddingValues)
 //        worldNavGraph(navController, paddingValues)

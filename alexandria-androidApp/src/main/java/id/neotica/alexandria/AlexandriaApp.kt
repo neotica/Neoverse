@@ -1,6 +1,7 @@
 package id.neotica.alexandria
 
 import android.app.Application
+import id.neotica.alexandria.di.appVariantModule
 import id.neotica.alexandria.di.repositoryModules
 import id.neotica.alexandria.di.useCaseModules
 import id.neotica.alexandria.di.viewModelModules
@@ -21,6 +22,7 @@ class AlexandriaApp: Application() {
                 repositoryModules,
                 viewModelModules,
                 useCaseModules,
+                appVariantModule
             )
         }
     }

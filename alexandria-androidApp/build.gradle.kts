@@ -47,6 +47,7 @@ dependencies {
     implementation(projects.core.network)
     implementation(projects.core.ui)
     implementation(projects.core.core)
+    implementation(projects.feature.profile)
     implementation(projects.feature.auth)
     implementation(projects.feature.alexandria)
     implementation(projects.feature.world)
