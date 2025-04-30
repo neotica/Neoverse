@@ -9,7 +9,8 @@ import id.neotica.domain.ApiResult
 import id.neotica.domain.model.alexandria.Book
 import id.neotica.domain.model.alexandria.Chapter
 import id.neotica.domain.model.alexandria.chapter.ChapterRequest
-import id.neotica.domain.remote.AlexandriaRepository
+import id.neotica.domain.remote.alexandria.BookRepository
+import id.neotica.domain.remote.alexandria.ChapterRepository
 import id.neotica.ui.navigation.AlexandriaScreen
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,7 +19,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class EditBookViewModel(
-    private val alexandriaRepo: AlexandriaRepository,
+    private val bookRepo: BookRepository,
+    private val chapterRepo: ChapterRepository,
     savedStateHandle: SavedStateHandle
 ): ViewModel() {
     private var _chapters: MutableStateFlow<ApiResult<Book>> = MutableStateFlow(ApiResult.Loading())
@@ -44,7 +46,7 @@ class EditBookViewModel(
 
     fun editBook(book: Book) = viewModelScope.launch {
         _isLoading.value = true
-        alexandriaRepo.editBook(book).collect {
+        bookRepo.editBook(book).collect {
             when (it) {
                 is ApiResult.Loading -> _isLoading.value = true
                 is ApiResult.Success -> {
@@ -61,7 +63,7 @@ class EditBookViewModel(
 
     fun deleteBook() = viewModelScope.launch {
         _isLoading.value = true
-        alexandriaRepo.deleteBook(args.id).collect {
+        bookRepo.deleteBook(args.id).collect {
             when (it) {
                 is ApiResult.Loading -> _isLoading.value = true
                 is ApiResult.Success -> {
@@ -78,7 +80,7 @@ class EditBookViewModel(
     }
 
     fun getChapters() = viewModelScope.launch {
-        alexandriaRepo.getBook(args.id).collect {
+        bookRepo.getBook(args.id).collect {
             Log.d("spirit", it.toString())
             _chapters.value = it
         }
@@ -87,7 +89,7 @@ class EditBookViewModel(
     fun createChapter(chapterRequest: ChapterRequest) = viewModelScope.launch {
         _chapterCreated.emit(ApiResult.Loading())
         _isLoading.value = true
-        alexandriaRepo.createChapter(chapterRequest).collect {
+        chapterRepo.createChapter(chapterRequest).collect {
             _chapterCreated.emit(it)
             when (it) {
                 is ApiResult.Loading -> _isLoading.value = true

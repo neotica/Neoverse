@@ -5,14 +5,14 @@ import androidx.lifecycle.viewModelScope
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.alexandria.Book
 import id.neotica.domain.model.alexandria.book.BookRequest
-import id.neotica.domain.remote.AlexandriaRepository
+import id.neotica.domain.remote.alexandria.BookRepository
 import id.neotica.domain.usecase.GetUserNameUseCase
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 
 class AddBookViewModel(
-    private val alexandriaRepo: AlexandriaRepository,
+    private val bookRepo: BookRepository,
     private val getUserNameUseCase: GetUserNameUseCase
 ): ViewModel() {
     private var _book = MutableSharedFlow<ApiResult<Book>>()
@@ -34,7 +34,7 @@ class AddBookViewModel(
             language = language,
             isPublished = false
         )
-        alexandriaRepo.addBook(book).collect {
+        bookRepo.addBook(book).collect {
             when(it) {
                 is ApiResult.Loading -> _isLoading.emit(true)
                 is ApiResult.Success -> {

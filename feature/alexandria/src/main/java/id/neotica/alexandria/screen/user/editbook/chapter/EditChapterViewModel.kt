@@ -10,7 +10,8 @@ import id.neotica.domain.model.alexandria.ChapterContent
 import id.neotica.domain.model.alexandria.ContentRequest
 import id.neotica.domain.model.alexandria.content.NewContentRequest
 import id.neotica.domain.pagination.PaginatedContent
-import id.neotica.domain.remote.AlexandriaRepository
+import id.neotica.domain.remote.alexandria.ChapterRepository
+import id.neotica.domain.remote.alexandria.ContentRepository
 import id.neotica.ui.navigation.AlexandriaScreen
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,7 +20,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class EditChapterViewModel(
-    private val alexandriaRepo: AlexandriaRepository,
+    private val chapterRepo: ChapterRepository,
+    private val contentRepo: ContentRepository,
     savedStateHandle: SavedStateHandle
 ): ViewModel() {
     private var _chapterDetail: MutableStateFlow<ApiResult<PaginatedContent>> = MutableStateFlow(ApiResult.Loading())
@@ -43,7 +45,7 @@ class EditChapterViewModel(
     }
 
     fun getChapterDetail(page: Int? = 1) = viewModelScope.launch {
-        alexandriaRepo.getContents(args.chapterId, page).collect {
+        contentRepo.getContents(args.chapterId, page).collect {
             Log.d("chapterdetailvm", it.toString())
             _chapterDetail.value = it
         }
@@ -51,14 +53,14 @@ class EditChapterViewModel(
 
     fun deleteChapter() = viewModelScope.launch {
         _chapterDeleted.emit(ApiResult.Loading())
-        alexandriaRepo.deleteChapter(args.chapterId).collect {
+        chapterRepo.deleteChapter(args.chapterId).collect {
             _chapterDeleted.emit(it)
         }
     }
 
     fun createContent(content: String) = viewModelScope.launch {
         _contentCreated.emit(ApiResult.Loading())
-        alexandriaRepo.createContent(
+        contentRepo.createContent(
             ContentRequest(
                 content = content,
                 chapterId = args.chapterId
@@ -69,7 +71,7 @@ class EditChapterViewModel(
     }
 
     fun editContent(content: String, id: Int, page: Int) = viewModelScope.launch {
-        alexandriaRepo.editContent(
+        contentRepo.editContent(
             content = NewContentRequest(newContent = content),
             id = id,
             page = page

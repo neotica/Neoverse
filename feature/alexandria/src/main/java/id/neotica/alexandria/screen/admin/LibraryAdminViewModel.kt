@@ -6,15 +6,15 @@ import androidx.lifecycle.viewModelScope
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.alexandria.Book
 import id.neotica.domain.pagination.Pagination
-import id.neotica.domain.remote.AlexandriaAdminRepository
 import id.neotica.domain.remote.PermissionRepository
+import id.neotica.domain.remote.alexandria.BookRepository
 import id.neotica.domain.usecase.GetUserNameUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class LibraryAdminViewModel(
-    private val adminRepo: AlexandriaAdminRepository,
+    private val bookRepo: BookRepository,
     private val permissionRepository: PermissionRepository,
     private val getUserNameUseCase: GetUserNameUseCase
 ): ViewModel() {
@@ -33,7 +33,7 @@ class LibraryAdminViewModel(
     }
 
     private fun getBooks() = viewModelScope.launch {
-        adminRepo.getBooks().collect {
+        bookRepo.getBooks().collect {
             _booksOld.value = it
         }
     }
@@ -43,9 +43,6 @@ class LibraryAdminViewModel(
             if (it is ApiResult.Success) {
                 _permission.value = it.data?.contains(userName()) == true
                 Log.d("permissionList", it.toString())
-//                Log.d("permissionList2", it.data!!.contains("laetuz") .toString())
-//                Log.d("permissionList3", userName() .toString())
-//                Log.d("permission", _permission.value.toString())
             }
         }
     }

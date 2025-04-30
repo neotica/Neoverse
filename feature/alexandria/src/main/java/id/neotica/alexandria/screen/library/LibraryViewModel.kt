@@ -11,16 +11,16 @@ import id.neotica.domain.local.CurrentUserRepository
 import id.neotica.domain.model.User
 import id.neotica.domain.model.alexandria.Book
 import id.neotica.domain.pagination.Pagination
-import id.neotica.domain.remote.AlexandriaRepository
 import id.neotica.domain.remote.PermissionRepository
 import id.neotica.domain.remote.UserRepository
+import id.neotica.domain.remote.alexandria.BookRepository
 import id.neotica.domain.usecase.GetUserNameUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class LibraryViewModel(
-    private val alexandriaRepo: AlexandriaRepository,
+    private val bookRepo: BookRepository,
     private val permissionRepository: PermissionRepository,
     private val getUserNameUseCase: GetUserNameUseCase,
     private val userRepo: UserRepository,
@@ -50,7 +50,7 @@ class LibraryViewModel(
     }
 
     private fun getBooks() = viewModelScope.launch {
-        alexandriaRepo.getBooks().collect {
+        bookRepo.getBooks().collect {
             _booksOld.value = it
         }
     }
