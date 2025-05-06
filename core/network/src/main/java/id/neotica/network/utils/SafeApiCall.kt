@@ -3,10 +3,11 @@ package id.neotica.network.utils
 import id.neotica.domain.ApiResult
 import io.ktor.client.plugins.HttpRequestTimeoutException
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.io.IOException
 
-inline fun <T> safeApiCall(crossinline apiCall: suspend () -> T): Flow<ApiResult<T>> = flow {
+/*inline fun <T> safeApiCall(crossinline apiCall: suspend () -> T): Flow<ApiResult<T>> = flow {
     try {
         val result = apiCall()
         emit(ApiResult.Success(result))
@@ -17,4 +18,12 @@ inline fun <T> safeApiCall(crossinline apiCall: suspend () -> T): Flow<ApiResult
     } catch (e: Exception) { // Handles other unexpected errors
         emit(ApiResult.Error("Unexpected error: ${e.message}"))
     }
+}*/
+
+inline fun <T> safeApiCall(crossinline apiCall: suspend () -> T): Flow<ApiResult<T>> = flow {
+    emit(ApiResult.Loading<T>())
+    val result = apiCall()
+    emit(ApiResult.Success(result))
+}.catch { e ->
+    emit(ApiResult.Error<T>(e.message ?: "Unknown error"))
 }

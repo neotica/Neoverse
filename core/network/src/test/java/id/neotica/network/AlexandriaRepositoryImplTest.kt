@@ -1,8 +1,10 @@
 package id.neotica.network
 
 import id.neotica.domain.ApiResult
+import id.neotica.network.dummy.FakeTokenProvider
 import io.ktor.client.HttpClient
-import io.ktor.client.engine.mock.*
+import io.ktor.client.engine.mock.MockEngine
+import io.ktor.client.engine.mock.respond
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
@@ -10,7 +12,10 @@ import io.ktor.http.headersOf
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.mockito.MockitoAnnotations
@@ -18,6 +23,7 @@ import org.mockito.MockitoAnnotations
 class AlexandriaRepositoryImplTest {
 
     private lateinit var repository: AlexandriaRepositoryImpl
+    val fakeTokenProvider = FakeTokenProvider()
 
     private fun createMockClient(
         status: HttpStatusCode = HttpStatusCode.OK,
@@ -73,7 +79,8 @@ class AlexandriaRepositoryImplTest {
         """.trimIndent()
 
         val client = createMockClient(content = mockResponse)
-        repository = AlexandriaRepositoryImpl(client)
+//        val token = token.getToken()
+        repository = AlexandriaRepositoryImpl(client, fakeTokenProvider)
 
         repository.getBooks().collect { result ->
             assertTrue(result is ApiResult.Success)

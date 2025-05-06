@@ -28,7 +28,7 @@ import kotlinx.coroutines.flow.Flow
 
 class AlexandriaRepositoryImpl(
     private val client: HttpClient,
-    private val token: TokenProvider
+    private val token: TokenProvider? = null
 ): BookRepository, ChapterRepository, ContentRepository {
 
     override fun getBooks(): Flow<ApiResult<Pagination<Book>>> = safeApiCall {
