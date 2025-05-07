@@ -38,7 +38,6 @@ import id.neotica.neoverse.presentation.screen.main.MainViewModel
 import id.neotica.neoverse.presentation.screen.sharing.SharingViewModel
 import id.neotica.neoverse.utils.connectionchecker.AndroidConnectivityObserver
 import id.neotica.network.AlexandriaAdminRepositoryImpl
-import id.neotica.network.AlexandriaRepositoryImpl
 import id.neotica.network.AuraRepositoryImpl
 import id.neotica.network.AuthRepositoryImpl
 import id.neotica.network.ChatRepositoryImpl
@@ -62,7 +61,6 @@ import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
-import org.koin.dsl.binds
 import org.koin.dsl.module
 
 val repositoryModules = module {
@@ -80,7 +78,6 @@ val repositoryModules = module {
     singleOf(::SuperAdminRepositoryImpl) bind SuperAdminRepository::class
     singleOf(::AndroidConnectivityObserver) bind ConnectivityObserver::class
     singleOf(::RavenRepositoryImpl) bind RavenRepository::class
-    singleOf(::AlexandriaRepositoryImpl) binds(arrayOf(BookRepository::class, ChapterRepository::class, ContentRepository::class))
     singleOf(::AlexandriaAdminRepositoryImpl) bind AlexandriaAdminRepository::class
     singleOf(::PermissionRepositoryImpl) bind PermissionRepository::class
     singleOf(::BookRepositoryImpl) bind BookRepository::class

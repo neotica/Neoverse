@@ -31,6 +31,7 @@ class BookRepositoryImplTest {
     private lateinit var client: HttpClient
     private lateinit var repository: BookRepository
     val fakeTokenProvider = FakeTokenProvider()
+    val dummy = BookDummy()
 
     private fun createMockClient(
         status: HttpStatusCode = HttpStatusCode.OK,
@@ -64,7 +65,7 @@ class BookRepositoryImplTest {
     @Test
     fun `emits Loading then Success when getBooks is called`() = runTest {
         // Given
-        client = createMockClient(content = responseEmpty)
+        client = createMockClient(content = dummy.responseEmpty)
         repository = BookRepositoryImpl(client, fakeTokenProvider)
 
         // When
@@ -77,8 +78,8 @@ class BookRepositoryImplTest {
     @Test
     fun `GetBooks, Successful API call with valid book data`() = runBlocking {
         // Given
-        val expectedBook = listOf<Book>(mockBook)
-        client = createMockClient(content = responseSuccess)
+        val expectedBook = listOf<Book>(dummy.mockBook)
+        client = createMockClient(content = dummy.responseSuccess)
         repository = BookRepositoryImpl(client, fakeTokenProvider)
         // When
         val result = repository.getBooks().last()
@@ -95,7 +96,7 @@ class BookRepositoryImplTest {
         // Verify that getBooks() emits ApiResult.Success with a Pagination<Book> object where the book list is empty, simulating a scenario where the API returns no books.
         // Given
         val expectedBook = emptyList<Book>()
-        client = createMockClient(content = responseEmpty)
+        client = createMockClient(content = dummy.responseEmpty)
         repository = BookRepositoryImpl(client, fakeTokenProvider)
         // When
         val result = repository.getBooks().last()
@@ -176,7 +177,7 @@ class BookRepositoryImplTest {
             language = "EN",
             isPublished = true
         )
-        val expectedBook = mockBook
+        val expectedBook = dummy.mockBook
         val jsonResponse = """
             {
                 "uuid": "${expectedBook.id}",
@@ -210,51 +211,9 @@ class BookRepositoryImplTest {
         val emission = repository.addBook(bookRequest).toList()
 
         //Then
-//        assertTrue(emission.first() is ApiResult.Loading)
         assertTrue(emission.last() is ApiResult.Success)
         println("emission: "+emission.last().data .toString())
         val resultBook = (emission[1] as ApiResult.Success).data
         assertEquals(expectedBook, resultBook)
-    }
-
-    companion object {
-        val mockBook = Book(
-            id = "2ea3741e-4b0d-42ad-8b5b-e4be983611fc",
-            title = "Frankenstein",
-            author = "tarakh",
-            language = "EN",
-            isPublished = true,
-            createdAt = 1745407419573,
-        )
-        val responseSuccess = """
-            {
-                    "content": [
-                        {
-                            "uuid": "2ea3741e-4b0d-42ad-8b5b-e4be983611fc",
-                            "title": "Frankenstein",
-                            "language": "EN",
-                            "isPublished": true,
-                            "author": "tarakh",
-                            "createdAt": 1745407419573
-                        }
-                    ],
-                    "currentPage": 1,
-                    "totalPages": 1,
-                    "pageSize": 10,
-                    "hasNextPage": false,
-                    "hasPreviousPage": false
-            }
-        """.trimIndent()
-
-        val responseEmpty = """
-            {
-                    "content": [],
-                    "currentPage": 0,
-                    "totalPages": 0,
-                    "pageSize": 10,
-                    "hasNextPage": false,
-                    "hasPreviousPage": false
-            }
-        """.trimIndent()
     }
 }

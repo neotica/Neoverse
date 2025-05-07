@@ -18,7 +18,6 @@ import id.neotica.domain.remote.usecase.TokenProvider
 import id.neotica.domain.usecase.GetUserIdUseCase
 import id.neotica.domain.usecase.GetUserNameUseCase
 import id.neotica.network.AlexandriaAdminRepositoryImpl
-import id.neotica.network.AlexandriaRepositoryImpl
 import id.neotica.network.AuthRepositoryImpl
 import id.neotica.network.FirebaseRepositoryImpl
 import id.neotica.network.PermissionRepositoryImpl
@@ -33,7 +32,6 @@ import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
-import org.koin.dsl.binds
 import org.koin.dsl.module
 
 val repositoryModules = module {
@@ -42,7 +40,6 @@ val repositoryModules = module {
     singleOf(::FriendDaoRepositoryImpl) bind FriendDaoRepository::class
     singleOf(::CurrentUserRepositoryImpl) bind CurrentUserRepository::class
     singleOf(::FirebaseRepositoryImpl) bind FirebaseRepository::class
-    singleOf(::AlexandriaRepositoryImpl) binds(arrayOf(BookRepository::class, ChapterRepository::class, ContentRepository::class))
     singleOf(::AlexandriaAdminRepositoryImpl) bind AlexandriaAdminRepository::class
     singleOf(::PermissionRepositoryImpl) bind PermissionRepository::class
     singleOf(::BookRepositoryImpl) bind BookRepository::class
