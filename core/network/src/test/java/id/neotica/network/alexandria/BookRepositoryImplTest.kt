@@ -2,6 +2,7 @@ package id.neotica.network.alexandria
 
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.alexandria.Book
+import id.neotica.domain.model.alexandria.book.BookRequest
 import id.neotica.domain.remote.alexandria.BookRepository
 import id.neotica.network.dummy.FakeTokenProvider
 import io.ktor.client.HttpClient
@@ -15,6 +16,7 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.last
+import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.Json
@@ -73,7 +75,7 @@ class BookRepositoryImplTest {
     }
 
     @Test
-    fun `Successful API call with valid book data`() = runBlocking {
+    fun `GetBooks, Successful API call with valid book data`() = runBlocking {
         // Given
         val expectedBook = listOf<Book>(mockBook)
         client = createMockClient(content = responseSuccess)
@@ -89,7 +91,7 @@ class BookRepositoryImplTest {
     }
 
     @Test
-    fun `Successful API call with empty book list`() = runBlocking {
+    fun `GetBooks, Successful API call with empty book list`() = runBlocking {
         // Verify that getBooks() emits ApiResult.Success with a Pagination<Book> object where the book list is empty, simulating a scenario where the API returns no books.
         // Given
         val expectedBook = emptyList<Book>()
@@ -167,9 +169,52 @@ class BookRepositoryImplTest {
     }
 
     @Test
-    fun `Concurrent calls handling`() {
-        // While `safeApiCall` might handle some concurrency, consider testing how concurrent calls to getBooks() behave.
-        // TODO implement test
+    fun `addBook emits loading then success on VALID POST`() = runTest {
+        val bookRequest = BookRequest(
+            title = "Frankenstein",
+            author = "tarakh",
+            language = "EN",
+            isPublished = true
+        )
+        val expectedBook = mockBook
+        val jsonResponse = """
+            {
+                "uuid": "${expectedBook.id}",
+                "title": "${expectedBook.title}",
+                "author": "${expectedBook.author}",
+                "language": "${expectedBook.language}",
+                "isPublished": ${expectedBook.isPublished},
+                "createdAt": ${expectedBook.createdAt}
+            }
+        """.trimIndent()
+
+        val mockEngine = MockEngine { request ->
+            assertEquals("POST", request.method.value)
+            assertEquals("/alexandria", request.url.encodedPath)
+            assertEquals("bearer ${fakeTokenProvider.getToken()}", "bearer dfsdsf")
+
+            respond(
+                content = jsonResponse,
+                status = HttpStatusCode.Created,
+                headers = headersOf(HttpHeaders.ContentType, "application/json")
+            )
+        }
+
+        val client = HttpClient(mockEngine) {
+            install(ContentNegotiation) { json(Json { ignoreUnknownKeys = true }) }
+        }
+
+        val repository = BookRepositoryImpl(client, fakeTokenProvider)
+
+        //When
+        val emission = repository.addBook(bookRequest).toList()
+
+        //Then
+//        assertTrue(emission.first() is ApiResult.Loading)
+        assertTrue(emission.last() is ApiResult.Success)
+        println("emission: "+emission.last().data .toString())
+        val resultBook = (emission[1] as ApiResult.Success).data
+        assertEquals(expectedBook, resultBook)
     }
 
     companion object {

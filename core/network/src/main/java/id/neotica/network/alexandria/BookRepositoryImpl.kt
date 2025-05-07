@@ -20,7 +20,7 @@ import kotlinx.coroutines.flow.Flow
 
 class BookRepositoryImpl(
     private val client: HttpClient,
-    private val token: TokenProvider
+    private val token: TokenProvider? = null
 ): BookRepository {
     override fun getBooks(): Flow<ApiResult<Pagination<Book>>> = safeApiCall {
         client.get("${baseUrl}/alexandria"){
