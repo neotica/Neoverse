@@ -1,6 +1,7 @@
 package id.neotica.network
 
 import id.neotica.domain.ApiResult
+import id.neotica.network.alexandria.BookRepositoryImpl
 import id.neotica.network.dummy.FakeTokenProvider
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine
@@ -22,7 +23,7 @@ import org.mockito.MockitoAnnotations
 
 class AlexandriaRepositoryImplTest {
 
-    private lateinit var repository: AlexandriaRepositoryImpl
+    private lateinit var repository: BookRepositoryImpl
     val fakeTokenProvider = FakeTokenProvider()
 
     private fun createMockClient(
@@ -80,7 +81,7 @@ class AlexandriaRepositoryImplTest {
 
         val client = createMockClient(content = mockResponse)
 //        val token = token.getToken()
-        repository = AlexandriaRepositoryImpl(client, fakeTokenProvider)
+        repository = BookRepositoryImpl(client, fakeTokenProvider)
 
         repository.getBooks().collect { result ->
             assertTrue(result is ApiResult.Success)
@@ -119,7 +120,7 @@ class AlexandriaRepositoryImplTest {
 
         val client = createMockClient(content = mockResponse)
 
-        repository = AlexandriaRepositoryImpl(client)
+        repository = BookRepositoryImpl(client, fakeTokenProvider)
 
         repository.getBooks().collect { result ->
             assertTrue(result is ApiResult.Success)
@@ -147,7 +148,7 @@ class AlexandriaRepositoryImplTest {
             contentType = "text/plain"
         )
 
-        repository = AlexandriaRepositoryImpl(client)
+        repository = BookRepositoryImpl(client)
 
         repository.getBooks().collect { result ->
             assertTrue(result is ApiResult.Error)

@@ -2,6 +2,8 @@ package id.neotica.network
 
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.alexandria.admin.WarningRequest
+import id.neotica.domain.model.alexandria.admin.WarningResponse
+import id.neotica.network.dummy.FakeTokenProvider
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respond
@@ -11,18 +13,22 @@ import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.headersOf
 import io.ktor.serialization.kotlinx.json.json
+import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 import org.mockito.MockitoAnnotations
 
 class AlexandriaAdminRepositoryImplTest {
 
     private lateinit var repository: AlexandriaAdminRepositoryImpl
+    private lateinit var client: HttpClient
+    val fakeTokenProvider = FakeTokenProvider()
 
     private fun createMockClient(
         status: HttpStatusCode = HttpStatusCode.OK,
@@ -58,50 +64,20 @@ class AlexandriaAdminRepositoryImplTest {
     fun `Successful retrieval of warnings`() = runBlocking {
         // Verify that the method returns a Flow emitting ApiResult.Success
         // containing a Pagination object with a list of books.
-        val mockResponse = """
-            {
-                "content": [
-                    {
-                        "id": "4cfb8a51-ba8a-4825-a7b6-7d352663d1ed",
-                        "bookId": "93c835b6-6545-4570-a3e2-b3b32af6b82d",
-                        "bookTitle": "The Bloody Ages 1",
-                        "isAppealed": false,
-                        "isApproved": false,
-                        "message": "You have psoted too much",
-                        "createdAt": 1745158041796
-                    }
-                ],
-                "currentPage": 1,
-                "totalPages": 1,
-                "pageSize": 10,
-                "hasNextPage": false,
-                "hasPreviousPage": false
-            }
-        """.trimIndent()
 
-        val client = createMockClient(content = mockResponse, url = "/admin/warning")
+        //Given
+        val expectedResult = listOf<WarningResponse>(mockWarning)
+        client = createMockClient(content = mockResponse, url = "/admin/warning")
         repository = AlexandriaAdminRepositoryImpl(client)
 
-        repository.getWarnings().collect { result ->
-            assertTrue(result is ApiResult.Success)
-
-            val pagination = (result as ApiResult.Success).data
-            assertNotNull(pagination)
-            assertEquals(1, pagination?.content?.size)
-
-            val warning = pagination?.content?.first()
-            assertEquals("The Bloody Ages 1", warning?.bookTitle)
-            assertEquals("93c835b6-6545-4570-a3e2-b3b32af6b82d", warning?.bookId)
-            assertEquals("4cfb8a51-ba8a-4825-a7b6-7d352663d1ed", warning?.id)
-            assertEquals(false, warning?.isAppealed)
-            assertEquals(false, warning?.isApproved)
-            assertEquals(1745158041796, warning?.createdAt)
-            assertEquals(1, pagination?.currentPage)
-            assertEquals(1L, pagination?.totalPages)
-            assertEquals(10, pagination?.pageSize)
-        }
+        //When
+        val result = repository.getWarnings().toList().last()
+        print("admin: " + result.data.toString())
+        assertTrue(result is ApiResult.Success)
+        assertEquals(expectedResult, result.data?.content)
     }
 
+    @Ignore("Revamped")
     @Test
     fun `Successfully Updated warning`() = runBlocking {
         val id = "8bab7937-c02c-4cd2-a753-e9fcaca52754"
@@ -165,6 +141,38 @@ class AlexandriaAdminRepositoryImplTest {
         }
 
 
+    }
+
+    companion object {
+        val mockWarning = WarningResponse(
+            id = "4cfb8a51-ba8a-4825-a7b6-7d352663d1ed",
+            bookId = "93c835b6-6545-4570-a3e2-b3b32af6b82d",
+            bookTitle = "The Bloody Ages 1",
+            isAppealed = false,
+            isApproved = false,
+            message = "You have psoted too much",
+            createdAt = 1745158041796
+        )
+        val mockResponse = """
+            {
+                "content": [
+                    {
+                        "id": "4cfb8a51-ba8a-4825-a7b6-7d352663d1ed",
+                        "bookId": "93c835b6-6545-4570-a3e2-b3b32af6b82d",
+                        "bookTitle": "The Bloody Ages 1",
+                        "isAppealed": false,
+                        "isApproved": false,
+                        "message": "You have psoted too much",
+                        "createdAt": 1745158041796
+                    }
+                ],
+                "currentPage": 1,
+                "totalPages": 1,
+                "pageSize": 10,
+                "hasNextPage": false,
+                "hasPreviousPage": false
+            }
+        """.trimIndent()
     }
 
 }

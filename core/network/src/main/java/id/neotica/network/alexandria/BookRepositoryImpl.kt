@@ -28,19 +28,21 @@ class BookRepositoryImpl(
     }
 
     override fun addBook(book: BookRequest): Flow<ApiResult<Book>> = safeApiCall {
+        val tokenResult = token?.getToken()
         client.post("$baseUrl/alexandria") {
             headers {
                 append("Content-Type", "application/json")
-                append("Authorization", "Bearer $token")
+                append("Authorization", "Bearer $tokenResult")
             }
             setBody(book)
         }.body<Book>()
     }
 
     override fun getUserBooks(username: String): Flow<ApiResult<List<Book>>> = safeApiCall {
+        val tokenResult = token?.getToken()
         client.get("${baseUrl}/alexandria/book"){
             headers {
-                append("Authorization", "Bearer $token")
+                append("Authorization", "Bearer $tokenResult")
             }
             url { parameters.append("author", username) }
         }.body<List<Book>>()
@@ -51,9 +53,10 @@ class BookRepositoryImpl(
     }
 
     override fun editBook(book: Book): Flow<ApiResult<Book>> = safeApiCall {
+        val tokenResult = token?.getToken()
         client.put("${baseUrl}/alexandria/${book.id}"){
             headers {
-                append("Authorization", "Bearer $token")
+                append("Authorization", "Bearer $tokenResult")
                 append("Content-Type", "application/json")
             }
             setBody(book)
@@ -61,10 +64,11 @@ class BookRepositoryImpl(
     }
 
     override fun deleteBook(bookId: String): Flow<ApiResult<String>> = safeApiCall {
+        val tokenResult = token?.getToken()
         client.delete("${baseUrl}/alexandria/$bookId") {
             headers {
                 append("Content-Type", "application/json")
-                append("Authorization", "Bearer $token")
+                append("Authorization", "Bearer $tokenResult")
             }
         }.body<String>()
     }
