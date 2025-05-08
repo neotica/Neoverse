@@ -4,19 +4,34 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import id.neotica.domain.ApiResult
 import id.neotica.domain.remote.AuthRepository
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 
 class LoginViewModel(
     private val authRepo: AuthRepository,
 ): ViewModel() {
 
-    private var _loginCred: MutableStateFlow<ApiResult<String>> = MutableStateFlow(ApiResult.Loading())
-    val loginCred = _loginCred.asStateFlow()
+    private var _loginResult = MutableSharedFlow<String>()
+    val loginResult = _loginResult.asSharedFlow()
 
-    fun login(email: String, password: String) = viewModelScope.launch {
-        _loginCred.emit(ApiResult.Loading())
-        _loginCred.value = authRepo.login(email, password)
+    private var _loading = MutableSharedFlow<Boolean>()
+    val loading get() = _loading.asSharedFlow()
+
+    fun login(email: String, password: String, callback: () -> Unit) = viewModelScope.launch {
+        _loading.emit(true)
+        val result = authRepo.login(email, password)
+        when (result) {
+            is ApiResult.Loading -> _loading.emit(true)
+            is ApiResult.Success -> {
+                _loading.emit(false)
+                _loginResult.emit(result.data.toString())
+                callback()
+            }
+            is ApiResult.Error -> {
+                _loading.emit(false)
+                _loginResult.emit(result.errorMessage.toString())
+            }
+        }
     }
 }

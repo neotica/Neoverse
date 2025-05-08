@@ -138,12 +138,25 @@ fun ProfileView(
             iconType = AlertEnum.WARNING,
             confirmButton = {
                 NeoButton("Yes, logout", negative = true) {
-                    viewModel.logout()
-                    navController.navigate(Screen.LoginScreen) {
-                        popUpTo(RootScreen.HomeNav) {
-                            inclusive = true
+                    when(appVariant.appName) {
+                        "Neoverse" -> {
+                            viewModel.logout()
+                            navController.navigate(Screen.LoginScreen) {
+                                popUpTo(RootScreen.HomeNav) {
+                                    inclusive = true
+                                }
+                                launchSingleTop
+                            }
                         }
-                        launchSingleTop
+                        "Alexandria" -> {
+                            viewModel.logout()
+                            navController.navigate(Screen.LoginScreen) {
+                                popUpTo(0) {
+                                    inclusive = true
+                                }
+                            }
+                        }
+                        else -> {}
                     }
                 }
             }

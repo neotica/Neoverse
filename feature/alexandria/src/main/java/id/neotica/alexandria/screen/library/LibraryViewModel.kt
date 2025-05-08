@@ -70,7 +70,7 @@ class LibraryViewModel(
                 is ApiResult.Success -> {
                     _loading.value = false
                     _permission.value = it.data?.contains(userName()) == true
-                    Log.d("permissionList", it.toString())
+                    Log.d("permissionList", it.data .toString())
                 }
                 is ApiResult.Error -> _loading.value = false
             }
