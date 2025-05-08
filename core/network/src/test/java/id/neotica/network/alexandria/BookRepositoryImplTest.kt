@@ -34,12 +34,14 @@ class BookRepositoryImplTest {
 
     private fun createMockClient(
         status: HttpStatusCode = HttpStatusCode.OK,
+        method: String? = "GET",
+        url: String? = "/alexandria",
         content: String = "",
         contentType: String = "application/json"
     ): HttpClient {
         val mockEngine = MockEngine { request ->
-            assertEquals("GET", request.method.value)
-            assertEquals("/alexandria", request.url.encodedPath)
+            assertEquals(method, request.method.value)
+            assertEquals(url, request.url.encodedPath)
             respond(
                 content = content,
                 status = status,
@@ -78,7 +80,7 @@ class BookRepositoryImplTest {
     fun `GetBooks, Successful API call with valid book data`() = runBlocking {
         // Given
         val expectedBook = listOf<Book>(dummy.bookResponse)
-        client = createMockClient(content = dummy.addBookResponseJson)
+        client = createMockClient(content = dummy.paginatedBookResponseJson)
         repository = BookRepositoryImpl(client, fakeTokenProvider)
         // When
         val result = repository.getBooks().last()
@@ -92,7 +94,6 @@ class BookRepositoryImplTest {
 
     @Test
     fun `GetBooks, Successful API call with empty book list`() = runBlocking {
-        // Verify that getBooks() emits ApiResult.Success with a Pagination<Book> object where the book list is empty, simulating a scenario where the API returns no books.
         // Given
         val expectedBook = emptyList<Book>()
         client = createMockClient(content = dummy.emptyBookResponseJson)
@@ -106,6 +107,25 @@ class BookRepositoryImplTest {
         assertEquals(expectedBook, successData.content)
 //        assertEquals(expectedBook, successData.content[0])
         assertEquals(0, successData.currentPage)
+    }
+
+    @Test
+    fun `getBook by author`() = runBlocking {
+        //Given
+        val expectedResponse = dummy.booksByAuthorResponse
+        val username = "tarakh"
+        client = createMockClient(
+            url = "/alexandria/book",
+            content = dummy.booksByAuthorResponseJson
+        )
+        repository = BookRepositoryImpl(client)
+        //When
+        val result = repository.getUserBooks(username).last()
+        println("💀: " + result.errorMessage)
+        //Then
+        assertTrue(result is ApiResult.Success)
+        val successData = (result as ApiResult.Success).data!!
+        assertEquals(expectedResponse, successData)
     }
 
     @Test
@@ -172,25 +192,16 @@ class BookRepositoryImplTest {
     fun `addBook emits loading then success on VALID POST`() = runTest {
         val bookRequest = dummy.addBookRequest
         val expectedBook = dummy.bookResponse
-        val jsonResponse = dummy.bookResponseJson
+        val jsonResponse = dummy.addBookResponseJson
 
-        val mockEngine = MockEngine { request ->
-            assertEquals("POST", request.method.value)
-            assertEquals("/alexandria", request.url.encodedPath)
-            assertEquals("bearer ${fakeTokenProvider.getToken()}", "bearer dfsdsf")
+        client = createMockClient(
+            method = "POST",
+            url = "/alexandria",
+            content = jsonResponse,
+            contentType = "application/json"
+        )
 
-            respond(
-                content = jsonResponse,
-                status = HttpStatusCode.Created,
-                headers = headersOf(HttpHeaders.ContentType, "application/json")
-            )
-        }
-
-        val client = HttpClient(mockEngine) {
-            install(ContentNegotiation) { json(Json { ignoreUnknownKeys = true }) }
-        }
-
-        val repository = BookRepositoryImpl(client, fakeTokenProvider)
+        repository = BookRepositoryImpl(client, fakeTokenProvider)
 
         //When
         val emission = repository.addBook(bookRequest).toList()

@@ -12,7 +12,7 @@ class BookDummy {
         isPublished = true,
         createdAt = 1745407419573,
     )
-    val addBookResponseJson = """
+    val paginatedBookResponseJson = """
             {
                     "content": [
                         {
@@ -43,6 +43,21 @@ class BookDummy {
             }
         """.trimIndent()
 
+    val booksByAuthorResponse = listOf<Book>(bookResponse)
+
+    val booksByAuthorResponseJson = """
+            [
+                {
+                    "uuid": "2ea3741e-4b0d-42ad-8b5b-e4be983611fc",
+                    "title": "Frankenstein",
+                    "language": "EN",
+                    "isPublished": true,
+                    "author": "tarakh",
+                    "createdAt": 1745407419573
+                }
+            ]
+        """.trimIndent()
+
     val addBookRequest = BookRequest(
         title = "Frankenstein",
         author = "tarakh",
@@ -50,14 +65,16 @@ class BookDummy {
         isPublished = true
     )
 
-    val bookResponseJson = """
+    val addBookResponseJson = """
             {
                 "uuid": "${bookResponse.id}",
                 "title": "${bookResponse.title}",
                 "author": "${bookResponse.author}",
                 "language": "${bookResponse.language}",
+                "summary": ${bookResponse.summary},
                 "isPublished": ${bookResponse.isPublished},
                 "createdAt": ${bookResponse.createdAt}
             }
         """.trimIndent()
+
 }
