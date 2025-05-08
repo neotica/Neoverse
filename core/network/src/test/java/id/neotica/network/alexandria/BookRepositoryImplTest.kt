@@ -2,7 +2,6 @@ package id.neotica.network.alexandria
 
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.alexandria.Book
-import id.neotica.domain.model.alexandria.book.BookRequest
 import id.neotica.domain.remote.alexandria.BookRepository
 import id.neotica.network.dummy.FakeTokenProvider
 import io.ktor.client.HttpClient
@@ -65,7 +64,7 @@ class BookRepositoryImplTest {
     @Test
     fun `emits Loading then Success when getBooks is called`() = runTest {
         // Given
-        client = createMockClient(content = dummy.responseEmpty)
+        client = createMockClient(content = dummy.emptyBookResponseJson)
         repository = BookRepositoryImpl(client, fakeTokenProvider)
 
         // When
@@ -78,8 +77,8 @@ class BookRepositoryImplTest {
     @Test
     fun `GetBooks, Successful API call with valid book data`() = runBlocking {
         // Given
-        val expectedBook = listOf<Book>(dummy.mockBook)
-        client = createMockClient(content = dummy.responseSuccess)
+        val expectedBook = listOf<Book>(dummy.bookResponse)
+        client = createMockClient(content = dummy.addBookResponseJson)
         repository = BookRepositoryImpl(client, fakeTokenProvider)
         // When
         val result = repository.getBooks().last()
@@ -96,7 +95,7 @@ class BookRepositoryImplTest {
         // Verify that getBooks() emits ApiResult.Success with a Pagination<Book> object where the book list is empty, simulating a scenario where the API returns no books.
         // Given
         val expectedBook = emptyList<Book>()
-        client = createMockClient(content = dummy.responseEmpty)
+        client = createMockClient(content = dummy.emptyBookResponseJson)
         repository = BookRepositoryImpl(client, fakeTokenProvider)
         // When
         val result = repository.getBooks().last()
@@ -171,23 +170,9 @@ class BookRepositoryImplTest {
 
     @Test
     fun `addBook emits loading then success on VALID POST`() = runTest {
-        val bookRequest = BookRequest(
-            title = "Frankenstein",
-            author = "tarakh",
-            language = "EN",
-            isPublished = true
-        )
-        val expectedBook = dummy.mockBook
-        val jsonResponse = """
-            {
-                "uuid": "${expectedBook.id}",
-                "title": "${expectedBook.title}",
-                "author": "${expectedBook.author}",
-                "language": "${expectedBook.language}",
-                "isPublished": ${expectedBook.isPublished},
-                "createdAt": ${expectedBook.createdAt}
-            }
-        """.trimIndent()
+        val bookRequest = dummy.addBookRequest
+        val expectedBook = dummy.bookResponse
+        val jsonResponse = dummy.bookResponseJson
 
         val mockEngine = MockEngine { request ->
             assertEquals("POST", request.method.value)

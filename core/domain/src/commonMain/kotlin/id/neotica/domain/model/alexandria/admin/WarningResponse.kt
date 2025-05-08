@@ -10,5 +10,6 @@ data class WarningResponse(
     val isAppealed: Boolean,
     val isApproved: Boolean,
     val message: String,
+    val version: Int,
     val createdAt: Long
 )
