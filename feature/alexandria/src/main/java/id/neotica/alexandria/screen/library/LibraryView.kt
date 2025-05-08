@@ -1,6 +1,5 @@
 package id.neotica.alexandria.screen.library
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -46,31 +45,20 @@ fun LibraryView(
             }
             launchSingleTop = true
         } else {
-//            user = viewModel.current
-            viewModel.currentUser.collect { result ->
-                Log.d("profileView", "result $result")
-                when(result) {
-                    is ApiResult.Loading -> { /*isUserEmpty = true*/ }
-                    is ApiResult.Success -> { user = result.data }
-                    is ApiResult.Error -> { /*isUserEmpty = true*/ }
-                    null -> { /*isUserEmpty = true*/ }
-                }
-            }
+            viewModel.userFlow.collect { user = it }
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.loading.collect {
+            isLoading = it
         }
     }
 
     LaunchedEffect(Unit) {
         viewModel.books.collect { result ->
-            when (result) {
-                is ApiResult.Loading -> isLoading = true
-                is ApiResult.Success -> {
-                    isLoading = false
-                    books = result.data!!.content
-                }
-                is ApiResult.Error -> {
-                    isLoading = false
-                    Log.e("library", result.errorMessage.toString())
-                }
+            if (result is ApiResult.Success) {
+                books = result.data!!.content
             }
         }
     }

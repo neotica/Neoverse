@@ -30,7 +30,7 @@ class BookContentViewModel(
     private var _currentPage = MutableStateFlow(1)
     val currentPage: StateFlow<Int> = _currentPage.asStateFlow()
 
-    var loading by mutableStateOf(false)
+    private var loading by mutableStateOf(false)
     var hasNext by mutableStateOf(false)
     var paginatedContent by mutableStateOf<Map<Int, PaginatedContent>>(emptyMap())
 
