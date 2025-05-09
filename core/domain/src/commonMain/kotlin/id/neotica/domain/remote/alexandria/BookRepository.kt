@@ -10,7 +10,7 @@ interface BookRepository {
     fun getBooks(): Flow<ApiResult<Pagination<Book>>>
     fun getBook(bookId: String): Flow<ApiResult<Book>>
     fun addBook(book: BookRequest): Flow<ApiResult<Book>>
-    fun editBook(book: Book): Flow<ApiResult<Book>>
+    fun editBook(id: String, book: BookRequest): Flow<ApiResult<Book>>
     fun deleteBook(bookId: String): Flow<ApiResult<String>>
     fun getUserBooks(username: String): Flow<ApiResult<List<Book>>>
 }

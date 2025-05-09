@@ -36,12 +36,17 @@ class BookRepositoryImplTest {
         status: HttpStatusCode = HttpStatusCode.OK,
         method: String? = "GET",
         url: String? = "/alexandria",
+        expectedParams: Map<String, String> = emptyMap(),
         content: String = "",
         contentType: String = "application/json"
     ): HttpClient {
         val mockEngine = MockEngine { request ->
             assertEquals(method, request.method.value)
             assertEquals(url, request.url.encodedPath)
+            expectedParams.forEach { (key, value) ->
+                val actual = request.url.parameters[key]
+                assertEquals("Query param $key mismatch", value, actual)
+            }
             respond(
                 content = content,
                 status = status,
@@ -116,12 +121,32 @@ class BookRepositoryImplTest {
         val username = "tarakh"
         client = createMockClient(
             url = "/alexandria/book",
-            content = dummy.booksByAuthorResponseJson
+            content = dummy.booksByAuthorResponseJson,
+            expectedParams = mapOf("author" to username)
         )
         repository = BookRepositoryImpl(client)
         //When
         val result = repository.getUserBooks(username).last()
         println("💀: " + result.errorMessage)
+        //Then
+        assertTrue(result is ApiResult.Success)
+        val successData = (result as ApiResult.Success).data!!
+        assertEquals(expectedResponse, successData)
+    }
+
+    @Test
+    fun `getBook by id`() = runBlocking {
+        //Given
+        val expectedResponse = dummy.bookByIdResponse
+        val id = expectedResponse.id
+        client = createMockClient(
+            url = "/alexandria/$id",
+            content = dummy.bookByIdJson,
+        )
+        repository = BookRepositoryImpl(client)
+        //When
+        val result = repository.getBook(id).last()
+        println("getBookById: " + result.data)
         //Then
         assertTrue(result is ApiResult.Success)
         val successData = (result as ApiResult.Success).data!!
@@ -211,5 +236,55 @@ class BookRepositoryImplTest {
         println("emission: "+emission.last().data .toString())
         val resultBook = (emission[1] as ApiResult.Success).data
         assertEquals(expectedBook, resultBook)
+    }
+
+    @Test
+    fun `editBook succeed`() = runTest {
+        val id = dummy.bookResponse.id
+        val bookRequest = dummy.editBookRequest
+        val expectedBook = dummy.editBookResponse
+        val jsonResponse = dummy.editBookResponseJson
+
+        client = createMockClient(
+            method = "PUT",
+            url = "/alexandria/$id",
+            content = jsonResponse,
+            contentType = "application/json"
+        )
+
+        repository = BookRepositoryImpl(client, fakeTokenProvider)
+
+        //When
+        val emission = repository.editBook(id, bookRequest).toList()
+
+        //Then
+        assertTrue(emission.last() is ApiResult.Success)
+        println("emission put: " + emission.last().data.toString())
+
+        val resultBook = (emission[1] as ApiResult.Success).data
+        assertEquals(expectedBook, resultBook)
+    }
+
+    @Test
+    fun `deleteBook succeed`() = runTest {
+        val id = dummy.bookResponse.id
+        val jsonResponse = dummy.deleteBookResponseJson
+
+        client = createMockClient(
+            method = "DELETE",
+            url = "/alexandria/$id",
+            content = jsonResponse,
+        )
+
+        repository = BookRepositoryImpl(client, fakeTokenProvider)
+
+        //When
+        val emission = repository.deleteBook(id).toList()
+
+        //Then
+        assertTrue(emission.last() is ApiResult.Success)
+
+        val result = (emission[1] as ApiResult.Success).data
+        assertEquals(jsonResponse, result)
     }
 }

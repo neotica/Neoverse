@@ -58,14 +58,9 @@ class BookDummy {
             ]
         """.trimIndent()
 
-    val addBookRequest = BookRequest(
-        title = "Frankenstein",
-        author = "tarakh",
-        language = "EN",
-        isPublished = true
-    )
+    val bookByIdResponse = bookResponse
 
-    val addBookResponseJson = """
+    val bookByIdJson = """
             {
                 "uuid": "${bookResponse.id}",
                 "title": "${bookResponse.title}",
@@ -73,8 +68,44 @@ class BookDummy {
                 "language": "${bookResponse.language}",
                 "summary": ${bookResponse.summary},
                 "isPublished": ${bookResponse.isPublished},
+                "imageUrl": ${bookResponse.imageUrl},
                 "createdAt": ${bookResponse.createdAt}
             }
         """.trimIndent()
+
+    val addBookRequest = BookRequest(
+        title = "Frankenstein",
+        author = "tarakh",
+        language = "EN",
+        isPublished = true
+    )
+
+    val addBookResponseJson = bookByIdJson
+
+    val editBookRequest = BookRequest(
+        title = bookResponse.id,
+        author = bookResponse.author,
+        language = bookResponse.language,
+        genre = bookResponse.genre, //nullable
+        summary = bookResponse.summary, //nullable
+        isPublished = bookResponse.isPublished,
+        imageUrl = bookResponse.imageUrl
+    )
+    val editBookResponse = bookResponse
+    val editBookResponseJson = """
+            {
+                "uuid": "${bookResponse.id}",
+                "title": "${bookResponse.title}",
+                "author": "${bookResponse.author}",
+                "language": "${bookResponse.language}",
+                "genre": ${bookResponse.genre},
+                "summary": ${bookResponse.summary},
+                "isPublished": ${bookResponse.isPublished},
+                "imageUrl": ${bookResponse.imageUrl},
+                "createdAt": ${bookResponse.createdAt}
+            }
+        """.trimIndent()
+
+    val deleteBookResponseJson = "Book deleted successfully"
 
 }

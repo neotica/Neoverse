@@ -1,6 +1,6 @@
 [versions]
 kotlin = "2.1.20"
-agp = "8.9.1"
+agp = "8.10.0"
 ksp = "2.1.20-2.0.0"
 cameraxVersion = "1.4.1"
 converterGson = "2.11.0"

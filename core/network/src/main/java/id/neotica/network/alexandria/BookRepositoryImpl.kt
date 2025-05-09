@@ -52,9 +52,9 @@ class BookRepositoryImpl(
         client.get("${baseUrl}/alexandria/$bookId").body<Book>()
     }
 
-    override fun editBook(book: Book): Flow<ApiResult<Book>> = safeApiCall {
+    override fun editBook(id: String, book: BookRequest): Flow<ApiResult<Book>> = safeApiCall {
         val tokenResult = token?.getToken()
-        client.put("${baseUrl}/alexandria/${book.id}"){
+        client.put("${baseUrl}/alexandria/${id}"){
             headers {
                 append("Authorization", "Bearer $tokenResult")
                 append("Content-Type", "application/json")

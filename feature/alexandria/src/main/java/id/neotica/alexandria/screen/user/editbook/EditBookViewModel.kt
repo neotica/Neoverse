@@ -8,6 +8,7 @@ import androidx.navigation.toRoute
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.alexandria.Book
 import id.neotica.domain.model.alexandria.Chapter
+import id.neotica.domain.model.alexandria.book.BookRequest
 import id.neotica.domain.model.alexandria.chapter.ChapterRequest
 import id.neotica.domain.remote.alexandria.BookRepository
 import id.neotica.domain.remote.alexandria.ChapterRepository
@@ -46,7 +47,17 @@ class EditBookViewModel(
 
     fun editBook(book: Book) = viewModelScope.launch {
         _isLoading.value = true
-        bookRepo.editBook(book).collect {
+        val id = book.id
+        val bookRequest = BookRequest(
+            title = book.title,
+            author = book.author,
+            language = book.language,
+            genre = book.genre,
+            summary = book.summary,
+            isPublished = book.isPublished,
+            imageUrl = book.imageUrl
+        )
+        bookRepo.editBook(id, bookRequest).collect {
             when (it) {
                 is ApiResult.Loading -> _isLoading.value = true
                 is ApiResult.Success -> {
