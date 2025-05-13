@@ -135,6 +135,30 @@ class BookRepositoryImplTest {
     }
 
     @Test
+    fun `getBook by author returns error when not found`() = runBlocking {
+        // Given
+        val username = "tarakh"
+        val expectedErrorMessage = "No books found for author 'tarakh'"
+
+        client = createMockClient(
+            status = HttpStatusCode.NotFound, // simulate not found
+            url = "/alexandria/book",
+            expectedParams = mapOf("author" to username),
+            content = dummy.booksByAuthorNotFoundJson
+        )
+        repository = BookRepositoryImpl(client)
+
+        // When
+        val result = repository.getUserBooks(username).last()
+
+        // Then
+        assertTrue(result is ApiResult.Error)
+        val error = result as ApiResult.Error
+        println("💀: ${error.errorMessage}")
+        assertTrue(error.errorMessage == expectedErrorMessage)
+    }
+
+    @Test
     fun `getBook by id`() = runBlocking {
         //Given
         val expectedResponse = dummy.bookByIdResponse

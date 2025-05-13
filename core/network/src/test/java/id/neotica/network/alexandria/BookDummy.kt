@@ -58,6 +58,12 @@ class BookDummy {
             ]
         """.trimIndent()
 
+    val booksByAuthorNotFoundJson = """
+            {
+                "error": "No books found for author 'tarakh'"
+            }
+        """.trimIndent()
+
     val bookByIdResponse = bookResponse
 
     val bookByIdJson = """

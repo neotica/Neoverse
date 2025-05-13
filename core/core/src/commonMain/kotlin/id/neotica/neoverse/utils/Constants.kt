@@ -1,7 +1,7 @@
 package id.neotica.neoverse.utils
 
-//const val baseUrl = "https://api.neotica.id" // prod
-const val baseUrl = "http://192.168.0.148:8080" // dev
+const val baseUrl = "https://api.neotica.id" // prod
+//const val baseUrl = "http://192.168.0.148:8080" // dev
 const val privacyPolicy = "https://neotica.id/legal/privacy-policy.html"
 const val termsOfService = "https://neotica.id/legal/terms-of-service.html"
 

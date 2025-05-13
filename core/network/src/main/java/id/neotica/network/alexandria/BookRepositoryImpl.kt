@@ -8,6 +8,7 @@ import id.neotica.domain.remote.alexandria.BookRepository
 import id.neotica.domain.remote.usecase.TokenProvider
 import id.neotica.neoverse.utils.baseUrl
 import id.neotica.network.utils.safeApiCall
+import id.neotica.network.utils.safeApiCallNew
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.delete
@@ -38,14 +39,15 @@ class BookRepositoryImpl(
         }.body<Book>()
     }
 
-    override fun getUserBooks(username: String): Flow<ApiResult<List<Book>>> = safeApiCall {
+    override fun getUserBooks(username: String): Flow<ApiResult<List<Book>>> = safeApiCallNew<List<Book>> {
         val tokenResult = token?.getToken()
+
         client.get("${baseUrl}/alexandria/book"){
             headers {
                 append("Authorization", "Bearer $tokenResult")
             }
             url { parameters.append("author", username) }
-        }.body<List<Book>>()
+        }
     }
 
     override fun getBook(bookId: String): Flow<ApiResult<Book>> = safeApiCall {
