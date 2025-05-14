@@ -1,6 +1,6 @@
 package id.neotica.network.admin
 
-import id.neotica.domain.model.alexandria.admin.WarningResponse
+import id.neotica.domain.model.admin.WarningResponse
 
 class AdminDummy {
     val warningResponse = WarningResponse(

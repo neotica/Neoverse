@@ -21,7 +21,7 @@ class ChapterRepositoryImpl(
     private val token: TokenProvider
 ): ChapterRepository {
     override fun getChapters(bookId: String): Flow<ApiResult<List<Chapter>>> = safeApiCall {
-        client.get("${baseUrl}/alexandria/$bookId").body<List<Chapter>>()
+        client.get("${baseUrl}/alexandria/chapters").body<List<Chapter>>()
     }
 
     override fun createChapter(chapter: ChapterRequest): Flow<ApiResult<Chapter>> = safeApiCall {

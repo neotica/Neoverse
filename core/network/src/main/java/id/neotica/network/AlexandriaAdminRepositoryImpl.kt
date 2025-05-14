@@ -3,8 +3,8 @@ package id.neotica.network
 import com.google.firebase.auth.FirebaseAuth
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.alexandria.Book
-import id.neotica.domain.model.alexandria.admin.WarningRequest
-import id.neotica.domain.model.alexandria.admin.WarningResponse
+import id.neotica.domain.model.admin.WarningRequest
+import id.neotica.domain.model.admin.WarningResponse
 import id.neotica.domain.pagination.Pagination
 import id.neotica.domain.remote.AlexandriaAdminRepository
 import id.neotica.domain.remote.usecase.TokenProvider

@@ -3,23 +3,18 @@ package id.neotica.network.alexandria
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.alexandria.Book
 import id.neotica.domain.remote.alexandria.BookRepository
+import id.neotica.network.client.createMockClient
 import id.neotica.network.dummy.FakeTokenProvider
 import io.ktor.client.HttpClient
-import io.ktor.client.engine.mock.MockEngine
-import io.ktor.client.engine.mock.respond
-import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
-import io.ktor.http.headersOf
-import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
-import kotlinx.serialization.json.Json
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.mockito.MockitoAnnotations
@@ -31,37 +26,6 @@ class BookRepositoryImplTest {
     private lateinit var repository: BookRepository
     val fakeTokenProvider = FakeTokenProvider()
     val dummy = BookDummy()
-
-    private fun createMockClient(
-        status: HttpStatusCode = HttpStatusCode.OK,
-        method: String? = "GET",
-        url: String? = "/alexandria",
-        expectedParams: Map<String, String> = emptyMap(),
-        content: String = "",
-        contentType: String = "application/json"
-    ): HttpClient {
-        val mockEngine = MockEngine { request ->
-            assertEquals(method, request.method.value)
-            assertEquals(url, request.url.encodedPath)
-            expectedParams.forEach { (key, value) ->
-                val actual = request.url.parameters[key]
-                assertEquals("Query param $key mismatch", value, actual)
-            }
-            respond(
-                content = content,
-                status = status,
-                headers = headersOf(HttpHeaders.ContentType, contentType)
-            )
-        }
-
-        return HttpClient(mockEngine) {
-            install(ContentNegotiation) {
-                json(Json {
-                    ignoreUnknownKeys = true
-                })
-            }
-        }
-    }
 
     @Before
     fun setup(){

@@ -11,6 +11,7 @@ import id.neotica.domain.remote.AuthRepository
 import id.neotica.domain.remote.FirebaseRepository
 import id.neotica.domain.remote.PermissionRepository
 import id.neotica.domain.remote.UserRepository
+import id.neotica.domain.remote.admin.WarningRepository
 import id.neotica.domain.remote.alexandria.BookRepository
 import id.neotica.domain.remote.alexandria.ChapterRepository
 import id.neotica.domain.remote.alexandria.ContentRepository
@@ -22,6 +23,7 @@ import id.neotica.network.AuthRepositoryImpl
 import id.neotica.network.FirebaseRepositoryImpl
 import id.neotica.network.PermissionRepositoryImpl
 import id.neotica.network.UserRepositoryImpl
+import id.neotica.network.admin.WarningRepositoryImpl
 import id.neotica.network.alexandria.BookRepositoryImpl
 import id.neotica.network.alexandria.ChapterRepositoryImpl
 import id.neotica.network.alexandria.ContentRepositoryImpl
@@ -45,6 +47,7 @@ val repositoryModules = module {
     singleOf(::BookRepositoryImpl) bind BookRepository::class
     singleOf(::ChapterRepositoryImpl) bind ChapterRepository::class
     singleOf(::ContentRepositoryImpl) bind ContentRepository::class
+    singleOf(::WarningRepositoryImpl) bind WarningRepository::class
 }
 
 val viewModelModules = module {

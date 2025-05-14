@@ -1,4 +1,4 @@
-package id.neotica.domain.model.alexandria.admin
+package id.neotica.domain.model.admin
 
 import kotlinx.serialization.Serializable
 

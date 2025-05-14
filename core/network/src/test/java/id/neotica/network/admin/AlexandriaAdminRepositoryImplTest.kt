@@ -1,8 +1,8 @@
 package id.neotica.network.admin
 
 import id.neotica.domain.ApiResult
-import id.neotica.domain.model.alexandria.admin.WarningRequest
-import id.neotica.domain.model.alexandria.admin.WarningResponse
+import id.neotica.domain.model.admin.WarningRequest
+import id.neotica.domain.model.admin.WarningResponse
 import id.neotica.network.AlexandriaAdminRepositoryImpl
 import id.neotica.network.dummy.FakeTokenProvider
 import io.ktor.client.HttpClient
