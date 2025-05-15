@@ -8,6 +8,7 @@ import id.neotica.domain.remote.admin.WarningRepository
 import id.neotica.domain.remote.usecase.TokenProvider
 import id.neotica.neoverse.utils.baseUrl
 import id.neotica.network.utils.safeApiCall
+import id.neotica.network.utils.safeApiCallNew
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.delete
@@ -29,7 +30,7 @@ class WarningRepositoryImpl(
     override fun newWarning(
         bookId: String,
         request: WarningRequest
-    ): Flow<ApiResult<WarningResponse>> = safeApiCall {
+    ): Flow<ApiResult<WarningResponse>> = safeApiCallNew<WarningResponse> {
         val tokenResult = token?.getToken()
         client.post("$baseUrl/admin/warning") {
             headers {
@@ -37,7 +38,7 @@ class WarningRepositoryImpl(
                 append("Authorization", "Bearer $tokenResult")
             }
             setBody(request)
-        }.body<WarningResponse>()
+        }
     }
 
     override fun updateWarning(
@@ -54,13 +55,13 @@ class WarningRepositoryImpl(
         }.body<WarningResponse>()
     }
 
-    override fun deleteWarning(id: String): Flow<ApiResult<String>> = safeApiCall {
+    override fun deleteWarning(id: String): Flow<ApiResult<String>> = safeApiCallNew<String> {
         val tokenResult = token?.getToken()
         client.delete("$baseUrl/admin/warning/$id") {
             headers {
                 append("Content-Type", "application/json")
                 append("Authorization", "Bearer $tokenResult")
             }
-        }.body<String>()
+        }//.body<String>()
     }
 }

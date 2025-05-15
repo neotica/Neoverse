@@ -76,7 +76,14 @@ class WarningDummy {
             "createdAt": 1747254046336
         }
     """.trimIndent()
-    val postWarningAlreadyExist = "Warning for this book already exists"
+
+    val postWarningAlreadyExistResponse = "Warning for this book already exists"
+
+    val postWarningAlreadyExistResponseJson = """
+            {
+                "error": "Warning for this book already exists"
+            }
+        """.trimIndent()
 
     val putWarningRequest = WarningRequest(
         message = "Great",
@@ -116,5 +123,10 @@ class WarningDummy {
     """.trimIndent()
 
     val deleteWarningResponseNotFound = "Warning not found"
+    val deleteWarningResponseNotFoundResponseJson = """
+            {
+                "error": "Warning not found"
+            }
+        """.trimIndent()
     val deleteWarningResponseSucceeded = "Warning deleted successfully"
 }
