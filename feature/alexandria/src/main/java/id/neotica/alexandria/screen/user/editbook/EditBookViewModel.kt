@@ -7,16 +7,17 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.alexandria.Book
-import id.neotica.domain.model.alexandria.Chapter
 import id.neotica.domain.model.alexandria.book.BookRequest
 import id.neotica.domain.model.alexandria.chapter.ChapterRequest
 import id.neotica.domain.remote.alexandria.BookRepository
 import id.neotica.domain.remote.alexandria.ChapterRepository
 import id.neotica.ui.navigation.AlexandriaScreen
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 class EditBookViewModel(
@@ -24,14 +25,15 @@ class EditBookViewModel(
     private val chapterRepo: ChapterRepository,
     savedStateHandle: SavedStateHandle
 ): ViewModel() {
-    private var _chapters: MutableStateFlow<ApiResult<Book>> = MutableStateFlow(ApiResult.Loading())
-    val chapters = _chapters.asStateFlow()
 
-    private val _chapterCreated = MutableSharedFlow<ApiResult<Chapter>>()
-    val chapterCreated = _chapterCreated.asSharedFlow()
+    private val _book: MutableStateFlow<Book?> = MutableStateFlow<Book?>(null)
+    val book = _book.asStateFlow()
 
     private var _isLoading = MutableStateFlow(false)
     val isLoading = _isLoading.asStateFlow()
+
+    private val channelTest = Channel<EventTest>()
+    val channelTestFlow = channelTest.receiveAsFlow()
 
     private var _message = MutableSharedFlow<String>()
     val message = _message.asSharedFlow()
@@ -92,28 +94,40 @@ class EditBookViewModel(
 
     fun getChapters() = viewModelScope.launch {
         bookRepo.getBook(args.id).collect {
-            Log.d("spirit", it.toString())
-            _chapters.value = it
-        }
-    }
-
-    fun createChapter(chapterRequest: ChapterRequest) = viewModelScope.launch {
-        _chapterCreated.emit(ApiResult.Loading())
-        _isLoading.value = true
-        chapterRepo.createChapter(chapterRequest).collect {
-            _chapterCreated.emit(it)
+            Log.d("getChapters", it.toString())
             when (it) {
                 is ApiResult.Loading -> _isLoading.value = true
                 is ApiResult.Success -> {
-                    getChapters()
                     _isLoading.value = false
-                    _message.emit("Created chapter.")
+                    _book.value = it.data!!
                 }
-                else -> {
+                is ApiResult.Error -> {
                     _isLoading.value = false
                     _message.emit(it.errorMessage.toString())
                 }
             }
         }
+    }
+
+    fun createChapter(chapterRequest: ChapterRequest) = viewModelScope.launch {
+        chapterRepo.createChapter(chapterRequest).collect {
+            when (it) {
+                is ApiResult.Loading -> _isLoading.value = true
+                is ApiResult.Success -> {
+                    getChapters()
+                    _isLoading.value = false
+                    channelTest.send(EventTest.OnCreateChapterSuccess(it.data!!.id, it.data!!.title))
+                }
+                is ApiResult.Error -> {
+                    _isLoading.value = false
+                    channelTest.send(EventTest.OnError(it.errorMessage.toString()))
+                }
+            }
+        }
+    }
+
+    sealed interface EventTest {
+        data class OnCreateChapterSuccess(val chapterId: Int = 0, val chapterTitle: String = ""): EventTest
+        data class OnError(val message: String): EventTest
     }
 }

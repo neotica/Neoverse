@@ -25,20 +25,22 @@ class ChapterRepositoryImpl(
     }
 
     override fun createChapter(chapter: ChapterRequest): Flow<ApiResult<Chapter>> = safeApiCall {
+        val tokenResult = token.getToken()
         client.post("${baseUrl}/alexandria/chapters") {
             headers {
                 append("Content-Type", "application/json")
-                append("Authorization", "Bearer $token")
+                append("Authorization", "Bearer $tokenResult")
             }
             setBody(chapter)
         }.body()
     }
 
     override fun deleteChapter(chapterId: Int): Flow<ApiResult<String>> = safeApiCall {
+        val tokenResult = token.getToken()
         client.delete("${baseUrl}/alexandria/chapters/$chapterId") {
             headers {
                 append("Content-Type", "application/json")
-                append("Authorization", "Bearer $token")
+                append("Authorization", "Bearer $tokenResult")
             }
         }.body<String>()
     }

@@ -32,30 +32,33 @@ class ContentRepositoryImpl(
     }
 
     override fun createContent(content: ContentRequest): Flow<ApiResult<ChapterContent>> = safeApiCall {
+        val tokenResult = token.getToken()
         client.post("${baseUrl}/alexandria/chapters/contents") {
             headers {
                 append("Content-Type", "application/json")
-                append("Authorization", "Bearer $token")
+                append("Authorization", "Bearer $tokenResult")
             }
             setBody(content)
         }.body<ChapterContent>()
     }
 
     override fun editContent(content: NewContentRequest, id: Int, page: Int): Flow<ApiResult<String>> = safeApiCall {
+        val tokenResult = token.getToken()
         client.put("${baseUrl}/alexandria/chapters/contents/${id}?page=$page") {
             headers {
                 append("Content-Type", "application/json")
-                append("Authorization", "Bearer $token")
+                append("Authorization", "Bearer $tokenResult")
             }
             setBody(content)
         }.body()
     }
 
     override fun deleteContent(contentId: Int): Flow<ApiResult<String>> = safeApiCall {
+        val tokenResult = token.getToken()
         client.delete("${baseUrl}/alexandria/chapters/contents/$contentId") {
             headers {
                 append("Content-Type", "application/json")
-                append("Authorization", "Bearer $token")
+                append("Authorization", "Bearer $tokenResult")
             }
         }.body<String>()
     }

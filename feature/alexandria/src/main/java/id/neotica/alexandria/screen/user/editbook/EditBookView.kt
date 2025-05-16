@@ -25,8 +25,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import id.neotica.alexandria.components.ChapterItem
-import id.neotica.domain.ApiResult
-import id.neotica.domain.model.alexandria.Book
 import id.neotica.domain.model.alexandria.Chapter
 import id.neotica.domain.model.alexandria.chapter.ChapterRequest
 import id.neotica.domain.utils.convertLongToTime
@@ -37,7 +35,7 @@ import id.neotica.ui.components.NeoButton
 import id.neotica.ui.components.edittext.CustomNeoTextField
 import id.neotica.ui.components.topbar.DotsMenuDropDown
 import id.neotica.ui.components.topbar.DotsMenuItem
-import id.neotica.ui.navigation.AlexandriaScreen
+import id.neotica.ui.navigation.AlexandriaScreen.EditChapterScreen
 import id.neotica.ui.navigation.navigateBack
 import id.neotica.ui.navigation.onRefresh
 import id.neotica.ui.navigation.refreshOnBack
@@ -50,7 +48,7 @@ fun EditBookView(
     navController: NavController,
     viewModel: EditBookViewModel = koinViewModel()
 ) {
-    val chapterList = remember { mutableStateOf<Book?>(null) }
+    val chapterList = viewModel.book.collectAsState()
 
     var isLoadingChapter by remember { mutableStateOf(false) }
 
@@ -81,20 +79,6 @@ fun EditBookView(
     LaunchedEffect(Unit) {
         viewModel.message.collect {
             Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    LaunchedEffect(Unit) {
-        viewModel.chapters.collect { result ->
-            when(result) {
-                is ApiResult.Loading -> isLoadingChapter = true
-                is ApiResult.Success -> {
-                    isLoadingChapter = false
-                    chapterList.value = result.data!!
-                    isChecked = result.data!!.isPublished
-                }
-                is ApiResult.Error -> isLoadingChapter = false
-            }
         }
     }
 
@@ -144,7 +128,6 @@ fun EditBookView(
                                 viewModel.editBook(updatedBook)
                             }
                         } }
-
                     }
                 )
 
@@ -170,17 +153,21 @@ fun EditBookView(
                 NeoTextField(chapterTitle)
 
                 LaunchedEffect(Unit) {
-                    viewModel.chapterCreated.collect { chapterResult ->
-                        when(chapterResult) {
-                            is ApiResult.Success -> {
-                                navController.navigate(AlexandriaScreen.EditChapterScreen(
-                                    chapterResult.data!!.id, chapterResult.data!!.title)
+                    viewModel.channelTestFlow.collect {
+                        when(it) {
+                            is EditBookViewModel.EventTest.OnCreateChapterSuccess -> {
+                                navController.navigate(
+                                    EditChapterScreen(it.chapterId, it.chapterTitle)
                                 )
                             }
-                            else -> {}
+
+                            is EditBookViewModel.EventTest.OnError -> {
+                                Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
+                            }
                         }
                     }
                 }
+
                 NeoButton(
                     "Create chapter",
                     enabled = chapterTitle.value.isNotEmpty(),
@@ -195,7 +182,6 @@ fun EditBookView(
                 }
             }
         }
-
 
         LazyColumn(
             contentPadding = PaddingValues(
@@ -213,8 +199,9 @@ fun EditBookView(
                         ChapterItem(
                             title = item.title,
                         ) {
-                            navController.navigate(AlexandriaScreen.EditChapterScreen(
-                                item.id, item.title)
+                            navController.navigate(
+                                EditChapterScreen(
+                                    item.id, item.title)
                             )
                             chapter = Chapter(
                                 id = item.id,
