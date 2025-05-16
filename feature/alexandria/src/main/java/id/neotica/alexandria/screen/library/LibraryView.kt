@@ -1,6 +1,5 @@
 package id.neotica.alexandria.screen.library
 
-import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,7 +22,6 @@ import id.neotica.ui.components.topbar.DotsMenuItem
 import id.neotica.ui.navigation.AlexandriaScreen
 import id.neotica.ui.navigation.Screen
 import id.neotica.ui.state.AppVariant
-import kotlinx.coroutines.flow.collectLatest
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -71,38 +69,19 @@ fun LibraryView(
             else -> true
         },
         trailingIcon = {
-            var gotoAuthor by remember { mutableStateOf(false) }
-            var gotoAdmin by remember { mutableStateOf(false) }
-
-            LaunchedEffect(gotoAuthor, gotoAdmin) {
-                when {
-                    gotoAuthor -> {
-                        viewModel.permission.collectLatest {
-                            gotoAuthor = false
-                            if (it) {
-                                navController.navigate(AlexandriaScreen.UserLibraryScreen)
-                            } else {
-                                Toast.makeText(context, "You did not have an author's account.", Toast.LENGTH_SHORT).show()
-                            }
-                        }
-                    }
-                    gotoAdmin -> {
-                        viewModel.permission.collectLatest {
-                            gotoAdmin = false
-                            if (it) {
-                                navController.navigate(AlexandriaScreen.AdminScreen)
-                            } else {
-                                Toast.makeText(context, "You did not have an admin's account.", Toast.LENGTH_SHORT).show()
-                            }
-                        }
-                    }
-                }
-            }
 
             DotsMenuDropDown(
                 item = listOf(
-                    DotsMenuItem("Author's Page") { gotoAuthor = true },
-                    DotsMenuItem("Admin Page") { gotoAdmin = true }
+                    DotsMenuItem("Author's Page") {
+                        viewModel.getPermission {
+                            navController.navigate(AlexandriaScreen.UserLibraryScreen)
+                        }
+                    },
+                    DotsMenuItem("Admin Page") {
+                        viewModel.getPermission {
+                            navController.navigate(AlexandriaScreen.AdminScreen)
+                        }
+                    }
                 ),
             )
         }

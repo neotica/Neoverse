@@ -1,6 +1,5 @@
 package id.neotica.alexandria.screen.library
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import id.neotica.domain.ApiResult
@@ -29,9 +28,6 @@ class LibraryViewModel(
         ApiResult.Loading())
     val books = _booksOld.asStateFlow()
 
-    private var _permission: MutableStateFlow<Boolean> = MutableStateFlow(false)
-    val permission = _permission.asStateFlow()
-
     private var _userFlow = MutableSharedFlow<User>()
     val userFlow = _userFlow.asSharedFlow()
 
@@ -42,7 +38,6 @@ class LibraryViewModel(
 
     init {
         getBooks()
-        getPermission()
         getUserRoomInstance()
     }
 
@@ -63,16 +58,18 @@ class LibraryViewModel(
         return userRepo.isLoggedIn()
     }
 
-    fun getPermission() = viewModelScope.launch {
+    fun getPermission(unit: () -> Unit) = viewModelScope.launch {
         permissionRepository.getPermissionList().collect {
             when(it) {
                 is ApiResult.Loading -> _loading.value = true
                 is ApiResult.Success -> {
                     _loading.value = false
-                    _permission.value = it.data?.contains(userName()) == true
-                    Log.d("permissionList", it.data .toString())
+                    val result = it.data?.contains(userName()) == true
+                    if (result) unit()
                 }
-                is ApiResult.Error -> _loading.value = false
+                is ApiResult.Error -> {
+                    _loading.value = false
+                }
             }
         }
     }
@@ -101,9 +98,5 @@ class LibraryViewModel(
             }
             is ApiResult.Error -> _loading.value = false
         }
-    }
-
-    suspend fun hasAuthorPermission(): Boolean {
-        return permissionRepository.hasPermission(userName())
     }
 }
