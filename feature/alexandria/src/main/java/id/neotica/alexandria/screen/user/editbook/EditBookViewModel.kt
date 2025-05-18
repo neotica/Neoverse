@@ -1,6 +1,5 @@
 package id.neotica.alexandria.screen.user.editbook
 
-import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -32,8 +31,8 @@ class EditBookViewModel(
     private var _isLoading = MutableStateFlow(false)
     val isLoading = _isLoading.asStateFlow()
 
-    private val channelTest = Channel<EventTest>()
-    val channelTestFlow = channelTest.receiveAsFlow()
+    private val channelCreateChapter = Channel<EventEdit>()
+    val channelCreateChapterFlow = channelCreateChapter.receiveAsFlow()
 
     private var _message = MutableSharedFlow<String>()
     val message = _message.asSharedFlow()
@@ -94,7 +93,6 @@ class EditBookViewModel(
 
     fun getChapters() = viewModelScope.launch {
         bookRepo.getBook(args.id).collect {
-            Log.d("getChapters", it.toString())
             when (it) {
                 is ApiResult.Loading -> _isLoading.value = true
                 is ApiResult.Success -> {
@@ -116,18 +114,18 @@ class EditBookViewModel(
                 is ApiResult.Success -> {
                     getChapters()
                     _isLoading.value = false
-                    channelTest.send(EventTest.OnCreateChapterSuccess(it.data!!.id, it.data!!.title))
+                    channelCreateChapter.send(EventEdit.OnCreateChapterSuccess(it.data!!.id, it.data!!.title))
                 }
                 is ApiResult.Error -> {
                     _isLoading.value = false
-                    channelTest.send(EventTest.OnError(it.errorMessage.toString()))
+                    channelCreateChapter.send(EventEdit.OnError(it.errorMessage.toString()))
                 }
             }
         }
     }
 
-    sealed interface EventTest {
-        data class OnCreateChapterSuccess(val chapterId: Int = 0, val chapterTitle: String = ""): EventTest
-        data class OnError(val message: String): EventTest
+    sealed interface EventEdit {
+        data class OnCreateChapterSuccess(val chapterId: Int = 0, val chapterTitle: String = ""): EventEdit
+        data class OnError(val message: String): EventEdit
     }
 }

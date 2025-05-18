@@ -1,22 +1,18 @@
 package id.neotica.alexandria.screen.library
 
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
-import id.neotica.domain.ApiResult
-import id.neotica.domain.model.User
-import id.neotica.domain.model.alexandria.Book
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.LoadingIndicator
+import id.neotica.ui.components.NeoButton
 import id.neotica.ui.components.topbar.DotsMenuDropDown
 import id.neotica.ui.components.topbar.DotsMenuItem
 import id.neotica.ui.navigation.AlexandriaScreen
@@ -30,34 +26,25 @@ fun LibraryView(
     appVariant: AppVariant,
     viewModel: LibraryViewModel = koinViewModel()
 ) {
-    var isLoading by remember { mutableStateOf(false) }
-    var books by remember { mutableStateOf(emptyList<Book>()) }
+    var isLoading = viewModel.loading.collectAsState().value //by remember { mutableStateOf(false) }
+    var books = viewModel.books.collectAsState().value
     val context = LocalContext.current
-
-    var user by remember { mutableStateOf<User?>(null) }
+    val errorMessage = viewModel.errorMessage.collectAsState().value
 
     LaunchedEffect(Unit) {
-        if (!viewModel.isLoggedIn()) navController.navigate(Screen.LoginScreen) {
-            popUpTo(0) {
-                inclusive = true
+        if (viewModel.isNotLogged.value) {
+            navController.navigate(Screen.LoginScreen) {
+                popUpTo(0) {
+                    inclusive = true
+                }
+                launchSingleTop = true
             }
-            launchSingleTop = true
-        } else {
-            viewModel.userFlow.collect { user = it }
         }
     }
 
-    LaunchedEffect(Unit) {
-        viewModel.loading.collect {
-            isLoading = it
-        }
-    }
-
-    LaunchedEffect(Unit) {
-        viewModel.books.collect { result ->
-            if (result is ApiResult.Success) {
-                books = result.data!!.content
-            }
+    LaunchedEffect(errorMessage) {
+        errorMessage?.let {
+            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -86,6 +73,11 @@ fun LibraryView(
             )
         }
     ) {
+        errorMessage?.let {
+            NeoButton("Reload") {
+                viewModel.getBooks()
+            }
+        }
         LibraryChildView(navController, books)
     }
     if (isLoading) Box(

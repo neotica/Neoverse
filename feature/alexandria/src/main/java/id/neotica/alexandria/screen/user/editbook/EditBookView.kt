@@ -153,15 +153,15 @@ fun EditBookView(
                 NeoTextField(chapterTitle)
 
                 LaunchedEffect(Unit) {
-                    viewModel.channelTestFlow.collect {
+                    viewModel.channelCreateChapterFlow.collect {
                         when(it) {
-                            is EditBookViewModel.EventTest.OnCreateChapterSuccess -> {
+                            is EditBookViewModel.EventEdit.OnCreateChapterSuccess -> {
                                 navController.navigate(
                                     EditChapterScreen(it.chapterId, it.chapterTitle)
                                 )
                             }
 
-                            is EditBookViewModel.EventTest.OnError -> {
+                            is EditBookViewModel.EventEdit.OnError -> {
                                 Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
                             }
                         }

@@ -6,14 +6,13 @@ import id.neotica.domain.ApiResult
 import id.neotica.domain.local.CurrentUserRepository
 import id.neotica.domain.model.User
 import id.neotica.domain.model.alexandria.Book
-import id.neotica.domain.pagination.Pagination
 import id.neotica.domain.remote.PermissionRepository
 import id.neotica.domain.remote.UserRepository
 import id.neotica.domain.remote.alexandria.BookRepository
 import id.neotica.domain.usecase.GetUserNameUseCase
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
@@ -24,38 +23,53 @@ class LibraryViewModel(
     private val userRepo: UserRepository,
     private val currentUserDatabase: CurrentUserRepository
 ): ViewModel() {
-    private var _booksOld: MutableStateFlow<ApiResult<Pagination<Book>>> = MutableStateFlow(
-        ApiResult.Loading())
-    val books = _booksOld.asStateFlow()
+    private var _books: MutableStateFlow<List<Book>> = MutableStateFlow(emptyList())
+    val books = _books.asStateFlow()
 
     private var _userFlow = MutableSharedFlow<User>()
-    val userFlow = _userFlow.asSharedFlow()
+
+    private val _errorMessage = MutableStateFlow<String?>(null)
+    val errorMessage: StateFlow<String?> = _errorMessage
 
     private var _loading: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val loading get() = _loading
 
+    private var _isNotLogged: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    val isNotLogged: StateFlow<Boolean> = _isNotLogged
+
     fun userName() = getUserNameUseCase.invoke()
 
     init {
-        getBooks()
+        loginState()
         getUserRoomInstance()
     }
 
-    private fun getBooks() = viewModelScope.launch {
-        bookRepo.getBooks().collect {
-            when(it) {
-                is ApiResult.Loading -> _loading.value = true
-                is ApiResult.Success -> {
-                    _booksOld.value = it
-                    _loading.value = false
-                }
-                is ApiResult.Error -> _loading.value = false
-            }
+    fun loginState() = viewModelScope.launch {
+        if (userRepo.isLoggedIn()) {
+            getBooks()
+            _isNotLogged.value = false
+        } else {
+            _isNotLogged.value = true
         }
     }
 
-    fun isLoggedIn(): Boolean {
-        return userRepo.isLoggedIn()
+    fun getBooks() = viewModelScope.launch {
+        bookRepo.getBooks().collect {
+            when(it) {
+                is ApiResult.Loading -> {
+                    _loading.value = true
+                    _errorMessage.value = null
+                }
+                is ApiResult.Success -> {
+                    it.data?.content?.let { _books.value = it }
+                    _loading.value = false
+                }
+                is ApiResult.Error -> {
+                    _errorMessage.value = it.errorMessage
+                    _loading.value = false
+                }
+            }
+        }
     }
 
     fun getPermission(unit: () -> Unit) = viewModelScope.launch {
@@ -68,6 +82,7 @@ class LibraryViewModel(
                     if (result) unit()
                 }
                 is ApiResult.Error -> {
+                    _errorMessage.value = it.errorMessage
                     _loading.value = false
                 }
             }
@@ -96,7 +111,10 @@ class LibraryViewModel(
                     currentUserDatabase.saveUser(it)
                 }
             }
-            is ApiResult.Error -> _loading.value = false
+            is ApiResult.Error -> {
+                _errorMessage.value = user.errorMessage
+                _loading.value = false
+            }
         }
     }
 }
