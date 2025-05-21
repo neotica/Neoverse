@@ -14,13 +14,17 @@ import id.neotica.neoverse.presentation.screen.SettingView
 import id.neotica.neoverse.presentation.screen.SplashView
 import id.neotica.neoverse.presentation.screen.dump.DumpView
 import id.neotica.ui.navigation.Screen
+import id.neotica.ui.state.AppVariant
 import id.neotica.world.worldNavGraph
+import org.koin.compose.getKoin
 
 @Composable
 fun NavGraph(
     navController: NavHostController,
     paddingValues: PaddingValues,
 ) {
+    val appVariant: AppVariant = getKoin().get()
+
     NavHost(
         navController,
         startDestination = Screen.Splash,
@@ -34,8 +38,8 @@ fun NavGraph(
         composable<Screen.DumpScreen> { DumpView(navController, paddingValues = paddingValues) }
 
         homeNavGraph(navController, paddingValues)
-        profileNavGraph(navController, paddingValues)
-        worldNavGraph(navController, paddingValues)
+        profileNavGraph(navController, paddingValues, appVariant)
+        worldNavGraph(navController, paddingValues, appVariant)
         friendNavGraph(navController, paddingValues)
     }
 }

@@ -19,7 +19,9 @@ import id.neotica.ui.navigation.WorldScreen
 import id.neotica.ui.state.ScreenState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
@@ -38,6 +40,9 @@ class ItemDetailViewModel(
 
     private val _sellerAuras: MutableStateFlow<ApiResult<World?>> = MutableStateFlow(ApiResult.Loading())
     private val _bankAuras: MutableStateFlow<ApiResult<World?>> = MutableStateFlow(ApiResult.Loading())
+
+    private val _loading = MutableSharedFlow<Boolean>()
+    val loading = _loading.asSharedFlow()
 
     private val args = savedStateHandle.toRoute<WorldScreen.ItemDetailScreen>()
 
@@ -75,8 +80,17 @@ class ItemDetailViewModel(
     }
 
     private fun fetchAuras() = viewModelScope.launch {
+        _loading.emit(true)
         auraRepo.getAuras(currentUserId()).collect {
-            _totalAuras.value = it
+            when (it) {
+                is ApiResult.Loading -> {}
+                is ApiResult.Success -> {
+                    _totalAuras.value = it
+                    _loading.emit(false)
+                }
+                is ApiResult.Error -> { _loading.emit(false) }
+            }
+
         }
     }
 

@@ -1,34 +1,38 @@
 package id.neotica.alexandria.screen.user.editbook
 
-import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.alexandria.Book
-import id.neotica.domain.model.alexandria.Chapter
+import id.neotica.domain.model.alexandria.book.BookRequest
 import id.neotica.domain.model.alexandria.chapter.ChapterRequest
-import id.neotica.domain.remote.AlexandriaRepository
+import id.neotica.domain.remote.alexandria.BookRepository
+import id.neotica.domain.remote.alexandria.ChapterRepository
 import id.neotica.ui.navigation.AlexandriaScreen
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 class EditBookViewModel(
-    private val alexandriaRepo: AlexandriaRepository,
+    private val bookRepo: BookRepository,
+    private val chapterRepo: ChapterRepository,
     savedStateHandle: SavedStateHandle
 ): ViewModel() {
-    private var _chapters: MutableStateFlow<ApiResult<Book>> = MutableStateFlow(ApiResult.Loading())
-    val chapters = _chapters.asStateFlow()
 
-    private val _chapterCreated = MutableSharedFlow<ApiResult<Chapter>>()
-    val chapterCreated = _chapterCreated.asSharedFlow()
+    private val _book: MutableStateFlow<Book?> = MutableStateFlow<Book?>(null)
+    val book = _book.asStateFlow()
 
     private var _isLoading = MutableStateFlow(false)
     val isLoading = _isLoading.asStateFlow()
+
+    private val channelCreateChapter = Channel<EventEdit>()
+    val channelCreateChapterFlow = channelCreateChapter.receiveAsFlow()
 
     private var _message = MutableSharedFlow<String>()
     val message = _message.asSharedFlow()
@@ -44,7 +48,17 @@ class EditBookViewModel(
 
     fun editBook(book: Book) = viewModelScope.launch {
         _isLoading.value = true
-        alexandriaRepo.editBook(book).collect {
+        val id = book.id
+        val bookRequest = BookRequest(
+            title = book.title,
+            author = book.author,
+            language = book.language,
+            genre = book.genre,
+            summary = book.summary,
+            isPublished = book.isPublished,
+            imageUrl = book.imageUrl
+        )
+        bookRepo.editBook(id, bookRequest).collect {
             when (it) {
                 is ApiResult.Loading -> _isLoading.value = true
                 is ApiResult.Success -> {
@@ -61,7 +75,7 @@ class EditBookViewModel(
 
     fun deleteBook() = viewModelScope.launch {
         _isLoading.value = true
-        alexandriaRepo.deleteBook(args.id).collect {
+        bookRepo.deleteBook(args.id).collect {
             when (it) {
                 is ApiResult.Loading -> _isLoading.value = true
                 is ApiResult.Success -> {
@@ -78,29 +92,40 @@ class EditBookViewModel(
     }
 
     fun getChapters() = viewModelScope.launch {
-        alexandriaRepo.getBook(args.id).collect {
-            Log.d("spirit", it.toString())
-            _chapters.value = it
-        }
-    }
-
-    fun createChapter(chapterRequest: ChapterRequest) = viewModelScope.launch {
-        _chapterCreated.emit(ApiResult.Loading())
-        _isLoading.value = true
-        alexandriaRepo.createChapter(chapterRequest).collect {
-            _chapterCreated.emit(it)
+        bookRepo.getBook(args.id).collect {
             when (it) {
                 is ApiResult.Loading -> _isLoading.value = true
                 is ApiResult.Success -> {
-                    getChapters()
                     _isLoading.value = false
-                    _message.emit("Created chapter.")
+                    _book.value = it.data!!
                 }
-                else -> {
+                is ApiResult.Error -> {
                     _isLoading.value = false
                     _message.emit(it.errorMessage.toString())
                 }
             }
         }
+    }
+
+    fun createChapter(chapterRequest: ChapterRequest) = viewModelScope.launch {
+        chapterRepo.createChapter(chapterRequest).collect {
+            when (it) {
+                is ApiResult.Loading -> _isLoading.value = true
+                is ApiResult.Success -> {
+                    getChapters()
+                    _isLoading.value = false
+                    channelCreateChapter.send(EventEdit.OnCreateChapterSuccess(it.data!!.id, it.data!!.title))
+                }
+                is ApiResult.Error -> {
+                    _isLoading.value = false
+                    channelCreateChapter.send(EventEdit.OnError(it.errorMessage.toString()))
+                }
+            }
+        }
+    }
+
+    sealed interface EventEdit {
+        data class OnCreateChapterSuccess(val chapterId: Int = 0, val chapterTitle: String = ""): EventEdit
+        data class OnError(val message: String): EventEdit
     }
 }

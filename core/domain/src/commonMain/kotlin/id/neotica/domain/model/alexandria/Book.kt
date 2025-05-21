@@ -8,7 +8,7 @@ data class Book(
     @SerialName("uuid")
     val id: String,
     val title: String,
-    val author: String,
+    val author: String = "",
     val language: String,
     val genre: String? = null,
     val summary: String? = null,

@@ -16,6 +16,7 @@ import id.neotica.raven.RavenView
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.WorldScreen
 import id.neotica.tavern.TavernView
+import id.neotica.ui.state.AppVariant
 import id.neotica.world.feat.inventory.InventoryView
 import id.neotica.world.feat.kanye.KanyeView
 import id.neotica.world.feat.leaderboards.LeaderBoardsView
@@ -31,7 +32,8 @@ import id.neotica.world.feat.world.WorldView
 
 fun NavGraphBuilder.worldNavGraph(
     navController: NavController,
-    paddingValues: PaddingValues
+    paddingValues: PaddingValues,
+    appVariant: AppVariant
 ) {
     navigation<RootScreen.WorldNav>(
         startDestination = WorldScreen.HomeScreen
@@ -139,6 +141,6 @@ fun NavGraphBuilder.worldNavGraph(
         ) {
             RavenChatView(navController)
         }
-        alexandriaNavGraph(navController)
+        alexandriaNavGraph(navController, appVariant)
     }
 }

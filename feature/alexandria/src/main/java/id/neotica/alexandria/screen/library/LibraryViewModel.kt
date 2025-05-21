@@ -1,56 +1,120 @@
 package id.neotica.alexandria.screen.library
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import id.neotica.domain.ApiResult
+import id.neotica.domain.local.CurrentUserRepository
+import id.neotica.domain.model.User
 import id.neotica.domain.model.alexandria.Book
-import id.neotica.domain.pagination.Pagination
-import id.neotica.domain.remote.AlexandriaRepository
 import id.neotica.domain.remote.PermissionRepository
+import id.neotica.domain.remote.UserRepository
+import id.neotica.domain.remote.alexandria.BookRepository
 import id.neotica.domain.usecase.GetUserNameUseCase
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class LibraryViewModel(
-    private val alexandriaRepo: AlexandriaRepository,
+    private val bookRepo: BookRepository,
     private val permissionRepository: PermissionRepository,
-    private val getUserNameUseCase: GetUserNameUseCase
+    private val getUserNameUseCase: GetUserNameUseCase,
+    private val userRepo: UserRepository,
+    private val currentUserDatabase: CurrentUserRepository
 ): ViewModel() {
-    private var _booksOld: MutableStateFlow<ApiResult<Pagination<Book>>> = MutableStateFlow(
-        ApiResult.Loading())
-    val books = _booksOld.asStateFlow()
+    private var _books: MutableStateFlow<List<Book>> = MutableStateFlow(emptyList())
+    val books = _books.asStateFlow()
 
-    private var _permission: MutableStateFlow<Boolean> = MutableStateFlow(false)
-    val permission = _permission.asStateFlow()
+    private var _userFlow = MutableSharedFlow<User>()
+
+    private val _errorMessage = MutableStateFlow<String?>(null)
+    val errorMessage: StateFlow<String?> = _errorMessage
+
+    private var _loading: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    val loading get() = _loading
+
+    private var _isNotLogged: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    val isNotLogged: StateFlow<Boolean> = _isNotLogged
 
     fun userName() = getUserNameUseCase.invoke()
 
     init {
-        getBooks()
-        getPermission()
+        loginState()
+        getUserRoomInstance()
     }
 
-    private fun getBooks() = viewModelScope.launch {
-        alexandriaRepo.getBooks().collect {
-            _booksOld.value = it
+    fun loginState() = viewModelScope.launch {
+        if (userRepo.isLoggedIn()) {
+            getBooks()
+            _isNotLogged.value = false
+        } else {
+            _isNotLogged.value = true
         }
     }
 
-    fun getPermission() = viewModelScope.launch {
-        permissionRepository.getPermissionList().collect {
-            if (it is ApiResult.Success) {
-                _permission.value = it.data?.contains(userName()) == true
-                Log.d("permissionList", it.toString())
-//                Log.d("permissionList2", it.data!!.contains("laetuz") .toString())
-//                Log.d("permissionList3", userName() .toString())
-//                Log.d("permission", _permission.value.toString())
+    fun getBooks() = viewModelScope.launch {
+        bookRepo.getBooks().collect {
+            when(it) {
+                is ApiResult.Loading -> {
+                    _loading.value = true
+                    _errorMessage.value = null
+                }
+                is ApiResult.Success -> {
+                    it.data?.content?.let { _books.value = it }
+                    _loading.value = false
+                }
+                is ApiResult.Error -> {
+                    _errorMessage.value = it.errorMessage
+                    _loading.value = false
+                }
             }
         }
     }
 
-    suspend fun hasAuthorPermission(): Boolean {
-        return permissionRepository.hasPermission(userName())
+    fun getPermission(unit: () -> Unit) = viewModelScope.launch {
+        permissionRepository.getPermissionList().collect {
+            when(it) {
+                is ApiResult.Loading -> _loading.value = true
+                is ApiResult.Success -> {
+                    _loading.value = false
+                    val result = it.data?.contains(userName()) == true
+                    if (result) unit()
+                }
+                is ApiResult.Error -> {
+                    _errorMessage.value = it.errorMessage
+                    _loading.value = false
+                }
+            }
+        }
+    }
+
+    private fun getUserRoomInstance() = viewModelScope.launch {
+        currentUserDatabase.getUser().collect {
+            if (it.isNotEmpty()) {
+                _userFlow.emit(it[0])
+            } else {
+                getUser()
+            }
+        }
+    }
+
+    private fun getUser() = viewModelScope.launch {
+        val user = userRepo.getUserDetail(userRepo.getUserId())
+
+        when(user) {
+            is ApiResult.Loading -> _loading.value = true
+            is ApiResult.Success -> {
+                _loading.value = false
+                user.data?.let {
+                    _userFlow.emit(it)
+                    currentUserDatabase.saveUser(it)
+                }
+            }
+            is ApiResult.Error -> {
+                _errorMessage.value = user.errorMessage
+                _loading.value = false
+            }
+        }
     }
 }

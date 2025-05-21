@@ -8,12 +8,12 @@ plugins {
 
 android {
     namespace = "id.neotica.neoverse"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "id.neotica.neoverse"
         minSdk = 26
-        targetSdk = 35
+        targetSdk = 36
         versionCode = 63
         versionName = "1.1"
 

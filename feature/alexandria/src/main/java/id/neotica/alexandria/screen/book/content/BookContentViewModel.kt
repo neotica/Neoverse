@@ -10,7 +10,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import id.neotica.domain.ApiResult
 import id.neotica.domain.pagination.PaginatedContent
-import id.neotica.domain.remote.AlexandriaRepository
+import id.neotica.domain.remote.alexandria.ContentRepository
 import id.neotica.ui.navigation.AlexandriaScreen
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,7 +19,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class BookContentViewModel(
-    private val alexandriaRepo: AlexandriaRepository,
+    private val contentRepo: ContentRepository,
     savedStateHandle: SavedStateHandle
 ): ViewModel() {
 
@@ -30,7 +30,7 @@ class BookContentViewModel(
     private var _currentPage = MutableStateFlow(1)
     val currentPage: StateFlow<Int> = _currentPage.asStateFlow()
 
-    var loading by mutableStateOf(false)
+    private var loading by mutableStateOf(false)
     var hasNext by mutableStateOf(false)
     var paginatedContent by mutableStateOf<Map<Int, PaginatedContent>>(emptyMap())
 
@@ -61,7 +61,7 @@ class BookContentViewModel(
 
     fun loadPage(page: Int) = viewModelScope.launch {
         loading = true
-        alexandriaRepo.getContents(args.chapterId, page).collect {
+        contentRepo.getContents(args.chapterId, page).collect {
             when (it) {
                 is ApiResult.Success -> {
                     paginatedContent = paginatedContent + (page to it.data!!)

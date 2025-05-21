@@ -40,6 +40,7 @@ import id.neotica.ui.navigation.NavigationItem
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.Screen
 import id.neotica.ui.navigation.WorldScreen
+import id.neotica.ui.navigation.showExcept
 import id.neotica.ui.state.AdaptiveState
 import id.neotica.ui.theme.DarkBackground
 import id.neotica.ui.theme.DarkPrimary
@@ -112,10 +113,7 @@ fun MainView() {
 
         val bottomBarExcludedRoutes = screenSet + worldScreen + alexandriaSet
 
-        val includeRoute = bottomBarExcludedRoutes.none {
-            if (navBackStackEntry?.destination?.route == null) true else
-                navBackStackEntry?.destination?.hasRoute(it::class) == true
-        }
+        val includeRoute = navBackStackEntry.showExcept(bottomBarExcludedRoutes)
         Log.d("currentScreen", navBackStackEntry?.destination?.route.toString())
 
         val mapAdaptive = AdaptiveState.from(currentWindowAdaptiveInfo())

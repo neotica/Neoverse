@@ -1,6 +1,5 @@
 package id.neotica.alexandria.screen.admin
 
-import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -29,13 +28,12 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.alexandria.Book
+import id.neotica.domain.model.alexandria.book.BookRequest
 import id.neotica.domain.utils.convertLongToTime
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.LoadingIndicator
 import id.neotica.ui.navigation.AlexandriaScreen
-import id.neotica.ui.navigation.navigateBack
 import id.neotica.ui.theme.DarkPrimaryTransparent80
-import kotlinx.coroutines.flow.collectLatest
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -57,16 +55,21 @@ fun LibraryAdminView(
                 }
                 is ApiResult.Error -> {
                     isLoading = false
-                    Log.e("library", result.errorMessage.toString())
                 }
             }
         }
     }
 
     LaunchedEffect(Unit) {
-        viewModel.permission.collectLatest {
-            if (!it) {
-                navController.navigateBack()
+        viewModel.isLoading.collect {
+            isLoading = it
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.permission.collect {
+            if (it == false) {
+                navController.navigateUp()
             }
         }
     }
@@ -110,10 +113,13 @@ fun LibraryAdminView(
                                     checked = isChecked,
                                     onCheckedChange = { checked ->
                                         isChecked = checked
-                                        val updatedBook = it.copy(
-                                            isPublished = checked
+                                        val request = BookRequest(
+                                            title = it.title,
+                                            author = it.author,
+                                            language = it.language,
+                                            isPublished = checked,
                                         )
-//                                        viewModel.editBook(updatedBook)
+                                        viewModel.publish(it.id, request)
                                     }
                                 )
                             }

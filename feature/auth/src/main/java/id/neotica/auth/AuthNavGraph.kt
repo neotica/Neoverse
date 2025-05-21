@@ -10,16 +10,18 @@ import id.neotica.auth.register.RegisterView
 import id.neotica.auth.verify.VerifyEmailView
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.Screen
+import id.neotica.ui.state.AppVariant
 
 fun NavGraphBuilder.authNavGraph(
     navController: NavController,
-    paddingValues: PaddingValues
+    paddingValues: PaddingValues,
+    appVariant: AppVariant
 ){
     navigation<RootScreen.AuthNav>(
         startDestination = Screen.LoginScreen,
     ) {
         composable<Screen.LoginScreen> {
-            LoginView(navController)
+            LoginView(navController, appVariant)
         }
         composable<Screen.RegisterScreen> {
             RegisterView(navController)

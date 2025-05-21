@@ -1,0 +1,117 @@
+package id.neotica.network.alexandria
+
+import id.neotica.domain.model.alexandria.Book
+import id.neotica.domain.model.alexandria.book.BookRequest
+
+class BookDummy {
+    val bookResponse = Book(
+        id = "2ea3741e-4b0d-42ad-8b5b-e4be983611fc",
+        title = "This is the end",
+        author = "tarakh",
+        language = "EN",
+        isPublished = true,
+        createdAt = 1745407419573,
+    )
+    val paginatedBookResponseJson = """
+            {
+                    "content": [
+                        {
+                            "uuid": "2ea3741e-4b0d-42ad-8b5b-e4be983611fc",
+                            "title": "This is the end",
+                            "language": "EN",
+                            "isPublished": true,
+                            "author": "tarakh",
+                            "createdAt": 1745407419573
+                        }
+                    ],
+                    "currentPage": 1,
+                    "totalPages": 1,
+                    "pageSize": 10,
+                    "hasNextPage": false,
+                    "hasPreviousPage": false
+            }
+        """.trimIndent()
+
+    val emptyBookResponseJson = """
+            {
+                    "content": [],
+                    "currentPage": 0,
+                    "totalPages": 0,
+                    "pageSize": 10,
+                    "hasNextPage": false,
+                    "hasPreviousPage": false
+            }
+        """.trimIndent()
+
+    val booksByAuthorResponse = listOf<Book>(bookResponse)
+
+    val booksByAuthorResponseJson = """
+            [
+                {
+                    "uuid": "2ea3741e-4b0d-42ad-8b5b-e4be983611fc",
+                    "title": "This is the end",
+                    "language": "EN",
+                    "isPublished": true,
+                    "author": "tarakh",
+                    "createdAt": 1745407419573
+                }
+            ]
+        """.trimIndent()
+
+    val booksByAuthorNotFoundJson = """
+            {
+                "error": "No books found for author 'tarakh'"
+            }
+        """.trimIndent()
+
+    val bookByIdResponse = bookResponse
+
+    val bookByIdJson = """
+            {
+                "uuid": "${bookResponse.id}",
+                "title": "${bookResponse.title}",
+                "author": "${bookResponse.author}",
+                "language": "${bookResponse.language}",
+                "summary": ${bookResponse.summary},
+                "isPublished": ${bookResponse.isPublished},
+                "imageUrl": ${bookResponse.imageUrl},
+                "createdAt": ${bookResponse.createdAt}
+            }
+        """.trimIndent()
+
+    val addBookRequest = BookRequest(
+        title = "This is the end",
+        author = "tarakh",
+        language = "EN",
+        isPublished = true
+    )
+
+    val addBookResponseJson = bookByIdJson
+
+    val editBookRequest = BookRequest(
+        title = bookResponse.id,
+        author = bookResponse.author,
+        language = bookResponse.language,
+        genre = bookResponse.genre, //nullable
+        summary = bookResponse.summary, //nullable
+        isPublished = bookResponse.isPublished,
+        imageUrl = bookResponse.imageUrl
+    )
+    val editBookResponse = bookResponse
+    val editBookResponseJson = """
+            {
+                "uuid": "${bookResponse.id}",
+                "title": "${bookResponse.title}",
+                "author": "${bookResponse.author}",
+                "language": "${bookResponse.language}",
+                "genre": ${bookResponse.genre},
+                "summary": ${bookResponse.summary},
+                "isPublished": ${bookResponse.isPublished},
+                "imageUrl": ${bookResponse.imageUrl},
+                "createdAt": ${bookResponse.createdAt}
+            }
+        """.trimIndent()
+
+    val deleteBookResponseJson = "Book deleted successfully"
+
+}

@@ -8,6 +8,7 @@ data class BookRequest(
     val author: String,
     val language: String,
     val genre: String? = null,
+    val summary: String? = null,
     val isPublished: Boolean,
     val imageUrl: String? = null
 )

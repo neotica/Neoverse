@@ -20,20 +20,23 @@ import id.neotica.profile.resetpassword.ResetPasswordView
 import id.neotica.profile.termsofservice.TermsOfServiceView
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.Screen
+import id.neotica.ui.state.AppVariant
 
 fun NavGraphBuilder.profileNavGraph(
     navController: NavController,
-    paddingValues: PaddingValues
+    paddingValues: PaddingValues,
+    appVariant: AppVariant
 ){
     navigation<RootScreen.ProfileNav>(
         startDestination = Screen.ProfileScreen,
     ) {
-        authNavGraph(navController, paddingValues)
+        authNavGraph(navController, paddingValues, appVariant)
 
         composable<Screen.ProfileScreen> {
             ProfileView(
                 navController,
-                paddingValues = paddingValues
+                paddingValues = paddingValues,
+                appVariant
             )
         }
         composable<Screen.PrivacyPolicyScreen>(

@@ -1,4 +1,4 @@
-package id.neotica.domain.model.alexandria.admin
+package id.neotica.domain.model.admin
 
 import kotlinx.serialization.Serializable
 
@@ -10,5 +10,6 @@ data class WarningResponse(
     val isAppealed: Boolean,
     val isApproved: Boolean,
     val message: String,
+    val version: Int,
     val createdAt: Long
 )
