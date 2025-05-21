@@ -6,7 +6,7 @@ import id.neotica.domain.model.alexandria.book.BookRequest
 class BookDummy {
     val bookResponse = Book(
         id = "2ea3741e-4b0d-42ad-8b5b-e4be983611fc",
-        title = "Frankenstein",
+        title = "This is the end",
         author = "tarakh",
         language = "EN",
         isPublished = true,
@@ -17,7 +17,7 @@ class BookDummy {
                     "content": [
                         {
                             "uuid": "2ea3741e-4b0d-42ad-8b5b-e4be983611fc",
-                            "title": "Frankenstein",
+                            "title": "This is the end",
                             "language": "EN",
                             "isPublished": true,
                             "author": "tarakh",
@@ -49,7 +49,7 @@ class BookDummy {
             [
                 {
                     "uuid": "2ea3741e-4b0d-42ad-8b5b-e4be983611fc",
-                    "title": "Frankenstein",
+                    "title": "This is the end",
                     "language": "EN",
                     "isPublished": true,
                     "author": "tarakh",
@@ -80,7 +80,7 @@ class BookDummy {
         """.trimIndent()
 
     val addBookRequest = BookRequest(
-        title = "Frankenstein",
+        title = "This is the end",
         author = "tarakh",
         language = "EN",
         isPublished = true
