@@ -6,7 +6,7 @@ import id.neotica.domain.model.alexandria.Chapter
 class ChapterDummy {
     val bookResponse = Book(
         id = "2ea3741e-4b0d-42ad-8b5b-e4be983611fc",
-        title = "Frankenstein",
+        title = "This is the end",
         author = "tarakh",
         language = "EN",
         isPublished = true,
