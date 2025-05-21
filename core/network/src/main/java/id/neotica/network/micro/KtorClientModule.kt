@@ -29,7 +29,7 @@ val ktorModule = module {
                 level = LogLevel.HEADERS
             }
             install(HttpTimeout) {
-                requestTimeoutMillis = 5.seconds.inWholeMilliseconds
+                requestTimeoutMillis = 15.seconds.inWholeMilliseconds
                 connectTimeoutMillis = 15.seconds.inWholeMilliseconds
                 socketTimeoutMillis = 15.seconds.inWholeMilliseconds
             }
