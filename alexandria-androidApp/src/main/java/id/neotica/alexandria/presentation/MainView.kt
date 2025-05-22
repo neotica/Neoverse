@@ -42,182 +42,181 @@ import id.neotica.ui.state.AdaptiveState
 import id.neotica.ui.theme.DarkBackground
 import id.neotica.ui.theme.DarkPrimary
 import id.neotica.ui.theme.NeoverseTheme
+import org.koin.compose.KoinContext
 
 @Composable
 fun MainView() {
-    NeoverseTheme {
-        val navController = rememberNavController()
+    KoinContext {
+        NeoverseTheme {
+            val navController = rememberNavController()
 
-        val navBackStackEntry by navController.currentBackStackEntryAsState()
-        val currentDestination = navBackStackEntry?.destination
+            val navBackStackEntry by navController.currentBackStackEntryAsState()
+            val currentDestination = navBackStackEntry?.destination
 
-        val navItems = listOf(
-            NavigationItem(
-                title = "Home",
-                icon = Icons.Default.Home,
-                screen = RootScreen.AlexandriaNav
-            ),
-//            NavigationItem(
-//                title = "World",
-//                icon = ImageVector.vectorResource(R.drawable.ic_world),
-//                screen = RootScreen.WorldNav
-//            ),
-            NavigationItem(
-                title = "Profile",
-                icon = Icons.Default.AccountCircle,
-                screen = Screen.ProfileScreen
+            val navItems = listOf(
+                NavigationItem(
+                    title = "Home",
+                    icon = Icons.Default.Home,
+                    screen = RootScreen.AlexandriaNav
+                ),
+                NavigationItem(
+                    title = "Profile",
+                    icon = Icons.Default.AccountCircle,
+                    screen = Screen.ProfileScreen
+                )
             )
-        )
 
-        val screenSet = setOf(
-            Screen.Splash,
-            Screen.LoginScreen,
-            Screen.RegisterScreen,
-            Screen.VerifyEmailScreen,
-            Screen.PrivacyPolicyScreen,
-            Screen.TermsOfServiceScreen,
-            Screen.DeleteAccountScreen,
-            Screen.AboutScreen,
-            Screen.AddChatScreen,
-            Screen.UpdateAppScreen,
-            Screen.CameraPreviewScreen,
-            Screen.SearchUserScreen,
-            Screen.FriendScreen,
-            Screen.ResetPassword,
-            Screen.Chat(),
-            Screen.EditProfileScreen(),
-        )
-
-        val worldScreen = setOf(
-            WorldScreen.TavernScreen,
-            WorldScreen.MiningScreen,
-            WorldScreen.LeaderBoardsScreen,
-            WorldScreen.TerminalScreen,
-            WorldScreen.RavenScreen,
-            WorldScreen.RavenChatScreen,
-            WorldScreen.ItemDetailScreen(),
-        )
-
-        val alexandriaSet = setOf(
-            AlexandriaScreen.BookScreen(),
-            AlexandriaScreen.UserLibraryScreen,
-            AlexandriaScreen.EditBookScreen(),
-            AlexandriaScreen.EditChapterScreen(),
-            AlexandriaScreen.BookContentScreen(),
-            AlexandriaScreen.AdminScreen
-        )
-
-        val bottomBarExcludedRoutes = screenSet + worldScreen + alexandriaSet
-
-        val includeRoute = navBackStackEntry.showExcept(bottomBarExcludedRoutes)
-
-        Log.d("currentScreen", navBackStackEntry?.destination?.route.toString())
-
-        val mapAdaptive = AdaptiveState.from(currentWindowAdaptiveInfo())
-        val customNavSuiteType = when (mapAdaptive) {
-            is AdaptiveState.Compact -> NavigationSuiteScaffoldDefaults.calculateFromAdaptiveInfo(
-                currentWindowAdaptiveInfo()
+            val screenSet = setOf(
+                Screen.Splash,
+                Screen.LoginScreen,
+                Screen.RegisterScreen,
+                Screen.VerifyEmailScreen,
+                Screen.PrivacyPolicyScreen,
+                Screen.TermsOfServiceScreen,
+                Screen.DeleteAccountScreen,
+                Screen.AboutScreen,
+                Screen.AddChatScreen,
+                Screen.UpdateAppScreen,
+                Screen.CameraPreviewScreen,
+                Screen.SearchUserScreen,
+                Screen.FriendScreen,
+                Screen.ResetPassword,
+                Screen.Chat(),
+                Screen.EditProfileScreen(),
             )
-            else -> NavigationSuiteType.NavigationRail
-        }
 
-        when(mapAdaptive) {
-            is AdaptiveState.Compact -> {
-                Scaffold(
-                    modifier = Modifier
-                        .background(DarkBackground)
-                        .fillMaxSize(),
-                    bottomBar = {
-                        AnimatedVisibility (
-                            visible = includeRoute,
-                            enter = slideInVertically(initialOffsetY = { it }),
-                            exit = slideOutVertically(targetOffsetY = { it }),
-                        ) {
-                            CustomNavBar (
-                                modifier = Modifier
+            val worldScreen = setOf(
+                WorldScreen.TavernScreen,
+                WorldScreen.MiningScreen,
+                WorldScreen.LeaderBoardsScreen,
+                WorldScreen.TerminalScreen,
+                WorldScreen.RavenScreen,
+                WorldScreen.RavenChatScreen,
+                WorldScreen.ItemDetailScreen(),
+            )
+
+            val alexandriaSet = setOf(
+                AlexandriaScreen.BookScreen(),
+                AlexandriaScreen.UserLibraryScreen,
+                AlexandriaScreen.EditBookScreen(),
+                AlexandriaScreen.EditChapterScreen(),
+                AlexandriaScreen.BookContentScreen(),
+                AlexandriaScreen.AdminScreen
+            )
+
+            val bottomBarExcludedRoutes = screenSet + worldScreen + alexandriaSet
+
+            val includeRoute = navBackStackEntry.showExcept(bottomBarExcludedRoutes)
+
+            Log.d("currentScreen", navBackStackEntry?.destination?.route.toString())
+
+            val mapAdaptive = AdaptiveState.from(currentWindowAdaptiveInfo())
+            val customNavSuiteType = when (mapAdaptive) {
+                is AdaptiveState.Compact -> NavigationSuiteScaffoldDefaults.calculateFromAdaptiveInfo(
+                    currentWindowAdaptiveInfo()
+                )
+                else -> NavigationSuiteType.NavigationRail
+            }
+
+            when(mapAdaptive) {
+                is AdaptiveState.Compact -> {
+                    Scaffold(
+                        modifier = Modifier
+                            .background(DarkBackground)
+                            .fillMaxSize(),
+                        bottomBar = {
+                            AnimatedVisibility (
+                                visible = includeRoute,
+                                enter = slideInVertically(initialOffsetY = { it }),
+                                exit = slideOutVertically(targetOffsetY = { it }),
                             ) {
-                                navItems.map {
-                                    NavigationBarItem(
-                                        colors = NavigationBarItemColors(
-                                            selectedIconColor = Color.White,
-                                            selectedTextColor = Color.White,
-                                            selectedIndicatorColor = DarkPrimary,
-                                            unselectedIconColor = Color.White,
-                                            unselectedTextColor = Color.White,
-                                            disabledIconColor = Color.Gray,
-                                            disabledTextColor = Color.Gray
-                                        ),
-                                        selected = currentDestination?.hierarchy?.any { current ->
-                                            current.hasRoute(it.screen::class)
-                                        } == true,
-                                        onClick = {
-                                            navController.navigate(it.screen) {
-                                                navController.graph.startDestinationId.let { route ->
-                                                    popUpTo(AlexandriaScreen.HomeScreen) {
-                                                        saveState = true
-                                                        inclusive = false
+                                CustomNavBar (
+                                    modifier = Modifier
+                                ) {
+                                    navItems.map {
+                                        NavigationBarItem(
+                                            colors = NavigationBarItemColors(
+                                                selectedIconColor = Color.White,
+                                                selectedTextColor = Color.White,
+                                                selectedIndicatorColor = DarkPrimary,
+                                                unselectedIconColor = Color.White,
+                                                unselectedTextColor = Color.White,
+                                                disabledIconColor = Color.Gray,
+                                                disabledTextColor = Color.Gray
+                                            ),
+                                            selected = currentDestination?.hierarchy?.any { current ->
+                                                current.hasRoute(it.screen::class)
+                                            } == true,
+                                            onClick = {
+                                                navController.navigate(it.screen) {
+                                                    navController.graph.startDestinationId.let { route ->
+                                                        popUpTo(AlexandriaScreen.HomeScreen) {
+                                                            saveState = true
+                                                            inclusive = false
+                                                        }
                                                     }
+                                                    launchSingleTop = true
+                                                    restoreState = true
                                                 }
-                                                launchSingleTop = true
-                                                restoreState = true
-                                            }
-                                        },
-                                        icon = {
-                                            Icon(imageVector = it.icon, contentDescription = it.title)
-                                        },
-                                        label = { Text(it.title) },
-                                    )
+                                            },
+                                            icon = {
+                                                Icon(imageVector = it.icon, contentDescription = it.title)
+                                            },
+                                            label = { Text(it.title) },
+                                        )
+                                    }
                                 }
                             }
                         }
-                    }
-                ) { innerPadding ->
-                    NavGraph(
-                        navController = navController,
-                        paddingValues = PaddingValues(
-                            top = innerPadding.calculateTopPadding(),
-                            bottom = innerPadding.calculateBottomPadding() - WindowInsets.systemBars.asPaddingValues().calculateBottomPadding()
-                        )
-                    )
-                }
-            }
-            else -> {
-                CustomNavigationSuiteScaffold(
-                    layoutType = customNavSuiteType,
-                    navigationVisibility = includeRoute,
-                    navigationSuiteItems = {
-                        navItems.map { navMap ->
-                            item(
-                                selected = currentDestination?.hierarchy?.any { current ->
-                                    current.hasRoute(navMap.screen::class)
-                                } == true,
-                                onClick = {
-                                    navController.navigate(navMap.screen) {
-                                        navController.graph.startDestinationRoute?.let { route ->
-                                            popUpTo(route) {
-                                                saveState = true
-                                            }
-                                        }
-                                        launchSingleTop = true
-                                        restoreState = true
-                                    }
-                                },
-                                icon = {
-                                    Icon(imageVector = navMap.icon, contentDescription = navMap.title)
-                                },
-                                label = {
-                                    Text(navMap.title)
-                                }
+                    ) { innerPadding ->
+                        NavGraph(
+                            navController = navController,
+                            paddingValues = PaddingValues(
+                                top = innerPadding.calculateTopPadding(),
+                                bottom = innerPadding.calculateBottomPadding() - WindowInsets.systemBars.asPaddingValues().calculateBottomPadding()
                             )
-                        }
+                        )
                     }
-                ) {
-                    NavGraph(
-                        navController = navController,
-                        paddingValues = PaddingValues(),
-                    )
+                }
+                else -> {
+                    CustomNavigationSuiteScaffold(
+                        layoutType = customNavSuiteType,
+                        navigationVisibility = includeRoute,
+                        navigationSuiteItems = {
+                            navItems.map { navMap ->
+                                item(
+                                    selected = currentDestination?.hierarchy?.any { current ->
+                                        current.hasRoute(navMap.screen::class)
+                                    } == true,
+                                    onClick = {
+                                        navController.navigate(navMap.screen) {
+                                            navController.graph.startDestinationRoute?.let { route ->
+                                                popUpTo(route) {
+                                                    saveState = true
+                                                }
+                                            }
+                                            launchSingleTop = true
+                                            restoreState = true
+                                        }
+                                    },
+                                    icon = {
+                                        Icon(imageVector = navMap.icon, contentDescription = navMap.title)
+                                    },
+                                    label = {
+                                        Text(navMap.title)
+                                    }
+                                )
+                            }
+                        }
+                    ) {
+                        NavGraph(
+                            navController = navController,
+                            paddingValues = PaddingValues(),
+                        )
+                    }
                 }
             }
         }
     }
+
 }

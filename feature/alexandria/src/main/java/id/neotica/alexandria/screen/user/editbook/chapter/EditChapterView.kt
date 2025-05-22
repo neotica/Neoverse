@@ -34,7 +34,7 @@ import id.neotica.ui.components.topbar.DotsMenuItem
 import id.neotica.ui.navigation.navigateBack
 import id.neotica.ui.navigation.refreshOnBack
 import id.neotica.ui.page.PageDropdown
-import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

@@ -42,7 +42,7 @@ kotlin {
             api(libs.kotlinx.serialization.json)
 
             // Koin
-            api(libs.koin.androidx.compose)
+            api(libs.bundles.koin)
         }
         androidUnitTest.dependencies {
             implementation(libs.junit.jupiter)

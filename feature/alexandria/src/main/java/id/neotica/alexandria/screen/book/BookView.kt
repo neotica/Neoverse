@@ -36,7 +36,7 @@ import id.neotica.ui.components.droidcore.NeoSearchBar
 import id.neotica.ui.navigation.AlexandriaScreen
 import id.neotica.ui.theme.DarkBackground
 import id.neotica.ui.theme.NeoPadding
-import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

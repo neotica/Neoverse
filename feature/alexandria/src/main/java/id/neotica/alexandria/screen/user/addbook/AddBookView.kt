@@ -35,7 +35,7 @@ import id.neotica.ui.components.NeoButton
 import id.neotica.ui.navigation.AlexandriaScreen
 import id.neotica.ui.theme.DarkPrimaryTransparent2
 import id.neotica.ui.theme.NeoPadding
-import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun AddBookView(

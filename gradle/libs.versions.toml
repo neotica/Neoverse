@@ -6,7 +6,7 @@ cameraxVersion = "1.4.1"
 converterGson = "2.11.0"
 converterMoshi = "2.9.0"
 haze = "1.2.0"
-koinAndroidxCompose = "3.5.6"
+koinMultiplatform = "4.0.1"
 coreKtx = "1.15.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
@@ -33,6 +33,7 @@ junitJupiter = "5.11.1"
 coroutines = "1.9.0"
 material = "1.12.0"
 ktor = "3.1.2"
+composeMultiplatform = "1.8.1"
 
 [libraries]
 androidx-adaptive = { module = "androidx.compose.material3.adaptive:adaptive" }
@@ -79,7 +80,6 @@ firebase-messaging = { module = "com.google.firebase:firebase-messaging"}
 firebase-appcheck-debug = { module = "com.google.firebase:firebase-appcheck-debug" }
 firebase-appcheck-playintegrity = { module = "com.google.firebase:firebase-appcheck-playintegrity" }
 #serialization
-koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koinAndroidxCompose" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization" }
 #room
 room = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
@@ -110,7 +110,11 @@ androidx-core-splashscreen = { group = "androidx.core", name = "core-splashscree
 wear-compose-navigation = { module = "androidx.wear.compose:compose-navigation", version.ref = "androidx-wear-compose" }
 
 #KMP
-koin-core = { module = "io.insert-koin:koin-core", version.ref = "koinAndroidxCompose"}
+#Koin
+koin-core = { module = "io.insert-koin:koin-core", version.ref = "koinMultiplatform" }
+koin-compose = {module="io.insert-koin:koin-compose", version.ref = "koinMultiplatform"}
+koin-composeVM = { module = "io.insert-koin:koin-compose-viewmodel", version.ref = "koinMultiplatform" }
+koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koinMultiplatform" } #android
 #KMP Test
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 #KMP Coroutine
@@ -121,6 +125,7 @@ android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 android-library = { id = "com.android.library", version.ref = "agp" }
+composeMultiplatform = { id = "org.jetbrains.compose", version.ref = "composeMultiplatform" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 google-services = { id = "com.google.gms.google-services", version.ref = "gms" }
 devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
@@ -135,6 +140,11 @@ ktor = [
     "ktor-serialization-kotlinx-json",
     "ktor-client-logging",
     "ktor-client-mock"
+]
+koin = [
+    "koin-core",
+    "koin-compose",
+    "koin-composeVM"
 ]
 unit-test = [
     "mockito-core",

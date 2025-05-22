@@ -18,7 +18,7 @@ import id.neotica.ui.components.topbar.DotsMenuItem
 import id.neotica.ui.navigation.AlexandriaScreen
 import id.neotica.ui.navigation.Screen
 import id.neotica.ui.state.AppVariant
-import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun LibraryView(

@@ -4,6 +4,7 @@ import id.neotica.alexandria.R
 import id.neotica.auth.di.authModules
 import id.neotica.database.CurrentUserRepositoryImpl
 import id.neotica.database.FriendDaoRepositoryImpl
+import id.neotica.database.databaseModule
 import id.neotica.domain.local.CurrentUserRepository
 import id.neotica.domain.local.FriendDaoRepository
 import id.neotica.domain.remote.AlexandriaAdminRepository
@@ -27,14 +28,29 @@ import id.neotica.network.admin.WarningRepositoryImpl
 import id.neotica.network.alexandria.BookRepositoryImpl
 import id.neotica.network.alexandria.ChapterRepositoryImpl
 import id.neotica.network.alexandria.ContentRepositoryImpl
+import id.neotica.network.micro.ktorModule
 import id.neotica.network.usecase.FirebaseTokenProvider
 import id.neotica.profile.ProfileViewModel
 import id.neotica.ui.state.AppVariant
 import org.koin.androidx.viewmodel.dsl.viewModelOf
+import org.koin.core.context.startKoin
 import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
+
+fun initializeKoin() {
+    startKoin {
+        modules(
+            ktorModule,
+            databaseModule,
+            repositoryModules,
+            viewModelModules,
+            useCaseModules,
+            appVariantModule
+        )
+    }
+}
 
 val repositoryModules = module {
     singleOf(::AuthRepositoryImpl) { bind<AuthRepository>() }
