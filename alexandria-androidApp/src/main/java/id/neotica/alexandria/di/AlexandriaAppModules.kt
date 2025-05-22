@@ -1,5 +1,6 @@
 package id.neotica.alexandria.di
 
+import android.content.Context
 import id.neotica.alexandria.R
 import id.neotica.auth.di.authModules
 import id.neotica.database.CurrentUserRepositoryImpl
@@ -39,11 +40,11 @@ import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
 
-fun initializeKoin() {
+fun initializeKoin(context: Context) {
     startKoin {
         modules(
             ktorModule,
-            databaseModule,
+            databaseModule(context),
             repositoryModules,
             viewModelModules,
             useCaseModules,

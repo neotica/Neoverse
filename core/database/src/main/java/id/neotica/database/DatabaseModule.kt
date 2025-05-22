@@ -1,19 +1,19 @@
 package id.neotica.database
 
+import android.content.Context
 import androidx.room.Room
-import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
-val databaseModule = module {
+fun databaseModule(context: Context) = module {
     factory { get<MainDatabase>().friendDao() }
     factory { get<MainDatabase>().currentUserDao() }
     single {
         Room.databaseBuilder(
-            context = androidContext(),
+            context = context.applicationContext,
             klass = MainDatabase::class.java,
             name = "Friend.db"
         )
-            .fallbackToDestructiveMigration()
+            .fallbackToDestructiveMigration(false)
             .build()
     }
 }
