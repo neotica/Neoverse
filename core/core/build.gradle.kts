@@ -31,7 +31,8 @@ kotlin {
         androidMain.dependencies {
             implementation(libs.androidx.core.ktx)
             implementation(libs.androidx.lifecycle.runtime.ktx)
-            api(libs.koin.androidx.compose)
+            implementation(libs.androidx.lifecycle.viewmodel)
+//            api(libs.koin.androidx.compose)
         }
         commonMain.dependencies {
             //put your multiplatform dependencies here

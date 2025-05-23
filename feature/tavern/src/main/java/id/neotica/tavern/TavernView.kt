@@ -57,7 +57,7 @@ import id.neotica.ui.theme.NeoPadding
 import id.neotica.ui.theme.Transparent
 import id.neotica.ui.theme.TransparentText20
 import id.neotica.tavern.components.SlotMachine
-import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun TavernView(

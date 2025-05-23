@@ -4,7 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
-import androidx.activity.compose.LocalActivity
+//import androidx.activity.compose.LocalActivity
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -86,7 +86,7 @@ import id.neotica.ui.theme.Transparent
 import id.neotica.ui.theme.TransparentText20
 import id.neotica.ui.theme.TransparentText40
 import kotlinx.coroutines.delay
-import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinViewModel
 import androidx.core.net.toUri
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -99,7 +99,7 @@ fun ChatView(
 ) {
     val messages = viewModel.message.collectAsState()
     val listState = rememberLazyListState()
-    val activity = LocalActivity.current
+//    val activity = LocalActivity.current
 
     fun finishApp() {
         if (defaultText.isEmpty()) {
@@ -111,7 +111,7 @@ fun ChatView(
 
             }
         } else {
-            activity?.finish()
+//            activity?.finish()
         }
     }
 

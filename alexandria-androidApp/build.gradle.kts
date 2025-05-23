@@ -7,7 +7,6 @@ import kotlin.apply
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlinMultiplatform)
-    alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.google.services)
     alias(libs.plugins.kotlin.serialization)
@@ -86,6 +85,15 @@ kotlin {
 //            implementation(compose.ui)
 //            implementation(compose.components.resources)
 //            implementation(compose.components.uiToolingPreview)
+            implementation(libs.bundles.compose.multiplatform)
+            implementation(libs.bundles.koin)
+//            implementation(projects.core.ui)
+//            implementation(compose.runtime)
+//            implementation(compose.foundation)
+//            implementation(compose.material3)
+//            implementation(compose.ui)
+//            implementation(compose.components.resources)
+//            implementation(compose.components.uiToolingPreview)
 //            implementation(libs.androidx.lifecycle.viewmodel)
 //            implementation(libs.androidx.lifecycle.runtimeCompose)
 //            implementation(libs.androidx.navigation.compose)
@@ -131,6 +139,10 @@ android {
         targetCompatibility = JavaVersion.VERSION_11
     }
 }
+
+//dependencies {
+//    debugImplementation(compose.uiTooling)
+//}
 
 //dependencies {
 

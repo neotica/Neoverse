@@ -39,7 +39,7 @@ import id.neotica.world.utils.bgLeaderBoards
 import id.neotica.world.utils.bgMining
 import id.neotica.world.utils.bgTavern
 import id.neotica.world.utils.worldIntro2
-import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinViewModel
 import kotlin.random.Random
 
 @Composable

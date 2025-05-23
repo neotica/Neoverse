@@ -28,6 +28,7 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import id.neotica.alexandria.presentation.navigation.NavGraph
+import id.neotica.alexandria.theme.NeoverseTheme
 import id.neotica.ui.components.navigation.CustomNavBar
 import id.neotica.ui.components.navigation.CustomNavigationSuiteScaffold
 import id.neotica.ui.components.navigation.NavigationSuiteScaffoldDefaults
@@ -41,8 +42,8 @@ import id.neotica.ui.navigation.showExcept
 import id.neotica.ui.state.AdaptiveState
 import id.neotica.ui.theme.DarkBackground
 import id.neotica.ui.theme.DarkPrimary
-import id.neotica.ui.theme.NeoverseTheme
 import org.koin.compose.KoinContext
+
 
 @Composable
 fun MainView() {

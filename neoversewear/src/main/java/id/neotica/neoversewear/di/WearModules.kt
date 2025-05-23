@@ -21,8 +21,8 @@ import id.neotica.network.AuthRepositoryImpl
 import id.neotica.network.ChatRepositoryImpl
 import id.neotica.network.FeedRepositoryImpl
 import id.neotica.network.UserRepositoryImpl
-import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.core.module.dsl.singleOf
+import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
 

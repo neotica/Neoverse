@@ -64,7 +64,7 @@ import id.neotica.ui.theme.DarkPrimaryCard
 import id.neotica.ui.theme.DarkPrimaryTransparent2
 import id.neotica.ui.theme.DarkTransparent
 import id.neotica.ui.theme.FontSize
-import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

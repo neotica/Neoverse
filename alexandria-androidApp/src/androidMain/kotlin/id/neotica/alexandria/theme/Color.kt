@@ -1,4 +1,4 @@
-package id.neotica.alexandria.ui.theme
+package id.neotica.alexandria.theme
 
 import androidx.compose.ui.graphics.Color
 

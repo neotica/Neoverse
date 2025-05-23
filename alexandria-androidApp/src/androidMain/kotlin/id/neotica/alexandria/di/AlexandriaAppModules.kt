@@ -33,10 +33,10 @@ import id.neotica.network.micro.ktorModule
 import id.neotica.network.usecase.FirebaseTokenProvider
 import id.neotica.profile.ProfileViewModel
 import id.neotica.ui.state.AppVariant
-import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.core.context.startKoin
 import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.singleOf
+import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
 

@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.compose.compiler)
 }
 
@@ -24,13 +25,6 @@ android {
                 "proguard-rules.pro"
             )
         }
-        release {
-            isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
-        }
     }
     buildFeatures {
         compose = true
@@ -45,17 +39,18 @@ android {
 }
 
 dependencies {
-    implementation(projects.core.core)
+    api(projects.core.core)
 
     // UI
-    api(libs.androidx.navigation.compose)
-    api(libs.androidx.activity.compose)
-    implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.ui)
-    implementation(libs.androidx.ui.graphics)
-    implementation(libs.androidx.ui.tooling.preview)
-    api(libs.androidx.material3)
+//    api(libs.androidx.navigation.compose)
+//    api(libs.androidx.activity.compose)
+//    implementation(platform(libs.androidx.compose.bom))
+//    implementation(libs.androidx.ui)
+//    implementation(libs.androidx.ui.graphics)
+//    implementation(libs.androidx.ui.tooling.preview)
+//    api(libs.androidx.material3)
     api(libs.haze)
+    api(libs.bundles.compose.multiplatform)
 
     //Adaptive
     api(libs.androidx.material3.adaptive.navigation.suite)

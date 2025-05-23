@@ -53,7 +53,7 @@ import id.neotica.ui.theme.DarkBackground
 import id.neotica.ui.theme.DarkPrimaryTransparent80
 import id.neotica.ui.theme.NeoPadding
 import kotlinx.coroutines.delay
-import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

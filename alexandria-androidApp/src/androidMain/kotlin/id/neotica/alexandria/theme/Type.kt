@@ -1,4 +1,4 @@
-package id.neotica.alexandria.ui.theme
+package id.neotica.alexandria.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

@@ -32,7 +32,7 @@ import id.neotica.ui.navigation.Screen
 import id.neotica.ui.theme.DarkPrimary
 import id.neotica.ui.theme.FontSize
 import id.neotica.ui.theme.NegativePrimary
-import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinViewModel
 import java.util.Locale
 
 @Composable
