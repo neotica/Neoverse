@@ -35,6 +35,9 @@ import id.neotica.ui.components.LoadingIndicator
 import id.neotica.ui.navigation.AlexandriaScreen
 import id.neotica.ui.theme.DarkPrimaryTransparent80
 import org.koin.compose.viewmodel.koinViewModel
+import androidx.compose.foundation.lazy.items
+import id.neotica.ui.components.topbar.DotsMenuDropDown
+import id.neotica.ui.components.topbar.DotsMenuItem
 
 @Composable
 fun LibraryAdminView(
@@ -77,57 +80,66 @@ fun LibraryAdminView(
     BasicScaffold(
         "Alexandria Administrator",
         navController = navController,
-        enableActionBar = true
+        enableActionBar = true,
+        trailingIcon = {
+
+            DotsMenuDropDown(
+                item = listOf(
+                    DotsMenuItem("Warning Hub") {
+                        navController.navigate(AlexandriaScreen.WarningHubScreen)
+                    }
+                ),
+            )
+        }
     ) {
         LazyColumn {
-            item {
-                books.forEach {
-                    Card(
+            items(books) {
+                Card(
+                    modifier = Modifier
+                        .padding(start = 16.dp, end = 16.dp, bottom = 8.dp, top = 8.dp)
+                        .clip(RoundedCornerShape(16.dp))
+                    ,
+                    colors = CardDefaults.cardColors().copy(containerColor = DarkPrimaryTransparent80)
+                ) {
+                    Column(
                         modifier = Modifier
-                            .padding(start = 16.dp, end = 16.dp, bottom = 8.dp, top = 8.dp)
-                            .clip(RoundedCornerShape(16.dp))
-                        ,
-                        colors = CardDefaults.cardColors().copy(containerColor = DarkPrimaryTransparent80)
-                    ) {
-                        Column(
-                            modifier = Modifier
-                                .clickable { AlexandriaScreen.BookScreen(id = it.id) }
-                                .padding(16.dp)
-                                .fillMaxWidth(),
-                            verticalArrangement = Arrangement.SpaceEvenly
-                        ) {
-                            Text(
-                                text = it.title,
-//                                modifier = Modifier.padding(vertical = 16.dp)
-                            )
-                            Text("Author: ${it.author}")
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                var isChecked by remember { mutableStateOf(false) }
-                                LaunchedEffect(Unit) { isChecked = it.isPublished }
-
-
-                                Text("Published: ")
-                                Checkbox(
-                                    checked = isChecked,
-                                    onCheckedChange = { checked ->
-                                        isChecked = checked
-                                        val request = BookRequest(
-                                            title = it.title,
-                                            author = it.author,
-                                            language = it.language,
-                                            isPublished = checked,
-                                        )
-                                        viewModel.publish(it.id, request)
-                                    }
-                                )
+                            .clickable {
+                                navController.navigate(AlexandriaScreen.AdminBookScreen(it.id))
                             }
-                            Text("Language: ${it.language}")
-                            Text("Created at: ${ convertLongToTime(time = it.createdAt) }")
-                            Text("Genre: ${it.genre?: "N/A"}")
-//                            Text("Summary: ${it.summary}")
+                            .padding(16.dp)
+                            .fillMaxWidth(),
+                        verticalArrangement = Arrangement.SpaceEvenly
+                    ) {
+                        Text(
+                            text = it.title,
+//                                modifier = Modifier.padding(vertical = 16.dp)
+                        )
+                        Text("Author: ${it.author}")
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            var isChecked by remember { mutableStateOf(false) }
+                            LaunchedEffect(Unit) { isChecked = it.isPublished }
+
+
+                            Text("Published: ")
+                            Checkbox(
+                                checked = isChecked,
+                                onCheckedChange = { checked ->
+                                    isChecked = checked
+                                    val request = BookRequest(
+                                        title = it.title,
+                                        author = it.author,
+                                        language = it.language,
+                                        isPublished = checked,
+                                    )
+                                    viewModel.publish(it.id, request)
+                                }
+                            )
                         }
+                        Text("Language: ${it.language}")
+                        Text("Created at: ${ convertLongToTime(time = it.createdAt) }")
+                        Text("Genre: ${it.genre?: "N/A"}")
                     }
                 }
             }

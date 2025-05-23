@@ -1,6 +1,9 @@
 package id.neotica.alexandria.di
 
 import id.neotica.alexandria.screen.admin.LibraryAdminViewModel
+import id.neotica.alexandria.screen.admin.book.AdminBookViewModel
+import id.neotica.alexandria.screen.admin.book.warning.CreateWarningViewModel
+import id.neotica.alexandria.screen.admin.warning.WarningHubViewModel
 import id.neotica.alexandria.screen.book.BookViewModel
 import id.neotica.alexandria.screen.book.content.BookContentViewModel
 import id.neotica.alexandria.screen.library.LibraryViewModel
@@ -20,4 +23,7 @@ val alexandriaModules = module {
     viewModelOf(::BookContentViewModel)
     viewModelOf(::AddBookViewModel)
     viewModelOf(::LibraryAdminViewModel)
+    viewModelOf(::AdminBookViewModel)
+    viewModelOf(::WarningHubViewModel)
+    viewModelOf(::CreateWarningViewModel)
 }
