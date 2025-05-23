@@ -8,5 +8,4 @@ plugins {
     alias(libs.plugins.composeMultiplatform).apply(false)
     alias(libs.plugins.kotlinMultiplatform).apply(false)
     alias(libs.plugins.compose.compiler).apply(false)
-//    id("dev.icerock.moko.kswift") version "0.7.0"
 }

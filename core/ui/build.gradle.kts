@@ -65,7 +65,7 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
 
     // Coil
-    api(libs.coil)
+    api(libs.bundles.coil)
 
     //DroidCore
     api(libs.droidcore)

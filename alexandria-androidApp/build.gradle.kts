@@ -32,30 +32,30 @@ kotlin {
         }
     }
 
-    jvm("desktop")
+//    jvm("desktop")
 
-    @OptIn(ExperimentalWasmDsl::class)
-    wasmJs {
-        moduleName = "composeApp"
-        browser {
-            val rootDirPath = project.rootDir.path
-            val projectDirPath = project.projectDir.path
-            commonWebpackConfig {
-                outputFileName = "composeApp.js"
-                devServer = (devServer ?: KotlinWebpackConfig.DevServer()).apply {
-                    static = (static ?: mutableListOf()).apply {
-                        // Serve sources to debug inside browser
-                        add(rootDirPath)
-                        add(projectDirPath)
-                    }
-                }
-            }
-        }
-        binaries.executable()
-    }
+//    @OptIn(ExperimentalWasmDsl::class)
+//    wasmJs {
+//        moduleName = "composeApp"
+//        browser {
+//            val rootDirPath = project.rootDir.path
+//            val projectDirPath = project.projectDir.path
+//            commonWebpackConfig {
+//                outputFileName = "composeApp.js"
+//                devServer = (devServer ?: KotlinWebpackConfig.DevServer()).apply {
+//                    static = (static ?: mutableListOf()).apply {
+//                        // Serve sources to debug inside browser
+//                        add(rootDirPath)
+//                        add(projectDirPath)
+//                    }
+//                }
+//            }
+//        }
+//        binaries.executable()
+//    }
 
     sourceSets {
-        val desktopMain by getting
+//        val desktopMain by getting
 
         androidMain.dependencies {
             implementation(projects.core.database)
@@ -79,15 +79,11 @@ kotlin {
 //            implementation(libs.ktor.client.darwin)
         }
         commonMain.dependencies {
-//            implementation(compose.runtime)
-//            implementation(compose.foundation)
-//            implementation(compose.material3)
-//            implementation(compose.ui)
-//            implementation(compose.components.resources)
-//            implementation(compose.components.uiToolingPreview)
-            implementation(libs.bundles.compose.multiplatform)
-            implementation(libs.bundles.koin)
-//            implementation(projects.core.ui)
+//            implementation(libs.bundles.compose.multiplatform)
+//            implementation(libs.bundles.koin)
+
+//            implementation(projects.core.uiShared)
+
 //            implementation(compose.runtime)
 //            implementation(compose.foundation)
 //            implementation(compose.material3)
@@ -104,10 +100,10 @@ kotlin {
         commonTest.dependencies {
             implementation(libs.kotlin.test)
         }
-        desktopMain.dependencies {
-//            implementation(compose.desktop.currentOs)
-//            implementation(libs.kotlinx.coroutinesSwing)
-        }
+//        desktopMain.dependencies {
+////            implementation(compose.desktop.currentOs)
+////            implementation(libs.kotlinx.coroutinesSwing)
+//        }
     }
 }
 
