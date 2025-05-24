@@ -1,22 +1,28 @@
 package id.neotica.alexandria.screen.admin.book
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import id.neotica.domain.ApiResult
+import id.neotica.domain.model.admin.WarningRequest
 import id.neotica.domain.model.alexandria.Book
 import id.neotica.domain.model.alexandria.book.BookRequest
+import id.neotica.domain.remote.admin.WarningRepository
 import id.neotica.domain.remote.alexandria.BookRepository
 import id.neotica.ui.navigation.AlexandriaScreen
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 class AdminBookViewModel(
     private val bookRepo: BookRepository,
+    private val warningRepo: WarningRepository,
     savedStateHandle: SavedStateHandle
 ): ViewModel() {
 
@@ -32,10 +38,41 @@ class AdminBookViewModel(
     private var _navigateBack = MutableSharedFlow<Boolean>()
     val navigateBack = _navigateBack.asSharedFlow()
 
-    private val args = savedStateHandle.toRoute<AlexandriaScreen.EditBookScreen>()
+    private val _channelCreateWarning = Channel<EventEdit>()
+    val channelCreateWarning = _channelCreateWarning.receiveAsFlow()
+
+    private val args = savedStateHandle.toRoute<AlexandriaScreen.AdminBookScreen>()
 
     init {
         getChapters()
+    }
+
+    fun createWarning(warningMessage: String) = viewModelScope.launch {
+        val request = WarningRequest(
+            bookId = args.id,
+            message = warningMessage,
+            version = 1,
+            isApproved = false,
+            isAppealed = false
+        )
+        warningRepo.newWarning(request).collect {
+            Log.d("createWarning", "createWarning all: ${it}")
+            when (it) {
+                is ApiResult.Loading -> _isLoading.value = true
+                is ApiResult.Success -> {
+                    _isLoading.value = false
+                    val id = it.data?.id
+                    _channelCreateWarning.send(EventEdit.OnCreateWarningSuccess(id.toString()))
+                    Log.d("createWarning", "createWarning: ${it.data}")
+                }
+                is ApiResult.Error -> {
+                    _isLoading.value = false
+                    _channelCreateWarning.send(EventEdit.OnError(it.errorMessage.toString()))
+//                    _message.emit(it.errorMessage.toString())
+                    Log.d("createWarning", "createWarning error: ${it.errorMessage}")
+                }
+            }
+        }
     }
 
     fun editBook(book: Book) = viewModelScope.launch {
@@ -97,5 +134,10 @@ class AdminBookViewModel(
                 }
             }
         }
+    }
+
+    sealed interface EventEdit {
+        data class OnCreateWarningSuccess(val warningId: String): EventEdit
+        data class OnError(val message: String): EventEdit
     }
 }

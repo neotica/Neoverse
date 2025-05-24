@@ -40,8 +40,8 @@ class WarningRepositoryImplTest {
     @Test
     fun `getWarnings, Successful API call with valid warnings data`() = runBlocking {
         // Given
-        val expectedJson = dummy.warningResponseJson
-        val expectedResponse = dummy.warningResponse
+        val expectedJson = dummy.warningsResponseJson
+        val expectedResponse = dummy.warningsResponse
         client = createMockClient(
             url = "/admin/warning",
             content = expectedJson
@@ -55,6 +55,31 @@ class WarningRepositoryImplTest {
         assertTrue(result is ApiResult.Success)
         val successData = (result as ApiResult.Success).data!!
         assertEquals(expectedResponse, successData.content)
+    }
+
+    /**
+     * Test case to verify the successful retrieval of a warning by its ID.
+     *
+     * This test mocks a successful API response for a specific warning ID.
+     * It then calls `getWarning` with that ID and asserts that:
+     * 1. The result is an [ApiResult.Success].
+     * 2. The data within the [ApiResult.Success] matches the expected warning response.
+     */
+    @Test
+    fun `getWarningById success`() = runBlocking {
+        val expectedResponse = dummy.warningResponse
+        client = createMockClient(
+            url = "/admin/warning/${expectedResponse.id}",
+            content = dummy.warningResponseJson
+        )
+        repository = WarningRepositoryImpl(client, fakeTokenProvider)
+        //When
+        val result = repository.getWarning(expectedResponse.id).last()
+        println("💀: " + result.errorMessage)
+        println("Result getwarningbyid: "+result.data)
+        assertTrue(result is ApiResult.Success)
+        val successData = (result as ApiResult.Success).data
+        assertEquals(expectedResponse, successData)
     }
 
     /**
@@ -78,7 +103,6 @@ class WarningRepositoryImplTest {
      */
     @Test
     fun `newWarning emits loading then success on VALID POST`() = runTest {
-        val bookId = dummy.newWarningRequest.bookId
         val request = dummy.newWarningRequest
         val expectedResponse = dummy.newWarningResponse
         val jsonResponse = dummy.postWarningResponseJson
@@ -94,7 +118,6 @@ class WarningRepositoryImplTest {
 
         //When
         val emission = repository.newWarning(
-            bookId = bookId.toString(),
             request = request
         ).toList()
         println("💀: " + emission.last().errorMessage)
@@ -121,7 +144,6 @@ class WarningRepositoryImplTest {
      */
     @Test
     fun `newWarning succeed, warning for book already exist`() = runTest {
-        val bookId = dummy.newWarningRequest.bookId
         val request = dummy.newWarningRequest
         val expectedResponse = dummy.postWarningAlreadyExistResponse
         val jsonResponse = dummy.postWarningAlreadyExistResponseJson
@@ -138,7 +160,6 @@ class WarningRepositoryImplTest {
 
         //When
         val emission = repository.newWarning(
-            bookId = bookId.toString(),
             request = request
         ).toList()
         println("💀: " + emission.last().errorMessage)

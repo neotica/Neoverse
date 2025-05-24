@@ -28,7 +28,7 @@ class BookRepositoryImpl(
         }.body<Pagination<Book>>()
     }
 
-    override fun addBook(book: BookRequest): Flow<ApiResult<Book>> = safeApiCall {
+    override fun addBook(book: BookRequest): Flow<ApiResult<Book>> = safeApiCallNew<Book> {
         val tokenResult = token?.getToken()
         client.post("$baseUrl/alexandria") {
             headers {
@@ -36,7 +36,7 @@ class BookRepositoryImpl(
                 append("Authorization", "Bearer $tokenResult")
             }
             setBody(book)
-        }.body<Book>()
+        }
     }
 
     override fun getUserBooks(username: String): Flow<ApiResult<List<Book>>> = safeApiCallNew<List<Book>> {

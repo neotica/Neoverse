@@ -112,7 +112,6 @@ fun LibraryAdminView(
                     ) {
                         Text(
                             text = it.title,
-//                                modifier = Modifier.padding(vertical = 16.dp)
                         )
                         Text("Author: ${it.author}")
                         Row(

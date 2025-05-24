@@ -27,12 +27,14 @@ import androidx.navigation.NavController
 import id.neotica.alexandria.components.ChapterItem
 import id.neotica.domain.model.alexandria.Chapter
 import id.neotica.domain.utils.convertLongToTime
+import id.neotica.droidcore.component.textfield.NeoTextField
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.LoadingIndicator
 import id.neotica.ui.components.NeoButton
 import id.neotica.ui.components.edittext.CustomNeoTextField
 import id.neotica.ui.components.topbar.DotsMenuDropDown
 import id.neotica.ui.components.topbar.DotsMenuItem
+import id.neotica.ui.navigation.AlexandriaScreen
 import id.neotica.ui.navigation.AlexandriaScreen.EditChapterScreen
 import id.neotica.ui.navigation.navigateBack
 import id.neotica.ui.navigation.onRefresh
@@ -69,6 +71,20 @@ fun AdminBookView(
     }
 
     var isChecked by remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        viewModel.channelCreateWarning.collect {
+            when(it) {
+                is AdminBookViewModel.EventEdit.OnCreateWarningSuccess -> {
+                    navController.navigate(AlexandriaScreen.WarningDetailScreen(it.warningId))
+                }
+
+                is AdminBookViewModel.EventEdit.OnError -> {
+                    Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
 
     LaunchedEffect(Unit) {
         navController.onRefresh { viewModel.getChapters() }
@@ -146,8 +162,10 @@ fun AdminBookView(
                         }
                     )
                 }
+                val warningMessage = remember { mutableStateOf("") }
+                NeoTextField(warningMessage)
                 NeoButton("Create Warning") {
-
+                    viewModel.createWarning(warningMessage.value)
                 }
             }
         }
