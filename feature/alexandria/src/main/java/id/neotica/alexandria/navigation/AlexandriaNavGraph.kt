@@ -4,8 +4,9 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import id.neotica.alexandria.screen.admin.LibraryAdminView
-import id.neotica.alexandria.screen.admin.book.AdminBookView
+import id.neotica.alexandria.screen.admin.AdminView
+import id.neotica.alexandria.screen.admin.library.AdminLibraryView
+import id.neotica.alexandria.screen.admin.library.book.AdminBookView
 import id.neotica.alexandria.screen.admin.warning.WarningHubView
 import id.neotica.alexandria.screen.admin.warning.detail.WarningDetailView
 import id.neotica.alexandria.screen.book.BookView
@@ -47,8 +48,8 @@ fun NavGraphBuilder.alexandriaNavGraph(
         composable<AlexandriaScreen.BookContentScreen> {
             BookContentView(navController)
         }
-        composable<AlexandriaScreen.AdminScreen> {
-            LibraryAdminView(navController)
+        composable<AlexandriaScreen.AdminLibraryScreen> {
+            AdminLibraryView(navController)
         }
         composable<AlexandriaScreen.AdminBookScreen> {
             AdminBookView(navController)
@@ -59,5 +60,6 @@ fun NavGraphBuilder.alexandriaNavGraph(
         composable<AlexandriaScreen.WarningDetailScreen> {
             WarningDetailView(navController)
         }
+        composable<AlexandriaScreen.AdminScreen> { AdminView(navController) }
     }
 }

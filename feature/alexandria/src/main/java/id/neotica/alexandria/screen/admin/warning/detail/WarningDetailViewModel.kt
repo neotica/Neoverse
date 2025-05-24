@@ -26,6 +26,9 @@ class WarningDetailViewModel(
     private var _message = MutableStateFlow<String?>(null)
     val message = _message.asStateFlow()
 
+    private var _navigateBack = MutableStateFlow(false)
+    val navigateBack = _navigateBack.asStateFlow()
+
     private val args = savedStateHandle.toRoute<AlexandriaScreen.WarningDetailScreen>()
 
     init {
@@ -40,6 +43,28 @@ class WarningDetailViewModel(
                     Log.d("WarningDetailViewModel", "getDetail: ${it.data}")
                     _isLoading.value = false
                     _warning.value = it.data
+                }
+                is ApiResult.Error -> {
+                    Log.d("WarningDetailViewModel", "Error: ${it.errorMessage}")
+                    _isLoading.value = false
+                    _message.value = it.errorMessage
+                }
+            }
+        }
+    }
+
+    fun deleteWarning(id: String) = viewModelScope.launch {
+        repo.deleteWarning(id).collect {
+            when(it) {
+                is ApiResult.Loading -> {
+                    _navigateBack.value = false
+                    _isLoading.value = true
+                }
+                is ApiResult.Success -> {
+                    Log.d("WarningDetailViewModel", "getDetail: ${it.data}")
+                    _isLoading.value = false
+                    _message.value = it.data
+                    _navigateBack.value = true
                 }
                 is ApiResult.Error -> {
                     Log.d("WarningDetailViewModel", "Error: ${it.errorMessage}")

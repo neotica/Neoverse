@@ -102,6 +102,7 @@ fun MainView() {
                 AlexandriaScreen.EditBookScreen(),
                 AlexandriaScreen.EditChapterScreen(),
                 AlexandriaScreen.BookContentScreen(),
+                AlexandriaScreen.AdminLibraryScreen,
                 AlexandriaScreen.AdminScreen
             )
 

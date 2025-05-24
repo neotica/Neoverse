@@ -13,6 +13,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
 import id.neotica.ui.components.BasicScaffold
+import id.neotica.ui.components.topbar.DotsMenuDropDown
+import id.neotica.ui.components.topbar.DotsMenuItem
+import id.neotica.ui.navigation.navigateBack
+import id.neotica.ui.navigation.refreshOnBack
 import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -35,9 +39,29 @@ fun WarningDetailView(
         }
     }
 
+    LaunchedEffect(Unit) {
+        viewModel.navigateBack.collect {
+            if (it) {
+                navController.refreshOnBack()
+                navController.navigateBack()
+            }
+        }
+    }
+
     BasicScaffold(
         "Warning Detail",
         isLoading = isLoading,
+        trailingIcon = {
+            DotsMenuDropDown(
+                item = listOf(
+                    DotsMenuItem("Delete warning") {
+                        warning?.let {
+                            viewModel.deleteWarning(it.id)
+                        }
+                    }
+                ),
+            )
+        }
     ) {
         warning?.let {
             Text(it.bookTitle)

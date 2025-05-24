@@ -1,4 +1,4 @@
-package id.neotica.alexandria.screen.admin.book
+package id.neotica.alexandria.screen.admin.library.book
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.Box
@@ -71,6 +71,10 @@ fun AdminBookView(
     }
 
     var isChecked by remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        navController.onRefresh { viewModel.getChapters() }
+    }
 
     LaunchedEffect(Unit) {
         viewModel.channelCreateWarning.collect {

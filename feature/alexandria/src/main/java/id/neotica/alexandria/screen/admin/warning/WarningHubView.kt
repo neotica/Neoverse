@@ -24,7 +24,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.LoadingIndicator
 import id.neotica.ui.navigation.AlexandriaScreen
 import id.neotica.ui.theme.DarkPrimaryTransparent80
@@ -46,41 +45,35 @@ fun WarningHubView(
         }
     }
 
-    BasicScaffold(
-        "Warning Hub",
-        navController = navController,
-        enableActionBar = true
-    ) {
-       LazyColumn {
-           warnings?.let {
-               items(it) {
-                   Card(
-                       modifier = Modifier
-                           .padding(start = 16.dp, end = 16.dp, bottom = 8.dp, top = 8.dp)
-                           .clip(RoundedCornerShape(16.dp))
-                       ,
-                       colors = CardDefaults.cardColors().copy(containerColor = DarkPrimaryTransparent80)
-                   ) {
-                       Column(
-                           modifier = Modifier
-                               .combinedClickable {
-                                   navController.navigate(AlexandriaScreen.WarningDetailScreen(it.id))
-                               }
-                               .padding(16.dp)
-                               .fillMaxWidth(),
-                           verticalArrangement = Arrangement.SpaceEvenly
-                       ) {
-                           Text(it.bookTitle)
-                           Text("Id: ${it.id}")
-                           Text("Message: ${it.message}")
-                           Text("Appealed: ${it.isAppealed}")
-                           Text("Approved: ${it.isApproved}")
-                           Text("Version: ${it.version}")
-                       }
-                   }
-               }
-           }
-       }
+    LazyColumn {
+        warnings?.let {
+            items(it) {
+                Card(
+                    modifier = Modifier
+                        .padding(start = 16.dp, end = 16.dp, bottom = 8.dp, top = 8.dp)
+                        .clip(RoundedCornerShape(16.dp))
+                    ,
+                    colors = CardDefaults.cardColors().copy(containerColor = DarkPrimaryTransparent80)
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .combinedClickable {
+                                navController.navigate(AlexandriaScreen.WarningDetailScreen(it.id))
+                            }
+                            .padding(16.dp)
+                            .fillMaxWidth(),
+                        verticalArrangement = Arrangement.SpaceEvenly
+                    ) {
+                        Text(it.bookTitle)
+                        Text("Id: ${it.id}")
+                        Text("Message: ${it.message}")
+                        Text("Appealed: ${it.isAppealed}")
+                        Text("Approved: ${it.isApproved}")
+                        Text("Version: ${it.version}")
+                    }
+                }
+            }
+        }
     }
     if (isLoading) Box(
         Modifier

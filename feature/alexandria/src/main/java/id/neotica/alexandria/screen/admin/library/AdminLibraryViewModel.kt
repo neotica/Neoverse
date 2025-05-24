@@ -1,4 +1,4 @@
-package id.neotica.alexandria.screen.admin
+package id.neotica.alexandria.screen.admin.library
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class LibraryAdminViewModel(
+class AdminLibraryViewModel(
     private val bookRepo: BookRepository,
     private val warningRepo: WarningRepository,
     private val permissionRepository: PermissionRepository,
