@@ -9,6 +9,7 @@ import id.neotica.domain.remote.alexandria.ContentRepository
 import id.neotica.domain.remote.usecase.TokenProvider
 import id.neotica.neoverse.utils.baseUrl
 import id.neotica.network.utils.safeApiCall
+import id.neotica.network.utils.safeApiCallNew
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.delete
@@ -23,15 +24,15 @@ class ContentRepositoryImpl(
     private val client: HttpClient,
     private val token: TokenProvider
 ): ContentRepository {
-    override fun getContents(chapterId: Int, page: Int?): Flow<ApiResult<PaginatedContent>> = safeApiCall {
+    override fun getContents(chapterId: Int, page: Int?): Flow<ApiResult<PaginatedContent>> = safeApiCallNew<PaginatedContent> {
         client.get("${baseUrl}/alexandria/chapters/contents/$chapterId"){
             url {
                 parameters.append("page", page?.toString() ?: "1")
             }
-        }.body()
+        }
     }
 
-    override fun createContent(content: ContentRequest): Flow<ApiResult<ChapterContent>> = safeApiCall {
+    override fun createContent(content: ContentRequest): Flow<ApiResult<ChapterContent>> = safeApiCallNew<ChapterContent> {
         val tokenResult = token.getToken()
         client.post("${baseUrl}/alexandria/chapters/contents") {
             headers {
@@ -39,7 +40,7 @@ class ContentRepositoryImpl(
                 append("Authorization", "Bearer $tokenResult")
             }
             setBody(content)
-        }.body<ChapterContent>()
+        }
     }
 
     override fun editContent(content: NewContentRequest, id: Int, page: Int): Flow<ApiResult<String>> = safeApiCall {
