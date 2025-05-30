@@ -1,6 +1,5 @@
 package id.neotica.alexandria.screen.user.editbook.chapter
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -15,6 +14,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -25,7 +25,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import id.neotica.domain.ApiResult
-import id.neotica.domain.pagination.PaginatedContent
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.NeoButton
 import id.neotica.ui.components.edittext.EditContentBox
@@ -34,7 +33,7 @@ import id.neotica.ui.components.topbar.DotsMenuItem
 import id.neotica.ui.navigation.navigateBack
 import id.neotica.ui.navigation.refreshOnBack
 import id.neotica.ui.page.PageDropdown
-import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -43,43 +42,24 @@ fun EditChapterView(
     viewModel: EditChapterViewModel = koinViewModel()
 ) {
 
-    var isLoadingChapter by remember { mutableStateOf(false) }
+    val isLoadingChapter by viewModel.isLoading.collectAsState()
 
     val context = LocalContext.current
 
-    var chapterDetail by remember { mutableStateOf<PaginatedContent?>(null) }
-    var chapterDetailStat by remember { mutableStateOf("") }
+    val chapterDetail by viewModel.chapterDetail.collectAsState()
     var contentText by remember { mutableStateOf("") }
+    val message by viewModel.message.collectAsState()
 
-    LaunchedEffect(Unit) {
-        viewModel.editContent.collect {
-            when (it) {
-                is ApiResult.Loading -> isLoadingChapter = true
-                is ApiResult.Success -> {
-                    isLoadingChapter = false
-                    Toast.makeText(context, it.data, Toast.LENGTH_SHORT).show()
-                }
-                is ApiResult.Error -> isLoadingChapter = false
-            }
+    LaunchedEffect(message) {
+        message?.let {
+            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
         }
     }
 
     LaunchedEffect(Unit) {
-        viewModel.chapterDetail.collect { result ->
-            when (result) {
-                is ApiResult.Loading -> {
-                    chapterDetail = null
-                    isLoadingChapter = true
-                }
-                is ApiResult.Success -> {
-                    isLoadingChapter = false
-                    chapterDetail = result.data
-                }
-                is ApiResult.Error -> {
-                    isLoadingChapter = false
-                    chapterDetailStat = result.errorMessage.toString()
-                }
-            }
+        viewModel.navigateBack.collect{
+            navController.refreshOnBack()
+            navController.navigateBack()
         }
     }
 
@@ -92,14 +72,13 @@ fun EditChapterView(
             LaunchedEffect(Unit) {
                 viewModel.chapterDeleted.collect {
                     when (it) {
-                        is ApiResult.Loading -> isLoadingChapter = true
+                        is ApiResult.Loading -> {}
                         is ApiResult.Success -> {
-                            isLoadingChapter = false
                             navController.refreshOnBack()
                             navController.navigateBack()
                             Toast.makeText(context, it.data.toString(), Toast.LENGTH_SHORT).show()
                         }
-                        is ApiResult.Error -> isLoadingChapter = false
+                        is ApiResult.Error -> {}
                     }
                 }
             }
@@ -110,7 +89,6 @@ fun EditChapterView(
                 Text(
                     modifier = Modifier.clickable {
                         if (chapterDetail!= null) {
-                            isLoadingChapter = true
                             viewModel.editContent(
                                 content = contentText,
                                 id = chapterDetail!!.id,
@@ -125,7 +103,6 @@ fun EditChapterView(
                 DotsMenuDropDown(
                     item = listOf(
                         DotsMenuItem("Delete Chapter") {
-                            Log.d("delete chapter", "Yeah, $chapterDetail")
                             viewModel.deleteChapter()
                         }
                     ),
@@ -140,22 +117,6 @@ fun EditChapterView(
         ) {
 
             chapterDetail.let {
-                LaunchedEffect(Unit) {
-                    viewModel.contentCreated.collect {
-                        when (it) {
-                            is ApiResult.Loading -> isLoadingChapter = true
-                            is ApiResult.Success -> {
-                                isLoadingChapter = false
-                                navController.navigateBack()
-                                Toast.makeText(context, "Content successfully created.", Toast.LENGTH_SHORT).show()
-                            }
-                            is ApiResult.Error -> {
-                                Toast.makeText(context, it.errorMessage.toString(), Toast.LENGTH_SHORT).show()
-                                isLoadingChapter = false
-                            }
-                        }
-                    }
-                }
                 LazyColumn(
                     modifier = Modifier
                         .padding(horizontal = 16.dp)
@@ -189,7 +150,6 @@ fun EditChapterView(
                         viewModel.getChapterDetail(page = detail.page - 1)
                     }
                     if (detail.hasNext) NeoButton(">") {
-                        Log.d("detailpage", detail.page.toString())
                         viewModel.getChapterDetail(page = detail.page + 1)
                     }
                     val pageCount = detail.totalPages

@@ -39,10 +39,11 @@ kotlin {
         androidMain.dependencies {
             implementation(libs.androidx.core.ktx)
             implementation(libs.androidx.lifecycle.runtime.ktx)
+            implementation(libs.androidx.lifecycle.viewmodel)
             api(libs.kotlinx.serialization.json)
 
             // Koin
-            api(libs.koin.androidx.compose)
+            api(libs.bundles.koin)
         }
         androidUnitTest.dependencies {
             implementation(libs.junit.jupiter)

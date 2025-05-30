@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
@@ -18,7 +19,7 @@ import id.neotica.ui.components.topbar.DotsMenuItem
 import id.neotica.ui.navigation.AlexandriaScreen
 import id.neotica.ui.navigation.Screen
 import id.neotica.ui.state.AppVariant
-import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun LibraryView(
@@ -26,10 +27,10 @@ fun LibraryView(
     appVariant: AppVariant,
     viewModel: LibraryViewModel = koinViewModel()
 ) {
-    var isLoading = viewModel.loading.collectAsState().value //by remember { mutableStateOf(false) }
-    var books = viewModel.books.collectAsState().value
+    val isLoading by viewModel.loading.collectAsState() //by remember { mutableStateOf(false) }
+    val books by viewModel.books.collectAsState()
     val context = LocalContext.current
-    val errorMessage = viewModel.errorMessage.collectAsState().value
+    val errorMessage by viewModel.errorMessage.collectAsState()
 
     LaunchedEffect(Unit) {
         if (viewModel.isNotLogged.value) {
@@ -56,7 +57,6 @@ fun LibraryView(
             else -> true
         },
         trailingIcon = {
-
             DotsMenuDropDown(
                 item = listOf(
                     DotsMenuItem("Author's Page") {

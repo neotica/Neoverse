@@ -42,7 +42,7 @@ import id.neotica.ui.navigation.Screen
 import id.neotica.ui.state.AppVariant
 import id.neotica.ui.theme.DarkPrimary
 import id.neotica.ui.theme.FontSize
-import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinViewModel
 import androidx.compose.animation.core.rememberInfiniteTransition as rememberInfiniteTransition1
 
 @Composable

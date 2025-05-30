@@ -1,7 +1,6 @@
 package id.neotica.ui.components.image
 
 import android.content.Context
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,12 +17,11 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import coil.annotation.ExperimentalCoilApi
-import coil.compose.SubcomposeAsyncImage
-import coil.request.ImageRequest
+import coil3.compose.SubcomposeAsyncImage
+import coil3.request.CachePolicy
+import coil3.request.ImageRequest
 import id.neotica.ui.components.LoadingIndicator
-//hey
-@OptIn(ExperimentalFoundationApi::class, ExperimentalCoilApi::class)
+
 @Composable
 fun ImageCoil(
     url: String,
@@ -54,8 +52,8 @@ fun ImageCoil(
     ) {
         SubcomposeAsyncImage(
             model = ImageRequest.Builder(context)
-                .memoryCachePolicy(if (refreshCache) coil.request.CachePolicy.DISABLED else coil.request.CachePolicy.ENABLED)
-                .diskCachePolicy(if (refreshCache) coil.request.CachePolicy.DISABLED else coil.request.CachePolicy.ENABLED)
+                .memoryCachePolicy(if (refreshCache) CachePolicy.DISABLED else CachePolicy.ENABLED)
+                .diskCachePolicy(if (refreshCache) CachePolicy.DISABLED else CachePolicy.ENABLED)
                 .data(url)
                 .build(),
             contentDescription =  "",

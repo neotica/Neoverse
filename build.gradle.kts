@@ -5,7 +5,7 @@ plugins {
     alias(libs.plugins.google.services).apply(false)
     alias(libs.plugins.devtools.ksp).apply(false)
     alias(libs.plugins.android.library).apply(false)
+    alias(libs.plugins.composeMultiplatform).apply(false)
     alias(libs.plugins.kotlinMultiplatform).apply(false)
     alias(libs.plugins.compose.compiler).apply(false)
-//    id("dev.icerock.moko.kswift") version "0.7.0"
 }

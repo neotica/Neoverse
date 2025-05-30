@@ -1,12 +1,10 @@
 package id.neotica.alexandria.screen.user.editbook.chapter
 
-import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import id.neotica.domain.ApiResult
-import id.neotica.domain.model.alexandria.ChapterContent
 import id.neotica.domain.model.alexandria.ContentRequest
 import id.neotica.domain.model.alexandria.content.NewContentRequest
 import id.neotica.domain.pagination.PaginatedContent
@@ -24,17 +22,21 @@ class EditChapterViewModel(
     private val contentRepo: ContentRepository,
     savedStateHandle: SavedStateHandle
 ): ViewModel() {
-    private var _chapterDetail: MutableStateFlow<ApiResult<PaginatedContent>> = MutableStateFlow(ApiResult.Loading())
-    val chapterDetail = _chapterDetail.asStateFlow()
-
-    private var _editContent: MutableStateFlow<ApiResult<String>> = MutableStateFlow(ApiResult.Loading())
-    val editContent = _editContent.asStateFlow()
-
-    private var _contentCreated = MutableSharedFlow<ApiResult<ChapterContent>>()
-    val contentCreated = _contentCreated.asSharedFlow()
 
     private var _chapterDeleted = MutableSharedFlow<ApiResult<String>>()
     val chapterDeleted = _chapterDeleted.asSharedFlow()
+
+    private var _isLoading = MutableStateFlow(false)
+    val isLoading = _isLoading.asStateFlow()
+
+    private var _chapterDetail = MutableStateFlow<PaginatedContent?>(null)
+    var chapterDetail = _chapterDetail.asStateFlow()
+
+    private var _message = MutableStateFlow<String?>(null)
+    val message = _message
+
+    private var _navigateBack = MutableSharedFlow<Boolean>()
+    val navigateBack = _navigateBack.asSharedFlow()
 
     private val args = savedStateHandle.toRoute<AlexandriaScreen.EditChapterScreen>()
 
@@ -46,27 +48,60 @@ class EditChapterViewModel(
 
     fun getChapterDetail(page: Int? = 1) = viewModelScope.launch {
         contentRepo.getContents(args.chapterId, page).collect {
-            Log.d("chapterdetailvm", it.toString())
-            _chapterDetail.value = it
+            when (it) {
+                is ApiResult.Loading -> _isLoading.value = true
+                is ApiResult.Success -> {
+                    _isLoading.value = false
+                    _chapterDetail.value = it.data
+                }
+                is ApiResult.Error -> {
+                    _isLoading.value = false
+                    if (it.errorMessage == "404 Not Found") {
+                        "You have not created content for this chapter."
+                    } else {
+                        _message.value = it.errorMessage
+                    }
+
+                }
+            }
         }
     }
 
     fun deleteChapter() = viewModelScope.launch {
-        _chapterDeleted.emit(ApiResult.Loading())
         chapterRepo.deleteChapter(args.chapterId).collect {
-            _chapterDeleted.emit(it)
+            when (it) {
+                is ApiResult.Loading -> _isLoading.value = true
+                is ApiResult.Success -> {
+                    _isLoading.value = false
+                    _message.value = it.data
+                    _navigateBack.emit(true)
+                }
+                is ApiResult.Error -> {
+                    _isLoading.value = false
+                    _message.value = it.errorMessage
+                }
+            }
         }
     }
 
     fun createContent(content: String) = viewModelScope.launch {
-        _contentCreated.emit(ApiResult.Loading())
         contentRepo.createContent(
             ContentRequest(
                 content = content,
                 chapterId = args.chapterId
             )
         ).collect {
-            _contentCreated.emit(it)
+            when (it) {
+                is ApiResult.Loading -> _isLoading.value = true
+                is ApiResult.Success -> {
+                    _isLoading.value = false
+                    _message.value = "Successfully created content."
+                }
+                is ApiResult.Error -> {
+                    _isLoading.value = false
+                    _message.value = it.errorMessage
+                }
+            }
         }
     }
 
@@ -76,8 +111,18 @@ class EditChapterViewModel(
             id = id,
             page = page
         ).collect {
-            _editContent.value = it
-            getChapterDetail(page)
+            when (it) {
+                is ApiResult.Loading -> _isLoading.value = true
+                is ApiResult.Success -> {
+                    getChapterDetail(page)
+                    _isLoading.value = false
+                    _message.value = it.data
+                }
+                is ApiResult.Error -> {
+                    _isLoading.value = false
+                    _message.value = it.errorMessage
+                }
+            }
         }
     }
 }

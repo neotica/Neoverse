@@ -18,9 +18,9 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
-import androidx.core.graphics.drawable.toBitmap
-import coil.Coil
-import coil.request.ImageRequest
+import coil3.ImageLoader
+import coil3.request.ImageRequest
+import coil3.toBitmap
 import java.io.File
 import java.io.FileOutputStream
 
@@ -118,7 +118,7 @@ private fun ifFileExist(context: Context, fileName: String): Boolean {
 }
 
 private fun downloadAndSaveImage(context: Context, url: String, fileName: String) {
-    val imageLoader = Coil.imageLoader(context)
+    val imageLoader = ImageLoader(context)
     val request = ImageRequest.Builder(context)
         .data(url)
         .target { result ->

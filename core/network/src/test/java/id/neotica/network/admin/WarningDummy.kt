@@ -4,7 +4,7 @@ import id.neotica.domain.model.admin.WarningRequest
 import id.neotica.domain.model.admin.WarningResponse
 
 class WarningDummy {
-    val warningResponse = listOf<WarningResponse>(
+    val warningsResponse = listOf<WarningResponse>(
         WarningResponse(
             id = "8bab7937-c02c-4cd2-a753-e9fcaca52754",
             bookId = "93c835b6-6545-4570-a3e2-b3b32af6b82d",
@@ -16,7 +16,29 @@ class WarningDummy {
             createdAt = 1745234211269
         )
     )
+    val warningResponse = WarningResponse(
+        id = "8bab7937-c02c-4cd2-a753-e9fcaca52754",
+        bookId = "93c835b6-6545-4570-a3e2-b3b32af6b82d",
+        bookTitle = "The Bloody Ages 1",
+        isAppealed = false,
+        isApproved = false,
+        message = "You have posted too much",
+        version = 1,
+        createdAt = 1745234211269
+    )
     val warningResponseJson = """
+        {
+            "id": "8bab7937-c02c-4cd2-a753-e9fcaca52754",
+            "bookId": "93c835b6-6545-4570-a3e2-b3b32af6b82d",
+            "bookTitle": "The Bloody Ages 1",
+            "isAppealed": false,
+            "isApproved": false,
+            "message": "You have posted too much",
+            "version": 1,
+            "createdAt": 1745234211269
+        }
+    """.trimIndent()
+    val warningsResponseJson = """
             {
                 "content": [
                     {

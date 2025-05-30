@@ -31,10 +31,12 @@ kotlin {
         androidMain.dependencies {
             implementation(libs.androidx.core.ktx)
             implementation(libs.androidx.lifecycle.runtime.ktx)
+            implementation(libs.androidx.lifecycle.viewmodel)
+//            api(libs.koin.androidx.compose)
         }
         commonMain.dependencies {
             //put your multiplatform dependencies here
-            api(libs.koin.core)
+            api(libs.bundles.koin)
             api(libs.kotlinx.serialization.json)
             api(libs.coroutines.core)
         }

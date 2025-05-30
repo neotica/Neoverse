@@ -108,7 +108,7 @@ fun MainView() {
             AlexandriaScreen.EditBookScreen(),
             AlexandriaScreen.EditChapterScreen(),
             AlexandriaScreen.BookContentScreen(),
-            AlexandriaScreen.AdminScreen
+            AlexandriaScreen.AdminLibraryScreen
         )
 
         val bottomBarExcludedRoutes = screenSet + worldScreen + alexandriaSet
