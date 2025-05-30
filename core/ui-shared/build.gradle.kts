@@ -34,10 +34,6 @@ kotlin {
         androidMain.dependencies {
             //Adaptive
             api(libs.androidx.material3.adaptive.navigation.suite)
-//            api(libs.androidx.adaptive)
-//            api(libs.androidx.adaptive.layout)
-//            api(libs.androidx.adaptive.navigation)
-            implementation(libs.androidx.activity.compose)
             api(libs.haze)
 
             //SplashScreen API

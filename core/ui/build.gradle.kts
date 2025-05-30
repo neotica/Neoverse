@@ -44,19 +44,22 @@ dependencies {
     // UI
 //    api(libs.androidx.navigation.compose)
 //    api(libs.androidx.activity.compose)
-//    implementation(platform(libs.androidx.compose.bom))
 //    implementation(libs.androidx.ui)
 //    implementation(libs.androidx.ui.graphics)
 //    implementation(libs.androidx.ui.tooling.preview)
 //    api(libs.androidx.material3)
+    api(compose.runtime)
+    api(compose.foundation)
+    api(compose.material3)
+    api(compose.ui)
+    api(compose.components.resources)
+
     api(libs.haze)
     api(libs.bundles.compose.multiplatform)
 
     //Adaptive
-    api(libs.androidx.material3.adaptive.navigation.suite)
-//    api(libs.androidx.adaptive)
-//    api(libs.androidx.adaptive.layout)
-//    api(libs.androidx.adaptive.navigation)
+    api(libs.androidx.compose.material3.adaptive)
+//    api(libs.androidx.material3.adaptive.navigation.suite)
 
     //SplashScreen API
     api(libs.androidx.core.splashscreen)
