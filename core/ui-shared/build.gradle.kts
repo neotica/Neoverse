@@ -34,14 +34,22 @@ kotlin {
         androidMain.dependencies {
             //Adaptive
             api(libs.androidx.material3.adaptive.navigation.suite)
-            api(libs.androidx.adaptive)
-            api(libs.androidx.adaptive.layout)
-            api(libs.androidx.adaptive.navigation)
+//            api(libs.androidx.adaptive)
+//            api(libs.androidx.adaptive.layout)
+//            api(libs.androidx.adaptive.navigation)
             implementation(libs.androidx.activity.compose)
             api(libs.haze)
 
             //SplashScreen API
             api(libs.androidx.core.splashscreen)
+        }
+        androidUnitTest.dependencies {
+            implementation(libs.bundles.unit.test)
+//            androidTestImplementation(libs.bundles.android.unit.test)
+        }
+        androidInstrumentedTest.dependencies {
+//            testImplementation(libs.bundles.unit.test)
+            implementation(libs.bundles.android.unit.test)
         }
         commonMain.dependencies {
             //put your multiplatform dependencies here

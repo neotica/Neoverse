@@ -15,7 +15,6 @@ import com.google.firebase.Firebase
 import com.google.firebase.appcheck.appCheck
 import com.google.firebase.appcheck.playintegrity.PlayIntegrityAppCheckProviderFactory
 import com.google.firebase.initialize
-import id.neotica.neoverse.di.initializeKoin
 import org.koin.compose.KoinContext
 
 class MainActivity : ComponentActivity() {
@@ -29,7 +28,6 @@ class MainActivity : ComponentActivity() {
             PlayIntegrityAppCheckProviderFactory.getInstance()
         )
         requestNotificationPermission()
-        initializeKoin(this)
 
         val notificationManager =
             getSystemService(NOTIFICATION_SERVICE) as NotificationManager

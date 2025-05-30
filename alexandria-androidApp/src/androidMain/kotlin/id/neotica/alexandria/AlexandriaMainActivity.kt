@@ -9,7 +9,6 @@ import com.google.firebase.Firebase
 import com.google.firebase.appcheck.appCheck
 import com.google.firebase.appcheck.playintegrity.PlayIntegrityAppCheckProviderFactory
 import com.google.firebase.initialize
-import id.neotica.alexandria.di.initializeKoin
 import id.neotica.alexandria.presentation.MainView
 
 class AlexandriaMainActivity : ComponentActivity() {
@@ -17,7 +16,6 @@ class AlexandriaMainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         installSplashScreen()
         enableEdgeToEdge()
-        initializeKoin(this)
 
         Firebase.initialize(this)
         Firebase.appCheck.installAppCheckProviderFactory(

@@ -57,4 +57,5 @@ dependencies {
     api(libs.bundles.ktor)
 
     testImplementation(libs.bundles.unit.test)
+    androidTestImplementation(libs.bundles.android.unit.test)
 }

@@ -1,5 +1,6 @@
 package id.neotica.neoversewear.di
 
+import android.content.Context
 import id.neotica.database.CurrentUserRepositoryImpl
 import id.neotica.database.FriendDaoRepositoryImpl
 import id.neotica.domain.local.CurrentUserRepository
@@ -21,6 +22,7 @@ import id.neotica.network.AuthRepositoryImpl
 import id.neotica.network.ChatRepositoryImpl
 import id.neotica.network.FeedRepositoryImpl
 import id.neotica.network.UserRepositoryImpl
+import org.koin.core.context.startKoin
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.bind
@@ -43,4 +45,8 @@ val wearModules = module {
 
     singleOf(::GetUserIdUseCase)
     singleOf(::GetUserNameUseCase)
+}
+
+fun initializeKoin(context: Context) = startKoin {
+    modules(wearModules)
 }

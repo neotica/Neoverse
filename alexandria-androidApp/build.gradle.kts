@@ -1,8 +1,5 @@
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
-import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
-import kotlin.apply
 
 plugins {
     alias(libs.plugins.android.application)
@@ -69,11 +66,10 @@ kotlin {
             implementation(projects.feature.world)
         }
         androidUnitTest.dependencies {
-            implementation(libs.junit)
-            implementation(libs.androidx.junit)
-            implementation(libs.androidx.espresso.core)
-//            implementation(platform(libs.androidx.compose.bom))
-//            implementation(libs.androidx.ui.test.junit4)
+            implementation(libs.bundles.unit.test)
+        }
+        androidInstrumentedTest.dependencies {
+            implementation(libs.bundles.android.unit.test)
         }
         iosMain.dependencies {
 //            implementation(libs.ktor.client.darwin)

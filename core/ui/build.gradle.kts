@@ -54,9 +54,9 @@ dependencies {
 
     //Adaptive
     api(libs.androidx.material3.adaptive.navigation.suite)
-    api(libs.androidx.adaptive)
-    api(libs.androidx.adaptive.layout)
-    api(libs.androidx.adaptive.navigation)
+//    api(libs.androidx.adaptive)
+//    api(libs.androidx.adaptive.layout)
+//    api(libs.androidx.adaptive.navigation)
 
     //SplashScreen API
     api(libs.androidx.core.splashscreen)
@@ -69,9 +69,13 @@ dependencies {
 
     //DroidCore
     api(libs.droidcore)
-//    api("com.valentinilk.shimmer:compose-shimmer:1.3.1")
 
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
+    //toast
+//    api("network.chaintech:cmptoast:1.0.3")
+
+    testImplementation(libs.bundles.unit.test)
+    androidTestImplementation(libs.bundles.android.unit.test)
+//    testImplementation(libs.junit)
+//    androidTestImplementation(libs.androidx.junit)
+//    androidTestImplementation(libs.androidx.espresso.core)
 }
