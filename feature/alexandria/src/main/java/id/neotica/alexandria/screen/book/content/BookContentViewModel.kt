@@ -45,17 +45,15 @@ class BookContentViewModel(
         _currentPage.value = page
     }
 
-    fun getPage(refresh: Boolean = true) {
-        viewModelScope.launch {
-            if (loading) return@launch
-            if (refresh) {
-                loading = true
-                _currentPage.value = 1
-                paginatedContent = emptyMap()
-            }
-            if (hasNext || refresh) {
-                loadPage(if (refresh) 1 else _currentPage.value + 1)
-            }
+    fun getPage(refresh: Boolean = true) = viewModelScope.launch {
+        if (loading) return@launch
+        if (refresh) {
+            loading = true
+            _currentPage.value = 1
+            paginatedContent = emptyMap()
+        }
+        if (hasNext || refresh) {
+            loadPage(if (refresh) 1 else _currentPage.value + 1)
         }
     }
 

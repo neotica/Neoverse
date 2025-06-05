@@ -32,8 +32,7 @@ kotlin {
 
     sourceSets {
         androidMain.dependencies {
-            //Adaptive
-            api(libs.androidx.material3.adaptive.navigation.suite)
+
             api(libs.haze)
 
             //SplashScreen API
@@ -41,22 +40,23 @@ kotlin {
         }
         androidUnitTest.dependencies {
             implementation(libs.bundles.unit.test)
-//            androidTestImplementation(libs.bundles.android.unit.test)
         }
         androidInstrumentedTest.dependencies {
-//            testImplementation(libs.bundles.unit.test)
             implementation(libs.bundles.android.unit.test)
         }
         commonMain.dependencies {
             //put your multiplatform dependencies here
             api(projects.core.core)
+            api(libs.droidcore.maven)
 
             implementation(compose.material3)
             implementation(compose.components.resources)
 
             api(libs.bundles.compose.multiplatform)
+            //Adaptive
+            api(libs.androidx.compose.material3.adaptive)
             //DroidCore
-            api(libs.droidcore)
+//            api(libs.droidcore)
             // Coil
             implementation(libs.bundles.coil)
 

@@ -27,7 +27,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavController
@@ -53,10 +52,8 @@ fun BookContentView(
     viewModel: BookContentViewModel = koinViewModel()
 ) {
 
-    val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val currentPage by viewModel.currentPage.collectAsState()
-
 
     val listState = rememberLazyListState()
 
@@ -156,7 +153,7 @@ fun BookContentView(
             ) {
                 items(
                     items = viewModel.paginatedContent.toSortedMap().values.toList(),
-                    key = {it.page}
+                    key = {it}
                 ) {
                     Text(it.content)
                 }

@@ -72,13 +72,13 @@ kotlin {
             implementation(libs.bundles.android.unit.test)
         }
         iosMain.dependencies {
-//            implementation(libs.ktor.client.darwin)
+            implementation(libs.ktor.client.darwin)
         }
         commonMain.dependencies {
 //            implementation(libs.bundles.compose.multiplatform)
 //            implementation(libs.bundles.koin)
 
-//            implementation(projects.core.uiShared)
+            implementation(projects.core.uiShared)
 
 //            implementation(compose.runtime)
 //            implementation(compose.foundation)

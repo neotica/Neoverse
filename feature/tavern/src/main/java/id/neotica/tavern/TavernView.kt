@@ -42,11 +42,12 @@ import id.neotica.domain.ApiResult
 import id.neotica.domain.model.chat.ParentNeo
 import id.neotica.domain.model.tavern.TavernPost
 import id.neotica.domain.utils.convertLongToTime
+import id.neotica.droidcore.component.alert.NeoToast
+import id.neotica.droidcore.component.carousel.CustomCarousel
 import id.neotica.droidcore.component.textfield.NeoTextField
 import id.neotica.ui.R
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.LoadingIndicator
-import id.neotica.ui.components.droidcore.CustomCarousel
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.Screen
 import id.neotica.ui.theme.DarkPrimary
@@ -69,6 +70,7 @@ fun TavernView(
     var auraInit by remember { mutableStateOf(false) }
     val whisper = remember { mutableStateOf("") }
     val context = LocalContext.current
+    val toast = remember { mutableStateOf(false) }
 
     var isLoading by remember { mutableStateOf(false) }
     var whispers by remember { mutableStateOf<List<ParentNeo<TavernPost>>?>(emptyList()) }
@@ -179,7 +181,8 @@ fun TavernView(
                                     Icon(
                                         modifier = Modifier.clickable {
                                             if (whisper.value.isEmpty()) {
-                                                Toast.makeText(context, "Please enter a message.", Toast.LENGTH_SHORT).show()
+                                                toast.value = true
+//                                                Toast.makeText(context, "Please enter a message.", Toast.LENGTH_SHORT).show()
                                             } else {
                                                 viewModel.sendPost(whisper.value)
                                                 whisper.value = ""
@@ -286,4 +289,5 @@ fun TavernView(
             .fillMaxSize()
             .clickable(enabled = true) {  },
     ) { LoadingIndicator() }
+    if (toast.value) NeoToast("Please enter a message.", toast)
 }

@@ -31,7 +31,6 @@ import id.neotica.droidcore.component.textfield.NeoTextField
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.LoadingIndicator
 import id.neotica.ui.components.NeoButton
-import id.neotica.ui.components.edittext.CustomNeoTextField
 import id.neotica.ui.components.topbar.DotsMenuDropDown
 import id.neotica.ui.components.topbar.DotsMenuItem
 import id.neotica.ui.navigation.AlexandriaScreen
@@ -129,7 +128,7 @@ fun AdminBookView(
 
                 LaunchedEffect(Unit) { title.value = it.title }
                 var editTitle by remember { mutableStateOf(false) }
-                CustomNeoTextField(
+                NeoTextField(
                     value = title,
                     label = "Title",
                     enabled = editTitle,

@@ -64,21 +64,19 @@ dependencies {
     //SplashScreen API
     api(libs.androidx.core.splashscreen)
 
-    debugImplementation(libs.androidx.ui.tooling)
+    debugImplementation(libs.compose.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
     // Coil
     api(libs.bundles.coil)
 
     //DroidCore
-    api(libs.droidcore)
+//    api(libs.droidcore)
+    api(libs.droidcore.maven)
 
     //toast
 //    api("network.chaintech:cmptoast:1.0.3")
 
     testImplementation(libs.bundles.unit.test)
     androidTestImplementation(libs.bundles.android.unit.test)
-//    testImplementation(libs.junit)
-//    androidTestImplementation(libs.androidx.junit)
-//    androidTestImplementation(libs.androidx.espresso.core)
 }
