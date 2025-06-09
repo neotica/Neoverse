@@ -10,7 +10,7 @@ import id.neotica.auth.register.RegisterView
 import id.neotica.auth.verify.VerifyEmailView
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.Screen
-import id.neotica.ui.state.AppVariant
+import id.neotica.ui.shared.state.AppVariant
 
 fun NavGraphBuilder.authNavGraph(
     navController: NavController,

@@ -19,7 +19,7 @@ import id.neotica.ui.components.topbar.DotsMenuDropDown
 import id.neotica.ui.components.topbar.DotsMenuItem
 import id.neotica.ui.navigation.AlexandriaScreen
 import id.neotica.ui.navigation.Screen
-import id.neotica.ui.state.AppVariant
+import id.neotica.ui.shared.state.AppVariant
 import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)

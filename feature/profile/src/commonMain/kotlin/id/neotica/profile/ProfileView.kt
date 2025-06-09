@@ -1,7 +1,5 @@
 package id.neotica.profile
 
-import android.util.Log
-import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -27,31 +25,30 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.White
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import id.neotica.domain.ApiResult
-import id.neotica.domain.model.User
 import id.neotica.droidcore.component.alert.NeoAlert
 import id.neotica.droidcore.component.icon.AlertEnum
-import id.neotica.ui.components.BasicScaffold
-import id.neotica.ui.components.image.ImageCoil
-import id.neotica.ui.components.LoadingIndicatorBool
-import id.neotica.ui.components.MenuItem
-import id.neotica.ui.components.NeoButton
-import id.neotica.ui.navigation.RootScreen
-import id.neotica.ui.navigation.Screen
-import id.neotica.ui.state.AppVariant
-import id.neotica.ui.theme.DarkBackground
-import id.neotica.ui.theme.FontSize
-import id.neotica.ui.theme.NegativePrimary
-import id.neotica.ui.theme.TransparentText20
+import id.neotica.ui.shared.components.BasicScaffold
+import id.neotica.ui.shared.components.image.ImageCoil
+import id.neotica.ui.shared.components.LoadingIndicatorBool
+import id.neotica.ui.shared.components.MenuItem
+import id.neotica.ui.shared.components.NeoButton
+import id.neotica.ui.shared.theme.DarkBackground
+import id.neotica.ui.shared.theme.FontSize
+import id.neotica.ui.shared.theme.NegativePrimary
+import id.neotica.ui.shared.theme.TransparentText20
 import org.koin.compose.viewmodel.koinViewModel
+import dev.icerock.moko.resources.compose.painterResource
+import id.neotica.domain.ApiResult
+import id.neotica.domain.model.User
+import id.neotica.rickpository.res.MR
+import id.neotica.ui.shared.navigation.RootScreen
+import id.neotica.ui.shared.navigation.Screen
+import id.neotica.ui.shared.state.AppVariant
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -63,7 +60,7 @@ fun ProfileView(
 ) {
     var user by remember { mutableStateOf<User?>(null) }
     val isLoading by remember { mutableStateOf(false) }
-    val context = LocalContext.current
+//    val context = LocalContext.current
     val haptic = LocalHapticFeedback.current
 
     val sheetState = rememberModalBottomSheetState()
@@ -95,7 +92,7 @@ fun ProfileView(
 
         } else {
             viewModel.currentUser.collect { result ->
-                Log.d("profileView", "result $result")
+//                Log.d("profileView", "result $result")
                 when(result) {
                     is ApiResult.Loading -> { /*isUserEmpty = true*/ }
                     is ApiResult.Success -> { user = result.data }
@@ -120,7 +117,7 @@ fun ProfileView(
                 }
                 MenuItem(
                     "Delete Account",
-                    textColor = NegativePrimary
+//                    textColor = NegativePrimary
                 ) {
                     navController.navigate(Screen.DeleteAccountScreen)
                 }
@@ -179,12 +176,12 @@ fun ProfileView(
                         },
                         onLongClick = {
                             haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                            Toast
-                                .makeText(context, "About", Toast.LENGTH_SHORT)
-                                .show()
+//                            Toast
+//                                .makeText(context, "About", Toast.LENGTH_SHORT)
+//                                .show()
                         },
                     ),
-                imageVector = ImageVector.vectorResource(id.neotica.ui.R.drawable.ic_info),
+                painter = painterResource(MR.images.ic_info),
                 contentDescription = "",
                 tint = White
             )
@@ -255,7 +252,7 @@ fun ProfileView(
                             MenuItem(
                                 title = "Logout",
                                 textColor = NegativePrimary,
-                                leadingIcon = id.neotica.ui.R.drawable.ic_logout,
+                                leadingIcon = painterResource(MR.images.ic_logout),
                             ) {
                                 showLogoutDialog.value = true
                             }

@@ -19,7 +19,7 @@ import id.neotica.profile.resetpassword.ResetPasswordView
 import id.neotica.profile.termsofservice.TermsOfServiceView
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.Screen
-import id.neotica.ui.state.AppVariant
+import id.neotica.ui.shared.state.AppVariant
 
 fun NavGraphBuilder.profileNavGraph(
     navController: NavController,
@@ -67,7 +67,7 @@ fun NavGraphBuilder.profileNavGraph(
             exitTransition = { ExitTransition.None }
         ) {
             val args = it.toRoute<Screen.EditProfileScreen>()
-            EditProfileView(navController, paddingValues, args = args)
+//            EditProfileView(navController, paddingValues, args = args)
         }
         composable<Screen.AboutScreen>(
             enterTransition = { EnterTransition.None },

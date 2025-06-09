@@ -1,25 +1,29 @@
 package id.neotica.profile.accountsettings
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import id.neotica.ui.components.BasicScaffold
-import id.neotica.ui.components.MenuItem
-import id.neotica.ui.navigation.Screen
-import id.neotica.ui.theme.NegativePrimary
+import id.neotica.droidcore.component.alert.NeoToast
+import id.neotica.ui.shared.components.BasicScaffold
+import id.neotica.ui.shared.components.MenuItem
+import id.neotica.ui.shared.navigation.Screen
+import id.neotica.ui.shared.theme.NegativePrimary
 
 @Composable
 fun AccountSettingView(
     navController: NavController,
     paddingValues: PaddingValues,
 ) {
+    var toast = remember { mutableStateOf(false) }
+    var toastMessage = remember { mutableStateOf("") }
+
     BasicScaffold(
         topBarTitle = "Account Settings",
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -27,12 +31,12 @@ fun AccountSettingView(
         navController = navController,
         enableActionBar = true
     ) {
-        val context = LocalContext.current
         Column(
             Modifier.padding(16.dp)
         ) {
             MenuItem("Change Password") {
-                Toast.makeText(context, "Please contact our support email to change password.", Toast.LENGTH_SHORT).show()
+                toast.value = true
+                toastMessage.value = "Please contact our support email to change password."
             }
             MenuItem(
                 "Delete Account",
@@ -43,4 +47,5 @@ fun AccountSettingView(
         }
 
     }
+    if (toast.value) NeoToast(toastMessage.value .toString(), toast)
 }

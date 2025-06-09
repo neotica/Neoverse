@@ -1,8 +1,5 @@
 package id.neotica.profile.about
 
-import android.content.Intent
-import android.net.Uri
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -11,12 +8,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import id.neotica.ui.components.BasicScaffold
-import id.neotica.ui.theme.DarkPrimary
+import id.neotica.ui.shared.components.BasicScaffold
+import id.neotica.ui.shared.theme.DarkPrimary
 
 @Composable
 fun AboutView(navController: NavController) {
@@ -25,7 +21,7 @@ fun AboutView(navController: NavController) {
         true,
         navController = navController,
     ) {
-        val context = LocalContext.current
+//        val context = LocalContext.current
 
         LazyColumn(Modifier.padding(vertical = 4.dp, horizontal = 16.dp)) {
             item {
@@ -39,10 +35,10 @@ fun AboutView(navController: NavController) {
                         color = DarkPrimary,
                         fontSize = 14.sp,
                         text = "- laetuz",
-                        modifier = Modifier.clickable {
-                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/laetuz"))
-                            context.startActivity(intent)
-                        }
+//                        modifier = Modifier.clickable {
+//                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/laetuz"))
+//                            context.startActivity(intent)
+//                        }
                     )
                 }
                 Spacer(Modifier.height(8.dp))
@@ -54,28 +50,28 @@ fun AboutView(navController: NavController) {
                         color = DarkPrimary,
                         fontSize = 14.sp,
                         text = "- Streamline",
-                        modifier = Modifier.clickable {
-                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://streamlinehq.com"))
-                            context.startActivity(intent)
-                        }
+//                        modifier = Modifier.clickable {
+//                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://streamlinehq.com"))
+//                            context.startActivity(intent)
+//                        }
                     )
                     Text(
                         color = DarkPrimary,
                         fontSize = 14.sp,
                         text = "- Glitch",
-                        modifier = Modifier.clickable {
-                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://archive.org/details/glitch-public-domain-game-art"))
-                            context.startActivity(intent)
-                        }
+//                        modifier = Modifier.clickable {
+//                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://archive.org/details/glitch-public-domain-game-art"))
+//                            context.startActivity(intent)
+//                        }
                     )
                     Text(
                         color = DarkPrimary,
                         fontSize = 14.sp,
                         text = "- Caner Kaşeler",
-                        modifier = Modifier.clickable {
-                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/canerkaseler/jetpack-compose-threads-card"))
-                            context.startActivity(intent)
-                        }
+//                        modifier = Modifier.clickable {
+//                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/canerkaseler/jetpack-compose-threads-card"))
+//                            context.startActivity(intent)
+//                        }
                     )
                 }
             }

@@ -45,6 +45,7 @@ android {
 
 dependencies {
     implementation(projects.core.ui)
+    implementation(projects.core.uiShared)
     implementation(projects.core.core)
     implementation(projects.core.domain)
     implementation(projects.feature.tavern)

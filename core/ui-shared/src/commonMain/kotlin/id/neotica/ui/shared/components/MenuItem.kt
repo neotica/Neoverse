@@ -12,32 +12,35 @@ import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.Text
 import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.Unspecified
 import androidx.compose.ui.graphics.Color.Companion.White
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.dp
-import neoverse.core.ui_shared.generated.resources.Res
-import neoverse.core.ui_shared.generated.resources.ic_arrow_forward
-import org.jetbrains.compose.resources.DrawableResource
-import org.jetbrains.compose.resources.painterResource
+import dev.icerock.moko.resources.compose.painterResource
+import id.neotica.droidcore.component.alert.NeoToast
+import id.neotica.rickpository.res.MR
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MenuItem(
     title: String,
     textColor: Color = Unspecified,
-    leadingIcon: DrawableResource? = null,
+    leadingIcon: Painter? = null,
     iconTint: Color = LocalContentColor.current,
     onClick: () -> Unit = {},
 ) {
+    var toast = remember { mutableStateOf(false) }
+    var toastMessage = remember { mutableStateOf("") }
     val haptic = LocalHapticFeedback.current
 
-    Row(
+    Row (
         modifier = Modifier
             .fillMaxWidth()
             .combinedClickable(
@@ -46,7 +49,8 @@ fun MenuItem(
                 onClick = onClick,
                 onLongClick = {
                     haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-//                    Toast.makeText(context, title, Toast.LENGTH_SHORT).show()
+                    toastMessage.value = title
+                    toast.value = true
                 },
             )
             .padding(vertical = 8.dp),
@@ -55,7 +59,7 @@ fun MenuItem(
     ) {
         if (leadingIcon != null) {
             Icon(
-                painter = painterResource(leadingIcon),
+                painter = leadingIcon,
                 contentDescription = "Change Profile Picture",
                 modifier = Modifier.padding(end = 8.dp),
                 tint = iconTint
@@ -68,9 +72,10 @@ fun MenuItem(
         )
         Icon(
             modifier = Modifier,
-            painter = painterResource(Res.drawable.ic_arrow_forward),
+            painter = painterResource(MR.images.ic_forward),
             contentDescription = "",
             tint = White
         )
     }
+    if (toast.value) NeoToast(toastMessage.value .toString(), toast)
 }

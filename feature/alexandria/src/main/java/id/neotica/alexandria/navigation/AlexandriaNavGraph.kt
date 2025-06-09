@@ -19,7 +19,7 @@ import id.neotica.alexandria.screen.user.editbook.EditBookView
 import id.neotica.alexandria.screen.user.editbook.chapter.EditChapterView
 import id.neotica.ui.navigation.AlexandriaScreen
 import id.neotica.ui.navigation.RootScreen
-import id.neotica.ui.state.AppVariant
+import id.neotica.ui.shared.state.AppVariant
 
 @OptIn(ExperimentalMaterial3Api::class)
 fun NavGraphBuilder.alexandriaNavGraph(

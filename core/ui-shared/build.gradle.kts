@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.moko.resources)
 }
 
 kotlin {
@@ -29,8 +30,11 @@ kotlin {
             isStatic = true
         }
     }
-
+    multiplatformResources {
+        resourcesPackage.set("id.neotica.rickpository.res")
+    }
     sourceSets {
+
         androidMain.dependencies {
 
             api(libs.haze)
@@ -59,6 +63,9 @@ kotlin {
 //            api(libs.droidcore)
             // Coil
             implementation(libs.bundles.coil)
+
+            api(libs.moko.resources)
+            api(libs.moko.resources.compose)
 
         }
         commonTest.dependencies {

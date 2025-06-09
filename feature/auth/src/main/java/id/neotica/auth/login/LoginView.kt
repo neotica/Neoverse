@@ -39,7 +39,7 @@ import id.neotica.ui.components.LoadingIndicator
 import id.neotica.ui.components.NeoButton
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.Screen
-import id.neotica.ui.state.AppVariant
+import id.neotica.ui.shared.state.AppVariant
 import id.neotica.ui.theme.DarkPrimary
 import id.neotica.ui.theme.FontSize
 import org.koin.compose.viewmodel.koinViewModel
