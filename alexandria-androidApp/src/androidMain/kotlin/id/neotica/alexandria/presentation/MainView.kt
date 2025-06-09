@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.systemBars
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemColors
@@ -30,21 +31,22 @@ import androidx.navigation.compose.rememberNavController
 import id.neotica.alexandria.presentation.navigation.NavGraph
 import id.neotica.alexandria.theme.NeoverseTheme
 import id.neotica.ui.components.navigation.CustomNavBar
-import id.neotica.ui.shared.components.navigation.CustomNavigationSuiteScaffold
-import id.neotica.ui.shared.components.navigation.NavigationSuiteScaffoldDefaults
-import id.neotica.ui.shared.components.navigation.NavigationSuiteType
 import id.neotica.ui.navigation.AlexandriaScreen
 import id.neotica.ui.navigation.NavigationItem
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.navigation.Screen
 import id.neotica.ui.navigation.WorldScreen
 import id.neotica.ui.navigation.showExcept
+import id.neotica.ui.shared.components.navigation.CustomNavigationSuiteScaffold
+import id.neotica.ui.shared.components.navigation.NavigationSuiteScaffoldDefaults
+import id.neotica.ui.shared.components.navigation.NavigationSuiteType
 import id.neotica.ui.shared.state.AdaptiveState
 import id.neotica.ui.theme.DarkBackground
 import id.neotica.ui.theme.DarkPrimary
 import org.koin.compose.KoinContext
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainView() {
     KoinContext {
@@ -176,7 +178,7 @@ fun MainView() {
                             paddingValues = PaddingValues(
                                 top = innerPadding.calculateTopPadding(),
                                 bottom = innerPadding.calculateBottomPadding() - WindowInsets.systemBars.asPaddingValues().calculateBottomPadding()
-                            )
+                            ),
                         )
                     }
                 }

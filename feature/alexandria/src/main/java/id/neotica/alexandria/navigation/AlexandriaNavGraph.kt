@@ -1,5 +1,6 @@
 package id.neotica.alexandria.navigation
 
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -20,6 +21,7 @@ import id.neotica.ui.navigation.AlexandriaScreen
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.ui.state.AppVariant
 
+@OptIn(ExperimentalMaterial3Api::class)
 fun NavGraphBuilder.alexandriaNavGraph(
     navController: NavController,
     appVariant: AppVariant,
@@ -28,7 +30,10 @@ fun NavGraphBuilder.alexandriaNavGraph(
         startDestination = AlexandriaScreen.HomeScreen
     ) {
         composable<AlexandriaScreen.HomeScreen> {
-            LibraryView(navController, appVariant)
+            LibraryView(
+                navController = navController,
+                appVariant = appVariant,
+            )
         }
         composable<AlexandriaScreen.BookScreen> {
             BookView(navController)

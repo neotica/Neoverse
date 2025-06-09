@@ -4,6 +4,7 @@ import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -21,13 +22,14 @@ import id.neotica.ui.navigation.Screen
 import id.neotica.ui.state.AppVariant
 import org.koin.compose.viewmodel.koinViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LibraryView(
     navController: NavController,
     appVariant: AppVariant,
     viewModel: LibraryViewModel = koinViewModel()
 ) {
-    val isLoading by viewModel.loading.collectAsState() //by remember { mutableStateOf(false) }
+    val isLoading by viewModel.loading.collectAsState()
     val books by viewModel.books.collectAsState()
     val context = LocalContext.current
     val errorMessage by viewModel.errorMessage.collectAsState()

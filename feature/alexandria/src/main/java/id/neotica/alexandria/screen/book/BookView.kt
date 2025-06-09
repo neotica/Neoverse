@@ -2,8 +2,6 @@ package id.neotica.alexandria.screen.book
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -35,7 +33,6 @@ import id.neotica.ui.components.LoadingIndicator
 import id.neotica.ui.components.droidcore.NeoSearchBar
 import id.neotica.ui.navigation.AlexandriaScreen
 import id.neotica.ui.theme.DarkBackground
-import id.neotica.ui.theme.NeoPadding
 import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -137,7 +134,6 @@ fun BookView(
                             }
                         }
                     }
-
                 }
 
                 LazyColumn(
@@ -160,21 +156,18 @@ fun BookView(
         fullScreen = true
     ) {
         if (isLoading) LoadingIndicator()
-        Spacer(modifier = Modifier.padding(top = NeoPadding.topBarPadding))
-        Column(
-            modifier = Modifier.padding(horizontal = 16.dp)
-        ) {
-            NeoSearchBar(searchBar, label = "Search Chapters")
-        }
-
-
         LazyColumn(
-            contentPadding = PaddingValues(
-                bottom = NeoPadding.systemBarPadding
-            )
+            contentPadding = it
         ) {
             val spiritsFilter = chapterList.value?.chapters?.filter {
                 it.title.contains(searchBar.value, ignoreCase = true)
+            }
+            item {
+                Column(
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                ) {
+                    NeoSearchBar(searchBar, label = "Search Chapters")
+                }
             }
             spiritsFilter?.let { chap ->
                 items(chap) { item ->

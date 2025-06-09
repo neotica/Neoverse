@@ -6,6 +6,7 @@ import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -30,6 +31,7 @@ import id.neotica.world.feat.superadmin.SuperAdminView
 import id.neotica.world.feat.terminal.TerminalView
 import id.neotica.world.feat.world.WorldView
 
+@OptIn(ExperimentalMaterial3Api::class)
 fun NavGraphBuilder.worldNavGraph(
     navController: NavController,
     paddingValues: PaddingValues,
