@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.kotlin.multiplatform.library)
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.moko.resources)
 }
 
 kotlin {
@@ -61,6 +62,8 @@ kotlin {
             dependencies {
                 implementation(libs.kotlin.stdlib)
                 api(libs.kotlinx.serialization.json)
+                api(libs.moko.resources)
+                api(libs.moko.resources.compose)
                 // Add KMP dependencies here
             }
         }

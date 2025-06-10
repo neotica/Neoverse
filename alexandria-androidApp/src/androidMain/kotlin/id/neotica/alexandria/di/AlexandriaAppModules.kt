@@ -1,7 +1,6 @@
 package id.neotica.alexandria.di
 
 import android.content.Context
-import id.neotica.alexandria.R
 import id.neotica.auth.di.authModules
 import id.neotica.database.CurrentUserRepositoryImpl
 import id.neotica.database.FriendDaoRepositoryImpl
@@ -32,6 +31,7 @@ import id.neotica.network.alexandria.ContentRepositoryImpl
 import id.neotica.network.micro.ktorModule
 import id.neotica.network.usecase.FirebaseTokenProvider
 import id.neotica.profile.ProfileViewModel
+import id.neotica.rickpository.res.MR
 import id.neotica.state.AppVariant
 import org.koin.core.context.startKoin
 import org.koin.core.module.dsl.bind
@@ -83,7 +83,7 @@ val appVariantModule = module {
     single {
         AppVariant(
             appName = "Alexandria",
-            logo = R.drawable.logo_alexandria
+            logo = MR.images.logo_alexandria
         )
     }
 }

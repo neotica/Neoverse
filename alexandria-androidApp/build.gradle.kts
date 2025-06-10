@@ -7,7 +7,6 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.google.services)
     alias(libs.plugins.kotlin.serialization)
-
 }
 
 kotlin {
@@ -24,46 +23,19 @@ kotlin {
         iosSimulatorArm64()
     ).forEach { iosTarget ->
         iosTarget.binaries.framework {
-            baseName = "ComposeApp"
+            baseName = "AlexandriaApp"
             isStatic = true
         }
     }
-
-//    jvm("desktop")
-
-//    @OptIn(ExperimentalWasmDsl::class)
-//    wasmJs {
-//        moduleName = "composeApp"
-//        browser {
-//            val rootDirPath = project.rootDir.path
-//            val projectDirPath = project.projectDir.path
-//            commonWebpackConfig {
-//                outputFileName = "composeApp.js"
-//                devServer = (devServer ?: KotlinWebpackConfig.DevServer()).apply {
-//                    static = (static ?: mutableListOf()).apply {
-//                        // Serve sources to debug inside browser
-//                        add(rootDirPath)
-//                        add(projectDirPath)
-//                    }
-//                }
-//            }
-//        }
-//        binaries.executable()
-//    }
 
     sourceSets {
 //        val desktopMain by getting
 
         androidMain.dependencies {
             implementation(projects.core.database)
-            implementation(projects.core.domain)
+
             implementation(projects.core.network)
             implementation(projects.core.ui)
-            implementation(projects.core.core)
-            implementation(projects.feature.profile)
-            implementation(projects.feature.auth)
-            implementation(projects.feature.alexandria)
-            implementation(projects.feature.world)
         }
         androidUnitTest.dependencies {
             implementation(libs.bundles.unit.test)
@@ -75,24 +47,14 @@ kotlin {
             implementation(libs.ktor.client.darwin)
         }
         commonMain.dependencies {
-//            implementation(libs.bundles.compose.multiplatform)
-//            implementation(libs.bundles.koin)
-
+            implementation(projects.core.core)
+            implementation(projects.core.domain)
             implementation(projects.core.uiShared)
             implementation(projects.core.routes)
 
-//            implementation(compose.runtime)
-//            implementation(compose.foundation)
-//            implementation(compose.material3)
-//            implementation(compose.ui)
-//            implementation(compose.components.resources)
-//            implementation(compose.components.uiToolingPreview)
-//            implementation(libs.androidx.lifecycle.viewmodel)
-//            implementation(libs.androidx.lifecycle.runtimeCompose)
-//            implementation(libs.androidx.navigation.compose)
-//            implementation(libs.bundles.ktor)
-//            implementation(libs.bundles.koin)
-//            implementation(libs.bundles.coil)
+            implementation(projects.feature.alexandria)
+            implementation(projects.feature.profile)
+            implementation(projects.feature.auth)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

@@ -5,6 +5,7 @@ import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition as rememberInfiniteTransition1
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -28,28 +29,26 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import dev.icerock.moko.resources.compose.painterResource
 import id.neotica.droidcore.component.textfield.NeoTextField
 import id.neotica.droidcore.component.textfield.PasswordTextField
 import id.neotica.routes.RootScreen
 import id.neotica.routes.Screen
 import id.neotica.state.AppVariant
-import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.LoadingIndicator
 import id.neotica.ui.components.NeoButton
+import id.neotica.ui.shared.components.BasicScaffold
 import id.neotica.ui.theme.DarkPrimary
 import id.neotica.ui.theme.FontSize
-import org.koin.compose.viewmodel.koinViewModel
-import androidx.compose.animation.core.rememberInfiniteTransition as rememberInfiniteTransition1
 
 @Composable
-fun LoginView(
+actual fun LoginView(
     navController: NavController,
     appVariant: AppVariant,
-    viewModel: LoginViewModel = koinViewModel()) {
+    viewModel: LoginViewModel) {
 
     var isButtonPressed by remember { mutableStateOf(false) }
     val emailValue = rememberSaveable { mutableStateOf("") }
@@ -149,7 +148,7 @@ fun LoginView(
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
                             fontSize = FontSize.Smaller,
-                            )
+                        )
                         Text(
                             color = DarkPrimary,
                             fontSize = FontSize.Smaller,
