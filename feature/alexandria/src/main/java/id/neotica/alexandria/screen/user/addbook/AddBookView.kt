@@ -32,7 +32,7 @@ import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.DropdownItem
 import id.neotica.ui.components.LoadingIndicatorBool
 import id.neotica.ui.components.NeoButton
-import id.neotica.ui.navigation.AlexandriaScreen
+import id.neotica.routes.AlexandriaScreen
 import id.neotica.ui.theme.DarkPrimaryTransparent2
 import id.neotica.ui.theme.NeoPadding
 import org.koin.compose.viewmodel.koinViewModel

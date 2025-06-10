@@ -10,7 +10,7 @@ import id.neotica.domain.model.alexandria.book.BookRequest
 import id.neotica.domain.model.alexandria.chapter.ChapterRequest
 import id.neotica.domain.remote.alexandria.BookRepository
 import id.neotica.domain.remote.alexandria.ChapterRepository
-import id.neotica.ui.navigation.AlexandriaScreen
+import id.neotica.routes.AlexandriaScreen
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow

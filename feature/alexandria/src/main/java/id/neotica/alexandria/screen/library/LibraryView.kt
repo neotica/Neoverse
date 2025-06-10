@@ -12,14 +12,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
+import id.neotica.routes.AlexandriaScreen
+import id.neotica.routes.Screen
+import id.neotica.state.AppVariant
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.LoadingIndicator
 import id.neotica.ui.components.NeoButton
 import id.neotica.ui.components.topbar.DotsMenuDropDown
 import id.neotica.ui.components.topbar.DotsMenuItem
-import id.neotica.ui.navigation.AlexandriaScreen
-import id.neotica.ui.navigation.Screen
-import id.neotica.ui.shared.state.AppVariant
 import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)

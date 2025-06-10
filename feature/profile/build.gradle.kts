@@ -46,6 +46,7 @@ kotlin {
         commonMain.dependencies {
             api(projects.core.uiShared)
             implementation(projects.core.domain)
+            implementation(projects.core.routes)
         }
     }
 }

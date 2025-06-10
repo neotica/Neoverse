@@ -44,7 +44,7 @@ android {
 dependencies {
     implementation(projects.core.core)
     implementation(projects.core.ui)
-    implementation(projects.core.uiShared)
+    implementation(projects.core.routes)
     implementation(projects.core.domain)
 
     testImplementation(libs.junit)

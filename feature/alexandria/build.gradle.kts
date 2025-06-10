@@ -41,7 +41,10 @@ kotlin {
         androidInstrumentedTest.dependencies {
             implementation(libs.bundles.android.unit.test)
         }
-        commonMain.dependencies { implementation(projects.core.uiShared) }
+        commonMain.dependencies {
+            implementation(projects.core.uiShared)
+            implementation(projects.core.routes)
+        }
     }
 }
 

@@ -79,6 +79,7 @@ kotlin {
 //            implementation(libs.bundles.koin)
 
             implementation(projects.core.uiShared)
+            implementation(projects.core.routes)
 
 //            implementation(compose.runtime)
 //            implementation(compose.foundation)

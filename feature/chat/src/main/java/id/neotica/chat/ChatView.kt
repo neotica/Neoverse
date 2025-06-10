@@ -73,8 +73,6 @@ import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.scroll.scrollBottomValue
 import id.neotica.ui.components.topbar.DotsMenuDropDown
 import id.neotica.ui.components.topbar.DotsMenuItem
-import id.neotica.ui.navigation.RootScreen
-import id.neotica.ui.navigation.Screen
 import id.neotica.ui.theme.BlackTransparent40
 import id.neotica.ui.theme.DarkPrimary
 import id.neotica.ui.theme.DarkPrimaryTransparent2
@@ -88,6 +86,8 @@ import id.neotica.ui.theme.TransparentText40
 import kotlinx.coroutines.delay
 import org.koin.compose.viewmodel.koinViewModel
 import androidx.core.net.toUri
+import id.neotica.ui.navigation.RootScreen
+import id.neotica.ui.navigation.Screen
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable

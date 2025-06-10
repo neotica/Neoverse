@@ -1,6 +1,5 @@
-package id.neotica.ui.shared.navigation
+package id.neotica.routes
 
-import androidx.compose.ui.graphics.vector.ImageVector
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -131,11 +130,13 @@ sealed class AlexandriaScreen {
     @Serializable
     data class BookContentScreen(val chapterId: Int = 0, val chapterTitle: String = ""): AlexandriaScreen()
     @Serializable
+    data object AdminLibraryScreen: AlexandriaScreen()
+    @Serializable
+    data class AdminBookScreen(val id: String = ""): AlexandriaScreen()
+    @Serializable
+    data object WarningHubScreen: AlexandriaScreen()
+    @Serializable
+    data class WarningDetailScreen(val id: String = ""): AlexandriaScreen()
+    @Serializable
     data object AdminScreen: AlexandriaScreen()
 }
-
-data class NavigationItem(
-    val title: String,
-    val icon: ImageVector,
-    val screen: Any
-)

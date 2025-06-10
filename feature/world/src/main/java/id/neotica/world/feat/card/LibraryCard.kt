@@ -2,7 +2,7 @@ package id.neotica.world.feat.card
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
-import id.neotica.ui.navigation.AlexandriaScreen
+import id.neotica.routes.AlexandriaScreen
 import id.neotica.ui.navigation.RootScreen
 import id.neotica.world.utils.chLibrary
 import id.neotica.world.utils.libraryDesc

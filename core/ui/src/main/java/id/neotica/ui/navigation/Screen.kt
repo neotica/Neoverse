@@ -114,34 +114,6 @@ sealed class WorldScreen {
     data object RavenChatScreen: Screen()
 }
 
-@Serializable
-sealed class AlexandriaScreen {
-    @Serializable
-    data object HomeScreen: AlexandriaScreen()
-    @Serializable
-    data class BookScreen(val id: String = ""): AlexandriaScreen()
-    @Serializable
-    data object UserLibraryScreen: AlexandriaScreen()
-    @Serializable
-    data object AddBookScreen: AlexandriaScreen()
-    @Serializable
-    data class EditBookScreen(val id: String = ""): AlexandriaScreen()
-    @Serializable
-    data class EditChapterScreen(val chapterId: Int = 0, val chapterTitle: String = ""): AlexandriaScreen()
-    @Serializable
-    data class BookContentScreen(val chapterId: Int = 0, val chapterTitle: String = ""): AlexandriaScreen()
-    @Serializable
-    data object AdminLibraryScreen: AlexandriaScreen()
-    @Serializable
-    data class AdminBookScreen(val id: String = ""): AlexandriaScreen()
-    @Serializable
-    data object WarningHubScreen: AlexandriaScreen()
-    @Serializable
-    data class WarningDetailScreen(val id: String = ""): AlexandriaScreen()
-    @Serializable
-    data object AdminScreen: AlexandriaScreen()
-}
-
 data class NavigationItem(
     val title: String,
     val icon: ImageVector,

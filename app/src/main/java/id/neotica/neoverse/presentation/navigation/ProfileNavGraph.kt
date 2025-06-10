@@ -18,9 +18,9 @@ import id.neotica.profile.deleteaccount.DeleteAccountView
 import id.neotica.profile.editprofile.EditProfileView
 import id.neotica.profile.resetpassword.ResetPasswordView
 import id.neotica.profile.termsofservice.TermsOfServiceView
-import id.neotica.ui.navigation.RootScreen
-import id.neotica.ui.navigation.Screen
-import id.neotica.ui.state.AppVariant
+import id.neotica.routes.RootScreen
+import id.neotica.routes.Screen
+import id.neotica.state.AppVariant
 
 fun NavGraphBuilder.profileNavGraph(
     navController: NavController,

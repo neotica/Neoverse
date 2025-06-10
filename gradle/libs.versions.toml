@@ -52,8 +52,12 @@ ktor = "3.1.2"
 moko = "0.24.5"
 #haze
 haze = "1.2.0"
+runner = "1.5.2"
+core = "1.5.0"
 
 [libraries]
+#kotlin
+kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlin" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 #testing
 mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockitoCore" }
@@ -113,7 +117,6 @@ room-compiler = { group = "androidx.room", name = "room-compiler", version.ref =
 coil-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil" }
 coil-network-ktor = { group = "io.coil-kt.coil3", name = "coil-network-ktor3", version.ref = "coil" }
 #droidCore
-droidcore = { group = "com.github.laetuz", name = "Droidcore", version.ref = "droidcore" }
 droidcore-maven = { group = "id.neotica", name = "droidcore", version.ref = "droidcore-maven" }
 #retrofit
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
@@ -161,6 +164,7 @@ google-services = { id = "com.google.gms.google-services", version.ref = "gms" }
 devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 moko-resources = { id = "dev.icerock.mobile.multiplatform-resources", version.ref = "moko" }
+android-kotlin-multiplatform-library = { id = "com.android.kotlin.multiplatform.library", version.ref = "agp" }
 
 [bundles]
 ktor = [

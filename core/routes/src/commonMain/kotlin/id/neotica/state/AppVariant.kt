@@ -1,4 +1,4 @@
-package id.neotica.ui.shared.state
+package id.neotica.state
 
 data class AppVariant(
     val appName: String,

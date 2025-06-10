@@ -46,9 +46,9 @@ import dev.icerock.moko.resources.compose.painterResource
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.User
 import id.neotica.rickpository.res.MR
-import id.neotica.ui.shared.navigation.RootScreen
-import id.neotica.ui.shared.navigation.Screen
-import id.neotica.ui.shared.state.AppVariant
+import id.neotica.routes.RootScreen
+import id.neotica.routes.Screen
+import id.neotica.state.AppVariant
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable

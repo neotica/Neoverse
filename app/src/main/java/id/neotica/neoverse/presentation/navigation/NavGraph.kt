@@ -13,8 +13,8 @@ import androidx.navigation.compose.composable
 import id.neotica.neoverse.presentation.screen.SettingView
 import id.neotica.neoverse.presentation.screen.SplashView
 import id.neotica.neoverse.presentation.screen.dump.DumpView
+import id.neotica.state.AppVariant
 import id.neotica.ui.navigation.Screen
-import id.neotica.ui.state.AppVariant
 import id.neotica.world.worldNavGraph
 import org.koin.compose.getKoin
 

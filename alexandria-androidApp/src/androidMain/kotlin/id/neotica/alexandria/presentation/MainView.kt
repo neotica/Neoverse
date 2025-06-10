@@ -31,11 +31,11 @@ import androidx.navigation.compose.rememberNavController
 import id.neotica.alexandria.presentation.navigation.NavGraph
 import id.neotica.alexandria.theme.NeoverseTheme
 import id.neotica.ui.components.navigation.CustomNavBar
-import id.neotica.ui.navigation.AlexandriaScreen
+import id.neotica.routes.AlexandriaScreen
+import id.neotica.routes.RootScreen
+import id.neotica.routes.Screen
+import id.neotica.routes.WorldScreen
 import id.neotica.ui.navigation.NavigationItem
-import id.neotica.ui.navigation.RootScreen
-import id.neotica.ui.navigation.Screen
-import id.neotica.ui.navigation.WorldScreen
 import id.neotica.ui.navigation.showExcept
 import id.neotica.ui.shared.components.navigation.CustomNavigationSuiteScaffold
 import id.neotica.ui.shared.components.navigation.NavigationSuiteScaffoldDefaults

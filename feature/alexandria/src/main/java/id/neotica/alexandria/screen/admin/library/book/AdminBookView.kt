@@ -28,13 +28,13 @@ import id.neotica.alexandria.components.ChapterItem
 import id.neotica.domain.model.alexandria.Chapter
 import id.neotica.domain.utils.convertLongToTime
 import id.neotica.droidcore.component.textfield.NeoTextField
+import id.neotica.routes.AlexandriaScreen
+import id.neotica.routes.AlexandriaScreen.EditChapterScreen
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.LoadingIndicator
 import id.neotica.ui.components.NeoButton
 import id.neotica.ui.components.topbar.DotsMenuDropDown
 import id.neotica.ui.components.topbar.DotsMenuItem
-import id.neotica.ui.navigation.AlexandriaScreen
-import id.neotica.ui.navigation.AlexandriaScreen.EditChapterScreen
 import id.neotica.ui.navigation.navigateBack
 import id.neotica.ui.navigation.onRefresh
 import id.neotica.ui.navigation.refreshOnBack

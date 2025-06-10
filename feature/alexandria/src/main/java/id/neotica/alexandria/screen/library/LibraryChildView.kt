@@ -5,7 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import id.neotica.alexandria.components.BookItem
 import id.neotica.domain.model.alexandria.Book
-import id.neotica.ui.navigation.AlexandriaScreen
+import id.neotica.routes.AlexandriaScreen
 
 @Composable
 fun LibraryChildView(

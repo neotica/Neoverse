@@ -11,8 +11,8 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import id.neotica.alexandria.navigation.alexandriaNavGraph
-import id.neotica.ui.navigation.RootScreen
-import id.neotica.ui.shared.state.AppVariant
+import id.neotica.routes.RootScreen
+import id.neotica.state.AppVariant
 import org.koin.compose.getKoin
 
 @OptIn(ExperimentalMaterial3Api::class)

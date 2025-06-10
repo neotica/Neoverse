@@ -18,10 +18,10 @@ import androidx.navigation.NavController
 import id.neotica.alexandria.components.BookItem
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.alexandria.Book
+import id.neotica.routes.AlexandriaScreen
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.LoadingIndicator
 import id.neotica.ui.components.NeoButton
-import id.neotica.ui.navigation.AlexandriaScreen
 import id.neotica.ui.navigation.onRefresh
 import org.koin.compose.viewmodel.koinViewModel
 

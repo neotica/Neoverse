@@ -31,7 +31,7 @@ import id.neotica.domain.pagination.PaginatedContent
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.LoadingIndicator
 import id.neotica.ui.components.droidcore.NeoSearchBar
-import id.neotica.ui.navigation.AlexandriaScreen
+import id.neotica.routes.AlexandriaScreen
 import id.neotica.ui.theme.DarkBackground
 import org.koin.compose.viewmodel.koinViewModel
 

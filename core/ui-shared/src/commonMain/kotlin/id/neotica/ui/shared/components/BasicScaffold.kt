@@ -1,6 +1,5 @@
 package id.neotica.ui.shared.components
 
-//import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
@@ -24,16 +23,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.Transparent
 import androidx.compose.ui.graphics.Color.Companion.White
-//import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
+import dev.icerock.moko.resources.compose.painterResource
+import id.neotica.rickpository.res.MR
 import id.neotica.ui.shared.navigation.navigateBack
 import id.neotica.ui.shared.theme.DarkPrimaryTransparent80
 import kotlinx.coroutines.delay
-import neoverse.core.ui_shared.generated.resources.Res
-import neoverse.core.ui_shared.generated.resources.ic_arrow_back
-import neoverse.core.ui_shared.generated.resources.ic_eye_closed
-import neoverse.core.ui_shared.generated.resources.ic_eye_open
-import org.jetbrains.compose.resources.painterResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -87,7 +82,7 @@ fun BasicScaffold(
                             }
                             ) {
                                 Icon(
-                                    painter = painterResource(Res.drawable.ic_arrow_back),
+                                    painter = painterResource(MR.images.ic_back),
                                     contentDescription = ""
                                 )
                             }
@@ -126,7 +121,7 @@ fun BasicScaffold(
                                     }
                                 ) {
                                     Icon(
-                                        painter = painterResource(Res.drawable.ic_eye_open),
+                                        painter = painterResource(MR.images.ic_eye_open),
                                         contentDescription = "",
                                         tint = White
                                     )
@@ -136,7 +131,7 @@ fun BasicScaffold(
                                     onClick = {eyeState.value = !eyeState.value}
                                 ) {
                                     Icon(
-                                        painter = painterResource(Res.drawable.ic_eye_closed),
+                                        painter = painterResource(MR.images.ic_eye_closed),
                                         contentDescription = ""
                                     )
                                 }

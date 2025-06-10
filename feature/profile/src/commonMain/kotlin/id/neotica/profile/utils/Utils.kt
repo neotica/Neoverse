@@ -11,6 +11,7 @@ package id.neotica.profile.utils
 //import java.io.File
 //import java.util.concurrent.TimeUnit
 
+//expect fun compressUri()
 //fun compressUri(uri: Uri, context: Context): Uri {
 //    val contentResolver = context.contentResolver
 //    val bitmap: Bitmap = if (VERSION.SDK_INT >= Build.VERSION_CODES.P) {

@@ -31,8 +31,8 @@ import id.neotica.domain.ApiResult
 import id.neotica.domain.model.alexandria.Book
 import id.neotica.domain.model.alexandria.book.BookRequest
 import id.neotica.domain.utils.convertLongToTime
+import id.neotica.routes.AlexandriaScreen
 import id.neotica.ui.components.LoadingIndicator
-import id.neotica.ui.navigation.AlexandriaScreen
 import id.neotica.ui.theme.DarkPrimaryTransparent80
 import org.koin.compose.viewmodel.koinViewModel
 

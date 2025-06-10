@@ -10,7 +10,7 @@ import id.neotica.domain.model.alexandria.content.NewContentRequest
 import id.neotica.domain.pagination.PaginatedContent
 import id.neotica.domain.remote.alexandria.ChapterRepository
 import id.neotica.domain.remote.alexandria.ContentRepository
-import id.neotica.ui.navigation.AlexandriaScreen
+import id.neotica.routes.AlexandriaScreen
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow

@@ -65,6 +65,7 @@ dependencies {
     implementation(projects.core.domain)
     implementation(projects.core.network)
     implementation(projects.core.ui)
+    implementation(projects.core.routes)
     implementation(projects.core.core)
     implementation(projects.core.camera)
     implementation(projects.feature.world)

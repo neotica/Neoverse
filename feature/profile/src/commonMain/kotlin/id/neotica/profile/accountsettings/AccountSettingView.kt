@@ -11,9 +11,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import id.neotica.droidcore.component.alert.NeoToast
+import id.neotica.routes.Screen
 import id.neotica.ui.shared.components.BasicScaffold
 import id.neotica.ui.shared.components.MenuItem
-import id.neotica.ui.shared.navigation.Screen
 import id.neotica.ui.shared.theme.NegativePrimary
 
 @Composable

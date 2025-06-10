@@ -34,7 +34,7 @@ import id.neotica.ui.components.LoadingIndicator
 import id.neotica.ui.components.NeoButton
 import id.neotica.ui.components.topbar.DotsMenuDropDown
 import id.neotica.ui.components.topbar.DotsMenuItem
-import id.neotica.ui.navigation.AlexandriaScreen.EditChapterScreen
+import id.neotica.routes.AlexandriaScreen.EditChapterScreen
 import id.neotica.ui.navigation.navigateBack
 import id.neotica.ui.navigation.onRefresh
 import id.neotica.ui.navigation.refreshOnBack

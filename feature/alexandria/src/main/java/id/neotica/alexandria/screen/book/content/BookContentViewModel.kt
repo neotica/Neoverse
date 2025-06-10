@@ -11,7 +11,7 @@ import androidx.navigation.toRoute
 import id.neotica.domain.ApiResult
 import id.neotica.domain.pagination.PaginatedContent
 import id.neotica.domain.remote.alexandria.ContentRepository
-import id.neotica.ui.navigation.AlexandriaScreen
+import id.neotica.routes.AlexandriaScreen
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

@@ -58,8 +58,8 @@ import id.neotica.network.alexandria.ContentRepositoryImpl
 import id.neotica.network.micro.ktorModule
 import id.neotica.network.usecase.FirebaseTokenProvider
 import id.neotica.profile.ProfileViewModel
+import id.neotica.state.AppVariant
 import id.neotica.ui.R
-import id.neotica.ui.state.AppVariant
 import id.neotica.world.di.worldModules
 import org.koin.core.context.startKoin
 import org.koin.core.module.dsl.bind

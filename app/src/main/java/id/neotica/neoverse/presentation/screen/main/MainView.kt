@@ -35,11 +35,11 @@ import id.neotica.ui.components.navigation.CustomNavBar
 import id.neotica.ui.components.navigation.CustomNavigationSuiteScaffold
 import id.neotica.ui.components.navigation.NavigationSuiteScaffoldDefaults
 import id.neotica.ui.components.navigation.NavigationSuiteType
-import id.neotica.ui.navigation.AlexandriaScreen
+import id.neotica.routes.AlexandriaScreen
+import id.neotica.routes.RootScreen
+import id.neotica.routes.Screen
+import id.neotica.routes.WorldScreen
 import id.neotica.ui.navigation.NavigationItem
-import id.neotica.ui.navigation.RootScreen
-import id.neotica.ui.navigation.Screen
-import id.neotica.ui.navigation.WorldScreen
 import id.neotica.ui.navigation.showExcept
 import id.neotica.ui.state.AdaptiveState
 import id.neotica.ui.theme.DarkBackground
