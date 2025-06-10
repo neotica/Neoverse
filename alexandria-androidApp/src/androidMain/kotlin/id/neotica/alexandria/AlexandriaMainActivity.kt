@@ -9,7 +9,8 @@ import com.google.firebase.Firebase
 import com.google.firebase.appcheck.appCheck
 import com.google.firebase.appcheck.playintegrity.PlayIntegrityAppCheckProviderFactory
 import com.google.firebase.initialize
-import id.neotica.alexandria.presentation.MainView
+import id.neotica.alexandria.presentation.AlexandriaView
+import id.neotica.alexandria.theme.NeoverseTheme
 
 class AlexandriaMainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,7 +23,9 @@ class AlexandriaMainActivity : ComponentActivity() {
             PlayIntegrityAppCheckProviderFactory.getInstance()
         )
         setContent {
-            MainView()
+            NeoverseTheme {
+                AlexandriaView()
+            }
         }
     }
 }
