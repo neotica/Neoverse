@@ -23,6 +23,7 @@ val DarkPrimaryTransparent40 = Color(0x99424D98)
 val DarkPrimaryTransparent80 = Color(0x33424D98)
 val DarkPrimaryCard = Color(0xFF3A4486)
 val DarkBackground = Color(0xFF151A3B)
+val DarkBackgroundV2 = Color(0x99151A3B)
 
 val NegativePrimary = Color(0xFFE05D5D)
 

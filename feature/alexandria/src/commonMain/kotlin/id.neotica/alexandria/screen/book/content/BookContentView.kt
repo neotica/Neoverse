@@ -1,0 +1,285 @@
+package id.neotica.alexandria.screen.book.content
+
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberTopAppBarState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
+import androidx.navigation.NavController
+import id.neotica.droidcore.component.button.NeoButton
+import id.neotica.ui.shared.components.BasicScaffoldScrollable
+import id.neotica.ui.shared.components.LoadingIndicator
+import id.neotica.ui.shared.components.topbar.DotsMenuDropDown
+import id.neotica.ui.shared.components.topbar.DotsMenuItem
+import id.neotica.ui.shared.page.PageDropdown
+import id.neotica.ui.shared.theme.DarkBackgroundV2
+import id.neotica.ui.shared.theme.DarkPrimaryTransparent2
+import id.neotica.ui.shared.theme.NeoPadding
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
+import org.koin.compose.viewmodel.koinViewModel
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun BookContentView(
+    navController: NavController,
+    viewModel: BookContentViewModel = koinViewModel()
+) {
+
+    val scope = rememberCoroutineScope()
+    val currentPage by viewModel.currentPage.collectAsState()
+
+    val listState = rememberLazyListState()
+
+    var openPageSelector by remember { mutableStateOf(false) }
+    val nestedBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
+
+    val isMoreLoadingVisible by remember {
+        derivedStateOf {
+            listState.layoutInfo.visibleItemsInfo
+                .filter { it.key.toString() == "loading" }
+                .size == 1
+        }
+    }
+
+    LaunchedEffect(key1 = isMoreLoadingVisible) {
+        if (isMoreLoadingVisible) {
+            viewModel.getPage(refresh = false)
+        }
+    }
+
+    LaunchedEffect(listState, viewModel.paginatedContent.size) {
+        snapshotFlow { listState.layoutInfo.visibleItemsInfo }
+            .map { visibleItems ->
+                val visiblePageItems = visibleItems.filter {
+                    // Only include items whose key is an integer (i.e., actual page numbers)
+                    it.key.toString().toIntOrNull() != null
+                }
+
+                val lastVisiblePageItem = visiblePageItems.maxByOrNull { it.offset }
+
+                val page = lastVisiblePageItem?.key?.toString()?.toIntOrNull() ?: 1
+
+                page
+            }
+            .distinctUntilChanged()
+            .collectLatest { page ->
+                if (viewModel.currentPage.value != page) {
+                    viewModel.setCurrentPage(page) // Create a setter if needed
+                }
+            }
+    }
+
+    BasicScaffoldScrollable(
+        topBarTitle = viewModel.chapterTitle,
+        fullScreen = true,
+        enableActionBar = true,
+        scrollBehavior = nestedBehavior,
+        trailingIcon = {
+            Row(
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                DotsMenuDropDown(
+                    item = listOf(
+                        DotsMenuItem(
+                            "Goto Page: "
+                        ) {
+                            openPageSelector = true
+                        }
+                    )
+                )
+            }
+        },
+        navController = navController,
+    ) {
+        Box(Modifier.fillMaxSize()) {
+            if (openPageSelector) {
+                PageSelectorOverlay(
+                    modifier = Modifier.align(Alignment.Center),
+                    currentPage = currentPage,
+                    totalPage = viewModel.totalPage,
+                    onDismiss = { openPageSelector = false }
+                ) { selectedPage ->
+                    scope.launch {
+                        viewModel.ensurePagesUpTo(selectedPage)
+
+//                        val sortedPages = viewModel.paginatedContent.toSortedMap().keys.toList()
+                        val sortedKey = viewModel.paginatedContent.values.map { it.page }.sorted()
+
+                        val targetIndex = sortedKey.indexOf(selectedPage).coerceAtLeast(0)
+
+                        listState.animateScrollToItem(targetIndex + 1)
+                        viewModel.setCurrentPage(selectedPage + 1)
+                    }
+                }
+            }
+
+            LazyColumn(
+                state = listState,
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+                    .align(Alignment.TopCenter)
+                    .fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                contentPadding = it
+            ) {
+//                val itemSortedMapLegacy = viewModel.paginatedContent.toSortedMap().values.toList()
+                val itemSortedMap = viewModel.paginatedContent.values.map { it }.sortedBy { it.id }
+                items(
+                    items = itemSortedMap,
+                    key = { it.page }
+                ) {
+                    Text(it.content)
+                }
+                if (viewModel.hasNext) {
+                    item(key = "loading") {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 8.dp)
+                        ) {
+                            LoadingIndicator()
+                        }
+                    }
+                }
+            }
+
+            AnimatedVisibility(
+                nestedBehavior.state.heightOffset == 0f,
+                modifier = Modifier.align(Alignment.BottomCenter),
+                enter = androidx.compose.animation.slideInVertically(initialOffsetY = { it }),
+                exit = androidx.compose.animation.slideOutVertically(targetOffsetY = { it })
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(color = DarkBackgroundV2)
+                        .padding(bottom = NeoPadding.systemBarPadding),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        NeoButton(
+                            text = "<",
+                            enabled = currentPage > 1
+                        ) {
+                            val prevPage = currentPage - 1
+
+                            scope.launch {
+                                if (!viewModel.paginatedContent.containsKey(prevPage)) {
+                                    viewModel.loadPage(prevPage)
+                                }
+                                // Wait until the page is loaded
+                                while (!viewModel.paginatedContent.containsKey(prevPage)) {
+                                    delay(100) // small delay to avoid tight loop
+                                }
+
+//                                val updatedSortedKeys = viewModel.paginatedContent.toSortedMap().keys.toList()
+                                val sortedKey = viewModel.paginatedContent.values.map { it.page }
+                                val targetIndex = sortedKey.indexOf(prevPage).coerceAtLeast(0)
+
+//                                Log.d("ScrollToPrevPage", "Scrolling to index $targetIndex for page $prevPage")
+
+                                listState.animateScrollToItem(targetIndex)
+                            }
+                        }
+
+                        NeoButton(
+                            text = ">",
+                            enabled = viewModel.paginatedContent[currentPage]?.hasNext == true
+                        ) {
+                            val nextPage = currentPage + 1
+                            scope.launch {
+                                if (!viewModel.paginatedContent.containsKey(nextPage)) {
+                                    viewModel.loadPage(nextPage)
+
+                                    // Wait until the next page is available in the map
+                                    while (!viewModel.paginatedContent.containsKey(nextPage)) {
+                                        delay(100)
+                                    }
+                                }
+
+                                // Now get the correct index after map is updated
+//                                val sortedPages = viewModel.paginatedContent.toSortedMap().keys.toList()
+                                val sortedKey = viewModel.paginatedContent.values.map { it.page }
+                                val targetIndex = sortedKey.indexOf(nextPage).coerceAtLeast(0)
+
+//                                Log.d("ScrollToNextPage", "Scrolling to index $targetIndex for page $nextPage")
+
+                                listState.animateScrollToItem(targetIndex)
+                            }
+                        }
+                        Text("Page $currentPage", modifier = Modifier.padding(horizontal = 8.dp))
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun PageSelectorOverlay(
+    modifier: Modifier,
+    currentPage: Int,
+    totalPage: Int,
+    onDismiss: () -> Unit,
+    onPageSelected: (Int) -> Unit
+) {
+    Card(
+        modifier = modifier
+            .zIndex(5f),
+        colors = CardDefaults.cardColors().copy(containerColor = DarkPrimaryTransparent2)
+    ) {
+        Row(
+            modifier = Modifier.padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Text("Go to page: ")
+            if (totalPage > 0) {
+                PageDropdown(
+                    top = true,
+                    currentValue = currentPage,
+                    count = totalPage,
+                    onValueChange = { selectedPage ->
+                        onDismiss()
+                        onPageSelected(selectedPage)
+                    }
+                )
+            }
+        }
+    }
+}

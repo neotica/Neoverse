@@ -13,7 +13,7 @@ kotlin {
     androidLibrary {
         namespace = "id.neotica.routes"
         compileSdk = 35
-        minSdk = 16
+        minSdk = 21
 
         withHostTestBuilder {
         }
@@ -70,7 +70,7 @@ kotlin {
 
         commonTest {
             dependencies {
-//                implementation(libs.kotlin.test)
+                implementation(libs.kotlin.test)
             }
         }
 

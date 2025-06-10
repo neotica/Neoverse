@@ -34,12 +34,11 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import dev.icerock.moko.resources.compose.painterResource
+import id.neotica.rickpository.res.MR
 import id.neotica.ui.shared.theme.FontSize
 import id.neotica.ui.shared.theme.Transparent
 import id.neotica.ui.shared.theme.TransparentText40
-import neoverse.core.ui_shared.generated.resources.Res
-import neoverse.core.ui_shared.generated.resources.ic_search
-import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun NeoSearchBar(
@@ -86,7 +85,7 @@ fun NeoSearchBar(
                 leadingIcon.invoke()
             } else {
                 Icon(
-                    painter = painterResource(Res.drawable.ic_search),
+                    painter = painterResource(MR.images.ic_search),
                     contentDescription = "",
                     tint = TransparentText40,
                     modifier = Modifier.padding(horizontal =  16.dp)

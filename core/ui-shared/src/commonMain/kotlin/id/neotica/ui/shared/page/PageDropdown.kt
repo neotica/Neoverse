@@ -20,13 +20,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
+import dev.icerock.moko.resources.compose.painterResource
+import id.neotica.rickpository.res.MR
 import id.neotica.ui.shared.components.DropdownItem
 import id.neotica.ui.shared.theme.DarkPrimary
 import id.neotica.ui.shared.theme.DarkPrimaryTransparent2
-import neoverse.core.ui_shared.generated.resources.Res
-import neoverse.core.ui_shared.generated.resources.ic_arrow_drop_down
-import neoverse.core.ui_shared.generated.resources.ic_arrow_drop_up
-import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun PageDropdown(
@@ -47,9 +45,9 @@ fun PageDropdown(
             Text("$currentValue")
             Icon(painterResource(
                 if (dropDown != top) {
-                    Res.drawable.ic_arrow_drop_down
+                    MR.images.ic_arrow_drop_down
                 } else {
-                    Res.drawable.ic_arrow_drop_up
+                    MR.images.ic_arrow_drop_up
                 }
             ),
                 contentDescription = "Dropdown to select page"

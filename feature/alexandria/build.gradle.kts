@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.moko.resources)
 }
 
 kotlin {
@@ -33,7 +34,6 @@ kotlin {
     sourceSets {
         androidMain.dependencies {
             implementation(projects.core.ui)
-            implementation(projects.core.domain)
         }
         androidUnitTest.dependencies {
             implementation(libs.bundles.unit.test)
@@ -43,6 +43,7 @@ kotlin {
         }
         commonMain.dependencies {
             implementation(projects.core.uiShared)
+            implementation(projects.core.domain)
             implementation(projects.core.routes)
         }
     }
