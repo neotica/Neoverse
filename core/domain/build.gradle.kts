@@ -43,7 +43,7 @@ kotlin {
             api(libs.kotlinx.serialization.json)
 
             // Koin
-            api(libs.bundles.koin)
+            implementation(libs.koin.android)
         }
         androidUnitTest.dependencies {
             implementation(libs.junit.jupiter)
@@ -52,6 +52,8 @@ kotlin {
         commonMain.dependencies {
             //put your multiplatform dependencies here
             implementation(projects.core.core)
+            api(libs.koin.core)
+//            api(libs.bundles.koin)
 //            implementation(libs.coroutines.core)
         }
         commonTest.dependencies {
