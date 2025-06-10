@@ -45,11 +45,11 @@ import id.neotica.domain.utils.convertLongToTime
 import id.neotica.droidcore.component.alert.NeoToast
 import id.neotica.droidcore.component.carousel.CustomCarousel
 import id.neotica.droidcore.component.textfield.NeoTextField
+import id.neotica.routes.RootScreen
+import id.neotica.routes.Screen
 import id.neotica.ui.R
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.LoadingIndicator
-import id.neotica.ui.navigation.RootScreen
-import id.neotica.ui.navigation.Screen
 import id.neotica.ui.theme.DarkPrimary
 import id.neotica.ui.theme.DarkPrimaryTransparent40
 import id.neotica.ui.theme.DarkPrimaryTransparent80

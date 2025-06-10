@@ -21,10 +21,10 @@ import androidx.core.content.pm.PackageInfoCompat
 import androidx.navigation.NavController
 import id.neotica.domain.ApiResult
 import id.neotica.droidcore.component.textfield.NumberField
+import id.neotica.routes.RootScreen
+import id.neotica.routes.Screen
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.NeoButton
-import id.neotica.ui.navigation.RootScreen
-import id.neotica.ui.navigation.Screen
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable

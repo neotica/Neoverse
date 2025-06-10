@@ -41,14 +41,14 @@ import androidx.navigation.NavController
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.User
 import id.neotica.friend.profile.FriendProfileView
+import id.neotica.routes.RootScreen
+import id.neotica.routes.Screen
 import id.neotica.ui.R
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.LoadingIndicatorBool
 import id.neotica.ui.components.NeoButton
 import id.neotica.ui.components.ProfileCard
 import id.neotica.ui.components.droidcore.NeoSearchBar
-import id.neotica.ui.navigation.RootScreen
-import id.neotica.ui.navigation.Screen
 import id.neotica.ui.theme.DarkBackground
 import id.neotica.ui.theme.DarkPrimaryTransparent80
 import id.neotica.ui.theme.NeoPadding

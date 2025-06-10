@@ -11,9 +11,9 @@ import androidx.compose.runtime.setValue
 import androidx.navigation.NavController
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.World
+import id.neotica.routes.WorldScreen
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.NeoButton
-import id.neotica.ui.navigation.WorldScreen
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable

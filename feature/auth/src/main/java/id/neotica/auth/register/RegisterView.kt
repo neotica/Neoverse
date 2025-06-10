@@ -25,10 +25,10 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import id.neotica.droidcore.component.textfield.NeoTextField
 import id.neotica.droidcore.component.textfield.PasswordTextField
+import id.neotica.routes.Screen
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.LoadingIndicatorBool
 import id.neotica.ui.components.NeoButton
-import id.neotica.ui.navigation.Screen
 import id.neotica.ui.theme.DarkPrimary
 import id.neotica.ui.theme.FontSize
 import id.neotica.ui.theme.NegativePrimary

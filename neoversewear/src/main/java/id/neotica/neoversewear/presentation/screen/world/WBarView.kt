@@ -16,8 +16,8 @@ import androidx.navigation.NavController
 import androidx.wear.compose.material.Text
 import id.neotica.domain.ApiResult
 import id.neotica.neoversewear.presentation.components.BasicWearScreen
-import id.neotica.ui.navigation.RootScreen
-import id.neotica.ui.navigation.Screen
+import id.neotica.routes.RootScreen
+import id.neotica.routes.Screen
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable

@@ -13,7 +13,7 @@ import id.neotica.home.HomeView
 import id.neotica.home.addchat.AddChatView
 import id.neotica.home.updateapp.UpdateAppView
 import id.neotica.routes.RootScreen
-import id.neotica.ui.navigation.Screen
+import id.neotica.routes.Screen
 
 fun NavGraphBuilder.homeNavGraph(
     navController: NavController,

@@ -86,8 +86,8 @@ import id.neotica.ui.theme.TransparentText40
 import kotlinx.coroutines.delay
 import org.koin.compose.viewmodel.koinViewModel
 import androidx.core.net.toUri
-import id.neotica.ui.navigation.RootScreen
-import id.neotica.ui.navigation.Screen
+import id.neotica.routes.RootScreen
+import id.neotica.routes.Screen
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable

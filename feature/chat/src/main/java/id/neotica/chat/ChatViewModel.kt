@@ -12,7 +12,7 @@ import id.neotica.domain.model.chat.notification.SendMessageDto
 import id.neotica.domain.remote.ChatRepository
 import id.neotica.domain.usecase.GetUserIdUseCase
 import id.neotica.domain.usecase.GetUserNameUseCase
-import id.neotica.ui.navigation.Screen
+import id.neotica.routes.Screen
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -29,10 +29,10 @@ import id.neotica.domain.model.chat.ChatRoom
 import id.neotica.domain.utils.randomUUID
 import id.neotica.droidcore.component.alert.NeoAlert
 import id.neotica.friend.FriendViewModel
+import id.neotica.routes.Screen
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.image.ImageCoil
 import id.neotica.ui.components.NeoButton
-import id.neotica.ui.navigation.Screen
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable

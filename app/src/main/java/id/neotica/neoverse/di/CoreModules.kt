@@ -35,7 +35,6 @@ import id.neotica.friend.FriendViewModel
 import id.neotica.home.HomeViewModel
 import id.neotica.home.addchat.AddChatViewModel
 import id.neotica.neoverse.presentation.screen.camerax.CameraPreviewViewModel
-import id.neotica.neoverse.presentation.screen.dump.DumpViewModel
 import id.neotica.neoverse.presentation.screen.main.MainViewModel
 import id.neotica.neoverse.presentation.screen.sharing.SharingViewModel
 import id.neotica.neoverse.utils.connectionchecker.AndroidConnectivityObserver
@@ -100,7 +99,6 @@ val viewModelModules = module {
     viewModelOf(::AddChatViewModel)
     viewModelOf(::ChatViewModel)
     viewModelOf(::FriendViewModel)
-    viewModelOf(::DumpViewModel)
     viewModelOf(::MainViewModel)
     viewModelOf(::SharingViewModel)
     viewModelOf(::CameraPreviewViewModel)

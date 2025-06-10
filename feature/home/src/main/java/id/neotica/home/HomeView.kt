@@ -66,6 +66,9 @@ import id.neotica.droidcore.component.cards.FlipCard
 import id.neotica.home.addchat.AddChatView
 import id.neotica.neoverse.utils.buddhaQuotes
 import id.neotica.neoverse.utils.marcusAureliusQuotes
+import id.neotica.routes.RootScreen
+import id.neotica.routes.Screen
+import id.neotica.routes.WorldScreen
 import id.neotica.ui.R
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.ChatListItem
@@ -76,9 +79,6 @@ import id.neotica.ui.components.animation.NeoRefreshBox
 import id.neotica.ui.components.droidcore.NeoSearchBar
 import id.neotica.ui.components.scroll.nestedScrollConnection
 import id.neotica.ui.components.noncomposable.simpleHaptic
-import id.neotica.ui.navigation.RootScreen
-import id.neotica.ui.navigation.Screen
-import id.neotica.ui.navigation.WorldScreen
 import id.neotica.ui.theme.DarkBackground
 import id.neotica.ui.theme.FontSize
 import id.neotica.ui.theme.NeoPadding

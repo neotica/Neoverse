@@ -14,9 +14,9 @@ import androidx.navigation.navigation
 import id.neotica.alexandria.navigation.alexandriaNavGraph
 import id.neotica.raven.RavenChatView
 import id.neotica.raven.RavenView
+import id.neotica.routes.RootScreen
+import id.neotica.routes.WorldScreen
 import id.neotica.state.AppVariant
-import id.neotica.ui.navigation.RootScreen
-import id.neotica.ui.navigation.WorldScreen
 import id.neotica.tavern.TavernView
 import id.neotica.world.feat.inventory.InventoryView
 import id.neotica.world.feat.kanye.KanyeView
