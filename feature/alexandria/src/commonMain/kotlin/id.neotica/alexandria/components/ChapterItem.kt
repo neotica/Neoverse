@@ -17,9 +17,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import id.neotica.ui.components.image.ImageCoil
-import id.neotica.ui.theme.DarkPrimary
-import id.neotica.ui.theme.DarkPrimaryTransparent80
+import id.neotica.ui.shared.components.image.ImageCoil
+import id.neotica.ui.shared.theme.DarkPrimary
+import id.neotica.ui.shared.theme.DarkPrimaryTransparent80
 
 @Composable
 fun ChapterItem(
