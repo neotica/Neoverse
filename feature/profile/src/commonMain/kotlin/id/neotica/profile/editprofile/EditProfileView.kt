@@ -25,4 +25,3 @@ expect fun EditProfileView(
     viewModel: ProfileViewModel = koinViewModel(),
     args: Screen.EditProfileScreen,
 )
-

@@ -112,7 +112,12 @@ class LibraryViewModel(
                 }
             }
             is ApiResult.Error -> {
-                _errorMessage.value = user.errorMessage
+                when(user.errorMessage.toString()) {
+                    "Invalid document reference. Document references must have an even number of segments, but Users has 1" -> {}
+                    else -> {
+                        _errorMessage.value = user.errorMessage
+                    }
+                }
                 _loading.value = false
             }
         }

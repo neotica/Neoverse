@@ -45,6 +45,7 @@ import org.koin.compose.viewmodel.koinViewModel
 import dev.icerock.moko.resources.compose.painterResource
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.User
+import id.neotica.droidcore.component.alert.NeoToast
 import id.neotica.rickpository.res.MR
 import id.neotica.routes.RootScreen
 import id.neotica.routes.Screen
@@ -60,7 +61,9 @@ fun ProfileView(
 ) {
     var user by remember { mutableStateOf<User?>(null) }
     val isLoading by remember { mutableStateOf(false) }
-//    val context = LocalContext.current
+    var toast = remember { mutableStateOf(false) }
+    var toastMessage = remember { mutableStateOf("") }
+
     val haptic = LocalHapticFeedback.current
 
     val sheetState = rememberModalBottomSheetState()
@@ -117,7 +120,7 @@ fun ProfileView(
                 }
                 MenuItem(
                     "Delete Account",
-//                    textColor = NegativePrimary
+                    textColor = NegativePrimary
                 ) {
                     navController.navigate(Screen.DeleteAccountScreen)
                 }
@@ -176,9 +179,8 @@ fun ProfileView(
                         },
                         onLongClick = {
                             haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-//                            Toast
-//                                .makeText(context, "About", Toast.LENGTH_SHORT)
-//                                .show()
+                            toastMessage.value = "About"
+                            toast.value = true
                         },
                     ),
                 painter = painterResource(MR.images.ic_info),
@@ -262,4 +264,5 @@ fun ProfileView(
             }
         }
     }
+    if (toast.value) NeoToast(toastMessage.value .toString(), toast)
 }

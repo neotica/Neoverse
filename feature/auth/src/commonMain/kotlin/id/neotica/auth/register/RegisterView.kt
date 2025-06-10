@@ -1,6 +1,5 @@
 package id.neotica.auth.register
 
-import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -19,21 +18,20 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import id.neotica.droidcore.component.alert.NeoToast
 import id.neotica.droidcore.component.textfield.NeoTextField
 import id.neotica.droidcore.component.textfield.PasswordTextField
 import id.neotica.routes.Screen
-import id.neotica.ui.components.BasicScaffold
-import id.neotica.ui.components.LoadingIndicatorBool
-import id.neotica.ui.components.NeoButton
-import id.neotica.ui.theme.DarkPrimary
-import id.neotica.ui.theme.FontSize
-import id.neotica.ui.theme.NegativePrimary
+import id.neotica.ui.shared.components.BasicScaffold
+import id.neotica.ui.shared.components.LoadingIndicatorBool
+import id.neotica.ui.shared.components.NeoButton
+import id.neotica.ui.shared.theme.DarkPrimary
+import id.neotica.ui.shared.theme.FontSize
+import id.neotica.ui.shared.theme.NegativePrimary
 import org.koin.compose.viewmodel.koinViewModel
-import java.util.Locale
 
 @Composable
 fun RegisterView(
@@ -52,8 +50,8 @@ fun RegisterView(
     var onValueChange by remember { mutableStateOf(false) }
     var checkEnabled by remember { mutableStateOf(false) }
 
-
-    val context = LocalContext.current
+    var toast = remember { mutableStateOf(false) }
+    var toastMessage = remember { mutableStateOf("") }
 
     LaunchedEffect(Unit) {
         viewModel.loading.collect {
@@ -63,7 +61,8 @@ fun RegisterView(
 
     LaunchedEffect(Unit) {
         viewModel.registerResult.collect {
-            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+            toast.value = true
+            toastMessage.value = it
         }
     }
 
@@ -169,13 +168,10 @@ fun RegisterView(
                                         && isUserExist,
                             ) {
                                 isButtonPressed = true
-                                viewModel.register(nameValue.value.lowercase(Locale.getDefault()), emailValue.value, passwordValue.value) {
+                                viewModel.register(nameValue.value.lowercase(), emailValue.value, passwordValue.value) {
                                     navController.navigate(Screen.VerifyEmailScreen)
-                                    Toast.makeText(
-                                        context,
-                                        "Success registered ${nameValue.value}",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
+                                    toast.value = true
+                                    toastMessage.value = "Success registered ${nameValue.value}"
                                 }
                             }
                         }
@@ -184,4 +180,5 @@ fun RegisterView(
             }
         }
     }
+    if (toast.value) NeoToast(toastMessage.value .toString(), toast)
 }

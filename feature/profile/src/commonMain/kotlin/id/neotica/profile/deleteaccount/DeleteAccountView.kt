@@ -12,10 +12,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import id.neotica.droidcore.component.button.NeoButton
 import id.neotica.droidcore.component.textfield.NeoTextField
 import id.neotica.profile.ProfileViewModel
-import id.neotica.ui.components.BasicScaffold
-import id.neotica.ui.components.NeoButton
+import id.neotica.ui.shared.components.BasicScaffold
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable

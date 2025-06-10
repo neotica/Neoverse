@@ -1,6 +1,5 @@
 package id.neotica.auth.verify
 
-import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -13,16 +12,18 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import id.neotica.droidcore.component.alert.NeoToast
 import id.neotica.routes.Screen
-import id.neotica.ui.components.BasicScaffold
-import id.neotica.ui.components.NeoButton
-import id.neotica.ui.theme.DarkPrimary
+import id.neotica.ui.shared.components.BasicScaffold
+import id.neotica.ui.shared.components.NeoButton
+import id.neotica.ui.shared.theme.DarkPrimary
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -32,6 +33,9 @@ fun VerifyEmailView(
     modifier: Modifier = Modifier,
     viewModel: VerifyEmailViewModel = koinViewModel()
 ) {
+    var toast = remember { mutableStateOf(false) }
+    var toastMessage = remember { mutableStateOf("") }
+
     LaunchedEffect(Unit) {
         if (viewModel.isUserVerified()) {
             viewModel.logout()
@@ -39,7 +43,7 @@ fun VerifyEmailView(
         } else
             viewModel.sendEmailVerification()
     }
-    BasicScaffold(
+    BasicScaffold (
         "Verify email",
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
@@ -74,14 +78,14 @@ fun VerifyEmailView(
                         text = "Didn't receive an email? ",
                         fontSize = 14.sp,
                     )
-                    val context = LocalContext.current
                     Text(
                         color = DarkPrimary,
                         fontSize = 14.sp,
                         text = "Resend email.",
                         modifier = Modifier.clickable {
                             viewModel.sendEmailVerification()
-                            Toast.makeText(context, "Email sent.", Toast.LENGTH_SHORT).show()
+                            toastMessage.value = "Email sent."
+                            toast.value = true
                         }
                     )
                 }
@@ -89,4 +93,5 @@ fun VerifyEmailView(
             }
         }
     }
+    if (toast.value) NeoToast(toastMessage.value .toString(), toast)
 }
