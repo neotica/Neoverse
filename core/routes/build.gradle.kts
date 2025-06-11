@@ -60,6 +60,7 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
+                api(projects.core.core)
                 implementation(libs.kotlin.stdlib)
                 api(libs.kotlinx.serialization.json)
                 api(libs.moko.resources)

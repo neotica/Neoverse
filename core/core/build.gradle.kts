@@ -29,17 +29,19 @@ kotlin {
 
     sourceSets {
         androidMain.dependencies {
-            implementation(libs.androidx.core.ktx)
-            implementation(libs.androidx.lifecycle.runtime.ktx)
-            implementation(libs.androidx.lifecycle.viewmodel)
-//            api(libs.koin.androidx.compose)
+//            implementation(libs.androidx.core.ktx)
+//            implementation(libs.androidx.lifecycle.runtime.ktx)
+//            implementation(libs.androidx.lifecycle.viewmodel)
+            api(libs.koin.android)
         }
         commonMain.dependencies {
             //put your multiplatform dependencies here
+            implementation(libs.kotlin.stdlib)
             api(libs.bundles.koin)
             api(libs.kotlinx.serialization.json)
             api(libs.coroutines.core)
         }
+        iosMain.dependencies {}
         commonTest.dependencies {
             implementation(libs.kotlin.test)
         }

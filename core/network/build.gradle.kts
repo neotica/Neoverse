@@ -55,6 +55,7 @@ dependencies {
     api(libs.firebase.appcheck.playintegrity)
     api(libs.firebase.appcheck.debug)
     api(libs.bundles.ktor)
+    implementation(libs.ktor.client.android)
 
     testImplementation(libs.bundles.unit.test)
     androidTestImplementation(libs.bundles.android.unit.test)

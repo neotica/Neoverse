@@ -5,8 +5,8 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import id.neotica.auth.login.LoginView
-import id.neotica.auth.register.RegisterView
+import id.neotica.auth.presentation.login.LoginView
+import id.neotica.auth.presentation.register.RegisterView
 import id.neotica.auth.verify.VerifyEmailView
 import id.neotica.routes.RootScreen
 import id.neotica.routes.Screen

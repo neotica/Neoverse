@@ -12,10 +12,6 @@ import com.google.firebase.firestore.FirebaseFirestoreException
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.User
 import id.neotica.domain.remote.AuthRepository
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.tasks.await
 
 class AuthRepositoryImpl: AuthRepository {
@@ -94,22 +90,6 @@ class AuthRepositoryImpl: AuthRepository {
         val reference = firebase.getReference("userdata").child(currentUser.uid)
         reference.removeValue()
     }
-
-    fun loginFlow(email: String, password: String): Flow<ApiResult<String>> = flow {
-        auth = FirebaseAuth.getInstance()
-        val loginResult = auth.signInWithEmailAndPassword(email, password)
-        emit(ApiResult.Loading())
-        try {
-            loginResult.await()
-            if (loginResult.isSuccessful) {
-                emit(ApiResult.Success("Success"))
-            } else {
-                emit(ApiResult.Error("Error"))
-            }
-        } catch (e: Exception) {
-            emit(ApiResult.Error("Exception"))
-        }
-    }.flowOn(Dispatchers.IO)
 
     override suspend fun isUsernameExist(username: String): ApiResult<Boolean> {
         firestore = FirebaseFirestore.getInstance()

@@ -44,7 +44,7 @@ kotlin {
             implementation(libs.bundles.android.unit.test)
         }
         iosMain.dependencies {
-            implementation(libs.ktor.client.darwin)
+
         }
         commonMain.dependencies {
             implementation(projects.core.core)

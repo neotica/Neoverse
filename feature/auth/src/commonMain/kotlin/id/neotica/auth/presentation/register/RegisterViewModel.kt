@@ -1,9 +1,9 @@
-package id.neotica.auth.register
+package id.neotica.auth.presentation.register
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import id.neotica.domain.ApiResult
-import id.neotica.domain.remote.AuthRepository
+import id.neotica.auth.domain.AuthRepository
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch

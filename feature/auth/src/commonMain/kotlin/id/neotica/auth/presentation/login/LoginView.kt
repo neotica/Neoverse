@@ -1,4 +1,4 @@
-package id.neotica.auth.login
+package id.neotica.auth.presentation.login
 
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
