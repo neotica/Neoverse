@@ -8,7 +8,6 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.google.firebase.Firebase
 import com.google.firebase.appcheck.appCheck
 import com.google.firebase.appcheck.playintegrity.PlayIntegrityAppCheckProviderFactory
-import com.google.firebase.initialize
 import id.neotica.alexandria.presentation.MainView
 
 class AlexandriaMainActivity : ComponentActivity() {
@@ -17,7 +16,6 @@ class AlexandriaMainActivity : ComponentActivity() {
         installSplashScreen()
         enableEdgeToEdge()
 
-        Firebase.initialize(this)
         Firebase.appCheck.installAppCheckProviderFactory(
             PlayIntegrityAppCheckProviderFactory.getInstance()
         )

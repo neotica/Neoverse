@@ -12,6 +12,7 @@ import com.google.firebase.ktx.Firebase
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.User
 import kotlinx.coroutines.tasks.await
+import dev.gitlive.firebase.auth.FirebaseAuth as FirebaseAuthKmp
 
 private var auth = FirebaseAuth.getInstance()
 private val firestore: FirebaseFirestore
@@ -20,7 +21,8 @@ private val firebase = Firebase.database
 
 actual suspend fun loginResult(
     email: String,
-    password: String
+    password: String,
+    authKmp: FirebaseAuthKmp
 ): ApiResult<String> {
     try {
         val loginResult = auth.signInWithEmailAndPassword(email, password).await()
@@ -49,10 +51,9 @@ actual suspend fun loginResult(
 actual suspend fun registerResult(
     username: String,
     email: String,
-    password: String
+    password: String,
+    authKmp: FirebaseAuthKmp
 ): ApiResult<String> {
-
-
     try {
         val registerResult = auth.createUserWithEmailAndPassword(email, password).await()
         if (registerResult.user != null) {
@@ -81,7 +82,7 @@ actual suspend fun registerResult(
     }
 }
 
-actual suspend fun isUsernameExistResult(username: String): ApiResult<Boolean> {
+actual suspend fun isUsernameExistResult(username: String, authKmp: FirebaseAuthKmp): ApiResult<Boolean> {
     return try {
         val snapshot = firestore.collection("Users").get().await()
         val userList = snapshot.documents.mapNotNull {
@@ -95,7 +96,7 @@ actual suspend fun isUsernameExistResult(username: String): ApiResult<Boolean> {
     }
 }
 
-actual fun deleteAccountResult() {
+actual fun deleteAccountResult(authKmp: FirebaseAuthKmp) {
     val currentUser = auth.currentUser
     currentUser!!.delete().addOnCompleteListener {
         Log.d("deleteuser", "usr deleted")
@@ -105,13 +106,13 @@ actual fun deleteAccountResult() {
     val reference = firebase.getReference("userdata").child(currentUser.uid)
     reference.removeValue()
 }
-actual fun logoutResult() {
+actual fun logoutResult(authKmp: FirebaseAuthKmp) {
     auth.signOut()
 }
-actual fun resetPasswordResult(email: String) {
+actual fun resetPasswordResult(email: String, authKmp: FirebaseAuthKmp) {
     auth.sendPasswordResetEmail(email)
 }
-actual fun sendEmailVerificationResult() {
+actual fun sendEmailVerificationResult(authKmp: FirebaseAuthKmp) {
     auth.currentUser?.sendEmailVerification()
 }
 
@@ -120,7 +121,7 @@ fun isLoggedIn(): Boolean {
     return auth.currentUser != null
 }
 
-actual fun isUserVerifiedResult(): Boolean {
+actual fun isUserVerifiedResult(authKmp: FirebaseAuthKmp): Boolean {
     auth = FirebaseAuth.getInstance()
 
     val verified = auth.currentUser?.isEmailVerified

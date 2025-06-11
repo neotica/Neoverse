@@ -12,8 +12,8 @@ kotlin {
     // See: https://kotlinlang.org/docs/multiplatform-discover-project.html#targets
     androidLibrary {
         namespace = "id.neotica.firebase"
-        compileSdk = 35
-        minSdk = 21
+        compileSdk = libs.versions.android.compileSdk.get().toInt()
+        minSdk = libs.versions.android.minSdk.get().toInt()
 
         withHostTestBuilder {
         }
@@ -61,6 +61,8 @@ kotlin {
         commonMain {
             dependencies {
                 // Add KMP dependencies here
+                implementation(projects.core.core)
+                api(libs.firebase.auth.kmp)
             }
         }
 
@@ -98,5 +100,4 @@ kotlin {
             }
         }
     }
-
 }

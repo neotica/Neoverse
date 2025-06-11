@@ -1,4 +1,7 @@
 [versions]
+android-compileSdk = "36"
+android-minSdk = "26"
+android-targetSdk = "36"
 kotlin = "2.1.20"
 agp = "8.10.1"
 ksp = "2.1.20-2.0.0"
@@ -27,6 +30,7 @@ jetbrainsComposeAdaptive = "1.1.1"
 #firebase
 firebaseBom = "33.6.0"
 firebaseFirestoreKtx = "25.1.0"
+firebaseKMP = "2.1.0"
 #retrofit/networking
 retrofit = "2.11.0"
 loggingInterceptor = "4.9.0"
@@ -152,6 +156,8 @@ coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", ve
 #moko
 moko-resources = { group = "dev.icerock.moko", name = "resources", version.ref = "moko" }
 moko-resources-compose = { group = "dev.icerock.moko", name = "resources-compose", version.ref = "moko" }
+#firebase
+firebase-auth-kmp = { group = "dev.gitlive", name = "firebase-auth", version.ref = "firebaseKMP"}
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

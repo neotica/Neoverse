@@ -68,11 +68,11 @@ kotlin {
 
 android {
     namespace = "id.neotica.alexandria"
-    compileSdk = 36
+    compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
         applicationId = "id.neotica.alexandria"
-        minSdk = 26
+        minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
