@@ -4,12 +4,12 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import id.neotica.alexandria.domain.BookRepository
+import id.neotica.alexandria.domain.ChapterRepository
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.alexandria.Book
 import id.neotica.domain.model.alexandria.book.BookRequest
 import id.neotica.domain.model.alexandria.chapter.ChapterRequest
-import id.neotica.domain.remote.alexandria.BookRepository
-import id.neotica.domain.remote.alexandria.ChapterRepository
 import id.neotica.routes.AlexandriaScreen
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableSharedFlow

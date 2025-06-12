@@ -34,6 +34,7 @@ kotlin {
     sourceSets {
         androidMain.dependencies {
             implementation(projects.core.ui)
+//            implementation(libs.ktor.client.android)
         }
         androidUnitTest.dependencies {
             implementation(libs.bundles.unit.test)
@@ -43,8 +44,9 @@ kotlin {
         }
         commonMain.dependencies {
             implementation(projects.core.uiShared)
-            implementation(projects.core.domain)
             implementation(projects.core.routes)
+            implementation(projects.feature.auth)
+            implementation(projects.core.ktor)
         }
     }
 }

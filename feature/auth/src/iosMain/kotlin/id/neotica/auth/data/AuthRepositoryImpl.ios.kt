@@ -55,3 +55,7 @@ actual fun sendEmailVerificationResult(authKmp: FirebaseAuth) {}
 actual fun isUserVerifiedResult(authKmp: FirebaseAuth): Boolean {
     TODO("Not yet implemented")
 }
+
+actual suspend fun getCurrentUserTokenResult(authKmp: FirebaseAuth): String {
+    return authKmp.currentUser?.getIdTokenResult(true)?.token?: ""
+}

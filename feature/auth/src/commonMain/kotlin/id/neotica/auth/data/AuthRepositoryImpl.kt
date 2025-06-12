@@ -28,6 +28,7 @@ class AuthRepositoryImpl(
 
     override fun sendEmailVerification() = sendEmailVerificationResult(auth)
     override fun isUserVerified(): Boolean = isUserVerifiedResult(auth)
+    override suspend fun getCurrentUserToken(): String = getCurrentUserTokenResult(auth)
 }
 
 expect suspend fun loginResult(email: String, password: String, authKmp: FirebaseAuth): ApiResult<String>
@@ -43,3 +44,4 @@ expect fun logoutResult(authKmp: FirebaseAuth)
 expect fun resetPasswordResult(email: String, authKmp: FirebaseAuth)
 expect fun sendEmailVerificationResult(authKmp: FirebaseAuth)
 expect fun isUserVerifiedResult(authKmp: FirebaseAuth): Boolean
+expect suspend fun getCurrentUserTokenResult(authKmp: FirebaseAuth): String

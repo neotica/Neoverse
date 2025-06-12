@@ -128,3 +128,8 @@ actual fun isUserVerifiedResult(authKmp: FirebaseAuthKmp): Boolean {
     if (!isLoggedIn()) return false
     return verified!!
 }
+
+actual suspend fun getCurrentUserTokenResult(authKmp: FirebaseAuthKmp): String {
+    auth = FirebaseAuth.getInstance()
+    return auth.currentUser?.getIdToken(true)?.await()?.token ?: ""
+}

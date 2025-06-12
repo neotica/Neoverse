@@ -32,8 +32,6 @@ kotlin {
 //        val desktopMain by getting
 
         androidMain.dependencies {
-            implementation(projects.core.database)
-
             implementation(projects.core.network)
             implementation(projects.core.ui)
         }
@@ -48,6 +46,7 @@ kotlin {
         }
         commonMain.dependencies {
             implementation(projects.core.core)
+            implementation(projects.core.database)
             implementation(projects.core.domain)
             implementation(projects.core.uiShared)
             implementation(projects.core.routes)

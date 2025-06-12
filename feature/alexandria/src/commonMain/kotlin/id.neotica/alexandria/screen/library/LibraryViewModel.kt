@@ -2,13 +2,13 @@ package id.neotica.alexandria.screen.library
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import id.neotica.alexandria.domain.BookRepository
 import id.neotica.domain.ApiResult
 import id.neotica.domain.local.CurrentUserRepository
 import id.neotica.domain.model.User
 import id.neotica.domain.model.alexandria.Book
 import id.neotica.domain.remote.PermissionRepository
 import id.neotica.domain.remote.UserRepository
-import id.neotica.domain.remote.alexandria.BookRepository
 import id.neotica.domain.usecase.GetUserNameUseCase
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow

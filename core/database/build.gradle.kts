@@ -14,16 +14,6 @@ kotlin {
         minSdk = libs.versions.android.minSdk.get().toInt()
     }
 
-//    androidTarget {
-//        compilations.all {
-//            compileTaskProvider.configure {
-//                compilerOptions {
-//                    jvmTarget.set(JvmTarget.JVM_11)
-//                }
-//            }
-//        }
-//    }
-
     listOf(
         iosX64(),
         iosArm64(),
@@ -38,13 +28,6 @@ kotlin {
     sourceSets {
         androidMain.dependencies {
 
-//            implementation(libs.room)
-//            implementation(libs.room.runtime)
-//            ksp(libs.room.compiler)
-
-//            testImplementation(libs.junit)
-//            androidTestImplementation(libs.androidx.junit)
-//            androidTestImplementation(libs.androidx.espresso.core)
         }
         commonMain.dependencies {
             implementation(projects.core.core)
