@@ -1,10 +1,10 @@
-package id.neotica.network.admin
+package id.neotica.alexandria.admin
 
+import id.neotica.alexandria.data.admin.AlexandriaAdminRepositoryImpl
+import id.neotica.alexandria.dummy.FakeTokenProvider
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.admin.WarningRequest
 import id.neotica.domain.model.admin.WarningResponse
-import id.neotica.network.AlexandriaAdminRepositoryImpl
-import id.neotica.network.dummy.FakeTokenProvider
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respond

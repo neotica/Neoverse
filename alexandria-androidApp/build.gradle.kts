@@ -50,6 +50,7 @@ kotlin {
             implementation(projects.core.domain)
             implementation(projects.core.uiShared)
             implementation(projects.core.routes)
+            implementation(projects.core.ktor)
 
             implementation(projects.feature.alexandria)
             implementation(projects.feature.profile)

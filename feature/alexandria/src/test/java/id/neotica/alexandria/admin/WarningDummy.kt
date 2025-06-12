@@ -1,4 +1,4 @@
-package id.neotica.network.admin
+package id.neotica.alexandria.admin
 
 import id.neotica.domain.model.admin.WarningRequest
 import id.neotica.domain.model.admin.WarningResponse

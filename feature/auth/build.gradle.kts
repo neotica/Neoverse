@@ -35,7 +35,8 @@ kotlin {
             api(projects.core.uiShared)
             implementation(projects.core.domain)
             implementation(projects.core.routes)
-            implementation(projects.core.firebase)
+            api(projects.core.firebase)
+            implementation(projects.core.ktor)
         }
         androidMain.dependencies {
             implementation(projects.core.core)

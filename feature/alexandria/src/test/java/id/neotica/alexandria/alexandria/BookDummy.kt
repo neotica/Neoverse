@@ -1,4 +1,4 @@
-package id.neotica.network.alexandria
+package id.neotica.alexandria.alexandria
 
 import id.neotica.domain.model.alexandria.Book
 import id.neotica.domain.model.alexandria.book.BookRequest

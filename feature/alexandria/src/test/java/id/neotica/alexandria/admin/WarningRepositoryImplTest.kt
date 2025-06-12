@@ -1,9 +1,11 @@
-package id.neotica.network.admin
+package id.neotica.alexandria.admin
 
+import id.neotica.alexandria.client.createMockClient
+import id.neotica.alexandria.data.admin.WarningRepositoryImpl
+import id.neotica.alexandria.domain.admin.WarningRepository
+import id.neotica.alexandria.dummy.FakeTokenProvider
+import id.neotica.auth.domain.AuthRepository
 import id.neotica.domain.ApiResult
-import id.neotica.domain.remote.admin.WarningRepository
-import id.neotica.network.client.createMockClient
-import id.neotica.network.dummy.FakeTokenProvider
 import io.ktor.client.HttpClient
 import io.ktor.http.HttpStatusCode
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -22,6 +24,7 @@ class WarningRepositoryImplTest {
     private lateinit var client: HttpClient
     private lateinit var repository: WarningRepository
     val fakeTokenProvider = FakeTokenProvider()
+    private lateinit var authRepo: AuthRepository
     val dummy = WarningDummy()
 
     @Before
@@ -46,7 +49,7 @@ class WarningRepositoryImplTest {
             url = "/admin/warning",
             content = expectedJson
         )
-        repository = WarningRepositoryImpl(client, fakeTokenProvider)
+        repository = WarningRepositoryImpl(client, authRepo)
         // When
         val result = repository.getWarnings().last()
         println("💀: " + result.errorMessage)
@@ -72,7 +75,7 @@ class WarningRepositoryImplTest {
             url = "/admin/warning/${expectedResponse.id}",
             content = dummy.warningResponseJson
         )
-        repository = WarningRepositoryImpl(client, fakeTokenProvider)
+        repository = WarningRepositoryImpl(client, authRepo)
         //When
         val result = repository.getWarning(expectedResponse.id).last()
         println("💀: " + result.errorMessage)
@@ -114,7 +117,7 @@ class WarningRepositoryImplTest {
             contentType = "application/json"
         )
 
-        repository = WarningRepositoryImpl(client, fakeTokenProvider)
+        repository = WarningRepositoryImpl(client, authRepo)
 
         //When
         val emission = repository.newWarning(
@@ -156,7 +159,7 @@ class WarningRepositoryImplTest {
             contentType = "application/json"
         )
 
-        repository = WarningRepositoryImpl(client, fakeTokenProvider)
+        repository = WarningRepositoryImpl(client, authRepo)
 
         //When
         val emission = repository.newWarning(
@@ -193,7 +196,7 @@ class WarningRepositoryImplTest {
             contentType = "application/json"
         )
 
-        repository = WarningRepositoryImpl(client, fakeTokenProvider)
+        repository = WarningRepositoryImpl(client, authRepo)
 
         //When
         val emission = repository.updateWarning(
@@ -231,7 +234,7 @@ class WarningRepositoryImplTest {
             contentType = "application/json"
         )
 
-        repository = WarningRepositoryImpl(client, fakeTokenProvider)
+        repository = WarningRepositoryImpl(client, authRepo)
 
         //When
         val emission = repository.deleteWarning(
@@ -269,7 +272,7 @@ class WarningRepositoryImplTest {
             contentType = "application/json"
         )
 
-        repository = WarningRepositoryImpl(client, fakeTokenProvider)
+        repository = WarningRepositoryImpl(client, authRepo)
 
         //When
         val emission = repository.deleteWarning(

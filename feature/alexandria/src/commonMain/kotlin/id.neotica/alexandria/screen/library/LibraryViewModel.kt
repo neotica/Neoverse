@@ -3,11 +3,12 @@ package id.neotica.alexandria.screen.library
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import id.neotica.alexandria.domain.BookRepository
+import id.neotica.alexandria.domain.PermissionRepository
+import id.neotica.auth.domain.AuthRepository
 import id.neotica.domain.ApiResult
 import id.neotica.domain.local.CurrentUserRepository
 import id.neotica.domain.model.User
 import id.neotica.domain.model.alexandria.Book
-import id.neotica.domain.remote.PermissionRepository
 import id.neotica.domain.remote.UserRepository
 import id.neotica.domain.usecase.GetUserNameUseCase
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -20,6 +21,7 @@ class LibraryViewModel(
     private val bookRepo: BookRepository,
     private val permissionRepository: PermissionRepository,
     private val getUserNameUseCase: GetUserNameUseCase,
+    private val authRepo: AuthRepository,
     private val userRepo: UserRepository,
     private val currentUserDatabase: CurrentUserRepository
 ): ViewModel() {
@@ -45,7 +47,7 @@ class LibraryViewModel(
     }
 
     fun loginState() = viewModelScope.launch {
-        if (userRepo.isLoggedIn()) {
+        if (authRepo.isLoggedIn()) {
             getBooks()
             _isNotLogged.value = false
         } else {
@@ -100,6 +102,7 @@ class LibraryViewModel(
     }
 
     private fun getUser() = viewModelScope.launch {
+        // TODO: make userDatabase schema in postgres
         val user = userRepo.getUserDetail(userRepo.getUserId())
 
         when(user) {

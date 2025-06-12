@@ -17,7 +17,6 @@ import id.neotica.domain.remote.FirebaseRepository
 import id.neotica.domain.remote.InventoryRepository
 import id.neotica.domain.remote.MarketRepository
 import id.neotica.domain.remote.MerchantRepository
-import id.neotica.domain.remote.PermissionRepository
 import id.neotica.domain.remote.RavenRepository
 import id.neotica.domain.remote.SuperAdminRepository
 import id.neotica.domain.remote.UserRepository
@@ -43,7 +42,6 @@ import id.neotica.network.FirebaseRepositoryImpl
 import id.neotica.network.InventoryRepositoryImpl
 import id.neotica.network.MarketRepositoryImpl
 import id.neotica.network.MerchantRepositoryImpl
-import id.neotica.network.PermissionRepositoryImpl
 import id.neotica.network.RavenRepositoryImpl
 import id.neotica.network.SuperAdminRepositoryImpl
 import id.neotica.network.UserRepositoryImpl
@@ -75,7 +73,6 @@ val repositoryModules = module {
     singleOf(::SuperAdminRepositoryImpl) bind SuperAdminRepository::class
     singleOf(::RavenRepositoryImpl) bind RavenRepository::class
     singleOf(::AlexandriaAdminRepositoryImpl) bind AlexandriaAdminRepository::class
-    singleOf(::PermissionRepositoryImpl) bind PermissionRepository::class
 }
 
 fun connectivityModule(context: Context) = module {

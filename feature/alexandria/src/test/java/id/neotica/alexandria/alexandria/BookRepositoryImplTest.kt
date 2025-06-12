@@ -1,10 +1,13 @@
-package id.neotica.network.alexandria
+package id.neotica.alexandria.alexandria
 
+import id.neotica.alexandria.client.createMockClient
+import id.neotica.alexandria.data.BookRepositoryImpl
+import id.neotica.alexandria.domain.BookRepository
+import id.neotica.alexandria.dummy.FakeTokenProvider
+import id.neotica.auth.data.AuthRepositoryImpl
+import id.neotica.auth.domain.AuthRepository
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.alexandria.Book
-import id.neotica.domain.remote.alexandria.BookRepository
-import id.neotica.network.client.createMockClient
-import id.neotica.network.dummy.FakeTokenProvider
 import io.ktor.client.HttpClient
 import io.ktor.http.HttpStatusCode
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -24,6 +27,7 @@ class BookRepositoryImplTest {
 
     private lateinit var client: HttpClient
     private lateinit var repository: BookRepository
+    private lateinit var authRepo: AuthRepository
     val fakeTokenProvider = FakeTokenProvider()
     val dummy = BookDummy()
 
@@ -36,7 +40,10 @@ class BookRepositoryImplTest {
     fun `emits Loading then Success when getBooks is called`() = runTest {
         // Given
         client = createMockClient(content = dummy.emptyBookResponseJson)
-        repository = BookRepositoryImpl(client, fakeTokenProvider)
+        repository = BookRepositoryImpl(client, authRepo)
+        authRepo = AuthRepositoryImpl(
+            auth = TODO()
+        )
 
         // When
         val emissions = repository.getBooks()
@@ -50,7 +57,7 @@ class BookRepositoryImplTest {
         // Given
         val expectedBook = listOf<Book>(dummy.bookResponse)
         client = createMockClient(content = dummy.paginatedBookResponseJson)
-        repository = BookRepositoryImpl(client, fakeTokenProvider)
+        repository = BookRepositoryImpl(client, authRepo)
         // When
         val result = repository.getBooks().last()
         println(result.data)
@@ -66,7 +73,7 @@ class BookRepositoryImplTest {
         // Given
         val expectedBook = emptyList<Book>()
         client = createMockClient(content = dummy.emptyBookResponseJson)
-        repository = BookRepositoryImpl(client, fakeTokenProvider)
+        repository = BookRepositoryImpl(client, authRepo)
         // When
         val result = repository.getBooks().last()
         println("empty: " + result.data)
@@ -88,7 +95,7 @@ class BookRepositoryImplTest {
             content = dummy.booksByAuthorResponseJson,
             expectedParams = mapOf("author" to username)
         )
-        repository = BookRepositoryImpl(client)
+        repository = BookRepositoryImpl(client, authRepo)
         //When
         val result = repository.getUserBooks(username).last()
         println("💀: " + result.errorMessage)
@@ -110,7 +117,7 @@ class BookRepositoryImplTest {
             expectedParams = mapOf("author" to username),
             content = dummy.booksByAuthorNotFoundJson
         )
-        repository = BookRepositoryImpl(client)
+        repository = BookRepositoryImpl(client, authRepo)
 
         // When
         val result = repository.getUserBooks(username).last()
@@ -131,7 +138,7 @@ class BookRepositoryImplTest {
             url = "/alexandria/$id",
             content = dummy.bookByIdJson,
         )
-        repository = BookRepositoryImpl(client)
+        repository = BookRepositoryImpl(client, authRepo)
         //When
         val result = repository.getBook(id).last()
         println("getBookById: " + result.data)
@@ -214,7 +221,7 @@ class BookRepositoryImplTest {
             contentType = "application/json"
         )
 
-        repository = BookRepositoryImpl(client, fakeTokenProvider)
+        repository = BookRepositoryImpl(client, authRepo)
 
         //When
         val emission = repository.addBook(bookRequest).toList()
@@ -240,7 +247,7 @@ class BookRepositoryImplTest {
             contentType = "application/json"
         )
 
-        repository = BookRepositoryImpl(client, fakeTokenProvider)
+        repository = BookRepositoryImpl(client, authRepo)
 
         //When
         val emission = repository.editBook(id, bookRequest).toList()
@@ -264,7 +271,7 @@ class BookRepositoryImplTest {
             content = jsonResponse,
         )
 
-        repository = BookRepositoryImpl(client, fakeTokenProvider)
+        repository = BookRepositoryImpl(client, authRepo)
 
         //When
         val emission = repository.deleteBook(id).toList()

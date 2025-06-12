@@ -1,9 +1,12 @@
-package id.neotica.network.alexandria
+package id.neotica.alexandria.alexandria
 
+import id.neotica.alexandria.client.createMockClient
+import id.neotica.alexandria.data.ChapterRepositoryImpl
+import id.neotica.alexandria.domain.ChapterRepository
+import id.neotica.alexandria.dummy.FakeTokenProvider
+import id.neotica.auth.data.AuthRepositoryImpl
+import id.neotica.auth.domain.AuthRepository
 import id.neotica.domain.ApiResult
-import id.neotica.domain.remote.alexandria.ChapterRepository
-import id.neotica.network.client.createMockClient
-import id.neotica.network.dummy.FakeTokenProvider
 import io.ktor.client.HttpClient
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.last
@@ -18,6 +21,7 @@ import org.mockito.MockitoAnnotations
 class ChapterRepositoryImplTest {
     private lateinit var client: HttpClient
     private lateinit var repository: ChapterRepository
+    private lateinit var authRepo: AuthRepository
     val fakeTokenProvider = FakeTokenProvider()
     val dummy = ChapterDummy()
 
@@ -34,7 +38,7 @@ class ChapterRepositoryImplTest {
         client = createMockClient(
             url = "/alexandria/chapters",
             content = dummy.chaptersResponseJson)
-        repository = ChapterRepositoryImpl(client, fakeTokenProvider)
+        repository = ChapterRepositoryImpl(client, authRepo)
         // When
         val result = repository.getChapters(bookId).last()
         println("💀: " + result.errorMessage)

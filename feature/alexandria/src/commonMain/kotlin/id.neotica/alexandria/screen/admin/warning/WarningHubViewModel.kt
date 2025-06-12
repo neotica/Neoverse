@@ -2,9 +2,9 @@ package id.neotica.alexandria.screen.admin.warning
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import id.neotica.alexandria.domain.admin.WarningRepository
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.admin.WarningResponse
-import id.neotica.domain.remote.admin.WarningRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch

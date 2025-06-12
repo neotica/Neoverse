@@ -59,3 +59,7 @@ actual fun isUserVerifiedResult(authKmp: FirebaseAuth): Boolean {
 actual suspend fun getCurrentUserTokenResult(authKmp: FirebaseAuth): String {
     return authKmp.currentUser?.getIdTokenResult(true)?.token?: ""
 }
+
+actual fun isLoggedInResult(authKmp: FirebaseAuth): Boolean {
+    return authKmp.currentUser != null
+}

@@ -1,12 +1,12 @@
 package id.neotica.alexandria.data.admin
 
 import id.neotica.alexandria.domain.admin.WarningRepository
+import id.neotica.auth.domain.AuthRepository
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.admin.WarningRequest
 import id.neotica.domain.model.admin.WarningResponse
 import id.neotica.domain.model.alexandria.Book
 import id.neotica.domain.pagination.Pagination
-import id.neotica.domain.remote.usecase.TokenProvider
 import id.neotica.ktor.utils.safeApiCall
 import id.neotica.ktor.utils.safeApiCallNew
 import id.neotica.neoverse.utils.baseUrl
@@ -24,10 +24,10 @@ import kotlinx.coroutines.flow.Flow
 
 class WarningRepositoryImpl(
     private val client: HttpClient,
-    private val token: TokenProvider? = null
+    private val authRepository: AuthRepository
 ): WarningRepository {
     override fun getAllBooks(): Flow<ApiResult<Pagination<Book>>> = safeApiCallNew<Pagination<Book>> {
-        val tokenResult = token?.getToken()
+        val tokenResult = authRepository.getCurrentUserToken()
 
         client.get("${baseUrl}/admin/books?pageSize=10&page=1"){
             headers {
@@ -47,7 +47,7 @@ class WarningRepositoryImpl(
     override fun newWarning(
         request: WarningRequest
     ): Flow<ApiResult<WarningResponse>> = safeApiCallNew<WarningResponse> {
-        val tokenResult = token?.getToken()
+        val tokenResult = authRepository.getCurrentUserToken()
         client.post("$baseUrl/admin/warning") {
             contentType(ContentType.Application.Json)
             headers {
@@ -61,7 +61,7 @@ class WarningRepositoryImpl(
         bookId: String,
         request: WarningRequest
     ): Flow<ApiResult<WarningResponse>> = safeApiCall {
-        val tokenResult = token?.getToken()
+        val tokenResult = authRepository.getCurrentUserToken()
         client.put("$baseUrl/admin/warning/$bookId") {
             headers {
                 append("Content-Type", "application/json")
@@ -72,7 +72,7 @@ class WarningRepositoryImpl(
     }
 
     override fun deleteWarning(id: String): Flow<ApiResult<String>> = safeApiCallNew<String> {
-        val tokenResult = token?.getToken()
+        val tokenResult = authRepository.getCurrentUserToken()
         client.delete("$baseUrl/admin/warning/$id") {
             headers {
                 append("Content-Type", "application/json")

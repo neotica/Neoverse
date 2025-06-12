@@ -1,11 +1,10 @@
-package id.neotica.network
+package id.neotica.alexandria.data
 
-import android.util.Log
+import id.neotica.alexandria.domain.PermissionRepository
 import id.neotica.domain.ApiResult
-import id.neotica.domain.remote.PermissionRepository
+import id.neotica.ktor.ktorClient
+import id.neotica.ktor.utils.safeApiCall
 import id.neotica.neoverse.utils.baseUrl
-import id.neotica.network.micro.ktorClient
-import id.neotica.network.utils.safeApiCall
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import kotlinx.coroutines.flow.Flow
@@ -19,7 +18,7 @@ class PermissionRepositoryImpl: PermissionRepository {
         return try {
             getPermissionList().first().data?.contains(userName) == true
         } catch (e: Exception) {
-            Log.e("PermissionRepo", "Error checking permission", e)
+//            Log.e("PermissionRepo", "Error checking permission", e)
             false
         }
     }

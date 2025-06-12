@@ -45,7 +45,7 @@ kotlin {
         commonMain.dependencies {
             implementation(projects.core.uiShared)
             implementation(projects.core.routes)
-            implementation(projects.feature.auth)
+            api(projects.feature.auth)
             implementation(projects.core.ktor)
         }
     }

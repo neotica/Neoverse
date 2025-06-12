@@ -3,10 +3,12 @@ package id.neotica.alexandria.di
 import id.neotica.alexandria.data.BookRepositoryImpl
 import id.neotica.alexandria.data.ChapterRepositoryImpl
 import id.neotica.alexandria.data.ContentRepositoryImpl
+import id.neotica.alexandria.data.PermissionRepositoryImpl
 import id.neotica.alexandria.data.admin.WarningRepositoryImpl
 import id.neotica.alexandria.domain.BookRepository
 import id.neotica.alexandria.domain.ChapterRepository
 import id.neotica.alexandria.domain.ContentRepository
+import id.neotica.alexandria.domain.PermissionRepository
 import id.neotica.alexandria.domain.admin.WarningRepository
 import id.neotica.alexandria.screen.admin.AdminViewModel
 import id.neotica.alexandria.screen.admin.library.AdminLibraryViewModel
@@ -42,5 +44,5 @@ val alexandriaModules = module {
     singleOf(::ChapterRepositoryImpl).bind(ChapterRepository::class)
     singleOf(::ContentRepositoryImpl).bind(ContentRepository::class)
     singleOf(::WarningRepositoryImpl).bind(WarningRepository::class)
-
+    singleOf(::PermissionRepositoryImpl).bind(PermissionRepository::class)
 }

@@ -1,10 +1,10 @@
 package id.neotica.alexandria.data
 
 import id.neotica.alexandria.domain.ChapterRepository
+import id.neotica.auth.domain.AuthRepository
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.alexandria.Chapter
 import id.neotica.domain.model.alexandria.chapter.ChapterRequest
-import id.neotica.domain.remote.usecase.TokenProvider
 import id.neotica.ktor.utils.safeApiCall
 import id.neotica.neoverse.utils.baseUrl
 import io.ktor.client.HttpClient
@@ -18,14 +18,14 @@ import kotlinx.coroutines.flow.Flow
 
 class ChapterRepositoryImpl(
     private val client: HttpClient,
-    private val token: TokenProvider
+    private val authRepository: AuthRepository
 ): ChapterRepository {
     override fun getChapters(bookId: String): Flow<ApiResult<List<Chapter>>> = safeApiCall {
         client.get("${baseUrl}/alexandria/chapters").body<List<Chapter>>()
     }
 
     override fun createChapter(chapter: ChapterRequest): Flow<ApiResult<Chapter>> = safeApiCall {
-        val tokenResult = token.getToken()
+        val tokenResult = authRepository.getCurrentUserToken()
         client.post("${baseUrl}/alexandria/chapters") {
             headers {
                 append("Content-Type", "application/json")
@@ -36,7 +36,7 @@ class ChapterRepositoryImpl(
     }
 
     override fun deleteChapter(chapterId: Int): Flow<ApiResult<String>> = safeApiCall {
-        val tokenResult = token.getToken()
+        val tokenResult = authRepository.getCurrentUserToken()
         client.delete("${baseUrl}/alexandria/chapters/$chapterId") {
             headers {
                 append("Content-Type", "application/json")

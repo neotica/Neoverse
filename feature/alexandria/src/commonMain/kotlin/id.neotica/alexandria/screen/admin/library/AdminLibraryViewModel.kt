@@ -3,12 +3,12 @@ package id.neotica.alexandria.screen.admin.library
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import id.neotica.alexandria.domain.BookRepository
+import id.neotica.alexandria.domain.PermissionRepository
+import id.neotica.alexandria.domain.admin.WarningRepository
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.alexandria.Book
 import id.neotica.domain.model.alexandria.book.BookRequest
 import id.neotica.domain.pagination.Pagination
-import id.neotica.domain.remote.PermissionRepository
-import id.neotica.domain.remote.admin.WarningRepository
 import id.neotica.domain.usecase.GetUserNameUseCase
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow

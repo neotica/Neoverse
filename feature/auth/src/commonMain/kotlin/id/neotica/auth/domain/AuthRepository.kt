@@ -12,4 +12,6 @@ interface AuthRepository {
     fun sendEmailVerification()
     fun isUserVerified(): Boolean
     suspend fun getCurrentUserToken(): String
+    fun isLoggedIn(): Boolean
+    fun getUserId(): String?
 }

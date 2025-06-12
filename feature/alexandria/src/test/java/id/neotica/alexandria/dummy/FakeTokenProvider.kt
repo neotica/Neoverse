@@ -1,4 +1,4 @@
-package id.neotica.network.dummy
+package id.neotica.alexandria.dummy
 
 import id.neotica.domain.remote.usecase.TokenProvider
 

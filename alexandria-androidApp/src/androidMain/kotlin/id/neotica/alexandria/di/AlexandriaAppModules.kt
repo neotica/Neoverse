@@ -7,21 +7,11 @@ import id.neotica.database.platformModule
 import id.neotica.database.provideDatabaseModule
 import id.neotica.domain.local.CurrentUserRepository
 import id.neotica.domain.local.FriendDaoRepository
-import id.neotica.domain.remote.AlexandriaAdminRepository
-import id.neotica.domain.remote.FirebaseRepository
-import id.neotica.domain.remote.PermissionRepository
 import id.neotica.domain.remote.UserRepository
-import id.neotica.domain.remote.admin.WarningRepository
-import id.neotica.domain.remote.usecase.TokenProvider
 import id.neotica.domain.usecase.GetUserIdUseCase
 import id.neotica.domain.usecase.GetUserNameUseCase
-import id.neotica.network.AlexandriaAdminRepositoryImpl
-import id.neotica.network.FirebaseRepositoryImpl
-import id.neotica.network.PermissionRepositoryImpl
+import id.neotica.ktor.ktorModule
 import id.neotica.network.UserRepositoryImpl
-import id.neotica.network.admin.WarningRepositoryImpl
-import id.neotica.network.micro.ktorModule
-import id.neotica.network.usecase.FirebaseTokenProvider
 import id.neotica.profile.ProfileViewModel
 import id.neotica.rickpository.res.MR
 import id.neotica.state.AppVariant
@@ -52,10 +42,6 @@ val repositoryModules = module {
     singleOf(::UserRepositoryImpl) { bind<UserRepository>() }
     singleOf(::FriendDaoRepositoryImpl) bind FriendDaoRepository::class
     singleOf(::CurrentUserRepositoryImpl) bind CurrentUserRepository::class
-    singleOf(::FirebaseRepositoryImpl) bind FirebaseRepository::class
-    singleOf(::AlexandriaAdminRepositoryImpl) bind AlexandriaAdminRepository::class
-    singleOf(::PermissionRepositoryImpl) bind PermissionRepository::class
-    singleOf(::WarningRepositoryImpl) bind WarningRepository::class
 }
 
 val viewModelModules = module {
@@ -67,7 +53,7 @@ val viewModelModules = module {
 val useCaseModules = module {
     singleOf(::GetUserIdUseCase)
     singleOf(::GetUserNameUseCase)
-    singleOf(::FirebaseTokenProvider) bind TokenProvider::class
+//    singleOf(::FirebaseTokenProvider) bind TokenProvider::class
 }
 
 val appVariantModule = module {

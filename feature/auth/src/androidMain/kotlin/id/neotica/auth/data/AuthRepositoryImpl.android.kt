@@ -133,3 +133,8 @@ actual suspend fun getCurrentUserTokenResult(authKmp: FirebaseAuthKmp): String {
     auth = FirebaseAuth.getInstance()
     return auth.currentUser?.getIdToken(true)?.await()?.token ?: ""
 }
+
+actual fun isLoggedInResult(authKmp: FirebaseAuthKmp): Boolean {
+    auth = FirebaseAuth.getInstance()
+    return auth.currentUser != null
+}
