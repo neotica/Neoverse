@@ -7,7 +7,7 @@ import id.neotica.domain.ApiResult
 import id.neotica.domain.local.CurrentUserRepository
 import id.neotica.domain.local.FriendDaoRepository
 import id.neotica.domain.model.User
-import id.neotica.domain.remote.AuthRepository
+import id.neotica.auth.domain.AuthRepository
 import id.neotica.domain.remote.UserRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

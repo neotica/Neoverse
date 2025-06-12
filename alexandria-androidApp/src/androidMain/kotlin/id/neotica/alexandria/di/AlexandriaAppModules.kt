@@ -8,7 +8,6 @@ import id.neotica.database.databaseModule
 import id.neotica.domain.local.CurrentUserRepository
 import id.neotica.domain.local.FriendDaoRepository
 import id.neotica.domain.remote.AlexandriaAdminRepository
-import id.neotica.domain.remote.AuthRepository
 import id.neotica.domain.remote.FirebaseRepository
 import id.neotica.domain.remote.PermissionRepository
 import id.neotica.domain.remote.UserRepository
@@ -54,7 +53,7 @@ fun initializeKoin(context: Context) {
 }
 
 val repositoryModules = module {
-    singleOf(::AuthRepositoryImpl) { bind<AuthRepository>() }
+//    singleOf(::AuthRepositoryImpl) { bind<AuthRepository>() }
     singleOf(::UserRepositoryImpl) { bind<UserRepository>() }
     singleOf(::FriendDaoRepositoryImpl) bind FriendDaoRepository::class
     singleOf(::CurrentUserRepositoryImpl) bind CurrentUserRepository::class

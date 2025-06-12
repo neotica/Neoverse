@@ -47,6 +47,7 @@ kotlin {
             api(projects.core.uiShared)
             implementation(projects.core.domain)
             implementation(projects.core.routes)
+            implementation(projects.feature.auth)
         }
     }
 }
