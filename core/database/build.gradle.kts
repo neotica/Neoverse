@@ -1,54 +1,68 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
-    alias(libs.plugins.android.library)
-    alias(libs.plugins.jetbrains.kotlin.android)
-    alias(libs.plugins.devtools.ksp)
+    alias(libs.plugins.android.kotlin.multiplatform.library)
+    alias(libs.plugins.kotlinMultiplatform)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.room)
 }
 
-android {
-    namespace = "id.neotica.database"
-    compileSdk = 35
-
-    defaultConfig {
-        minSdk = 26
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles("consumer-rules.pro")
+kotlin {
+    androidLibrary {
+        namespace = "id.neotica.database"
+        compileSdk = libs.versions.android.compileSdk.get().toInt()
+        minSdk = libs.versions.android.minSdk.get().toInt()
     }
 
-    buildTypes {
-        release {
-            isMinifyEnabled = true
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
+//    androidTarget {
+//        compilations.all {
+//            compileTaskProvider.configure {
+//                compilerOptions {
+//                    jvmTarget.set(JvmTarget.JVM_11)
+//                }
+//            }
+//        }
+//    }
+
+    listOf(
+        iosX64(),
+        iosArm64(),
+        iosSimulatorArm64()
+    ).forEach {
+        it.binaries.framework {
+            baseName = "roomKit"
+            isStatic = true
         }
-        release {
-            isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
+    }
+
+    sourceSets {
+        androidMain.dependencies {
+
+//            implementation(libs.room)
+//            implementation(libs.room.runtime)
+//            ksp(libs.room.compiler)
+
+//            testImplementation(libs.junit)
+//            androidTestImplementation(libs.androidx.junit)
+//            androidTestImplementation(libs.androidx.espresso.core)
+        }
+        commonMain.dependencies {
+            implementation(projects.core.core)
+            implementation(projects.core.domain)
+            implementation(libs.room.runtime)
+            implementation(libs.sqlite.bundled)
         }
     }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-    }
-    kotlinOptions {
-        jvmTarget = "11"
-    }
+
 }
 
 dependencies {
-    implementation(projects.core.core)
-    implementation(projects.core.domain)
+    add("kspAndroid", libs.room.compiler)
+    add("kspIosSimulatorArm64", libs.room.compiler)
+    add("kspIosX64", libs.room.compiler)
+    add("kspIosArm64", libs.room.compiler)
+}
 
-    implementation(libs.room)
-    implementation(libs.room.runtime)
-    ksp(libs.room.compiler)
-
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
+room {
+    schemaDirectory("$projectDir/schemas")
 }

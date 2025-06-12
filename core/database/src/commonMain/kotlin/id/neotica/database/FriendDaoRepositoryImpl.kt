@@ -1,11 +1,11 @@
 package id.neotica.database
 
-import android.util.Log
 import id.neotica.database.dao.FriendDao
 import id.neotica.domain.model.User
 import id.neotica.domain.local.FriendDaoRepository
 import id.neotica.database.Mapper.toUser
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
@@ -25,7 +25,7 @@ class FriendDaoRepositoryImpl(
     }
 
     override suspend fun addFriend(friend: User) {
-        Log.d("friendRepo", "fun addfriend")
+//        Log.d("friendRepo", "fun addfriend")
         withContext(Dispatchers.IO) {
             val friendEnt = Mapper.friendResponseToEntity(friend)
             dao.addFriend(friendEnt)
@@ -36,7 +36,7 @@ class FriendDaoRepositoryImpl(
     }
 
     override suspend fun clearFriends() = withContext(Dispatchers.IO) {
-        Log.d("DAO", "clearFriend() called")
+//        Log.d("DAO", "clearFriend() called")
         dao.clearFriend()
     }
 }

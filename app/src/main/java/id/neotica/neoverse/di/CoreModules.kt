@@ -5,7 +5,6 @@ import id.neotica.auth.di.authModules
 import id.neotica.chat.ChatViewModel
 import id.neotica.database.CurrentUserRepositoryImpl
 import id.neotica.database.FriendDaoRepositoryImpl
-import id.neotica.database.databaseModule
 import id.neotica.domain.local.CurrentUserRepository
 import id.neotica.domain.local.FriendDaoRepository
 import id.neotica.domain.observer.ConnectivityObserver
@@ -129,7 +128,7 @@ val domainModules = module {
 fun initializeKoin(context: Context) = startKoin {
     modules(
         ktorModule,
-        databaseModule(context),
+//        databaseModule(context),
         connectivityModule(context),
         repositoryModules,
         viewModelModules,

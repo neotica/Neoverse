@@ -5,6 +5,7 @@ import id.neotica.domain.model.User
 import id.neotica.domain.local.CurrentUserRepository
 import id.neotica.database.Mapper.toUser
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext

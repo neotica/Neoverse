@@ -1,10 +1,10 @@
 package id.neotica.alexandria.di
 
-import android.content.Context
 import id.neotica.auth.di.authModules
 import id.neotica.database.CurrentUserRepositoryImpl
 import id.neotica.database.FriendDaoRepositoryImpl
-import id.neotica.database.databaseModule
+import id.neotica.database.platformModule
+import id.neotica.database.provideDatabaseModule
 import id.neotica.domain.local.CurrentUserRepository
 import id.neotica.domain.local.FriendDaoRepository
 import id.neotica.domain.remote.AlexandriaAdminRepository
@@ -19,7 +19,6 @@ import id.neotica.domain.remote.usecase.TokenProvider
 import id.neotica.domain.usecase.GetUserIdUseCase
 import id.neotica.domain.usecase.GetUserNameUseCase
 import id.neotica.network.AlexandriaAdminRepositoryImpl
-import id.neotica.network.AuthRepositoryImpl
 import id.neotica.network.FirebaseRepositoryImpl
 import id.neotica.network.PermissionRepositoryImpl
 import id.neotica.network.UserRepositoryImpl
@@ -36,14 +35,17 @@ import org.koin.core.context.startKoin
 import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModelOf
+import org.koin.dsl.KoinAppDeclaration
 import org.koin.dsl.bind
 import org.koin.dsl.module
 
-fun initializeKoin(context: Context) {
+fun initializeKoin(config: KoinAppDeclaration? = null) {
     startKoin {
+        config?.invoke(this)
         modules(
             ktorModule,
-            databaseModule(context),
+            platformModule(),
+            provideDatabaseModule,
             repositoryModules,
             viewModelModules,
             useCaseModules,
@@ -53,7 +55,6 @@ fun initializeKoin(context: Context) {
 }
 
 val repositoryModules = module {
-//    singleOf(::AuthRepositoryImpl) { bind<AuthRepository>() }
     singleOf(::UserRepositoryImpl) { bind<UserRepository>() }
     singleOf(::FriendDaoRepositoryImpl) bind FriendDaoRepository::class
     singleOf(::CurrentUserRepositoryImpl) bind CurrentUserRepository::class
