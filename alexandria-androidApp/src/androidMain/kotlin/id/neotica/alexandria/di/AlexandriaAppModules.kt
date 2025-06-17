@@ -12,13 +12,12 @@ import id.neotica.domain.usecase.GetUserIdUseCase
 import id.neotica.domain.usecase.GetUserNameUseCase
 import id.neotica.ktor.ktorModule
 import id.neotica.network.UserRepositoryImpl
-import id.neotica.profile.ProfileViewModel
+import id.neotica.profile.di.profileModules
 import id.neotica.rickpository.res.MR
 import id.neotica.state.AppVariant
 import org.koin.core.context.startKoin
 import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.singleOf
-import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.KoinAppDeclaration
 import org.koin.dsl.bind
 import org.koin.dsl.module
@@ -47,7 +46,7 @@ val repositoryModules = module {
 val viewModelModules = module {
     includes(authModules)
     includes(alexandriaModules)
-    viewModelOf(::ProfileViewModel)
+    includes(profileModules)
 }
 
 val useCaseModules = module {

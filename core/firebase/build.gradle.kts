@@ -63,6 +63,9 @@ kotlin {
                 // Add KMP dependencies here
                 implementation(projects.core.core)
                 api(libs.firebase.auth.kmp)
+                api(libs.firebase.storage.kmp)
+                api(libs.firebase.firestore.kmp)
+                api(libs.firebase.storage.kmp)
             }
         }
 

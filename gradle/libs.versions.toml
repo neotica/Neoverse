@@ -160,6 +160,9 @@ moko-resources = { group = "dev.icerock.moko", name = "resources", version.ref =
 moko-resources-compose = { group = "dev.icerock.moko", name = "resources-compose", version.ref = "moko" }
 #firebase
 firebase-auth-kmp = { group = "dev.gitlive", name = "firebase-auth", version.ref = "firebaseKMP"}
+firebase-database-kmp = { group = "dev.gitlive", name = "firebase-database", version.ref = "firebaseKMP"}
+firebase-firestore-kmp = { group = "dev.gitlive", name = "firebase-firestore", version.ref = "firebaseKMP"}
+firebase-storage-kmp = { group = "dev.gitlive", name = "firebase-storage", version.ref = "firebaseKMP"}
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

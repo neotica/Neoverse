@@ -47,7 +47,7 @@ import id.neotica.network.SuperAdminRepositoryImpl
 import id.neotica.network.UserRepositoryImpl
 import id.neotica.network.micro.ktorModule
 import id.neotica.network.usecase.FirebaseTokenProvider
-import id.neotica.profile.ProfileViewModel
+import id.neotica.profile.presentation.ProfileViewModel
 import id.neotica.rickpository.res.MR
 import id.neotica.state.AppVariant
 import id.neotica.world.di.worldModules
