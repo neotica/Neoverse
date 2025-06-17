@@ -24,7 +24,7 @@ fun NavGraph(
     val appVariant: AppVariant = getKoin().get()
 
     NavHost(
-        navController,
+        navController = navController,
         startDestination = RootScreen.AlexandriaNav,
         enterTransition = { fadeIn(tween(100)) },
         popEnterTransition = { EnterTransition.None },
