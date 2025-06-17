@@ -46,6 +46,7 @@ kotlin {
             implementation(projects.core.uiShared)
             implementation(projects.core.routes)
             api(projects.feature.auth)
+            api(projects.feature.profile)
             implementation(projects.core.ktor)
         }
     }

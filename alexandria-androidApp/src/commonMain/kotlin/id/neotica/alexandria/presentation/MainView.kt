@@ -1,6 +1,5 @@
 package id.neotica.alexandria.presentation
 
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
@@ -32,15 +31,15 @@ import id.neotica.routes.AlexandriaScreen
 import id.neotica.routes.RootScreen
 import id.neotica.routes.Screen
 import id.neotica.routes.WorldScreen
-import id.neotica.ui.components.navigation.CustomNavBar
+import id.neotica.ui.shared.components.navigation.CustomNavBar
 import id.neotica.ui.shared.components.navigation.CustomNavigationSuiteScaffold
 import id.neotica.ui.shared.components.navigation.NavigationSuiteScaffoldDefaults
 import id.neotica.ui.shared.components.navigation.NavigationSuiteType
 import id.neotica.ui.shared.navigation.NavigationItem
 import id.neotica.ui.shared.navigation.showExcept
 import id.neotica.ui.shared.state.AdaptiveState
-import id.neotica.ui.theme.DarkBackground
-import id.neotica.ui.theme.DarkPrimary
+import id.neotica.ui.shared.theme.DarkBackground
+import id.neotica.ui.shared.theme.DarkPrimary
 import org.koin.compose.KoinContext
 
 
@@ -109,7 +108,7 @@ fun MainView() {
 
         val includeRoute = navBackStackEntry.showExcept(bottomBarExcludedRoutes)
 
-        Log.d("currentScreen", navBackStackEntry?.destination?.route.toString())
+//        Log.d("currentScreen", navBackStackEntry?.destination?.route.toString())
 
         val mapAdaptive = AdaptiveState.from(currentWindowAdaptiveInfo())
         val customNavSuiteType = when (mapAdaptive) {
@@ -122,8 +121,7 @@ fun MainView() {
         when(mapAdaptive) {
             is AdaptiveState.Compact -> {
                 Scaffold(
-                    modifier = Modifier
-                        .background(DarkBackground)
+                    modifier = Modifier.background(DarkBackground)
                         .fillMaxSize(),
                     bottomBar = {
                         AnimatedVisibility (

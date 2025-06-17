@@ -9,8 +9,8 @@ import id.neotica.domain.ApiResult
 import id.neotica.domain.local.CurrentUserRepository
 import id.neotica.domain.model.User
 import id.neotica.domain.model.alexandria.Book
-import id.neotica.domain.remote.UserRepository
 import id.neotica.domain.usecase.GetUserNameUseCase
+import id.neotica.profile.domain.ProfileRepository
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -22,7 +22,7 @@ class LibraryViewModel(
     private val permissionRepository: PermissionRepository,
     private val getUserNameUseCase: GetUserNameUseCase,
     private val authRepo: AuthRepository,
-    private val userRepo: UserRepository,
+    private val profileRepo: ProfileRepository,
     private val currentUserDatabase: CurrentUserRepository
 ): ViewModel() {
     private var _books: MutableStateFlow<List<Book>> = MutableStateFlow(emptyList())
@@ -103,7 +103,7 @@ class LibraryViewModel(
 
     private fun getUser() = viewModelScope.launch {
         // TODO: make userDatabase schema in postgres
-        val user = userRepo.getUserDetail(userRepo.getUserId())
+        val user = profileRepo.getUserDetail(authRepo.getUserId().toString())
 
         when(user) {
             is ApiResult.Loading -> _loading.value = true
