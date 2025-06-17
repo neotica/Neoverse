@@ -38,7 +38,8 @@ kotlin {
         androidMain.dependencies {
 
             api(libs.haze)
-
+            implementation(libs.androidx.lifecycle.runtime.ktx)
+            implementation(libs.androidx.lifecycle.viewmodel)
             //SplashScreen API
             api(libs.androidx.core.splashscreen)
         }

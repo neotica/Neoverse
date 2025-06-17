@@ -13,11 +13,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.White
+import dev.icerock.moko.resources.compose.painterResource
+import id.neotica.rickpository.res.MR.images.three_dots
 import id.neotica.ui.shared.components.DropdownItem
 import id.neotica.ui.shared.theme.DarkPrimaryTransparent2
-import neoverse.core.ui_shared.generated.resources.Res
-import neoverse.core.ui_shared.generated.resources.three_dots
-import org.jetbrains.compose.resources.painterResource
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -35,7 +34,7 @@ fun DotsMenuDropDown(item: List<DotsMenuItem>, onLongClick: () -> Unit? = {}) {
                     },
                     onLongClick = { onLongClick() },
                 ),
-            painter = painterResource(Res.drawable.three_dots),
+            painter = painterResource(three_dots),
             contentDescription = "",
             tint = White
         )

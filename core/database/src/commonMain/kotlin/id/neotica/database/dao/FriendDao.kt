@@ -19,8 +19,8 @@ interface FriendDao {
     suspend fun addFriend(friend: FriendEntity)
 
     @Query("delete from friend where username = :username")
-    fun unfriend(username: String)
+    suspend fun unfriend(username: String)
 
     @Query("delete from friend")
-    fun clearFriend()
+    suspend fun clearFriend()
 }

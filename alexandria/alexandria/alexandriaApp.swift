@@ -7,11 +7,16 @@
 
 import SwiftUI
 import AlexandriaApp
+import Firebase
+import FirebaseCore
+import FirebaseFirestore
+import FirebaseAuth
 
 @main
 struct alexandriaApp: App {
     
-    init {
+    init() {
+        FirebaseApp.configure()
         AlexandriaAppModulesKt.initializeKoin()
     }
     

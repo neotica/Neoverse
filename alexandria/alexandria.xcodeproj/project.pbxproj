@@ -6,6 +6,16 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		87C572D82E016F54004425ED /* FirebaseAppCheck in Frameworks */ = {isa = PBXBuildFile; productRef = 87C572D72E016F54004425ED /* FirebaseAppCheck */; };
+		87C572DA2E016F54004425ED /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 87C572D92E016F54004425ED /* FirebaseAuth */; };
+		87C572DC2E016F54004425ED /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 87C572DB2E016F54004425ED /* FirebaseCore */; };
+		87C572DE2E016F54004425ED /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = 87C572DD2E016F54004425ED /* FirebaseDatabase */; };
+		87C572E02E016F54004425ED /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 87C572DF2E016F54004425ED /* FirebaseFirestore */; };
+		87C572E22E016F54004425ED /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 87C572E12E016F54004425ED /* FirebaseStorage */; };
+		BBBBBBBBBBBBBBBBBBBBBB /* AlexandriaApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAAAAAAAAAAAAAAAAAAAAAAA /* AlexandriaApp.framework */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		871FE4FA2E014586002822BE /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -27,11 +37,25 @@
 		871FE4E82E014584002822BE /* alexandria.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = alexandria.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		871FE4F92E014586002822BE /* alexandriaTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = alexandriaTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		871FE5032E014586002822BE /* alexandriaUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = alexandriaUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		AAAAAAAAAAAAAAAAAAAAAAAA /* AlexandriaApp.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AlexandriaApp.framework; path = "../alexandriaApp/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)/AlexandriaApp.framework"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		87C572E62E017ACC004425ED /* Exceptions for "alexandria" folder in "alexandria" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 871FE4E72E014584002822BE /* alexandria */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		871FE4EA2E014584002822BE /* alexandria */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				87C572E62E017ACC004425ED /* Exceptions for "alexandria" folder in "alexandria" target */,
+			);
 			path = alexandria;
 			sourceTree = "<group>";
 		};
@@ -52,6 +76,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				87C572DE2E016F54004425ED /* FirebaseDatabase in Frameworks */,
+				87C572D82E016F54004425ED /* FirebaseAppCheck in Frameworks */,
+				87C572DA2E016F54004425ED /* FirebaseAuth in Frameworks */,
+				87C572DC2E016F54004425ED /* FirebaseCore in Frameworks */,
+				87C572E22E016F54004425ED /* FirebaseStorage in Frameworks */,
+				BBBBBBBBBBBBBBBBBBBBBB /* AlexandriaApp.framework in Frameworks */,
+				87C572E02E016F54004425ED /* FirebaseFirestore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -79,6 +110,7 @@
 				871FE4FC2E014586002822BE /* alexandriaTests */,
 				871FE5062E014586002822BE /* alexandriaUITests */,
 				871FE4E92E014584002822BE /* Products */,
+				AAAAAAAAAAAAAAAAAAAAAAAA /* AlexandriaApp.framework */,
 			);
 			sourceTree = "<group>";
 		};
@@ -101,6 +133,7 @@
 			buildPhases = (
 				871FE4E42E014584002822BE /* Sources */,
 				871FE5162E014660002822BE /* Compile Kotlin Framework */,
+				87C572E82E01863B004425ED /* Moko Resource */,
 				871FE4E52E014584002822BE /* Frameworks */,
 				871FE4E62E014584002822BE /* Resources */,
 			);
@@ -113,6 +146,12 @@
 			);
 			name = alexandria;
 			packageProductDependencies = (
+				87C572D72E016F54004425ED /* FirebaseAppCheck */,
+				87C572D92E016F54004425ED /* FirebaseAuth */,
+				87C572DB2E016F54004425ED /* FirebaseCore */,
+				87C572DD2E016F54004425ED /* FirebaseDatabase */,
+				87C572DF2E016F54004425ED /* FirebaseFirestore */,
+				87C572E12E016F54004425ED /* FirebaseStorage */,
 			);
 			productName = alexandria;
 			productReference = 871FE4E82E014584002822BE /* alexandria.app */;
@@ -196,6 +235,9 @@
 			);
 			mainGroup = 871FE4DF2E014584002822BE;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				87C572D62E016F54004425ED /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 871FE4E92E014584002822BE /* Products */;
 			projectDirPath = "";
@@ -250,6 +292,24 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "if [ \"YES\" = \"$OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED\" ]; then\n  echo \"Skipping Gradle build task invocation due to OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED environment variable set to \\\"YES\\\"\"\n  exit 0\nfi\ncd \"$SRCROOT/..\"\n./gradlew :alexandriaApp:embedAndSignAppleFrameworkForXcode --stacktrace\n";
+		};
+		87C572E82E01863B004425ED /* Moko Resource */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Moko Resource";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\"$SRCROOT/../gradlew\" -p \"$SRCROOT/../\" :core:ui-shared:copyFrameworkResourcesToApp \\\n    -Pmoko.resources.PLATFORM_NAME=\"$PLATFORM_NAME\" \\\n    -Pmoko.resources.CONFIGURATION=\"$CONFIGURATION\" \\\n    -Pmoko.resources.ARCHS=\"$ARCHS\" \\\n    -Pmoko.resources.BUILT_PRODUCTS_DIR=\"$BUILT_PRODUCTS_DIR\" \\\n    -Pmoko.resources.CONTENTS_FOLDER_PATH=\"$CONTENTS_FOLDER_PATH\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -347,6 +407,8 @@
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -401,6 +463,8 @@
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
 				SWIFT_COMPILATION_MODE = wholemodule;
 			};
 			name = Release;
@@ -420,6 +484,7 @@
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../alexandriaApp/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)";
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = alexandria/Info.plist;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -438,10 +503,11 @@
 				PRODUCT_BUNDLE_IDENTIFIER = id.neotica.alexandria;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,7";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				XROS_DEPLOYMENT_TARGET = 2.2;
 			};
 			name = Debug;
@@ -461,6 +527,7 @@
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../alexandriaApp/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)";
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = alexandria/Info.plist;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -479,10 +546,11 @@
 				PRODUCT_BUNDLE_IDENTIFIER = id.neotica.alexandria;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,7";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				XROS_DEPLOYMENT_TARGET = 2.2;
 			};
 			name = Release;
@@ -617,6 +685,50 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		87C572D62E016F54004425ED /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 11.14.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		87C572D72E016F54004425ED /* FirebaseAppCheck */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 87C572D62E016F54004425ED /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAppCheck;
+		};
+		87C572D92E016F54004425ED /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 87C572D62E016F54004425ED /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+		87C572DB2E016F54004425ED /* FirebaseCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 87C572D62E016F54004425ED /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCore;
+		};
+		87C572DD2E016F54004425ED /* FirebaseDatabase */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 87C572D62E016F54004425ED /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseDatabase;
+		};
+		87C572DF2E016F54004425ED /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 87C572D62E016F54004425ED /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
+		87C572E12E016F54004425ED /* FirebaseStorage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 87C572D62E016F54004425ED /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseStorage;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 871FE4E02E014584002822BE /* Project object */;
 }

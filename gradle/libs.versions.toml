@@ -209,8 +209,8 @@ android-unit-test = [
     "coroutine-test",
 ]
 compose-multiplatform = [
-    "androidx-lifecycle-viewmodel",
-    "androidx-lifecycle-runtime-ktx",
+#    "androidx-lifecycle-viewmodel",
+#    "androidx-lifecycle-runtime-ktx",
     "androidx-navigation-compose",
 ]
 coil = [
