@@ -5,7 +5,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.ime
-import androidx.compose.foundation.layout.isImeVisible
+//import androidx.compose.foundation.layout.isImeVisible
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -39,11 +39,11 @@ class NeoPadding {
             @Composable
             get() = WindowInsets.ime.asPaddingValues()
 
-        @OptIn(ExperimentalLayoutApi::class)
-        val topBarImePadding : Dp
-            @Composable
-            get() = if (WindowInsets.isImeVisible && imePaddingValue.calculateBottomPadding() > statusBarPadding) imePaddingValue.calculateBottomPadding() - statusBarPadding + 24.dp
-                else 0.dp
+//        @OptIn(ExperimentalLayoutApi::class)
+//        val topBarImePadding : Dp
+////            @Composable
+////            get() = if (WindowInsets.isImeVisible && imePaddingValue.calculateBottomPadding() > statusBarPadding) imePaddingValue.calculateBottomPadding() - statusBarPadding + 24.dp
+////                else 0.dp
     }
 
     @Composable

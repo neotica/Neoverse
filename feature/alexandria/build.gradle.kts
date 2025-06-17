@@ -33,7 +33,7 @@ kotlin {
 
     sourceSets {
         androidMain.dependencies {
-            implementation(projects.core.ui)
+//            implementation(projects.core.ui)
 //            implementation(libs.ktor.client.android)
         }
         androidUnitTest.dependencies {

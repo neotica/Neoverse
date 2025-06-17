@@ -54,6 +54,7 @@ import androidx.compose.ui.util.fastFirst
 import androidx.window.core.layout.WindowHeightSizeClass
 import androidx.window.core.layout.WindowWidthSizeClass
 import id.neotica.ui.shared.theme.DarkPrimary
+import kotlin.jvm.JvmInline
 
 /**
  * The Navigation Suite Scaffold wraps the provided content and places the adequate provided

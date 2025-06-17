@@ -1,6 +1,6 @@
 package id.neotica.ui.shared.theme
 
-import android.app.Activity
+//import android.app.Activity
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
@@ -9,8 +9,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.platform.LocalView
-import androidx.core.view.WindowCompat
+//import androidx.compose.ui.platform.LocalView
+//import androidx.core.view.WindowCompat
 
 private val DarkColorScheme = darkColorScheme(
     primary = DarkPrimary,
@@ -52,19 +52,19 @@ fun NeoverseTheme(
         else -> DarkColorScheme //LightColorScheme
     }
 
-    val view = LocalView.current
+//    val view = LocalView.current
 
-    if (!view.isInEditMode) {
-        SideEffect {
-            // Change StatusBar icon color.
-            val window = (view.context as Activity).window
-            if (!darkTheme) {
-                WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
-                WindowCompat.getInsetsController(window, view).isAppearanceLightNavigationBars = darkTheme
-            }
-            window.navigationBarColor = Transparent.toArgb()
-        }
-    }
+//    if (!view.isInEditMode) {
+//        SideEffect {
+//            // Change StatusBar icon color.
+//            val window = (view.context as Activity).window
+//            if (!darkTheme) {
+//                WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
+//                WindowCompat.getInsetsController(window, view).isAppearanceLightNavigationBars = darkTheme
+//            }
+//            window.navigationBarColor = Transparent.toArgb()
+//        }
+//    }
 
     MaterialTheme(
         colorScheme = colorScheme,

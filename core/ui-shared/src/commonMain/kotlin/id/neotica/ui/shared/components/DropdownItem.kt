@@ -1,6 +1,6 @@
 package id.neotica.ui.shared.components
 
-import android.widget.Toast
+//import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -17,7 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.Unspecified
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
-import androidx.compose.ui.platform.LocalContext
+//import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.dp
 
@@ -29,7 +29,7 @@ fun DropdownItem(
     custom: (@Composable () -> Unit)? = null,
     onClick: () -> Unit = {},
 ) {
-    val context = LocalContext.current
+//    val context = LocalContext.current
     val haptic = LocalHapticFeedback.current
 
     Row(
@@ -41,7 +41,7 @@ fun DropdownItem(
                 onClick = onClick,
                 onLongClick = {
                     haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                    Toast.makeText(context, title, Toast.LENGTH_SHORT).show()
+//                    Toast.makeText(context, title, Toast.LENGTH_SHORT).show()
                 },
             )
             .padding(vertical = 4.dp, horizontal = 16.dp),
