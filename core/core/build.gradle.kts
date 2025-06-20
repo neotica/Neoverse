@@ -40,6 +40,7 @@ kotlin {
             api(libs.bundles.koin)
             api(libs.kotlinx.serialization.json)
             api(libs.coroutines.core)
+            api("co.touchlab:kermit:2.0.4")
         }
         iosMain.dependencies {}
         commonTest.dependencies {

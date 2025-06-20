@@ -10,11 +10,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemColors
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
+import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -38,7 +40,9 @@ import id.neotica.ui.shared.navigation.NavigationItem
 import id.neotica.ui.shared.navigation.showExcept
 import id.neotica.ui.shared.state.AdaptiveState
 import id.neotica.ui.shared.theme.BlackTransparent40
+import id.neotica.ui.shared.theme.DarkBackground
 import id.neotica.ui.shared.theme.DarkPrimary
+import id.neotica.ui.shared.theme.NegativePrimary
 import org.koin.compose.KoinContext
 
 @Composable
@@ -47,7 +51,18 @@ expect fun NeoverseTheme(content: @Composable () -> Unit)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainView() {
-    NeoverseTheme {
+    MaterialTheme (
+        colorScheme = darkColorScheme(
+            primary = DarkPrimary,
+            onPrimary = Color.White,
+            secondary = Color.White,
+            onSecondary = DarkPrimary,
+            background = DarkBackground,
+            onBackground = Color.White,
+            tertiary = NegativePrimary,
+            onTertiary = Color.White
+        )
+    )  {
         KoinContext {
             val navController = rememberNavController()
 

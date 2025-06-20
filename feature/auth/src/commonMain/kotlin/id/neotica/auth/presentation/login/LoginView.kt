@@ -30,13 +30,14 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import co.touchlab.kermit.Logger
 import dev.icerock.moko.resources.compose.painterResource
 import id.neotica.droidcore.component.alert.NeoToast
 import id.neotica.droidcore.component.textfield.NeoTextField
-import id.neotica.droidcore.component.textfield.PasswordTextField
 import id.neotica.routes.RootScreen
 import id.neotica.routes.Screen
 import id.neotica.state.AppVariant
+import id.neotica.ui.shared.PasswordTextField
 import id.neotica.ui.shared.components.BasicScaffold
 import id.neotica.ui.shared.components.LoadingIndicator
 import id.neotica.ui.shared.components.NeoButton
@@ -66,7 +67,8 @@ fun LoginView(
 
     LaunchedEffect(Unit) {
         viewModel.loginResult.collect {
-            toast.value
+            Logger.d("neouser") { "loginview: ${toastMessage.value}" }
+            toast.value = true
             toastMessage.value = it
         }
     }
@@ -126,8 +128,7 @@ fun LoginView(
                     Column {
                         NeoTextField(value = emailValue, label = "Email")
                         Spacer(modifier = Modifier.padding(4.dp))
-                        NeoTextField(passwordValue, label = "Password")
-//                        PasswordTextField(value = passwordValue, placeholder = "Password")
+                        PasswordTextField(value = passwordValue, placeholder = "Password")
                     }
                 }
                 Column(

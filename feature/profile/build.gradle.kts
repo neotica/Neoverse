@@ -45,7 +45,11 @@ kotlin {
         }
         commonMain.dependencies {
             api(projects.core.uiShared)
+//            implementation(projects.core.database)
+            api(libs.room.runtime)
+            api(libs.sqlite.bundled)
             implementation(projects.core.domain)
+            implementation(projects.core.ktor)
             implementation(projects.core.routes)
             implementation(projects.feature.auth)
         }

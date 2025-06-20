@@ -32,6 +32,7 @@ actual suspend fun loginResult(
             if (user.isEmailVerified) {
                 ApiResult.Success("Login successful")
             } else {
+                authKmp.currentUser?.sendEmailVerification()
                 ApiResult.Error("Email not verified. Please verify your email.")
             }
         } else {
@@ -67,6 +68,7 @@ actual suspend fun registerResult(
             currentUser.sendEmailVerification()
 
             // Save user data in Firestore
+
             firestore.collection("Users").document(currentUser.uid).set(dataUser).await()
 
             return ApiResult.Success("Registration successful")

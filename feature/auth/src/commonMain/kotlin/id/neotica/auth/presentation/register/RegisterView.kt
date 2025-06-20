@@ -23,8 +23,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import id.neotica.droidcore.component.alert.NeoToast
 import id.neotica.droidcore.component.textfield.NeoTextField
-import id.neotica.droidcore.component.textfield.PasswordTextField
 import id.neotica.routes.Screen
+import id.neotica.ui.shared.PasswordTextField
 import id.neotica.ui.shared.components.BasicScaffold
 import id.neotica.ui.shared.components.LoadingIndicatorBool
 import id.neotica.ui.shared.components.NeoButton

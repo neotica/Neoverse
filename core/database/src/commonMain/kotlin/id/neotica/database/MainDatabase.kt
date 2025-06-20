@@ -8,16 +8,23 @@ import id.neotica.database.dao.CurrentUserDao
 import id.neotica.database.dao.FriendDao
 import id.neotica.database.entity.FriendEntity
 import id.neotica.database.entity.CurrentUserEntity
+import id.neotica.profile.data.local.ProfileDao
+import id.neotica.profile.data.local.ProfileEntity
 
 @Database(
-    entities = [FriendEntity::class, CurrentUserEntity::class],
-    version = 3,
+    entities = [
+        FriendEntity::class,
+        CurrentUserEntity::class,
+        ProfileEntity::class
+    ],
+    version = 1,
 //    exportSchema = false
 )
 @ConstructedBy(AppDatabaseConstructor::class)
 abstract class MainDatabase: RoomDatabase() {
     abstract fun friendDao(): FriendDao
     abstract fun currentUserDao(): CurrentUserDao
+    abstract fun profileDao(): ProfileDao
 }
 
 @Suppress("NO_ACTUAL_FOR_EXPECT")

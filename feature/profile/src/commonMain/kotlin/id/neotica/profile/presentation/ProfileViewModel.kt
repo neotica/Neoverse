@@ -3,8 +3,10 @@ package id.neotica.profile.presentation
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import co.touchlab.kermit.Logger
 import id.neotica.auth.domain.AuthRepository
 import id.neotica.domain.ApiResult
+import id.neotica.domain.NeoUser
 import id.neotica.domain.local.CurrentUserRepository
 import id.neotica.domain.local.FriendDaoRepository
 import id.neotica.domain.model.User
@@ -30,8 +32,11 @@ class ProfileViewModel(
     )
     val currentUser = _currentUser.asStateFlow()
 
+    private var _profile: MutableStateFlow<NeoUser?> = MutableStateFlow(null)
+    val profile = _profile.asStateFlow()
+
     init {
-        getUserRoomInstance()
+        getUser()
     }
 
     fun isLoggedIn(): Boolean {
@@ -51,18 +56,19 @@ class ProfileViewModel(
     }
 
     private fun getUser() = viewModelScope.launch {
-        val user = profileRepo.getUserDetail(authRepo.getUserId().toString())
-        _user.value = ApiResult.Loading()
-        _user.value = user
-        user.data?.let { currentUserDatabase.saveUser(it) }
-    }
-
-    private fun getUserRoomInstance() = viewModelScope.launch {
-        currentUserDatabase.getUser().collect {
-            if (it.isNotEmpty()) {
-                _currentUser.value = ApiResult.Success(it[0])
-            } else {
-                getUser()
+        val userNew = profileRepo.getUserDetailNew(authRepo.getUserId().toString())
+        userNew.collect {
+            when (it) {
+                is ApiResult.Success -> {
+                    currentUserDatabase.saveNeoUser(it.data!!)
+                    _profile.value = it.data
+                    Logger.d("profileVM") { it.data.toString() }
+                }
+                is ApiResult.Error -> {
+                    Logger.e("profileVM") { it.errorMessage.toString() }
+                    _user.value = ApiResult.Error(it.errorMessage.toString())
+                }
+                is ApiResult.Loading -> {}
             }
         }
     }

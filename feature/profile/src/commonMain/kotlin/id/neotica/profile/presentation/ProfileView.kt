@@ -17,6 +17,7 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -31,7 +32,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import dev.icerock.moko.resources.compose.painterResource
 import id.neotica.domain.ApiResult
-import id.neotica.domain.model.User
 import id.neotica.droidcore.component.alert.NeoAlert
 import id.neotica.droidcore.component.alert.NeoToast
 import id.neotica.droidcore.component.icon.AlertEnum
@@ -40,6 +40,7 @@ import id.neotica.routes.RootScreen
 import id.neotica.routes.Screen
 import id.neotica.state.AppVariant
 import id.neotica.ui.shared.components.BasicScaffold
+import id.neotica.ui.shared.components.LoadingIndicator
 import id.neotica.ui.shared.components.LoadingIndicatorBool
 import id.neotica.ui.shared.components.MenuItem
 import id.neotica.ui.shared.components.NeoButton
@@ -50,7 +51,6 @@ import id.neotica.ui.shared.theme.NegativePrimary
 import id.neotica.ui.shared.theme.TransparentText20
 import org.koin.compose.viewmodel.koinViewModel
 
-//@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileView(
@@ -59,10 +59,11 @@ fun ProfileView(
     appVariant: AppVariant,
     viewModel: ProfileViewModel = koinViewModel()
 ) {
-    var user by remember { mutableStateOf<User?>(null) }
+//    var user by remember { mutableStateOf<User?>(null) }
     val isLoading by remember { mutableStateOf(false) }
     var toast = remember { mutableStateOf(false) }
     var toastMessage = remember { mutableStateOf("") }
+    val profile by viewModel.profile.collectAsState()
 
     val haptic = LocalHapticFeedback.current
 
@@ -98,7 +99,7 @@ fun ProfileView(
 //                Log.d("profileView", "result $result")
                 when(result) {
                     is ApiResult.Loading -> { /*isUserEmpty = true*/ }
-                    is ApiResult.Success -> { user = result.data }
+                    is ApiResult.Success -> { /*user = result.data*/ }
                     is ApiResult.Error -> { /*isUserEmpty = true*/ }
                     null -> { /*isUserEmpty = true*/ }
                 }
@@ -196,7 +197,8 @@ fun ProfileView(
             ) {
                 LazyColumn {
                     item {
-                        user?.let {
+                        if (profile == null) LoadingIndicator()
+                        profile?.let {
                             Column(
                                 Modifier
                                     .fillMaxWidth()
@@ -216,7 +218,7 @@ fun ProfileView(
                                 )
 
                                 Text(
-                                    text = it.userEmail,
+                                    text = it.email,
                                     fontSize = FontSize.Normal,
                                     color = TransparentText20,
                                     fontWeight = FontWeight.Light
@@ -232,7 +234,7 @@ fun ProfileView(
                             MenuItem(
                                 "Edit Profile",
                             ) {
-                                navController.navigate(Screen.EditProfileScreen(profPic = user?.imageUrl ?: ""))
+                                navController.navigate(Screen.EditProfileScreen(profPic = profile?.imageUrl ?: ""))
                             }
                             MenuItem(
                                 "Account Settings",

@@ -14,6 +14,7 @@ val provideDatabaseModule = module {
         getRoomDatabase(get()) }
     single { getFriendDatabase(get()) }
     single { getCurrentUserDatabase(get()) }
+    single { getProfileDatabase(get()) }
 }
 
 fun getRoomDatabase(
@@ -27,3 +28,4 @@ fun getRoomDatabase(
 
 fun getFriendDatabase(db: MainDatabase) = db.friendDao()
 fun getCurrentUserDatabase(db: MainDatabase) = db.currentUserDao()
+fun getProfileDatabase(db: MainDatabase) = db.profileDao()

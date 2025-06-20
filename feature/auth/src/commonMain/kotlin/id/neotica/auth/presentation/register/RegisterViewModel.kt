@@ -2,6 +2,7 @@ package id.neotica.auth.presentation.register
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import co.touchlab.kermit.Logger
 import id.neotica.domain.ApiResult
 import id.neotica.auth.domain.AuthRepository
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -33,6 +34,7 @@ class RegisterViewModel(
             }
             is ApiResult.Error -> {
                 _loading.emit(false)
+                Logger.e { "registervm: ${result.errorMessage.toString()}" }
                 _registerResult.emit(result.errorMessage.toString())
             }
         }
