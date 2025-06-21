@@ -44,18 +44,10 @@ dependencies {
     implementation(projects.core.domain)
     implementation(projects.core.retrofit)
 
-    //Firebase
-    api(platform(libs.firebase.bom))
-    api(libs.firebase.analytics)
-    api(libs.firebase.auth)
-    api(libs.firebase.database)
-    api(libs.firebase.storage)
-    api(libs.firebase.messaging)
-    api(libs.firebase.firestore.ktx)
-    api(libs.firebase.appcheck.playintegrity)
-    api(libs.firebase.appcheck.debug)
+    api(projects.core.firebase)
+    api(libs.bundles.ktor)
+    implementation(libs.ktor.client.android)
 
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
+    testImplementation(libs.bundles.unit.test)
+    androidTestImplementation(libs.bundles.android.unit.test)
 }

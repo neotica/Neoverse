@@ -8,11 +8,11 @@ sealed class ApiResult<T>(
     class Loading<T>(data: T? = null) : ApiResult<T>(data)
     class Error<T>(errorMessage: String? = null) : ApiResult<T>(null, errorMessage)
 
-    override fun toString(): String {
-        return when (this) {
-            is Success<*> -> "Success[data=$data]"
-            is Error -> "Error[exception=$errorMessage]"
-            is Loading<T> -> "Loading"
-        }
-    }
+//    override fun toString(): String {
+//        return when (this) {
+//            is Success<*> -> "Success[data=$data]"
+//            is Error -> "Error[exception=$errorMessage]"
+//            is Loading<T> -> "Loading"
+//        }
+//    }
 }

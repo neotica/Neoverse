@@ -37,7 +37,7 @@ fun CustomNavBar(
             .padding(
                 start = 12.dp, end = 12.dp, bottom = WindowInsets.systemBars.asPaddingValues().calculateBottomPadding()
             ),
-        shape = RoundedCornerShape(20.dp)
+        shape = RoundedCornerShape(20.dp),
     ) {
         Row(
             modifier = Modifier

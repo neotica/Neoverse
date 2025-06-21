@@ -1,0 +1,38 @@
+package id.neotica.database
+
+import id.neotica.database.dao.CurrentUserDao
+import id.neotica.domain.model.User
+import id.neotica.domain.local.CurrentUserRepository
+import id.neotica.database.Mapper.toUser
+import id.neotica.domain.NeoUser
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.withContext
+
+class CurrentUserRepositoryImpl(
+    private val dao: CurrentUserDao,
+): CurrentUserRepository {
+
+    override suspend fun saveUser(user: User) = withContext(Dispatchers.IO) {
+        val userEnt = Mapper.userResponseToEntity(user)
+        dao.saveCurrentUser(userEnt)
+    }
+
+    override suspend fun saveNeoUser(user: NeoUser) {
+//        dao.saveCurrentUser()
+    }
+
+    override suspend fun clearCurrent() = withContext(Dispatchers.IO) {
+        dao.clearUser()
+    }
+
+    override fun getUser(): Flow<List<User>> {
+        return dao.currentUser().map { users ->
+            users.map { user ->
+                user.toUser()
+            }
+        }
+    }
+}

@@ -27,19 +27,19 @@ import androidx.navigation.NavController
 import id.neotica.domain.ApiResult
 import id.neotica.droidcore.component.cards.Pocket
 import id.neotica.droidcore.component.carousel.CarouselCard
+import id.neotica.routes.RootScreen
+import id.neotica.routes.Screen
+import id.neotica.routes.WorldScreen
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.NeoButton
 import id.neotica.ui.components.world.WorldCard
-import id.neotica.ui.navigation.RootScreen
-import id.neotica.ui.navigation.Screen
-import id.neotica.ui.navigation.WorldScreen
 import id.neotica.world.feat.card.LibraryCard
 import id.neotica.world.feat.card.RavenCard
 import id.neotica.world.utils.bgLeaderBoards
 import id.neotica.world.utils.bgMining
 import id.neotica.world.utils.bgTavern
 import id.neotica.world.utils.worldIntro2
-import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinViewModel
 import kotlin.random.Random
 
 @Composable

@@ -10,18 +10,20 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import id.neotica.neoverse.presentation.screen.ChatFromHomeView
 import id.neotica.neoverse.presentation.screen.SettingView
 import id.neotica.neoverse.presentation.screen.SplashView
-import id.neotica.neoverse.presentation.screen.dump.DumpView
-import id.neotica.ui.navigation.Screen
+import id.neotica.routes.Screen
+import id.neotica.state.AppVariant
 import id.neotica.world.worldNavGraph
+import org.koin.compose.getKoin
 
 @Composable
 fun NavGraph(
     navController: NavHostController,
     paddingValues: PaddingValues,
 ) {
+    val appVariant: AppVariant = getKoin().get()
+
     NavHost(
         navController,
         startDestination = Screen.Splash,
@@ -32,12 +34,10 @@ fun NavGraph(
     ) {
         composable<Screen.Splash> { SplashView(navController = navController) }
         composable<Screen.Setting> { SettingView(paddingValues) }
-        composable<Screen.ChatFromHome> { ChatFromHomeView(paddingValues = paddingValues) }
-        composable<Screen.DumpScreen> { DumpView(navController, paddingValues = paddingValues) }
 
         homeNavGraph(navController, paddingValues)
-        authNavGraph(navController, paddingValues)
-        worldNavGraph(navController, paddingValues)
+        profileNavGraph(navController, paddingValues, appVariant)
+        worldNavGraph(navController, paddingValues, appVariant)
         friendNavGraph(navController, paddingValues)
     }
 }

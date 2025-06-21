@@ -4,18 +4,19 @@ plugins {
     alias(libs.plugins.google.services)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.composeMultiplatform)
 }
 
 android {
     namespace = "id.neotica.neoverse"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "id.neotica.neoverse"
         minSdk = 26
-        targetSdk = 35
-        versionCode = 59
-        versionName = "1.0.1"
+        targetSdk = 36
+        versionCode = 64
+        versionName = "1.1.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -64,14 +65,21 @@ dependencies {
     implementation(projects.core.domain)
     implementation(projects.core.network)
     implementation(projects.core.ui)
+    implementation(projects.core.routes)
     implementation(projects.core.core)
-    implementation(projects.feature.world)
     implementation(projects.core.camera)
+    implementation(projects.feature.world)
+    implementation(projects.feature.auth)
+    implementation(projects.feature.profile)
+    implementation(projects.feature.home)
+    implementation(projects.feature.chat)
+    implementation(projects.feature.friend)
 
     // Testing
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.androidx.ui.test.junit4)
+    testImplementation(libs.bundles.unit.test)
+    androidTestImplementation(libs.bundles.android.unit.test)
+//    testImplementation(libs.junit)
+//    androidTestImplementation(libs.androidx.junit)
+//    androidTestImplementation(libs.androidx.espresso.core)
+//    androidTestImplementation(libs.androidx.ui.test.junit4)
 }

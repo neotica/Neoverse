@@ -29,15 +29,20 @@ kotlin {
 
     sourceSets {
         androidMain.dependencies {
-            implementation(libs.androidx.core.ktx)
-            implementation(libs.androidx.lifecycle.runtime.ktx)
+//            implementation(libs.androidx.core.ktx)
+//            implementation(libs.androidx.lifecycle.runtime.ktx)
+//            implementation(libs.androidx.lifecycle.viewmodel)
+            api(libs.koin.android)
         }
         commonMain.dependencies {
             //put your multiplatform dependencies here
-            api(libs.koin.core)
+            implementation(libs.kotlin.stdlib)
+            api(libs.bundles.koin)
             api(libs.kotlinx.serialization.json)
             api(libs.coroutines.core)
+            api("co.touchlab:kermit:2.0.4")
         }
+        iosMain.dependencies {}
         commonTest.dependencies {
             implementation(libs.kotlin.test)
         }
@@ -46,10 +51,10 @@ kotlin {
 
 android {
     namespace = "id.neotica.core"
-    compileSdk = 35
+    compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
-        minSdk = 26
+        minSdk = libs.versions.android.minSdk.get().toInt()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")

@@ -65,12 +65,12 @@ import id.neotica.domain.model.raven.Raven
 import id.neotica.domain.utils.convertLongToTime
 import id.neotica.raven.utils.ravenIntro
 import id.neotica.raven.utils.unknownCommand
+import id.neotica.routes.RootScreen
+import id.neotica.routes.WorldScreen
 import id.neotica.ui.R
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.DropdownItem
 import id.neotica.ui.components.scroll.scrollBottomValue
-import id.neotica.ui.navigation.RootScreen
-import id.neotica.ui.navigation.WorldScreen
 import id.neotica.ui.theme.BlackTransparent40
 import id.neotica.ui.theme.DarkPrimary
 import id.neotica.ui.theme.DarkPrimaryTransparent2
@@ -81,7 +81,7 @@ import id.neotica.ui.theme.Transparent
 import id.neotica.ui.theme.TransparentText20
 import id.neotica.ui.theme.TransparentText40
 import kotlinx.coroutines.delay
-import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable

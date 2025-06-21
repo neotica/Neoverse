@@ -1,5 +1,6 @@
 package id.neotica.tavern
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import id.neotica.domain.ApiResult
@@ -14,8 +15,7 @@ import id.neotica.domain.utils.randomUUID
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import java.security.SecureRandom
-import kotlin.random.asKotlinRandom
+import kotlin.random.Random
 
 class TavernViewModel(
     private val gameRepo: AuraRepository,
@@ -26,10 +26,6 @@ class TavernViewModel(
 ): ViewModel() {
     private val _randomNum = MutableStateFlow("")
     val randomNum = _randomNum.asStateFlow()
-    private val _randomNum2 = MutableStateFlow("")
-    val randomNum2 = _randomNum2.asStateFlow()
-    private val _randomNum3 = MutableStateFlow("")
-    val randomNum3 = _randomNum3.asStateFlow()
 
     private val _auraPoints = MutableStateFlow(0)
     val auraPoints = _auraPoints.asStateFlow()
@@ -43,6 +39,13 @@ class TavernViewModel(
     private var _logs: MutableStateFlow<ApiResult<List<ParentNeo<TavernPost>>>> = MutableStateFlow(ApiResult.Loading())
     val logs = _logs.asStateFlow()
 
+    private val resultMapping = mapOf(
+        "7\uFE0F7\uFE0F7\uFE0F" to 750,
+        "⭐\uFE0F⭐\uFE0F⭐\uFE0F" to 250,
+        "\uD83E\uDD88\uD83E\uDD88\uD83E\uDD88" to 150,
+        "\uD83D\uDE0A\uD83D\uDE0A\uD83D\uDE0A" to 50,
+    )
+
     private fun currentUserId(): String = getIdUseCase.invoke()
     private fun currentUsername(): String = getUserNameUseCase.invoke()
 
@@ -51,9 +54,9 @@ class TavernViewModel(
     }
 
     init {
-        generateTranspose()
-        generateTranspose2()
-        generateTranspose3()
+        generateTranspose(1)
+        generateTranspose(2)
+        generateTranspose(3)
         fetchAuras()
         getWhispers()
         getLogs()
@@ -77,84 +80,61 @@ class TavernViewModel(
         }
     }
 
-    private fun generateTranspose() = viewModelScope.launch {
-        val randomValue = SecureRandom().asKotlinRandom(). nextInt(1,80)
-        _randomNum.value = when (randomValue) {
-            in 1..15 -> "7\uFE0F"
-            in 21..40 -> "\uD83D\uDE0A"
-            in 41..60 -> "⭐\uFE0F"
-            else -> "\uD83E\uDD88"
+    private fun generateTranspose(transposeNumber: Int) = viewModelScope.launch {
+        val emojis = listOf("7\uFE0F", "\uD83D\uDE0A", "⭐\uFE0F", "\uD83E\uDD88")
+        val weights = listOf(10, 45, 25, 20)
+        fun weightedRandom(items: List<String>, weights: List<Int>): String {
+            val totalWeight = weights.sum()
+            val randomNumber = Random.nextInt(1, totalWeight + 1)
+            var cumulativeWeight = 0
+
+            for (i in items.indices) {
+                cumulativeWeight += weights[i]
+                if (randomNumber <= cumulativeWeight) {
+                    return items[i]
+                }
+            }
+            return items.last()
         }
-    }
-    private fun generateTranspose2() = viewModelScope.launch {
-        val randomValue = SecureRandom().asKotlinRandom(). nextInt(1,80)
-        _randomNum2.value = when (randomValue) {
-            in 1..15 -> "7\uFE0F"
-            in 21..40 -> "\uD83D\uDE0A"
-            in 41..60 -> "⭐\uFE0F"
-            else -> "\uD83E\uDD88"
-        }
-    }
-    private fun generateTranspose3() = viewModelScope.launch {
-        val randomValue = SecureRandom().asKotlinRandom(). nextInt(1,80)
-        _randomNum3.value = when (randomValue) {
-            in 1..15 -> "7\uFE0F"
-            in 21..40 -> "\uD83D\uDE0A"
-            in 41..60 -> "⭐\uFE0F"
-            else -> "\uD83E\uDD88"
+
+        val result = weightedRandom(emojis, weights)
+        when (transposeNumber) {
+            1 -> _randomNum.value = result
+            else -> Log.e("generateTranspose", "Invalid transpose number: $transposeNumber")
         }
     }
 
     fun getAuraPoints(result: String) = viewModelScope.launch {
-        val seven = "7\uFE0F"
-        val star = "⭐\uFE0F"
-        val smile = "\uD83D\uDE0A"
-        val shark = "\uD83E\uDD88"
-
-        when(result) {
-            "$seven$seven$seven" -> {
-                sendScore(750)
-                _auraPoints.value = 750
-            }
-            "$star$star$star" -> {
-                sendScore(250)
-                _auraPoints.value = 250
-            }
-            "$shark$shark$shark" -> {
-                sendScore(150)
-                _auraPoints.value = 150
-            }
-            "$smile$smile$smile" -> {
-                sendScore(50)
-                _auraPoints.value = 50
-            }
-            else -> _auraPoints.value = -10
+        val points = resultMapping[result]
+        if (points != null) {
+            sendScore(points.toLong())
+            _auraPoints.value = points
+        } else {
+            _auraPoints.value = -10
         }
         firebase.eventLog("GameView", "slot_result", _auraPoints.value.toString())
     }
 
     fun sendPost(message: String) = viewModelScope.launch {
-        val post = TavernPost(
-            id = randomUUID(),
-            creatorId = currentUserId(),
-            creatorName = currentUsername(),
-            message = message
-        )
-        val tot = _totalAuras.value.data
-        if (tot != null) {
-            feedRepo.postWhisper(post)
-            sendAuraPoints(-5)
-            fetchAuras()
+        if (currentUsername() != "tarakh") {
+            val post = TavernPost(
+                id = randomUUID(),
+                creatorId = currentUserId(),
+                creatorName = currentUsername(),
+                message = message
+            )
+            val tot = _totalAuras.value.data
+            if (tot != null) {
+                feedRepo.postWhisper(post)
+                sendAuraPoints(-5)
+                fetchAuras()
+            }
+            getWhispers()
         }
-        getWhispers()
     }
 
     private fun sendScore(aura: Long) = viewModelScope.launch {
         val message: String = when(aura) {
-            50L -> "${currentUsername()} has won $aura auras!"
-            100L -> "${currentUsername()} has won $aura auras!"
-            150L -> "${currentUsername()} has won $aura auras!"
-            250L -> "${currentUsername()} has won $aura auras!"
             750L -> "JACKPOT!!! ${currentUsername()} has won $aura auras!!!"
             else -> "${currentUsername()} has won $aura auras!"
         }

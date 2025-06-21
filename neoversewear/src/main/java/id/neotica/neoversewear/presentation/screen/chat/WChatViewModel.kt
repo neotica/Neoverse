@@ -15,7 +15,7 @@ import id.neotica.domain.model.chat.ChatRoom
 import id.neotica.domain.model.chat.Message
 import id.neotica.domain.remote.ChatRepository
 import id.neotica.domain.remote.UserRepository
-import id.neotica.ui.navigation.Screen
+import id.neotica.routes.Screen
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn

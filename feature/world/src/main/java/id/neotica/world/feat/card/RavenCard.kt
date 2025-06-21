@@ -2,7 +2,7 @@ package id.neotica.world.feat.card
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
-import id.neotica.ui.navigation.WorldScreen
+import id.neotica.routes.WorldScreen
 import id.neotica.world.utils.chRaven
 import id.neotica.world.utils.ravenDescShort
 

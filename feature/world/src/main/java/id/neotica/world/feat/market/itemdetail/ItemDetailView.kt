@@ -42,7 +42,7 @@ import id.neotica.ui.components.LoadingIndicator
 import id.neotica.ui.components.NeoButton
 import id.neotica.ui.state.ScreenState
 import id.neotica.ui.theme.FontSize
-import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun ItemDetailView(

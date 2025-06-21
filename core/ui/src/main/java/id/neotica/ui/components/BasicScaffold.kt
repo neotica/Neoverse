@@ -43,13 +43,14 @@ fun BasicScaffold(
     paddingValues: PaddingValues = PaddingValues(),
     paddingValuesBottomOnly: Boolean = true,
     fullScreen: Boolean = false,
+    isLoading: Boolean = false,
     enableEye: Boolean = false,
     horizontalAlignment: Alignment.Horizontal = Alignment.Start,
     trailingIcon: (@Composable () -> Unit)? = null,
     topBarVisibility: Boolean = true,
     topBarBackground: Boolean? = null,
     topBarModifier: Modifier = Modifier,
-    content: @Composable () -> Unit
+    content: @Composable (paddingValues: PaddingValues) -> Unit
 ) {
     Scaffold(
         modifier = Modifier,
@@ -60,6 +61,8 @@ fun BasicScaffold(
                 exit = shrinkVertically(),
             ) {
                 val topBarColor = if (topBarBackground == true) DarkPrimaryTransparent80 else DarkPrimaryTransparent80
+
+                if (isLoading) LoadingIndicator()
 
                 TopAppBar(
                     title = {
@@ -163,16 +166,15 @@ fun BasicScaffold(
                         .fillMaxSize(),
                     horizontalAlignment = horizontalAlignment
                 ) {
-                    content()
+                    content(it)
                 }
             }
         } else {
             Column(
                 modifier = Modifier
-                    .padding(paddingValues)
                     .fillMaxSize(),
                 horizontalAlignment = horizontalAlignment
-            ) { content() }
+            ) { content(it) }
         }
     }
 }

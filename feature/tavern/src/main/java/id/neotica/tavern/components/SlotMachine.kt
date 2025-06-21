@@ -36,37 +36,21 @@ import id.neotica.ui.components.animation.SlideInto
 import id.neotica.ui.theme.DarkPrimaryTransparent
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinViewModel
 import java.security.SecureRandom
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun SlotMachine(viewModel: TavernViewModel = koinViewModel()) {
     Column(Modifier.padding(20.dp)) {
-        val randomNum = viewModel.randomNum.collectAsState()
-        val randomNum2 = viewModel.randomNum2.collectAsState()
-        val randomNum3 = viewModel.randomNum3.collectAsState()
-        val randomStrings1 = remember {
-            mutableStateListOf(
-                randomNum.value,
-                randomNum2.value,
-                randomNum3.value
-            )
+        val randomNum by viewModel.randomNum.collectAsState()
+        val randomStrings = remember {
+            List(3) { mutableStateListOf(randomNum, randomNum, randomNum) }
         }
-        val randomStrings2 = remember {
-            mutableStateListOf(
-                randomNum.value,
-                randomNum2.value,
-                randomNum3.value
-            )
-        }
-        val randomStrings3 = remember {
-            mutableStateListOf(
-                randomNum.value,
-                randomNum2.value,
-                randomNum3.value
-            )
-        }
+        val randomStrings1 = randomStrings[0]
+        val randomStrings2 = randomStrings[1]
+        val randomStrings3 = randomStrings[2]
+
 
         var onClick by rememberSaveable { mutableStateOf(false) }
         var delayedClick by rememberSaveable { mutableStateOf(true) }
@@ -150,14 +134,8 @@ fun SlotMachine(viewModel: TavernViewModel = koinViewModel()) {
                 delayedClick = false
                 giveAura = true
                 stopEnabled = true
-                randomStrings1.forEachIndexed { index, _ ->
-                    randomStrings1[index] = generateTranspose(SecureRandom())
-                }
-                randomStrings2.forEachIndexed { index, _ ->
-                    randomStrings2[index] = generateTranspose(SecureRandom())
-                }
-                randomStrings3.forEachIndexed { index, _ ->
-                    randomStrings3[index] = generateTranspose(SecureRandom())
+                randomStrings.forEach { list ->
+                  list.indices.forEach { list[it] = generateTranspose(SecureRandom()) }
                 }
                 onPressed = true
                 viewModel.getItemEvent("Play", "Button")

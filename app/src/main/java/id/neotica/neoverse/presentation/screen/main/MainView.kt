@@ -35,11 +35,12 @@ import id.neotica.ui.components.navigation.CustomNavBar
 import id.neotica.ui.components.navigation.CustomNavigationSuiteScaffold
 import id.neotica.ui.components.navigation.NavigationSuiteScaffoldDefaults
 import id.neotica.ui.components.navigation.NavigationSuiteType
-import id.neotica.ui.navigation.AlexandriaScreen
+import id.neotica.routes.AlexandriaScreen
+import id.neotica.routes.RootScreen
+import id.neotica.routes.Screen
+import id.neotica.routes.WorldScreen
 import id.neotica.ui.navigation.NavigationItem
-import id.neotica.ui.navigation.RootScreen
-import id.neotica.ui.navigation.Screen
-import id.neotica.ui.navigation.WorldScreen
+import id.neotica.ui.navigation.showExcept
 import id.neotica.ui.state.AdaptiveState
 import id.neotica.ui.theme.DarkBackground
 import id.neotica.ui.theme.DarkPrimary
@@ -67,10 +68,11 @@ fun MainView() {
             NavigationItem(
                 title = "Profile",
                 icon = Icons.Default.AccountCircle,
-                screen = RootScreen.AuthNav
+                screen = RootScreen.ProfileNav
             )
         )
-        val bottomBarExcludedRoutes = setOf(
+
+        val screenSet = setOf(
             Screen.Splash,
             Screen.LoginScreen,
             Screen.RegisterScreen,
@@ -83,31 +85,36 @@ fun MainView() {
             Screen.UpdateAppScreen,
             Screen.CameraPreviewScreen,
             Screen.SearchUserScreen,
+            Screen.FriendScreen,
+            Screen.ResetPassword,
+            Screen.Chat(),
+            Screen.EditProfileScreen(),
+        )
+
+        val worldScreen = setOf(
             WorldScreen.TavernScreen,
             WorldScreen.MiningScreen,
             WorldScreen.LeaderBoardsScreen,
             WorldScreen.TerminalScreen,
             WorldScreen.RavenScreen,
             WorldScreen.RavenChatScreen,
-            Screen.FriendScreen,
+            WorldScreen.ItemDetailScreen(),
+        )
+
+        val alexandriaSet = setOf(
             AlexandriaScreen.HomeScreen,
-            AlexandriaScreen.GoetiaScreen,
-            Screen.ResetPassword
+            AlexandriaScreen.BookScreen(),
+            AlexandriaScreen.UserLibraryScreen,
+            AlexandriaScreen.EditBookScreen(),
+            AlexandriaScreen.EditChapterScreen(),
+            AlexandriaScreen.BookContentScreen(),
+            AlexandriaScreen.AdminLibraryScreen
         )
 
-        val includeRoute = bottomBarExcludedRoutes.none {
-            if (navBackStackEntry?.destination?.route == null) true else
-                navBackStackEntry?.destination?.hasRoute(it::class) == true
-        }
-        val specificRoutes = setOf(
-            "id.neotica.ui.navigation.Screen.Chat/{chatId}/{user2}?chatroomId={chatroomId}",
-            "id.neotica.ui.navigation.WorldScreen.ItemDetailScreen/{id}/{type}",
-            "id.neotica.ui.navigation.Screen.EditProfileScreen/{profPic}"
-        )
-        val currentRoute = navBackStackEntry?.destination?.route
+        val bottomBarExcludedRoutes = screenSet + worldScreen + alexandriaSet
+
+        val includeRoute = navBackStackEntry.showExcept(bottomBarExcludedRoutes)
         Log.d("currentScreen", navBackStackEntry?.destination?.route.toString())
-
-        val includeRoute3 = includeRoute && currentRoute !in specificRoutes
 
         val mapAdaptive = AdaptiveState.from(currentWindowAdaptiveInfo())
         val customNavSuiteType = when (mapAdaptive) {
@@ -125,7 +132,7 @@ fun MainView() {
                         .fillMaxSize(),
                     bottomBar = {
                         AnimatedVisibility (
-                            visible = includeRoute3,
+                            visible = includeRoute,
                             enter = slideInVertically(initialOffsetY = { it }),
                             exit = slideOutVertically(targetOffsetY = { it }),
                         ) {
@@ -180,7 +187,7 @@ fun MainView() {
             else -> {
                 CustomNavigationSuiteScaffold(
                     layoutType = customNavSuiteType,
-                    navigationVisibility = includeRoute3,
+                    navigationVisibility = includeRoute,
                     navigationSuiteItems = {
                         navItems.map { navMap ->
                             item(

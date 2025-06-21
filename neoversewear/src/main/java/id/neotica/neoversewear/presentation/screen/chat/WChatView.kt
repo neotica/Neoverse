@@ -55,7 +55,7 @@ import id.neotica.ui.theme.FontSize
 import id.neotica.ui.theme.Transparent
 import id.neotica.ui.theme.TransparentText40
 import kotlinx.coroutines.launch
-import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun WChatView(

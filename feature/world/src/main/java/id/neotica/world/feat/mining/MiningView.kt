@@ -25,7 +25,7 @@ import id.neotica.ui.components.image.ImagePermanentCache
 import id.neotica.ui.components.NeoButton
 import id.neotica.ui.navigation.navigateBack
 import id.neotica.world.utils.rockPicture
-import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun MiningView(

@@ -5,6 +5,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
@@ -17,9 +18,9 @@ import id.neotica.domain.model.chat.ParentNeo
 import id.neotica.domain.model.chat.notification.ChatState
 import id.neotica.domain.model.chat.notification.SendMessageDto
 import id.neotica.domain.remote.ChatRepository
-import id.neotica.network.di.NetworkApiService
+import id.neotica.neoverse.utils.baseUrl
+import id.neotica.network.micro.NetworkApiService
 import id.neotica.network.utils.StringCryptoUtil
-import id.neotica.network.utils.baseUrl
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -28,6 +29,7 @@ import kotlinx.coroutines.tasks.await
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.create
+import java.util.UUID
 
 class ChatRepositoryImpl: ChatRepository {
     private val firebase = Firebase.database
@@ -41,31 +43,26 @@ class ChatRepositoryImpl: ChatRepository {
     }
 
     override suspend fun getAllChatrooms(): Flow<ApiResult<List<ParentNeo<ChatRoom>>>> = flow {
-        val list = mutableListOf<ParentNeo<ChatRoom>>()
-        list.clear()
+        val fb = FirebaseAuth.getInstance().currentUser?.getIdToken(true)?.await()?.token
+        Log.d("firebase token: ", fb?:"")
         emit(ApiResult.Loading())
         try {
-            val reference = firebase.getReference("chatroom").get().await()
-            reference.children.forEach { data ->
-                val cr = data.getValue(ChatRoom::class.java)
-                val crDecrypted = try {
-                    cr?.copy(lastMessage = StringCryptoUtil.decrypt(cr.lastMessage))
-                } catch (e: Exception) {
-                    cr
-                }
-                val channel = ParentNeo(
-                    key = data.key!!,
-                    value = crDecrypted!!
-                )
-                list.add(channel)
-                if (data.value != null) {
-                    emit(ApiResult.Success(
-                        list.sortedByDescending { it.value.lastOpened })
+            val snapshot = firebase.getReference("chatroom").get().await()
+            val chatRooms = snapshot.children.mapNotNull { data ->
+                data.getValue(ChatRoom::class.java)?.let { chatRoom ->
+                    val decryptedChatRoom = try {
+                        chatRoom.copy(lastMessage = StringCryptoUtil.decrypt(chatRoom.lastMessage))
+                    } catch (e: Exception) {
+                        chatRoom
+                    }
+                    ParentNeo(
+                        key = data.key ?: return@mapNotNull null,
+                        value = decryptedChatRoom
                     )
-                } else {
-                    emit(ApiResult.Error("data null"))
                 }
-            }
+            }.sortedByDescending { it.value.lastOpened }
+            emit(ApiResult.Success(chatRooms))
+
         } catch (e: NullPointerException) {
             emit(ApiResult.Error("exception: ${e.message}"))
         }
@@ -83,7 +80,6 @@ class ChatRepositoryImpl: ChatRepository {
         }
     }
 
-
     override suspend fun addChatroom(chatRoom: ChatRoom) {
         val reference = firebase.getReference("chatroom").child(chatRoom.id).setValue(chatRoom)
         reference.await()
@@ -99,16 +95,16 @@ class ChatRepositoryImpl: ChatRepository {
     }
 
     override fun getMessages(chatId: String): Flow<List<Message>> = callbackFlow {
-        val reqDb = firebase.getReference("messages").child(chatId)
+        val messagesReference = firebase.getReference("messages").child(chatId)
             .orderByChild("createdAt")
 
-        val event = reqDb.addValueEventListener(object : ValueEventListener {
+        val event = messagesReference.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                val list = snapshot.children.mapNotNull { data ->
+                val messages = snapshot.children.mapNotNull { data ->
                     val message = data.getValue(Message::class.java)
                     message?.copy(message = StringCryptoUtil.decrypt(message.message))
                 }
-                trySend(list)
+                trySend(messages)
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -116,7 +112,7 @@ class ChatRepositoryImpl: ChatRepository {
             }
         })
         awaitClose {
-            reqDb.removeEventListener(event)
+            messagesReference.removeEventListener(event)
         }
     }
 
@@ -124,6 +120,8 @@ class ChatRepositoryImpl: ChatRepository {
         val messageEncrypted = message.copy(message = StringCryptoUtil.encrypt(message.message))
         firebase.getReference("messages").child(chatId).push().setValue(messageEncrypted)
     }
+
+    override fun pushReferenceKey(): String = firebase.reference.push().key ?: UUID.randomUUID().toString()
 
     override suspend fun updateChatroom(chatId: String, chatRoom: ChatRoom) {
         val token = reloadFcmToken()
@@ -142,14 +140,10 @@ class ChatRepositoryImpl: ChatRepository {
 
     override suspend fun sendNotification(isBroadcast: Boolean, messageDto: SendMessageDto) {
         try {
-
-            if (isBroadcast) {
-                api.sendMessage(messageDto)
-            } //else api.broadcast(messageDto)
+            if (isBroadcast) api.sendMessage(messageDto)
         } catch (e: Exception) {
             Log.d("sendNotification", e.message.toString())
         }
-
     }
 
     private val api: NetworkApiService = Retrofit.Builder()

@@ -17,7 +17,7 @@ import id.neotica.neoversewear.presentation.components.NeoWChip
 import id.neotica.neoversewear.presentation.components.SpacerItem
 import id.neotica.neoversewear.presentation.navigation.WearScreen
 import id.neotica.ui.components.image.ImageCoil
-import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun WProfileView(navController: NavController, modifier: Modifier = Modifier, viewModel: WProfileViewModel = koinViewModel()) {

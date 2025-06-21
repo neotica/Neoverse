@@ -57,6 +57,7 @@ dependencies {
     implementation(project(":core:ui"))
     implementation(project(":core:core"))
     implementation(project(":feature:world"))
+    implementation(projects.core.routes)
 
     implementation(libs.play.services.wearable)
     implementation(platform(libs.androidx.compose.bom))

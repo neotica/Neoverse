@@ -2,7 +2,8 @@ package id.neotica.world.feat.card
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
-import id.neotica.ui.navigation.RootScreen
+import id.neotica.routes.AlexandriaScreen
+import id.neotica.routes.RootScreen
 import id.neotica.world.utils.chLibrary
 import id.neotica.world.utils.libraryDesc
 
@@ -13,5 +14,6 @@ fun LibraryCard(navController: NavController) {
         desc = libraryDesc,
         fileName = "ch_library",
         url = chLibrary,
+        onLongClick = { navController.navigate(AlexandriaScreen.UserLibraryScreen) }
     ) { navController.navigate(RootScreen.AlexandriaNav) }
 }

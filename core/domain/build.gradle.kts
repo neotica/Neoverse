@@ -6,7 +6,7 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     id("de.mannodermaus.android-junit5") version "1.11.2.0"
 //    id("dev.icerock.moko.kswift") version "0.7.0"
-    id("co.touchlab.skie") version "0.9.5"
+//    id("co.touchlab.skie") version "0.9.5"
 }
 
 /*kswift {
@@ -18,7 +18,7 @@ kotlin {
         compilations.all {
             compileTaskProvider.configure {
                 compilerOptions {
-                    jvmTarget.set(JvmTarget.JVM_11)
+                    jvmTarget.set(JvmTarget.JVM_17)
                 }
             }
         }
@@ -39,10 +39,11 @@ kotlin {
         androidMain.dependencies {
             implementation(libs.androidx.core.ktx)
             implementation(libs.androidx.lifecycle.runtime.ktx)
-            api(libs.kotlinx.serialization.json)
+            implementation(libs.androidx.lifecycle.viewmodel)
+//            api(libs.kotlinx.serialization.json)
 
             // Koin
-            api(libs.koin.androidx.compose)
+            api(libs.bundles.koin)
         }
         androidUnitTest.dependencies {
             implementation(libs.junit.jupiter)
@@ -61,10 +62,10 @@ kotlin {
 
 android {
     namespace = "id.neotica.domain"
-    compileSdk = 35
+    compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
-        minSdk = 26
+        minSdk = libs.versions.android.minSdk.get().toInt()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
@@ -87,7 +88,7 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 }

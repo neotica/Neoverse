@@ -38,13 +38,13 @@ import id.neotica.domain.ApiResult
 import id.neotica.domain.model.World
 import id.neotica.domain.model.market.Hero
 import id.neotica.domain.model.market.Item
+import id.neotica.routes.WorldScreen
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.image.ImageCoil
-import id.neotica.ui.navigation.WorldScreen
 import id.neotica.ui.state.ScreenState
 import id.neotica.ui.theme.DarkPrimaryTransparent2
 import id.neotica.ui.theme.FontSize
-import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun InventoryView(
