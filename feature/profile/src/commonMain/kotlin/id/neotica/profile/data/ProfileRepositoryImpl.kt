@@ -6,6 +6,8 @@ import id.neotica.domain.ApiResult
 import id.neotica.domain.NeoUser
 import id.neotica.domain.model.User
 import id.neotica.ktor.utils.safeApiCall
+import id.neotica.ktor.utils.safeApiCallNew
+import id.neotica.neoverse.getCurrentTimeMillis
 import id.neotica.neoverse.utils.baseUrl
 import id.neotica.profile.data.local.ProfileDao
 import id.neotica.profile.domain.ProfileRepository
@@ -57,6 +59,23 @@ class ProfileRepositoryImpl(
             profileDao.insertProfile(client.toEntity())
             client
         }
+    }
+
+    override suspend fun fillProfile(user: NeoUser): Flow<ApiResult<NeoUser>> = safeApiCallNew<NeoUser> {
+        val userCopy = user.copy(
+            id = user.id,
+            firebaseId = authRepo.getUserId().toString(),
+            createdAt = getCurrentTimeMillis().time,
+            imageUrl = "https://www.pngarts.com/files/6/User-Avatar-in-Suit-PNG.png"
+        )
+        val client = client.post("$baseUrl/user") {
+            headers.append("Content-Type", "application/json")
+            setBody(
+                userCopy
+            )
+        }
+
+        client
     }
 
     override suspend fun getUserProfilePic(): String {

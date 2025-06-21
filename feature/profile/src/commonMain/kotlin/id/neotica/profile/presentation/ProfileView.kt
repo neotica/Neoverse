@@ -73,6 +73,22 @@ fun ProfileView(
     val showLogoutDialog = remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
+        viewModel.profileChannel.collect {
+            when(it) {
+                is ProfileViewModel.ProfileState.OnError -> {
+                    toastMessage.value = it.message
+                    toast.value = true
+                }
+                is ProfileViewModel.ProfileState.OnNavigate -> {
+                    it.route?.let {
+                        navController.navigate(it)
+                    }
+                }
+            }
+        }
+    }
+
+    LaunchedEffect(Unit) {
         if (!viewModel.isLoggedIn()) {
             when(appVariant.appName) {
                 "Neoverse" -> {

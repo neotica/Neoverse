@@ -23,8 +23,6 @@ sealed class Screen {
 
     @Serializable
     data object Setting: Screen()
-    @Serializable
-    data object DumpScreen: Screen()
 
     // Auth Navigation
     @Serializable
@@ -39,6 +37,8 @@ sealed class Screen {
     data object AccountSettingScreen: Screen()
     @Serializable
     data class EditProfileScreen(val profPic: String = "")
+    @Serializable
+    data object InputProfileScreen: Screen()
     @Serializable
     data object VerifyEmailScreen: Screen()
     @Serializable

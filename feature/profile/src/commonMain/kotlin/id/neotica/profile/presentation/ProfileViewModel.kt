@@ -11,11 +11,14 @@ import id.neotica.domain.local.CurrentUserRepository
 import id.neotica.domain.local.FriendDaoRepository
 import id.neotica.domain.model.User
 import id.neotica.profile.domain.ProfileRepository
+import id.neotica.routes.Screen
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 class ProfileViewModel(
@@ -34,6 +37,9 @@ class ProfileViewModel(
 
     private var _profile: MutableStateFlow<NeoUser?> = MutableStateFlow(null)
     val profile = _profile.asStateFlow()
+
+    private var _profileChannel = Channel<ProfileState>()
+    val profileChannel = _profileChannel.receiveAsFlow()
 
     init {
         getUser()
@@ -66,6 +72,14 @@ class ProfileViewModel(
                 }
                 is ApiResult.Error -> {
                     Logger.e("profileVM") { it.errorMessage.toString() }
+                    _profileChannel.send(
+                        ProfileState.OnError(
+                            message = it.errorMessage.toString(),
+                        ),
+                    )
+                    _profileChannel.send(
+                        ProfileState.OnNavigate(Screen.InputProfileScreen)
+                    )
                     _user.value = ApiResult.Error(it.errorMessage.toString())
                 }
                 is ApiResult.Loading -> {}
@@ -104,5 +118,10 @@ class ProfileViewModel(
 
     fun resetPassword(email: String) = viewModelScope.launch {
         authRepo.resetPassword(email)
+    }
+
+    sealed interface ProfileState {
+        data class OnError(val message: String): ProfileState
+        data class OnNavigate(val route: Screen?): ProfileState
     }
 }
