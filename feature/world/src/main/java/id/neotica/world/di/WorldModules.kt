@@ -12,7 +12,7 @@ import id.neotica.world.feat.market.merchant.MerchantViewModel
 import id.neotica.world.feat.mining.MiningViewModel
 import id.neotica.world.feat.superadmin.SuperAdminViewModel
 import id.neotica.world.feat.world.WorldViewModel
-import org.koin.androidx.viewmodel.dsl.viewModelOf
+import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
 val worldModules = module {

@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.compose.compiler)
 }
 
@@ -24,13 +25,6 @@ android {
                 "proguard-rules.pro"
             )
         }
-        release {
-            isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
-        }
     }
     buildFeatures {
         compose = true
@@ -45,38 +39,44 @@ android {
 }
 
 dependencies {
-    implementation(projects.core.core)
+    api(projects.core.core)
 
     // UI
-    api(libs.androidx.navigation.compose)
-    api(libs.androidx.activity.compose)
-    implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.ui)
-    implementation(libs.androidx.ui.graphics)
-    implementation(libs.androidx.ui.tooling.preview)
-    api(libs.androidx.material3)
+//    api(libs.androidx.navigation.compose)
+//    api(libs.androidx.activity.compose)
+//    implementation(libs.androidx.ui)
+//    implementation(libs.androidx.ui.graphics)
+//    implementation(libs.androidx.ui.tooling.preview)
+//    api(libs.androidx.material3)
+    api(compose.runtime)
+    api(compose.foundation)
+    api(compose.material3)
+    api(compose.ui)
+    api(compose.components.resources)
+
     api(libs.haze)
+    api(libs.bundles.compose.multiplatform)
 
     //Adaptive
-    api(libs.androidx.material3.adaptive.navigation.suite)
-    api(libs.androidx.adaptive)
-    api(libs.androidx.adaptive.layout)
-    api(libs.androidx.adaptive.navigation)
+    api(libs.androidx.compose.material3.adaptive)
+//    api(libs.androidx.material3.adaptive.navigation.suite)
 
     //SplashScreen API
     api(libs.androidx.core.splashscreen)
 
-    debugImplementation(libs.androidx.ui.tooling)
+    debugImplementation(libs.compose.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
     // Coil
-    api(libs.coil)
+    api(libs.bundles.coil)
 
     //DroidCore
-    api(libs.droidcore)
-//    api("com.valentinilk.shimmer:compose-shimmer:1.3.1")
+//    api(libs.droidcore)
+    api(libs.droidcore.maven)
 
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
+    //toast
+//    api("network.chaintech:cmptoast:1.0.3")
+
+    testImplementation(libs.bundles.unit.test)
+    androidTestImplementation(libs.bundles.android.unit.test)
 }

@@ -1,5 +1,6 @@
 package id.neotica.neoverse.di
 
+import android.content.Context
 import id.neotica.auth.di.authModules
 import id.neotica.chat.ChatViewModel
 import id.neotica.database.CurrentUserRepositoryImpl
@@ -16,13 +17,9 @@ import id.neotica.domain.remote.FirebaseRepository
 import id.neotica.domain.remote.InventoryRepository
 import id.neotica.domain.remote.MarketRepository
 import id.neotica.domain.remote.MerchantRepository
-import id.neotica.domain.remote.PermissionRepository
 import id.neotica.domain.remote.RavenRepository
 import id.neotica.domain.remote.SuperAdminRepository
 import id.neotica.domain.remote.UserRepository
-import id.neotica.domain.remote.alexandria.BookRepository
-import id.neotica.domain.remote.alexandria.ChapterRepository
-import id.neotica.domain.remote.alexandria.ContentRepository
 import id.neotica.domain.remote.usecase.TokenProvider
 import id.neotica.domain.usecase.BuyHeroUseCase
 import id.neotica.domain.usecase.BuyItemUseCase
@@ -33,7 +30,6 @@ import id.neotica.friend.FriendViewModel
 import id.neotica.home.HomeViewModel
 import id.neotica.home.addchat.AddChatViewModel
 import id.neotica.neoverse.presentation.screen.camerax.CameraPreviewViewModel
-import id.neotica.neoverse.presentation.screen.dump.DumpViewModel
 import id.neotica.neoverse.presentation.screen.main.MainViewModel
 import id.neotica.neoverse.presentation.screen.sharing.SharingViewModel
 import id.neotica.neoverse.utils.connectionchecker.AndroidConnectivityObserver
@@ -46,20 +42,19 @@ import id.neotica.network.FirebaseRepositoryImpl
 import id.neotica.network.InventoryRepositoryImpl
 import id.neotica.network.MarketRepositoryImpl
 import id.neotica.network.MerchantRepositoryImpl
-import id.neotica.network.PermissionRepositoryImpl
 import id.neotica.network.RavenRepositoryImpl
 import id.neotica.network.SuperAdminRepositoryImpl
 import id.neotica.network.UserRepositoryImpl
-import id.neotica.network.alexandria.BookRepositoryImpl
-import id.neotica.network.alexandria.ChapterRepositoryImpl
-import id.neotica.network.alexandria.ContentRepositoryImpl
+import id.neotica.network.micro.ktorModule
 import id.neotica.network.usecase.FirebaseTokenProvider
-import id.neotica.profile.ProfileViewModel
-import id.neotica.ui.R
-import id.neotica.ui.state.AppVariant
-import org.koin.androidx.viewmodel.dsl.viewModelOf
+import id.neotica.profile.presentation.ProfileViewModel
+import id.neotica.rickpository.res.MR
+import id.neotica.state.AppVariant
+import id.neotica.world.di.worldModules
+import org.koin.core.context.startKoin
 import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.singleOf
+import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
 
@@ -76,13 +71,12 @@ val repositoryModules = module {
     singleOf(::FirebaseRepositoryImpl) bind FirebaseRepository::class
     singleOf(::FeedRepositoryImpl) bind FeedRepository::class
     singleOf(::SuperAdminRepositoryImpl) bind SuperAdminRepository::class
-    singleOf(::AndroidConnectivityObserver) bind ConnectivityObserver::class
     singleOf(::RavenRepositoryImpl) bind RavenRepository::class
     singleOf(::AlexandriaAdminRepositoryImpl) bind AlexandriaAdminRepository::class
-    singleOf(::PermissionRepositoryImpl) bind PermissionRepository::class
-    singleOf(::BookRepositoryImpl) bind BookRepository::class
-    singleOf(::ChapterRepositoryImpl) bind ChapterRepository::class
-    singleOf(::ContentRepositoryImpl) bind ContentRepository::class
+}
+
+fun connectivityModule(context: Context) = module {
+    single<ConnectivityObserver> { AndroidConnectivityObserver(context) }
 }
 
 val viewModelModules = module {
@@ -92,7 +86,6 @@ val viewModelModules = module {
     viewModelOf(::AddChatViewModel)
     viewModelOf(::ChatViewModel)
     viewModelOf(::FriendViewModel)
-    viewModelOf(::DumpViewModel)
     viewModelOf(::MainViewModel)
     viewModelOf(::SharingViewModel)
     viewModelOf(::CameraPreviewViewModel)
@@ -111,11 +104,25 @@ val appVariantModule = module {
     single {
         AppVariant(
             appName = "Neoverse",
-            logo = R.drawable.logo_app
+            logo = MR.images.logo_neoverse
         )
     }
 }
 
 val domainModules = module {
 //    factoryOf(::GetUserIdUseCase)
+}
+
+fun initializeKoin(context: Context) = startKoin {
+    modules(
+        ktorModule,
+//        databaseModule(context),
+        connectivityModule(context),
+        repositoryModules,
+        viewModelModules,
+        domainModules,
+        useCaseModules,
+        worldModules,
+        appVariantModule
+    )
 }

@@ -13,8 +13,8 @@ import androidx.navigation.toRoute
 import id.neotica.friend.profile.FriendProfileView
 import id.neotica.friend.FriendView
 import id.neotica.friend.search.SearchUser
-import id.neotica.ui.navigation.RootScreen
-import id.neotica.ui.navigation.Screen
+import id.neotica.routes.RootScreen
+import id.neotica.routes.Screen
 
 fun NavGraphBuilder.friendNavGraph(
     navController: NavController,

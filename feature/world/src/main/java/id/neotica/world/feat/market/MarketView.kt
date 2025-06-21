@@ -55,16 +55,16 @@ import id.neotica.domain.model.World
 import id.neotica.domain.model.market.Hero
 import id.neotica.domain.model.market.Item
 import id.neotica.droidcore.component.carousel.CarouselCard
+import id.neotica.routes.WorldScreen
 import id.neotica.ui.components.BasicScaffold
 import id.neotica.ui.components.image.ImageCoil
 import id.neotica.ui.components.scroll.scrollTopValue
-import id.neotica.ui.navigation.WorldScreen
 import id.neotica.ui.state.ScreenState
 import id.neotica.ui.theme.DarkPrimaryCard
 import id.neotica.ui.theme.DarkPrimaryTransparent2
 import id.neotica.ui.theme.DarkTransparent
 import id.neotica.ui.theme.FontSize
-import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

@@ -36,6 +36,7 @@ android {
 dependencies {
     implementation(projects.core.core)
     implementation(projects.core.ui)
+    implementation(projects.core.routes)
     implementation(projects.core.domain)
     implementation(projects.feature.friend)
     implementation(projects.feature.world)

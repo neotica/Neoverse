@@ -19,7 +19,7 @@ import id.neotica.neoversewear.presentation.components.BasicWearScreen
 import id.neotica.neoversewear.presentation.components.SpacerItem
 import id.neotica.neoversewear.presentation.navigation.WearScreen
 import id.neotica.ui.components.NeoButton
-import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun WLoginView(navController: NavController, modifier: Modifier = Modifier, viewModel: WLoginViewModel = koinViewModel()) {

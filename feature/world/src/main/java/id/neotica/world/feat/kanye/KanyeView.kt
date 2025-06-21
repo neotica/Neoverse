@@ -14,7 +14,7 @@ import androidx.navigation.NavController
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.kanye.KanyeQuotes
 import id.neotica.ui.components.BasicScaffold
-import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun KanyeView(

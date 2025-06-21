@@ -19,5 +19,4 @@ interface UserRepository {
     suspend fun changeUserProfile(user: User)
     suspend fun getUserProfilePic(): String
     fun getWorldDetail(userId: String): Flow<ApiResult<UserData>>
-//    suspend fun changeProfilePictureApi(uri: String): Flow<ApiResult<String>>
 }

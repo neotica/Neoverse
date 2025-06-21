@@ -1,15 +1,67 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     alias(libs.plugins.android.library)
-    alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.composeMultiplatform)
+    alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.moko.resources)
+}
+
+kotlin {
+    androidTarget {
+        compilations.all {
+            compileTaskProvider.configure {
+                compilerOptions {
+                    jvmTarget.set(JvmTarget.JVM_17)
+                }
+            }
+        }
+    }
+
+    listOf(
+        iosX64(),
+        iosArm64(),
+        iosSimulatorArm64()
+    ).forEach {
+        it.binaries.framework {
+            baseName = "profileKit"
+            isStatic = true
+        }
+    }
+
+    sourceSets {
+        androidUnitTest.dependencies {
+            implementation(libs.bundles.unit.test)
+        }
+        androidInstrumentedTest.dependencies {
+            implementation(libs.bundles.android.unit.test)
+        }
+        androidMain.dependencies {
+            implementation(projects.core.core)
+            implementation(projects.core.ui)
+
+        }
+        commonMain.dependencies {
+            api(projects.core.uiShared)
+//            implementation(projects.core.database)
+            api(libs.room.runtime)
+            api(libs.sqlite.bundled)
+            implementation(projects.core.domain)
+            implementation(projects.core.ktor)
+            implementation(projects.core.routes)
+            implementation(projects.feature.auth)
+        }
+    }
 }
 
 android {
     namespace = "id.neotica.profile"
-    compileSdk = 35
+    compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
-        minSdk = 26
+        minSdk = libs.versions.android.minSdk.get().toInt()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
@@ -25,20 +77,7 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
-    kotlinOptions {
-        jvmTarget = "11"
-    }
-}
-
-dependencies {
-    implementation(projects.core.core)
-    implementation(projects.core.ui)
-    implementation(projects.core.domain)
-
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
 }

@@ -9,7 +9,7 @@ import id.neotica.neoversewear.presentation.components.BasicWearScreen
 import id.neotica.neoversewear.presentation.components.NeoWChip
 import id.neotica.neoversewear.presentation.components.SpacerItem
 import id.neotica.neoversewear.presentation.navigation.WearScreen
-import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun WearHomeNavView(navController: NavController, modifier: Modifier = Modifier, viewModel: WHomeViewModel = koinViewModel()) {

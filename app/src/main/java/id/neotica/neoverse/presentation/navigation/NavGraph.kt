@@ -12,9 +12,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import id.neotica.neoverse.presentation.screen.SettingView
 import id.neotica.neoverse.presentation.screen.SplashView
-import id.neotica.neoverse.presentation.screen.dump.DumpView
-import id.neotica.ui.navigation.Screen
-import id.neotica.ui.state.AppVariant
+import id.neotica.routes.Screen
+import id.neotica.state.AppVariant
 import id.neotica.world.worldNavGraph
 import org.koin.compose.getKoin
 
@@ -35,7 +34,6 @@ fun NavGraph(
     ) {
         composable<Screen.Splash> { SplashView(navController = navController) }
         composable<Screen.Setting> { SettingView(paddingValues) }
-        composable<Screen.DumpScreen> { DumpView(navController, paddingValues = paddingValues) }
 
         homeNavGraph(navController, paddingValues)
         profileNavGraph(navController, paddingValues, appVariant)

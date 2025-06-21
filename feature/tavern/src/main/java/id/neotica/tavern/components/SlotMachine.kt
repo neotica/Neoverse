@@ -36,7 +36,7 @@ import id.neotica.ui.components.animation.SlideInto
 import id.neotica.ui.theme.DarkPrimaryTransparent
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinViewModel
 import java.security.SecureRandom
 
 @SuppressLint("StateFlowValueCalledInComposition")

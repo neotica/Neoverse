@@ -6,6 +6,7 @@ import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -13,10 +14,10 @@ import androidx.navigation.navigation
 import id.neotica.alexandria.navigation.alexandriaNavGraph
 import id.neotica.raven.RavenChatView
 import id.neotica.raven.RavenView
-import id.neotica.ui.navigation.RootScreen
-import id.neotica.ui.navigation.WorldScreen
+import id.neotica.routes.RootScreen
+import id.neotica.routes.WorldScreen
+import id.neotica.state.AppVariant
 import id.neotica.tavern.TavernView
-import id.neotica.ui.state.AppVariant
 import id.neotica.world.feat.inventory.InventoryView
 import id.neotica.world.feat.kanye.KanyeView
 import id.neotica.world.feat.leaderboards.LeaderBoardsView
@@ -30,6 +31,7 @@ import id.neotica.world.feat.superadmin.SuperAdminView
 import id.neotica.world.feat.terminal.TerminalView
 import id.neotica.world.feat.world.WorldView
 
+@OptIn(ExperimentalMaterial3Api::class)
 fun NavGraphBuilder.worldNavGraph(
     navController: NavController,
     paddingValues: PaddingValues,

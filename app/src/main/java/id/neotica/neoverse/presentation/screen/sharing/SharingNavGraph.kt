@@ -8,7 +8,7 @@ import androidx.navigation.toRoute
 import id.neotica.chat.ChatView
 import id.neotica.home.addchat.AddChatView
 import id.neotica.neoverse.presentation.screen.sharing.screen.MainSharingScreen
-import id.neotica.ui.navigation.Screen
+import id.neotica.routes.Screen
 
 @Composable
 fun SharingNavGraph(

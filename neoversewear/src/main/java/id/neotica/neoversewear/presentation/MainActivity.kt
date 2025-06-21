@@ -7,7 +7,6 @@ package id.neotica.neoversewear.presentation
 
 import android.Manifest
 import android.app.NotificationManager
-import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -30,6 +29,7 @@ import com.google.firebase.Firebase
 import com.google.firebase.appcheck.appCheck
 import com.google.firebase.appcheck.playintegrity.PlayIntegrityAppCheckProviderFactory
 import com.google.firebase.initialize
+import id.neotica.neoversewear.di.initializeKoin
 import id.neotica.neoversewear.presentation.navigation.WearNavGraph
 import id.neotica.neoversewear.presentation.theme.NeoverseTheme
 
@@ -46,7 +46,8 @@ class MainActivity : ComponentActivity() {
             PlayIntegrityAppCheckProviderFactory.getInstance()
         )
         requestNotificationPermission()
-        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        initializeKoin(this)
+        val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.cancelAll() // Clear all notification when user clicked on it.
 
         setContent {

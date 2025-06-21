@@ -15,7 +15,7 @@ import id.neotica.domain.usecase.BuyHeroUseCase
 import id.neotica.domain.usecase.BuyItemUseCase
 import id.neotica.domain.usecase.GetUserIdUseCase
 import id.neotica.domain.usecase.GetUserNameUseCase
-import id.neotica.ui.navigation.WorldScreen
+import id.neotica.routes.WorldScreen
 import id.neotica.ui.state.ScreenState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

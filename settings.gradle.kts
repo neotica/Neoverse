@@ -1,4 +1,6 @@
+rootProject.name = "Neoverse"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
+
 pluginManagement {
     repositories {
         google {
@@ -6,6 +8,11 @@ pluginManagement {
                 includeGroupByRegex("com\\.android.*")
                 includeGroupByRegex("com\\.google.*")
                 includeGroupByRegex("androidx.*")
+            }
+            mavenContent {
+                includeGroupAndSubgroups("androidx")
+                includeGroupAndSubgroups("com.android")
+                includeGroupAndSubgroups("com.google")
             }
         }
         mavenCentral()
@@ -21,7 +28,10 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Neoverse"
+plugins {
+    id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
+}
+
 include(":app")
 include(":neoversewear")
 include(":core")
@@ -42,4 +52,8 @@ include(":feature:auth")
 include(":feature:chat")
 include(":feature:home")
 include(":feature:friend")
-include(":alexandria-androidApp")
+include(":alexandriaApp")
+include(":core:ui-shared")
+include(":core:routes")
+include(":core:firebase")
+include(":core:ktor")

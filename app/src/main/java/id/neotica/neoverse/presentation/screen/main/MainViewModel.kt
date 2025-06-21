@@ -3,7 +3,6 @@ package id.neotica.neoverse.presentation.screen.main
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import id.neotica.domain.ApiResult
-import id.neotica.domain.remote.AuthRepository
 import id.neotica.domain.remote.SuperAdminRepository
 import id.neotica.domain.observer.ConnectivityObserver
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,7 +12,6 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class MainViewModel(
-    private val authRepo: AuthRepository,
     private val adminRepo: SuperAdminRepository,
     connectionObserver: ConnectivityObserver
 ): ViewModel() {
