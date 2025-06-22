@@ -2,6 +2,7 @@ package id.neotica.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import id.neotica.auth.domain.AuthRepository
 import id.neotica.domain.ApiResult
 import id.neotica.domain.local.CurrentUserRepository
 import id.neotica.domain.local.FriendDaoRepository
@@ -18,6 +19,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
+    private val authRepo: AuthRepository,
     private val userRepo: UserRepository,
     private val chatRepo: ChatRepository,
     private val userDatabase: CurrentUserRepository,
@@ -56,7 +58,7 @@ class HomeViewModel(
 
     private fun currentUserId() = getUserIdUseCase.invoke()
 
-    fun isLoggedIn(): Boolean = currentUserId().isNotEmpty()
+    fun isLoggedIn(): Boolean = authRepo.isLoggedIn()
 
     fun isUserVerified() = userRepo.isUserVerified()
 

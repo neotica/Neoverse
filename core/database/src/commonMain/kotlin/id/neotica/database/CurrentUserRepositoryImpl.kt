@@ -4,6 +4,7 @@ import id.neotica.database.dao.CurrentUserDao
 import id.neotica.domain.model.User
 import id.neotica.domain.local.CurrentUserRepository
 import id.neotica.database.Mapper.toUser
+import id.neotica.database.entity.CurrentUserEntity
 import id.neotica.domain.NeoUser
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
@@ -21,7 +22,14 @@ class CurrentUserRepositoryImpl(
     }
 
     override suspend fun saveNeoUser(user: NeoUser) {
-//        dao.saveCurrentUser()
+        val current = CurrentUserEntity(
+            id = user.id,
+            username = user.username,
+            email = user.email,
+            status = "",
+            imageUrl = user.imageUrl
+        )
+        dao.saveCurrentUser(current)
     }
 
     override suspend fun clearCurrent() = withContext(Dispatchers.IO) {

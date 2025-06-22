@@ -16,7 +16,6 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.google.firebase.Firebase
 import com.google.firebase.appcheck.appCheck
 import com.google.firebase.appcheck.playintegrity.PlayIntegrityAppCheckProviderFactory
-import com.google.firebase.initialize
 import org.koin.compose.KoinContext
 
 class MainActivity : ComponentActivity() {
@@ -27,7 +26,6 @@ class MainActivity : ComponentActivity() {
 
         m3.Default.Lock
 
-        Firebase.initialize(this)
         Firebase.appCheck.installAppCheckProviderFactory(
             PlayIntegrityAppCheckProviderFactory.getInstance()
         )

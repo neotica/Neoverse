@@ -67,7 +67,7 @@ class AuthRepositoryImpl(
             Logger.e { "NeoUser unexpected error: error register" }
             return ApiResult.Error("Unexpected Error: ${e.message}")
         }
-    } //registerResult(username, email, password, auth)
+    }
 
     fun saveUser(user: NeoUser) = safeApiCallNew<NeoUser> {
         client.post("$baseUrl/user") {
@@ -87,7 +87,8 @@ class AuthRepositoryImpl(
     override fun sendEmailVerification() = sendEmailVerificationResult(auth)
     override fun isUserVerified(): Boolean = isUserVerifiedResult(auth)
     override suspend fun getCurrentUserToken(): String = getCurrentUserTokenResult(auth)
-    override fun isLoggedIn() = isLoggedInResult(auth)
+    override fun isLoggedIn() = auth.currentUser != null
+
     override fun getUserId() = auth.currentUser?.uid
 }
 

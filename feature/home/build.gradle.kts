@@ -40,6 +40,7 @@ dependencies {
     implementation(projects.core.domain)
     implementation(projects.feature.friend)
     implementation(projects.feature.world)
+    implementation(projects.feature.auth)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

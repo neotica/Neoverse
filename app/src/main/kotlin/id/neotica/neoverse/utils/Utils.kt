@@ -11,6 +11,7 @@ import android.provider.MediaStore
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.util.concurrent.TimeUnit
+import androidx.core.graphics.scale
 
 fun compressUri(uri: Uri, context: Context): Uri {
     val contentResolver = context.contentResolver
@@ -72,5 +73,5 @@ fun resizeBitmap(bitmap: Bitmap, maxWidth: Int, maxHeight: Int): Bitmap {
         newWidth = (maxHeight * aspectRatio).toInt()
     }
 
-    return Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true)
+    return bitmap.scale(newWidth, newHeight)
 }
