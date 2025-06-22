@@ -22,7 +22,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import id.neotica.domain.ApiResult
+import co.touchlab.kermit.Logger
+import id.neotica.droidcore.component.alert.NeoToast
 import id.neotica.ui.shared.components.BasicScaffold
 import id.neotica.ui.shared.components.NeoButton
 import id.neotica.ui.shared.components.edittext.EditContentBox
@@ -42,14 +43,18 @@ fun EditChapterView(
 
     val isLoadingChapter by viewModel.isLoading.collectAsState()
 
-//    val context = LocalContext.current
-
     val chapterDetail by viewModel.chapterDetail.collectAsState()
     var contentText by remember { mutableStateOf("") }
     val message by viewModel.message.collectAsState()
 
+    var toast = remember { mutableStateOf(false) }
+    var toastMessage by remember { mutableStateOf("") }
+
     LaunchedEffect(message) {
         message?.let {
+            toast.value = true
+            toastMessage = it.toString()
+            Logger.d("EditChapter") { it }
 //            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
         }
     }
@@ -67,23 +72,11 @@ fun EditChapterView(
         navController = navController,
         isLoading = isLoadingChapter,
         trailingIcon = {
-            LaunchedEffect(Unit) {
-                viewModel.chapterDeleted.collect {
-                    when (it) {
-                        is ApiResult.Loading -> {}
-                        is ApiResult.Success -> {
-                            navController.refreshOnBack()
-                            navController.navigateBack()
-//                            Toast.makeText(context, it.data.toString(), Toast.LENGTH_SHORT).show()
-                        }
-                        is ApiResult.Error -> {}
-                    }
-                }
-            }
             Row(
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
+                // TODO: Conflict on first content update. Fix Later.
                 Text(
                     modifier = Modifier.clickable {
                         if (chapterDetail!= null) {
@@ -160,4 +153,5 @@ fun EditChapterView(
             }
         }
     }
+    if (toast.value) NeoToast(toastMessage, toast)
 }

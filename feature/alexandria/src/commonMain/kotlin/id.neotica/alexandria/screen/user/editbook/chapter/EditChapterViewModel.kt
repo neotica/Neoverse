@@ -23,9 +23,6 @@ class EditChapterViewModel(
     savedStateHandle: SavedStateHandle
 ): ViewModel() {
 
-    private var _chapterDeleted = MutableSharedFlow<ApiResult<String>>()
-    val chapterDeleted = _chapterDeleted.asSharedFlow()
-
     private var _isLoading = MutableStateFlow(false)
     val isLoading = _isLoading.asStateFlow()
 
@@ -33,7 +30,7 @@ class EditChapterViewModel(
     var chapterDetail = _chapterDetail.asStateFlow()
 
     private var _message = MutableStateFlow<String?>(null)
-    val message = _message
+    val message = _message.asStateFlow()
 
     private var _navigateBack = MutableSharedFlow<Boolean>()
     val navigateBack = _navigateBack.asSharedFlow()
@@ -112,7 +109,10 @@ class EditChapterViewModel(
             page = page
         ).collect {
             when (it) {
-                is ApiResult.Loading -> _isLoading.value = true
+                is ApiResult.Loading -> {
+                    _message.value = null
+                    _isLoading.value = true
+                }
                 is ApiResult.Success -> {
                     getChapterDetail(page)
                     _isLoading.value = false

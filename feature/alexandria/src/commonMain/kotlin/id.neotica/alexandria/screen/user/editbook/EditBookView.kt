@@ -22,10 +22,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import co.touchlab.kermit.Logger
 import id.neotica.alexandria.components.ChapterItem
 import id.neotica.domain.model.alexandria.Chapter
 import id.neotica.domain.model.alexandria.chapter.ChapterRequest
 import id.neotica.domain.utils.convertLongToTime
+import id.neotica.droidcore.component.alert.NeoToast
 import id.neotica.droidcore.component.textfield.NeoTextField
 import id.neotica.ui.shared.components.BasicScaffold
 import id.neotica.ui.shared.components.LoadingIndicator
@@ -53,6 +55,9 @@ fun EditBookView(
 
     val searchBar = remember { mutableStateOf("") }
 
+    var toast = remember { mutableStateOf(false) }
+    var toastMessage = remember { mutableStateOf("") }
+
 //    val context = LocalContext.current
 
     var chapter by remember {
@@ -75,6 +80,9 @@ fun EditBookView(
 
     LaunchedEffect(Unit) {
         viewModel.message.collect {
+            toast.value = true
+            toastMessage.value = it
+            Logger.d("EditBookView") { it }
 //            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
         }
     }
@@ -90,6 +98,8 @@ fun EditBookView(
         chapterList.value?.title ?: "",
         isLoading = isLoading,
         fullScreen = true,
+        enableActionBar = true,
+        navController = navController,
         trailingIcon = {
             DotsMenuDropDown(
                 item = listOf(
@@ -213,4 +223,5 @@ fun EditBookView(
             }
         }
     }
+    if (toast.value) NeoToast(toastMessage.toString(), toast)
 }

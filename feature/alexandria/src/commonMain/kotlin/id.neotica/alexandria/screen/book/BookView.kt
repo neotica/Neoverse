@@ -152,7 +152,9 @@ fun BookView(
     }
 
     BasicScaffold(
-        chapterList.value?.title ?: "",
+        topBarTitle = chapterList.value?.title ?: "",
+        enableActionBar = true,
+        navController = navController,
         fullScreen = true
     ) {
         if (isLoading) LoadingIndicator()
