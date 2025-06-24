@@ -21,6 +21,7 @@ import id.neotica.ui.shared.theme.TransparentText40
 @Composable
 fun EditContentBox(
     contentText: String,
+    showKeyboard: Boolean,
     onContentChange: (String) -> Unit
 ) {
     Column(
@@ -30,9 +31,11 @@ fun EditContentBox(
         val focusRequester = remember { FocusRequester() }
         val keyboardController = LocalSoftwareKeyboardController.current
 
-        LaunchedEffect(Unit) {
-            focusRequester.requestFocus()
-            keyboardController?.show()
+        LaunchedEffect(showKeyboard) {
+            if (showKeyboard) {
+                focusRequester.requestFocus()
+                keyboardController?.show()
+            }
         }
 
         OutlinedTextField(

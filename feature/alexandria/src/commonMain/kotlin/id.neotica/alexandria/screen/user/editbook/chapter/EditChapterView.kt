@@ -76,7 +76,6 @@ fun EditChapterView(
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // TODO: Conflict on first content update. Fix Later.
                 Text(
                     modifier = Modifier.clickable {
                         if (chapterDetail!= null) {
@@ -119,6 +118,7 @@ fun EditChapterView(
                     item {
                         EditContentBox(
                             contentText = contentText,
+                            showKeyboard = if (chapterDetail != null) true else false,
                             onContentChange = { contentText = it }
                         )
                     }

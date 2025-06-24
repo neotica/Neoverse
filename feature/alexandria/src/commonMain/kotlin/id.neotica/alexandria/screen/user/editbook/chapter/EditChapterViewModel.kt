@@ -92,6 +92,7 @@ class EditChapterViewModel(
                 is ApiResult.Loading -> _isLoading.value = true
                 is ApiResult.Success -> {
                     _isLoading.value = false
+                    getChapterDetail()
                     _message.value = "Successfully created content."
                 }
                 is ApiResult.Error -> {
