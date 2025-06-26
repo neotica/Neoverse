@@ -67,7 +67,6 @@ fun ProfileView(
     var toast = remember { mutableStateOf(false) }
     var toastMessage = remember { mutableStateOf("") }
     val profile by viewModel.profile.collectAsState()
-    var link by remember { mutableStateOf("") }
     val uriHandler = LocalUriHandler.current
 
     val haptic = LocalHapticFeedback.current
