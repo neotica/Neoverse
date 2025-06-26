@@ -27,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -35,6 +36,8 @@ import id.neotica.domain.ApiResult
 import id.neotica.droidcore.component.alert.NeoAlert
 import id.neotica.droidcore.component.alert.NeoToast
 import id.neotica.droidcore.component.icon.AlertEnum
+import id.neotica.neoverse.utils.privacyPolicy
+import id.neotica.neoverse.utils.termsOfService
 import id.neotica.rickpository.res.MR
 import id.neotica.routes.RootScreen
 import id.neotica.routes.Screen
@@ -64,6 +67,8 @@ fun ProfileView(
     var toast = remember { mutableStateOf(false) }
     var toastMessage = remember { mutableStateOf("") }
     val profile by viewModel.profile.collectAsState()
+    var link by remember { mutableStateOf("") }
+    val uriHandler = LocalUriHandler.current
 
     val haptic = LocalHapticFeedback.current
 
@@ -260,12 +265,12 @@ fun ProfileView(
                             MenuItem(
                                 "Privacy Policy",
                             ) {
-                                navController.navigate(Screen.PrivacyPolicyScreen)
+                                uriHandler.openUri(privacyPolicy)
                             }
                             MenuItem(
                                 "Terms of Service",
                             ) {
-                                navController.navigate(Screen.TermsOfServiceScreen)
+                                uriHandler.openUri(termsOfService)
                             }
 
                             Spacer(Modifier.padding(16.dp))

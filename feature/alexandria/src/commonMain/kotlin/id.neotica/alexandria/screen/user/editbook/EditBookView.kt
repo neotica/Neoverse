@@ -58,8 +58,6 @@ fun EditBookView(
     var toast = remember { mutableStateOf(false) }
     var toastMessage = remember { mutableStateOf("") }
 
-//    val context = LocalContext.current
-
     var chapter by remember {
         mutableStateOf(
             Chapter(
