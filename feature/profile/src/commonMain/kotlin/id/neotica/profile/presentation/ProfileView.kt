@@ -32,7 +32,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import dev.icerock.moko.resources.compose.painterResource
-import id.neotica.domain.ApiResult
 import id.neotica.droidcore.component.alert.NeoAlert
 import id.neotica.droidcore.component.alert.NeoToast
 import id.neotica.droidcore.component.icon.AlertEnum
@@ -62,10 +61,9 @@ fun ProfileView(
     appVariant: AppVariant,
     viewModel: ProfileViewModel = koinViewModel()
 ) {
-//    var user by remember { mutableStateOf<User?>(null) }
     val isLoading by remember { mutableStateOf(false) }
-    var toast = remember { mutableStateOf(false) }
-    var toastMessage = remember { mutableStateOf("") }
+    val toast = remember { mutableStateOf(false) }
+    val toastMessage = remember { mutableStateOf("") }
     val profile by viewModel.profile.collectAsState()
     val uriHandler = LocalUriHandler.current
 
@@ -112,17 +110,6 @@ fun ProfileView(
                     }
                 }
                 else -> {}
-            }
-
-        } else {
-            viewModel.currentUser.collect { result ->
-//                Log.d("profileView", "result $result")
-                when(result) {
-                    is ApiResult.Loading -> { /*isUserEmpty = true*/ }
-                    is ApiResult.Success -> { /*user = result.data*/ }
-                    is ApiResult.Error -> { /*isUserEmpty = true*/ }
-                    null -> { /*isUserEmpty = true*/ }
-                }
             }
         }
     }
@@ -286,5 +273,5 @@ fun ProfileView(
             }
         }
     }
-    if (toast.value) NeoToast(toastMessage.value .toString(), toast)
+    if (toast.value) NeoToast(toastMessage.value, toast)
 }

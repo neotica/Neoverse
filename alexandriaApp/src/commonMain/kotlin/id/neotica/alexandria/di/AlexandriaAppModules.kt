@@ -33,12 +33,6 @@ fun initializeKoin(config: KoinAppDeclaration? = null) {
     }
 }
 
-private val databaseModule = module {
-
-}
-
-//fun getProfileDatabase(db: MainDatabase) = db.
-
 val repositoryModules = module {
     singleOf(::FriendDaoRepositoryImpl) bind FriendDaoRepository::class
     singleOf(::CurrentUserRepositoryImpl) bind CurrentUserRepository::class

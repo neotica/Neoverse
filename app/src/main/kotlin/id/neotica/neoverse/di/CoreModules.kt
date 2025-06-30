@@ -10,7 +10,6 @@ import id.neotica.database.provideDatabaseModule
 import id.neotica.domain.local.CurrentUserRepository
 import id.neotica.domain.local.FriendDaoRepository
 import id.neotica.domain.observer.ConnectivityObserver
-import id.neotica.domain.remote.AlexandriaAdminRepository
 import id.neotica.domain.remote.AuraRepository
 import id.neotica.domain.remote.AuthRepository
 import id.neotica.domain.remote.ChatRepository
@@ -35,7 +34,6 @@ import id.neotica.neoverse.presentation.screen.camerax.CameraPreviewViewModel
 import id.neotica.neoverse.presentation.screen.main.MainViewModel
 import id.neotica.neoverse.presentation.screen.sharing.SharingViewModel
 import id.neotica.neoverse.utils.connectionchecker.AndroidConnectivityObserver
-import id.neotica.network.AlexandriaAdminRepositoryImpl
 import id.neotica.network.AuraRepositoryImpl
 import id.neotica.network.AuthRepositoryImpl
 import id.neotica.network.ChatRepositoryImpl
@@ -49,7 +47,7 @@ import id.neotica.network.SuperAdminRepositoryImpl
 import id.neotica.network.UserRepositoryImpl
 import id.neotica.network.micro.ktorModule
 import id.neotica.network.usecase.FirebaseTokenProvider
-import id.neotica.profile.presentation.ProfileViewModel
+import id.neotica.profile.di.profileModules
 import id.neotica.rickpository.res.MR
 import id.neotica.state.AppVariant
 import id.neotica.world.di.worldModules
@@ -76,7 +74,6 @@ val repositoryModules = module {
     singleOf(::FeedRepositoryImpl) bind FeedRepository::class
     singleOf(::SuperAdminRepositoryImpl) bind SuperAdminRepository::class
     singleOf(::RavenRepositoryImpl) bind RavenRepository::class
-    singleOf(::AlexandriaAdminRepositoryImpl) bind AlexandriaAdminRepository::class
 }
 
 fun connectivityModule(context: Context) = module {
@@ -85,7 +82,7 @@ fun connectivityModule(context: Context) = module {
 
 val viewModelModules = module {
     includes(authModules)
-    viewModelOf(::ProfileViewModel)
+    includes(profileModules)
     viewModelOf(::HomeViewModel)
     viewModelOf(::AddChatViewModel)
     viewModelOf(::ChatViewModel)
@@ -113,10 +110,6 @@ val appVariantModule = module {
     }
 }
 
-val domainModules = module {
-//    factoryOf(::GetUserIdUseCase)
-}
-
 fun initializeKoin(context: Context, config: KoinAppDeclaration? = null) = startKoin {
     config?.invoke(this)
     modules(
@@ -126,7 +119,6 @@ fun initializeKoin(context: Context, config: KoinAppDeclaration? = null) = start
         connectivityModule(context),
         repositoryModules,
         viewModelModules,
-        domainModules,
         useCaseModules,
         worldModules,
         appVariantModule
