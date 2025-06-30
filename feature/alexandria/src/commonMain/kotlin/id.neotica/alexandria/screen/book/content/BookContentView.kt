@@ -64,6 +64,8 @@ fun BookContentView(
     var openPageSelector by remember { mutableStateOf(false) }
     val nestedBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
 
+    val isLoading by viewModel.isLoading.collectAsState()
+
     val isMoreLoadingVisible by remember {
         derivedStateOf {
             listState.layoutInfo.visibleItemsInfo
@@ -95,7 +97,7 @@ fun BookContentView(
             .distinctUntilChanged()
             .collectLatest { page ->
                 if (viewModel.currentPage.value != page) {
-                    viewModel.setCurrentPage(page) // Create a setter if needed
+                    viewModel.setCurrentPage(page)
                 }
             }
     }
@@ -164,6 +166,7 @@ fun BookContentView(
                 }
                 if (viewModel.hasNext) {
                     item(key = "loading") {
+                        //TODO: remove this from using "loading", to make it appear using isLoading, but still maintains the logic for fetching the next page
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -207,11 +210,8 @@ fun BookContentView(
                                     delay(100) // small delay to avoid tight loop
                                 }
 
-//                                val updatedSortedKeys = viewModel.paginatedContent.toSortedMap().keys.toList()
                                 val sortedKey = viewModel.paginatedContent.values.map { it.page }
                                 val targetIndex = sortedKey.indexOf(prevPage).coerceAtLeast(0)
-
-//                                Log.d("ScrollToPrevPage", "Scrolling to index $targetIndex for page $prevPage")
 
                                 listState.animateScrollToItem(targetIndex)
                             }
@@ -225,7 +225,6 @@ fun BookContentView(
                             scope.launch {
                                 if (!viewModel.paginatedContent.containsKey(nextPage)) {
                                     viewModel.loadPage(nextPage)
-
                                     // Wait until the next page is available in the map
                                     while (!viewModel.paginatedContent.containsKey(nextPage)) {
                                         delay(100)
@@ -233,11 +232,8 @@ fun BookContentView(
                                 }
 
                                 // Now get the correct index after map is updated
-//                                val sortedPages = viewModel.paginatedContent.toSortedMap().keys.toList()
                                 val sortedKey = viewModel.paginatedContent.values.map { it.page }
                                 val targetIndex = sortedKey.indexOf(nextPage).coerceAtLeast(0)
-
-//                                Log.d("ScrollToNextPage", "Scrolling to index $targetIndex for page $nextPage")
 
                                 listState.animateScrollToItem(targetIndex)
                             }
@@ -247,6 +243,7 @@ fun BookContentView(
                 }
             }
         }
+        if (isLoading && !isMoreLoadingVisible) LoadingIndicator()
     }
 }
 

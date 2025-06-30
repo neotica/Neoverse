@@ -31,6 +31,10 @@ class BookContentViewModel(
     val currentPage: StateFlow<Int> = _currentPage.asStateFlow()
 
     private var loading by mutableStateOf(false)
+
+    private var _isLoading = MutableStateFlow(false)
+    val isLoading = _isLoading.asStateFlow()
+
     var hasNext by mutableStateOf(false)
     var paginatedContent by mutableStateOf<Map<Int, PaginatedContent>>(emptyMap())
 
@@ -47,8 +51,10 @@ class BookContentViewModel(
 
     fun getPage(refresh: Boolean = true) = viewModelScope.launch {
         if (loading) return@launch
+        if (_isLoading.value) return@launch
         if (refresh) {
             loading = true
+            _isLoading.value = true
             _currentPage.value = 1
             paginatedContent = emptyMap()
         }
@@ -59,6 +65,7 @@ class BookContentViewModel(
 
     fun loadPage(page: Int) = viewModelScope.launch {
         loading = true
+        _isLoading.value = true
         contentRepo.getContents(args.chapterId, page).collect {
             when (it) {
                 is ApiResult.Success -> {
@@ -66,10 +73,17 @@ class BookContentViewModel(
                     hasNext = it.data!!.hasNext
                     _currentPage.value = page
                     loading = false
+                    _isLoading.value = false
                     totalPage = it.data!!.totalPages
                 }
-                is ApiResult.Error -> { loading = false }
-                is ApiResult.Loading -> { loading = true }
+                is ApiResult.Error -> {
+                    loading = false
+                    _isLoading.value = false
+                }
+                is ApiResult.Loading -> {
+                    loading = true
+                    _isLoading.value = true
+                }
             }
         }
     }
