@@ -33,7 +33,6 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             api(projects.core.uiShared)
-            implementation(projects.core.domain)
             implementation(projects.core.routes)
             api(projects.core.firebase)
             implementation(projects.core.ktor)

@@ -37,9 +37,9 @@ kotlin {
 
     sourceSets {
         androidMain.dependencies {
-            implementation(libs.androidx.core.ktx)
-            implementation(libs.androidx.lifecycle.runtime.ktx)
-            implementation(libs.androidx.lifecycle.viewmodel)
+//            implementation(libs.androidx.core.ktx)
+//            implementation(libs.androidx.lifecycle.runtime.ktx)
+//            implementation(libs.androidx.lifecycle.viewmodel)
 //            api(libs.kotlinx.serialization.json)
 
             // Koin

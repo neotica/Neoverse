@@ -22,7 +22,6 @@ import coil3.compose.SubcomposeAsyncImage
 import coil3.request.CachePolicy
 import coil3.request.ImageRequest
 import id.neotica.ui.shared.components.LoadingIndicator
-import org.koin.core.context.KoinContext
 
 //hey
 @Composable

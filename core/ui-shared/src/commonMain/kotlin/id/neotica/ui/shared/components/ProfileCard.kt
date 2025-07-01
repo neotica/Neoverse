@@ -21,13 +21,12 @@ import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import dev.icerock.moko.resources.compose.painterResource
+import id.neotica.rickpository.res.MR
 import id.neotica.ui.shared.components.image.ImageCoil
 import id.neotica.ui.shared.theme.DarkPrimaryTransparent
 import id.neotica.ui.shared.theme.DarkPrimaryTransparent80
 import id.neotica.ui.shared.theme.TransparentText40
-import neoverse.core.ui_shared.generated.resources.Res
-import neoverse.core.ui_shared.generated.resources.three_dots
-import org.jetbrains.compose.resources.painterResource
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -104,7 +103,7 @@ fun ProfileCard(
                 },
             ) {
                 Icon(
-                    painter = painterResource(Res.drawable.three_dots),
+                    painter = painterResource(MR.images.three_dots),
                     contentDescription = "",
                     tint = TransparentText40
                 )

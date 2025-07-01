@@ -36,11 +36,11 @@ kotlin {
         }
         commonMain.dependencies {
             //put your multiplatform dependencies here
-            implementation(libs.kotlin.stdlib)
+//            implementation(libs.kotlin.stdlib)
             api(libs.bundles.koin)
             api(libs.kotlinx.serialization.json)
             api(libs.coroutines.core)
-            api("co.touchlab:kermit:2.0.4")
+            api(libs.kermit)
         }
         iosMain.dependencies {}
         commonTest.dependencies {
