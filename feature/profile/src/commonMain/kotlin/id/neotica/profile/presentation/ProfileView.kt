@@ -83,7 +83,11 @@ fun ProfileView(
                 }
                 is ProfileViewModel.ProfileState.OnNavigate -> {
                     it.route?.let {
-                        navController.navigate(it)
+                        navController.navigate(it) {
+                            popUpTo(RootScreen.ProfileNav) {
+                                inclusive = true
+                            }
+                        }
                     }
                 }
             }

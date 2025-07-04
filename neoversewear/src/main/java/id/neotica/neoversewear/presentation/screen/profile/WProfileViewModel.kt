@@ -34,8 +34,8 @@ class WProfileViewModel(
 
     fun logout() = viewModelScope.launch {
         authRepo.logout()
-        currentUserDatabase.clearCurrent()
-        friendDatabase.clearFriends()
+//        currentUserDatabase.clearCurrent()
+//        friendDatabase.clearFriends()
     }
 
     fun deleteAccount() = viewModelScope.launch {

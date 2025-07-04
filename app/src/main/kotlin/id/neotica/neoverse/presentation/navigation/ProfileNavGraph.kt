@@ -16,6 +16,7 @@ import id.neotica.profile.presentation.privacypolicy.PrivacyPolicyView
 import id.neotica.profile.presentation.ProfileView
 import id.neotica.profile.presentation.deleteaccount.DeleteAccountView
 import id.neotica.profile.presentation.editprofile.EditProfileView
+import id.neotica.profile.presentation.inputprofile.InputProfileView
 import id.neotica.profile.presentation.resetpassword.ResetPasswordView
 import id.neotica.profile.presentation.termsofservice.TermsOfServiceView
 import id.neotica.routes.RootScreen
@@ -87,6 +88,12 @@ fun NavGraphBuilder.profileNavGraph(
             exitTransition = { ExitTransition.None }
         ) {
             ResetPasswordView(navController)
+        }
+        composable <Screen.InputProfileScreen>(
+            enterTransition = { EnterTransition.None },
+            exitTransition = { ExitTransition.None }
+        ){
+            InputProfileView(navController, paddingValues)
         }
     }
 }

@@ -99,6 +99,7 @@ fun MainView() {
                 Screen.ResetPassword,
                 Screen.Chat(),
                 Screen.EditProfileScreen(),
+                Screen.InputProfileScreen
             )
 
             val worldScreen = setOf(
@@ -124,8 +125,6 @@ fun MainView() {
             val bottomBarExcludedRoutes = screenSet + worldScreen + alexandriaSet
 
             val includeRoute = navBackStackEntry.showExcept(bottomBarExcludedRoutes)
-
-//        Log.d("currentScreen", navBackStackEntry?.destination?.route.toString())
 
             val mapAdaptive = AdaptiveState.from(currentWindowAdaptiveInfo())
             val customNavSuiteType = when (mapAdaptive) {

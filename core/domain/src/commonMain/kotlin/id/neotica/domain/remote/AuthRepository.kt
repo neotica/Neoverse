@@ -7,7 +7,7 @@ interface AuthRepository {
     suspend fun register(username: String, email: String, password: String): ApiResult<String>
     suspend fun isUsernameExist(username: String): ApiResult<Boolean>
     fun deleteAccount()
-    fun logout()
+    suspend fun logout()
     fun resetPassword(email: String)
     fun sendEmailVerification()
 }

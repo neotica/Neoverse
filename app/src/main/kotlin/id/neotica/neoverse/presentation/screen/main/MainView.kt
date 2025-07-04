@@ -89,6 +89,7 @@ fun MainView() {
             Screen.ResetPassword,
             Screen.Chat(),
             Screen.EditProfileScreen(),
+            Screen.InputProfileScreen
         )
 
         val worldScreen = setOf(

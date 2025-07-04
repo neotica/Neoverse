@@ -7,6 +7,10 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
 }
 
+kotlin {
+    jvmToolchain(11)
+}
+
 android {
     namespace = "id.neotica.neoverse"
     compileSdk = 36
@@ -15,8 +19,8 @@ android {
         applicationId = "id.neotica.neoverse"
         minSdk = 26
         targetSdk = 36
-        versionCode = 64
-        versionName = "1.1.1"
+        versionCode = 66
+        versionName = "1.2.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -46,9 +50,6 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
-    }
-    kotlinOptions {
-        jvmTarget = "11"
     }
     buildFeatures {
         compose = true

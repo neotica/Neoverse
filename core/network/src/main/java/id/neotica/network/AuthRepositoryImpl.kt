@@ -10,11 +10,16 @@ import com.google.firebase.database.database
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import id.neotica.domain.ApiResult
+import id.neotica.domain.local.CurrentUserRepository
+import id.neotica.domain.local.FriendDaoRepository
 import id.neotica.domain.model.User
 import id.neotica.domain.remote.AuthRepository
 import kotlinx.coroutines.tasks.await
 
-class AuthRepositoryImpl: AuthRepository {
+class AuthRepositoryImpl(
+    val currentUserRepo: CurrentUserRepository,
+    val friendRepo: FriendDaoRepository
+): AuthRepository {
     private lateinit var auth: FirebaseAuth
     private lateinit var firestore: FirebaseFirestore
     private val firebase = Firebase.database
@@ -102,7 +107,7 @@ class AuthRepositoryImpl: AuthRepository {
             val isUserExist = checkUser[0].username == username
             ApiResult.Success(isUserExist)
         } catch (e: Exception) {
-            ApiResult.Success(false)
+            ApiResult.Error(e.message)
         }
     }
 
@@ -110,7 +115,9 @@ class AuthRepositoryImpl: AuthRepository {
         auth.currentUser?.sendEmailVerification()
     }
 
-    override fun logout() {
+    override suspend fun logout() {
+        currentUserRepo.clearCurrent()
+        friendRepo.clearFriends()
         auth = FirebaseAuth.getInstance()
         auth.signOut()
     }
