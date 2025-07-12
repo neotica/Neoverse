@@ -1,11 +1,9 @@
 package id.neotica.domain.model.alexandria
 
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class Book(
-    @SerialName("uuid")
     val id: String,
     val title: String,
     val author: String = "",
@@ -18,9 +16,6 @@ data class Book(
     //val warning: List<AdministratorWarning>? = null,
     val chapters: List<Chapter>? = null
 )
-
-// limit all book per user to 20, but if user want to extend should make appeal first.
-// limit chapter by 5 per day. or user could appeal.
 
 @Serializable
 data class AdministratorWarning(

@@ -5,8 +5,8 @@ import id.neotica.auth.domain.GetCurrentUserTokenUseCase
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.alexandria.Chapter
 import id.neotica.domain.model.alexandria.chapter.ChapterRequest
+import id.neotica.domain.url.AlexandriaUrl
 import id.neotica.ktor.utils.safeApiCall
-import id.neotica.neoverse.utils.baseUrl
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.delete
@@ -21,12 +21,12 @@ class ChapterRepositoryImpl(
     private val getCurrentUserTokenUseCase: GetCurrentUserTokenUseCase
 ): ChapterRepository {
     override fun getChapters(bookId: String): Flow<ApiResult<List<Chapter>>> = safeApiCall {
-        client.get("${baseUrl}/alexandria/chapters").body<List<Chapter>>()
+        client.get(AlexandriaUrl.CHAPTER).body<List<Chapter>>()
     }
 
     override fun createChapter(chapter: ChapterRequest): Flow<ApiResult<Chapter>> = safeApiCall {
         val tokenResult = getCurrentUserTokenUseCase.invoke()
-        client.post("${baseUrl}/alexandria/chapters") {
+        client.post(AlexandriaUrl.CHAPTER) {
             headers {
                 append("Content-Type", "application/json")
                 append("Authorization", "Bearer $tokenResult")
@@ -37,7 +37,7 @@ class ChapterRepositoryImpl(
 
     override fun deleteChapter(chapterId: Int): Flow<ApiResult<String>> = safeApiCall {
         val tokenResult = getCurrentUserTokenUseCase.invoke()
-        client.delete("${baseUrl}/alexandria/chapters/$chapterId") {
+        client.delete("${AlexandriaUrl.CHAPTER}/$chapterId") {
             headers {
                 append("Content-Type", "application/json")
                 append("Authorization", "Bearer $tokenResult")

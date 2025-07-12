@@ -34,14 +34,12 @@ class BookViewModel(
 
     private fun getChapters() = viewModelScope.launch {
         bookRepo.getBook(args.id).collect {
-//            Log.d("spirit", it.toString())
             _chapters.value = it
         }
     }
 
     fun getChapterDetail(chapterId: Int, page: Int? = 1) = viewModelScope.launch {
         contentRepo.getContents(chapterId, page).collect {
-//            Log.d("spirit", it.toString())
             _chapterDetail.value = it
         }
     }

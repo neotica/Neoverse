@@ -6,6 +6,7 @@ import id.neotica.domain.ApiResult
 import id.neotica.domain.model.alexandria.Book
 import id.neotica.domain.model.alexandria.book.BookRequest
 import id.neotica.domain.pagination.Pagination
+import id.neotica.domain.url.AlexandriaUrl
 import id.neotica.ktor.utils.safeApiCall
 import id.neotica.ktor.utils.safeApiCallNew
 import id.neotica.neoverse.utils.baseUrl
@@ -24,13 +25,13 @@ class BookRepositoryImpl(
     private val getCurrentUserTokenUseCase: GetCurrentUserTokenUseCase
 ): BookRepository {
     override fun getBooks(): Flow<ApiResult<Pagination<Book>>> = safeApiCall {
-        client.get("${baseUrl}/alexandria"){
+        client.get(AlexandriaUrl.HOME){
         }.body<Pagination<Book>>()
     }
 
     override fun addBook(book: BookRequest): Flow<ApiResult<Book>> = safeApiCallNew<Book> {
         val tokenResult = getCurrentUserTokenUseCase.invoke()
-        client.post("$baseUrl/alexandria") {
+        client.post(AlexandriaUrl.HOME) {
             headers {
                 append("Content-Type", "application/json")
                 append("Authorization", "Bearer $tokenResult")
@@ -39,6 +40,7 @@ class BookRepositoryImpl(
         }
     }
 
+    //fix this one
     override fun getUserBooks(username: String): Flow<ApiResult<List<Book>>> = safeApiCallNew<List<Book>> {
         val tokenResult = getCurrentUserTokenUseCase.invoke()
 
@@ -51,12 +53,12 @@ class BookRepositoryImpl(
     }
 
     override fun getBook(bookId: String): Flow<ApiResult<Book>> = safeApiCall {
-        client.get("${baseUrl}/alexandria/$bookId").body<Book>()
+        client.get("${AlexandriaUrl.HOME}/$bookId").body<Book>()
     }
 
     override fun editBook(id: String, book: BookRequest): Flow<ApiResult<Book>> = safeApiCall {
         val tokenResult = getCurrentUserTokenUseCase.invoke()
-        client.put("${baseUrl}/alexandria/${id}"){
+        client.put("${AlexandriaUrl.HOME}/${id}"){
             headers {
                 append("Authorization", "Bearer $tokenResult")
                 append("Content-Type", "application/json")
@@ -67,7 +69,7 @@ class BookRepositoryImpl(
 
     override fun deleteBook(bookId: String): Flow<ApiResult<String>> = safeApiCall {
         val tokenResult = getCurrentUserTokenUseCase.invoke()
-        client.delete("${baseUrl}/alexandria/$bookId") {
+        client.delete("${AlexandriaUrl.HOME}/$bookId") {
             headers {
                 append("Content-Type", "application/json")
                 append("Authorization", "Bearer $tokenResult")
