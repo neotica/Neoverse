@@ -1,7 +1,6 @@
 package id.neotica.home.updateapp
 
 import android.content.Intent
-import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -13,13 +12,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import id.neotica.ui.R
-import id.neotica.ui.components.BasicScaffold
-import id.neotica.ui.components.NeoButton
-import id.neotica.ui.theme.FontSize
+import dev.icerock.moko.resources.compose.painterResource
+import id.neotica.rickpository.res.MR
+import id.neotica.ui.shared.components.BasicScaffold
+import id.neotica.ui.shared.components.NeoButton
+import id.neotica.ui.shared.theme.FontSize
+import androidx.core.net.toUri
 
 @Composable
 fun UpdateAppView() {
@@ -35,9 +35,7 @@ fun UpdateAppView() {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Image(
-                painter = painterResource(
-                    id = R.drawable.logo_app
-                ),
+                painter = painterResource(MR.images.logo_neoverse),
                 contentScale = ContentScale.Crop,
                 contentDescription = "")
             Text(
@@ -56,7 +54,8 @@ fun UpdateAppView() {
             NeoButton(
                 text = "Update Neoverse"
             ) {
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=id.neotica.neoverse"))
+                val intent = Intent(Intent.ACTION_VIEW,
+                    "https://play.google.com/store/apps/details?id=id.neotica.neoverse".toUri())
                 context.startActivity(intent)
             }
         }

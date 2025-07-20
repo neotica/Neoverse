@@ -6,10 +6,10 @@ plugins {
 
 android {
     namespace = "id.neotica.home"
-    compileSdk = 35
+    compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
-        minSdk = 26
+        minSdk = libs.versions.android.minSdk.get().toInt()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
@@ -35,7 +35,7 @@ android {
 
 dependencies {
     implementation(projects.core.core)
-    implementation(projects.core.ui)
+    implementation(projects.core.uiShared)
     implementation(projects.core.routes)
     implementation(projects.core.domain)
     implementation(projects.feature.friend)

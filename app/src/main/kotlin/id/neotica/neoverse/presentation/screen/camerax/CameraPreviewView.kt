@@ -23,10 +23,10 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.navigation.NavController
 import id.neotica.camera.R
 import id.neotica.domain.ApiResult
-import id.neotica.ui.components.BasicScaffold
-import id.neotica.ui.components.LoadingIndicator
-import id.neotica.ui.navigation.navigateBack
-import id.neotica.ui.theme.NeoPadding
+import id.neotica.ui.shared.components.BasicScaffold
+import id.neotica.ui.shared.components.LoadingIndicator
+import id.neotica.ui.shared.navigation.navigateBack
+import id.neotica.ui.shared.theme.NeoPadding
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable

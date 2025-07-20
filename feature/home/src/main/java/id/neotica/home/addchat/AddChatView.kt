@@ -53,11 +53,11 @@ import id.neotica.friend.profile.FriendProfileView
 import id.neotica.routes.RootScreen
 import id.neotica.routes.Screen
 import id.neotica.ui.R
-import id.neotica.ui.components.BasicScaffold
-import id.neotica.ui.components.ProfileCard
-import id.neotica.ui.components.droidcore.NeoSearchBar
-import id.neotica.ui.theme.DarkBackground
-import id.neotica.ui.theme.DarkPrimaryTransparent80
+import id.neotica.ui.shared.components.BasicScaffold
+import id.neotica.ui.shared.components.ProfileCard
+import id.neotica.ui.shared.components.droidcore.NeoSearchBar
+import id.neotica.ui.shared.theme.DarkBackground
+import id.neotica.ui.shared.theme.DarkPrimaryTransparent80
 import id.neotica.world.feat.card.RavenCard
 import kotlinx.coroutines.delay
 import org.koin.compose.viewmodel.koinViewModel

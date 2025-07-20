@@ -39,7 +39,6 @@ kotlin {
         }
         androidMain.dependencies {
             implementation(projects.core.core)
-            implementation(projects.core.ui)
         }
         androidUnitTest.dependencies {
             implementation(libs.bundles.unit.test)

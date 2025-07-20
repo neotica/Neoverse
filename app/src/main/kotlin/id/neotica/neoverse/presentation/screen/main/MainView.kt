@@ -1,6 +1,5 @@
 package id.neotica.neoverse.presentation.screen.main
 
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
@@ -10,9 +9,6 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.systemBars
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemColors
@@ -23,28 +19,28 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.vectorResource
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import co.touchlab.kermit.Logger
+import dev.icerock.moko.resources.compose.painterResource
 import id.neotica.neoverse.presentation.navigation.NavGraph
-import id.neotica.ui.R
-import id.neotica.ui.components.navigation.CustomNavBar
-import id.neotica.ui.components.navigation.CustomNavigationSuiteScaffold
-import id.neotica.ui.components.navigation.NavigationSuiteScaffoldDefaults
-import id.neotica.ui.components.navigation.NavigationSuiteType
+import id.neotica.rickpository.res.MR
 import id.neotica.routes.AlexandriaScreen
 import id.neotica.routes.RootScreen
 import id.neotica.routes.Screen
 import id.neotica.routes.WorldScreen
-import id.neotica.ui.navigation.NavigationItem
-import id.neotica.ui.navigation.showExcept
-import id.neotica.ui.state.AdaptiveState
-import id.neotica.ui.theme.DarkBackground
-import id.neotica.ui.theme.DarkPrimary
-import id.neotica.ui.theme.NeoverseTheme
+import id.neotica.ui.shared.components.navigation.CustomNavBar
+import id.neotica.ui.shared.components.navigation.CustomNavigationSuiteScaffold
+import id.neotica.ui.shared.components.navigation.NavigationSuiteScaffoldDefaults
+import id.neotica.ui.shared.components.navigation.NavigationSuiteType
+import id.neotica.ui.shared.navigation.NavigationItem
+import id.neotica.ui.shared.navigation.showExcept
+import id.neotica.ui.shared.state.AdaptiveState
+import id.neotica.ui.shared.theme.DarkBackground
+import id.neotica.ui.shared.theme.DarkPrimary
+import id.neotica.ui.shared.theme.NeoverseTheme
 
 @Composable
 fun MainView() {
@@ -57,17 +53,17 @@ fun MainView() {
         val navItems = listOf(
             NavigationItem(
                 title = "Home",
-                icon = Icons.Default.Home,
+                icon = painterResource(MR.images.ic_home),
                 screen = RootScreen.HomeNav
             ),
             NavigationItem(
                 title = "World",
-                icon = ImageVector.vectorResource(R.drawable.ic_world),
+                icon = painterResource(MR.images.ic_world),
                 screen = RootScreen.WorldNav
             ),
             NavigationItem(
                 title = "Profile",
-                icon = Icons.Default.AccountCircle,
+                icon = painterResource(MR.images.ic_profile),
                 screen = RootScreen.ProfileNav
             )
         )
@@ -115,7 +111,7 @@ fun MainView() {
         val bottomBarExcludedRoutes = screenSet + worldScreen + alexandriaSet
 
         val includeRoute = navBackStackEntry.showExcept(bottomBarExcludedRoutes)
-        Log.d("currentScreen", navBackStackEntry?.destination?.route.toString())
+        Logger.d("currentRoute") { navBackStackEntry?.destination?.route.toString() }
 
         val mapAdaptive = AdaptiveState.from(currentWindowAdaptiveInfo())
         val customNavSuiteType = when (mapAdaptive) {
@@ -167,7 +163,7 @@ fun MainView() {
                                             }
                                         },
                                         icon = {
-                                            Icon(imageVector = it.icon, contentDescription = it.title)
+                                            Icon(painter = it.icon, contentDescription = it.title)
                                         },
                                         label = { Text(it.title) },
                                     )
@@ -207,7 +203,7 @@ fun MainView() {
                                     }
                                 },
                                 icon = {
-                                    Icon(imageVector = navMap.icon, contentDescription = navMap.title)
+                                    Icon(painter = navMap.icon, contentDescription = navMap.title)
                                 },
                                 label = {
                                     Text(navMap.title)

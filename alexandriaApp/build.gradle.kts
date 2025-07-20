@@ -33,7 +33,6 @@ kotlin {
 
         androidMain.dependencies {
             implementation(projects.core.network)
-            implementation(projects.core.ui)
         }
         androidUnitTest.dependencies {
             implementation(libs.bundles.unit.test)
@@ -73,7 +72,7 @@ android {
     defaultConfig {
         applicationId = "id.neotica.alexandria"
         minSdk = libs.versions.android.minSdk.get().toInt()
-        targetSdk = 36
+        targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1
         versionName = "1.0"
 

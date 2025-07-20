@@ -33,7 +33,6 @@ kotlin {
 
     sourceSets {
         androidMain.dependencies {
-//            implementation(projects.core.ui)
 //            implementation(libs.ktor.client.android)
         }
         androidUnitTest.dependencies {
@@ -54,10 +53,10 @@ kotlin {
 
 android {
     namespace = "id.neotica.alexandria"
-    compileSdk = 35
+    compileSdk = libs.versions.android.targetSdk.get().toInt()
 
     defaultConfig {
-        minSdk = 26
+        minSdk = libs.versions.android.minSdk.get().toInt()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")

@@ -39,11 +39,11 @@ class NeoPadding {
             @Composable
             get() = WindowInsets.ime.asPaddingValues()
 
-//        @OptIn(ExperimentalLayoutApi::class)
-//        val topBarImePadding : Dp
-////            @Composable
-////            get() = if (WindowInsets.isImeVisible && imePaddingValue.calculateBottomPadding() > statusBarPadding) imePaddingValue.calculateBottomPadding() - statusBarPadding + 24.dp
-////                else 0.dp
+        @OptIn(ExperimentalLayoutApi::class)
+        val topBarImePadding : Dp
+            @Composable
+            get() = if (imePaddingValue.calculateBottomPadding() > statusBarPadding) imePaddingValue.calculateBottomPadding() - statusBarPadding + 24.dp
+                else 0.dp
     }
 
     @Composable

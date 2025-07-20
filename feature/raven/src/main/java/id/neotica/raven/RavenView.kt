@@ -14,8 +14,8 @@ import androidx.navigation.NavController
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.raven.Raven
 import id.neotica.droidcore.component.textfield.NeoTextField
-import id.neotica.ui.components.BasicScaffold
-import id.neotica.ui.components.NeoButton
+import id.neotica.ui.shared.components.BasicScaffold
+import id.neotica.ui.shared.components.NeoButton
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable

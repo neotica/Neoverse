@@ -12,7 +12,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import id.neotica.routes.RootScreen
 import id.neotica.routes.Screen
-import id.neotica.ui.theme.DarkBackground
+import id.neotica.ui.shared.theme.DarkBackground
 
 @Composable
 fun SplashView(navController: NavController) {
