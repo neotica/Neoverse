@@ -28,17 +28,17 @@ import id.neotica.ui.shared.navigation.onRefresh
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun UserLibraryView(
+fun AuthorView(
     navController: NavController,
-    viewModel: UserLibraryViewModel = koinViewModel()
+    viewModel: AuthorViewModel = koinViewModel()
 ) {
     val isLoading by viewModel.loading.collectAsState()
     val books by viewModel.books.collectAsState()
     var reload by remember { mutableStateOf(false) }
     val message by viewModel.message.collectAsState()
 
-    var toast = remember { mutableStateOf(false) }
-    var toastMessage = remember { mutableStateOf("") }
+    val toast = remember { mutableStateOf(false) }
+    val toastMessage = remember { mutableStateOf("") }
 
     LaunchedEffect(Unit) {
         navController.onRefresh { viewModel.getBooks() }
@@ -74,9 +74,9 @@ fun UserLibraryView(
                 }
             }
             item {
-                books
-                    .sortedBy { it.createdAt }
-                    .forEach {
+                books?.content
+                    ?.sortedBy { it.createdAt }
+                    ?.forEach {
                     BookItem(
                         title = it.title,
                         route = AlexandriaScreen.EditBookScreen(id = it.id),

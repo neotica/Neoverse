@@ -41,15 +41,24 @@ class BookRepositoryImpl(
     }
 
     //fix this one
-    override fun getUserBooks(username: String): Flow<ApiResult<List<Book>>> = safeApiCallNew<List<Book>> {
+    override fun getUserBooks(username: String): Flow<ApiResult<Pagination<Book>>> = safeApiCall {
         val tokenResult = getCurrentUserTokenUseCase.invoke()
 
-        client.get("${baseUrl}/alexandria/book"){
+        //the og one
+        /*client.get("${baseUrl}/books/book"){
             headers {
                 append("Authorization", "Bearer $tokenResult")
             }
             url { parameters.append("author", username) }
-        }
+        }*/
+
+        // temporary replacement
+        client.get("${baseUrl}/books/author/$username"){
+            headers {
+                append("Authorization", "Bearer $tokenResult")
+            }
+            url { parameters.append("author", username) }
+        }.body()
     }
 
     override fun getBook(bookId: String): Flow<ApiResult<Book>> = safeApiCall {

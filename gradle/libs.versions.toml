@@ -16,13 +16,13 @@ junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
 #serialization
-serialization = "1.8.0"
+serialization = "1.9.0"
 #splashscreen
 coreSplashscreen = "1.0.1"
 #cameraX
 cameraxVersion = "1.4.1"
 #koin
-koinMultiplatform = "4.0.1"
+koinMultiplatform = "4.1.0"
 #compose
 activityCompose = "1.10.1"
 composeBom = "2025.05.00"

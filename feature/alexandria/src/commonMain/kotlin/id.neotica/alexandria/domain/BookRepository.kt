@@ -12,5 +12,5 @@ interface BookRepository {
     fun addBook(book: BookRequest): Flow<ApiResult<Book>>
     fun editBook(id: String, book: BookRequest): Flow<ApiResult<Book>>
     fun deleteBook(bookId: String): Flow<ApiResult<String>>
-    fun getUserBooks(username: String): Flow<ApiResult<List<Book>>>
+    fun getUserBooks(username: String): Flow<ApiResult<Pagination<Book>>>
 }

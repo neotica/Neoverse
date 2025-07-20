@@ -40,7 +40,7 @@ kotlin {
         }
         androidMain.dependencies {
             implementation(projects.core.core)
-            implementation(projects.core.ui)
+//            implementation(projects.core.ui)
 
         }
         commonMain.dependencies {

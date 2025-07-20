@@ -19,9 +19,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavController
-import id.neotica.ui.components.BasicScaffold
-import id.neotica.ui.components.LoadingIndicator
-import id.neotica.ui.theme.NeoPadding
+import id.neotica.ui.shared.components.BasicScaffold
+import id.neotica.ui.shared.components.LoadingIndicator
+import id.neotica.ui.shared.theme.NeoPadding
 import androidx.core.net.toUri
 import id.neotica.neoverse.utils.termsOfService
 

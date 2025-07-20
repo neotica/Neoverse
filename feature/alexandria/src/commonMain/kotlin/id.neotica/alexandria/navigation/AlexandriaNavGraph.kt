@@ -13,7 +13,7 @@ import id.neotica.alexandria.screen.admin.warning.detail.WarningDetailView
 import id.neotica.alexandria.screen.book.BookView
 import id.neotica.alexandria.screen.book.content.BookContentView
 import id.neotica.alexandria.screen.library.LibraryView
-import id.neotica.alexandria.screen.user.UserLibraryView
+import id.neotica.alexandria.screen.user.AuthorView
 import id.neotica.alexandria.screen.user.addbook.AddBookView
 import id.neotica.alexandria.screen.user.editbook.EditBookView
 import id.neotica.alexandria.screen.user.editbook.chapter.EditChapterView
@@ -39,7 +39,7 @@ fun NavGraphBuilder.alexandriaNavGraph(
             BookView(navController)
         }
         composable<AlexandriaScreen.UserLibraryScreen> {
-            UserLibraryView(navController)
+            AuthorView(navController)
         }
         composable<AlexandriaScreen.AddBookScreen> {
             AddBookView(navController)

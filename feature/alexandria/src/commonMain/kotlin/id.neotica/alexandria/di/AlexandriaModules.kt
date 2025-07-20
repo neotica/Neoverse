@@ -18,7 +18,7 @@ import id.neotica.alexandria.screen.admin.warning.WarningHubViewModel
 import id.neotica.alexandria.screen.book.BookViewModel
 import id.neotica.alexandria.screen.book.content.BookContentViewModel
 import id.neotica.alexandria.screen.library.LibraryViewModel
-import id.neotica.alexandria.screen.user.UserLibraryViewModel
+import id.neotica.alexandria.screen.user.AuthorViewModel
 import id.neotica.alexandria.screen.user.addbook.AddBookViewModel
 import id.neotica.alexandria.screen.user.editbook.EditBookViewModel
 import id.neotica.alexandria.screen.user.editbook.chapter.EditChapterViewModel
@@ -30,7 +30,7 @@ import org.koin.dsl.module
 val alexandriaModules = module {
     viewModelOf(::LibraryViewModel)
     viewModelOf(::BookViewModel)
-    viewModelOf(::UserLibraryViewModel)
+    viewModelOf(::AuthorViewModel)
     viewModelOf(::EditBookViewModel)
     viewModelOf(::EditChapterViewModel)
     viewModelOf(::BookContentViewModel)
