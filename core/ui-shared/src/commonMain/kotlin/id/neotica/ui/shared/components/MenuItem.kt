@@ -25,7 +25,7 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.dp
 import dev.icerock.moko.resources.compose.painterResource
 import id.neotica.droidcore.component.alert.NeoToast
-import id.neotica.rickpository.res.MR
+import id.neotica.res.MR
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -36,8 +36,8 @@ fun MenuItem(
     iconTint: Color = LocalContentColor.current,
     onClick: () -> Unit = {},
 ) {
-    var toast = remember { mutableStateOf(false) }
-    var toastMessage = remember { mutableStateOf("") }
+    val toast = remember { mutableStateOf(false) }
+    val toastMessage = remember { mutableStateOf("") }
     val haptic = LocalHapticFeedback.current
 
     Row (
@@ -77,5 +77,5 @@ fun MenuItem(
             tint = White
         )
     }
-    if (toast.value) NeoToast(toastMessage.value .toString(), toast)
+    if (toast.value) NeoToast(toastMessage.value, toast)
 }

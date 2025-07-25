@@ -10,7 +10,7 @@ import id.neotica.domain.local.FriendDaoRepository
 import id.neotica.domain.usecase.GetUserNameUseCase
 import id.neotica.ktor.ktorModule
 import id.neotica.profile.di.profileModules
-import id.neotica.rickpository.res.MR
+import id.neotica.res.MR
 import id.neotica.state.AppVariant
 import org.koin.core.context.startKoin
 import org.koin.core.module.dsl.singleOf

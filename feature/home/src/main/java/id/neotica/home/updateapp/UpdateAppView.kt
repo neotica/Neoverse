@@ -15,7 +15,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import dev.icerock.moko.resources.compose.painterResource
-import id.neotica.rickpository.res.MR
+import id.neotica.res.MR
 import id.neotica.ui.shared.components.BasicScaffold
 import id.neotica.ui.shared.components.NeoButton
 import id.neotica.ui.shared.theme.FontSize

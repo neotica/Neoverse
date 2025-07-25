@@ -35,7 +35,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import dev.icerock.moko.resources.compose.painterResource
-import id.neotica.rickpository.res.MR
+import id.neotica.res.MR
 import id.neotica.ui.shared.theme.FontSize
 import id.neotica.ui.shared.theme.Transparent
 import id.neotica.ui.shared.theme.TransparentText40

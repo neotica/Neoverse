@@ -27,7 +27,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import dev.icerock.moko.resources.compose.painterResource
 import id.neotica.alexandria.presentation.navigation.NavGraph
-import id.neotica.rickpository.res.MR
+import id.neotica.res.MR
 import id.neotica.routes.AlexandriaScreen
 import id.neotica.routes.RootScreen
 import id.neotica.routes.Screen

@@ -26,7 +26,7 @@ import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.navigation.NavController
 import dev.icerock.moko.resources.compose.painterResource
-import id.neotica.rickpository.res.MR
+import id.neotica.res.MR
 import id.neotica.ui.shared.navigation.navigateBack
 import id.neotica.ui.shared.theme.DarkBackgroundV2
 import id.neotica.ui.shared.theme.DarkPrimaryTransparent80

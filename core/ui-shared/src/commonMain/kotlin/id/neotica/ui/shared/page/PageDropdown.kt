@@ -21,7 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 import dev.icerock.moko.resources.compose.painterResource
-import id.neotica.rickpository.res.MR
+import id.neotica.res.MR
 import id.neotica.ui.shared.components.DropdownItem
 import id.neotica.ui.shared.theme.DarkPrimary
 import id.neotica.ui.shared.theme.DarkPrimaryTransparent2

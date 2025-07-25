@@ -24,8 +24,9 @@ import androidx.navigation.NavController
 import dev.icerock.moko.resources.compose.painterResource
 import id.neotica.domain.ApiResult
 import id.neotica.domain.model.alexandria.Book
+import id.neotica.droidcore.component.alert.NeoToast
 import id.neotica.droidcore.component.textfield.NeoTextField
-import id.neotica.rickpository.res.MR
+import id.neotica.res.MR
 import id.neotica.ui.shared.components.BasicScaffold
 import id.neotica.ui.shared.components.DropdownItem
 import id.neotica.ui.shared.components.LoadingIndicatorBool
@@ -41,13 +42,14 @@ fun AddBookView(
     viewModel: AddBookViewModel = koinViewModel()
 ) {
     var isLoading by remember { mutableStateOf(false) }
-//    val context = LocalContext.current
 
-    var bookState by remember { mutableStateOf<Book?>(null) }
+    val toast = remember { mutableStateOf(false) }
+    val toastMessage = remember { mutableStateOf("") }
 
     LaunchedEffect(Unit) {
         viewModel.toastMessage.collect {
-//            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+            toast.value = true
+            toastMessage.value = it
         }
     }
 
@@ -58,7 +60,6 @@ fun AddBookView(
     LaunchedEffect(Unit) {
         viewModel.book.collect {
             if (it is ApiResult.Success) {
-                bookState = it.data
                 navController.navigate(AlexandriaScreen.EditBookScreen(it.data!!.id)) {
                     popUpTo(AlexandriaScreen.AddBookScreen) { inclusive = true }
                 }
@@ -129,4 +130,5 @@ fun AddBookView(
             }
         }
     }
+    if (toast.value) NeoToast(toastMessage.toString(), toast)
 }

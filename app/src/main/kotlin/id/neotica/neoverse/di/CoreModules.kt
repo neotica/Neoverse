@@ -48,7 +48,7 @@ import id.neotica.network.UserRepositoryImpl
 import id.neotica.network.micro.ktorModule
 import id.neotica.network.usecase.FirebaseTokenProvider
 import id.neotica.profile.di.profileModules
-import id.neotica.rickpository.res.MR
+import id.neotica.res.MR
 import id.neotica.state.AppVariant
 import id.neotica.world.di.worldModules
 import org.koin.core.context.startKoin

@@ -14,7 +14,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.White
 import dev.icerock.moko.resources.compose.painterResource
-import id.neotica.rickpository.res.MR.images.three_dots
+import id.neotica.res.MR.images.three_dots
 import id.neotica.ui.shared.components.DropdownItem
 import id.neotica.ui.shared.theme.DarkPrimaryTransparent2
 

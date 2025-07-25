@@ -13,7 +13,6 @@
 		87C572DE2E016F54004425ED /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = 87C572DD2E016F54004425ED /* FirebaseDatabase */; };
 		87C572E02E016F54004425ED /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 87C572DF2E016F54004425ED /* FirebaseFirestore */; };
 		87C572E22E016F54004425ED /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 87C572E12E016F54004425ED /* FirebaseStorage */; };
-		BBBBBBBBBBBBBBBBBBBBBB /* AlexandriaApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAAAAAAAAAAAAAAAAAAAAAAA /* AlexandriaApp.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -81,7 +80,6 @@
 				87C572DA2E016F54004425ED /* FirebaseAuth in Frameworks */,
 				87C572DC2E016F54004425ED /* FirebaseCore in Frameworks */,
 				87C572E22E016F54004425ED /* FirebaseStorage in Frameworks */,
-				BBBBBBBBBBBBBBBBBBBBBB /* AlexandriaApp.framework in Frameworks */,
 				87C572E02E016F54004425ED /* FirebaseFirestore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -132,8 +130,8 @@
 			buildConfigurationList = 871FE50D2E014586002822BE /* Build configuration list for PBXNativeTarget "alexandria" */;
 			buildPhases = (
 				871FE4E42E014584002822BE /* Sources */,
-				871FE5162E014660002822BE /* Compile Kotlin Framework */,
 				87C572E82E01863B004425ED /* Moko Resource */,
+				871FE5162E014660002822BE /* Compile Kotlin Framework */,
 				871FE4E52E014584002822BE /* Frameworks */,
 				871FE4E62E014584002822BE /* Resources */,
 			);
@@ -291,7 +289,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if [ \"YES\" = \"$OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED\" ]; then\n  echo \"Skipping Gradle build task invocation due to OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED environment variable set to \\\"YES\\\"\"\n  exit 0\nfi\ncd \"$SRCROOT/..\"\n./gradlew :alexandriaApp:embedAndSignAppleFrameworkForXcode --stacktrace\n";
+			shellScript = "if [ \"YES\" = \"$OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED\" ]; then\n  echo \"Skipping Gradle build task invocation due to OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED environment variable set to \\\"YES\\\"\"\n  exit 0\nfi\ncd \"$SRCROOT/..\"\n./gradlew :hadall:embedAndSignAppleFrameworkForXcode --stacktrace\n";
 		};
 		87C572E82E01863B004425ED /* Moko Resource */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -475,14 +473,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = alexandria/alexandria.entitlements;
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"alexandria/Preview Content\"";
-				DEVELOPMENT_TEAM = A2759U79AC;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
-				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../alexandriaApp/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)";
+				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../hadall/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = alexandria/Info.plist;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
@@ -502,6 +500,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = id.neotica.alexandria;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -518,14 +517,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = alexandria/alexandria.entitlements;
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"alexandria/Preview Content\"";
-				DEVELOPMENT_TEAM = A2759U79AC;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
-				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../alexandriaApp/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)";
+				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../hadall/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = alexandria/Info.plist;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
@@ -545,6 +544,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = id.neotica.alexandria;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;

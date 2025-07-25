@@ -27,7 +27,7 @@ koinMultiplatform = "4.1.0"
 activityCompose = "1.10.1"
 composeBom = "2025.05.00"
 navigationCompose = "2.9.0-beta01"
-composeMultiplatform = "1.8.1"
+composeMultiplatform = "1.8.2"
 jetbrainsComposeAdaptive = "1.1.1"
 #firebase
 firebaseBom = "33.6.0"
@@ -55,7 +55,7 @@ sqlite = "2.5.1"
 #ktor
 ktor = "3.1.2"
 #moko
-moko = "0.24.5"
+moko = "0.25.0"
 #haze
 haze = "1.2.0"
 runner = "1.5.2"

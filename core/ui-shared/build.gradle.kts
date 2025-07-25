@@ -26,12 +26,12 @@ kotlin {
         iosSimulatorArm64()
     ).forEach {
         it.binaries.framework {
-            baseName = "shared"
+            baseName = "ComposeUIKit"
             isStatic = true
         }
     }
     multiplatformResources {
-        resourcesPackage.set("id.neotica.rickpository.res")
+        resourcesPackage.set("id.neotica.res")
     }
     sourceSets {
 
@@ -77,10 +77,10 @@ kotlin {
 
 android {
     namespace = "id.neotica.ui"
-    compileSdk = 35
+    compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
-        minSdk = 26
+        minSdk = libs.versions.android.minSdk.get().toInt()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")

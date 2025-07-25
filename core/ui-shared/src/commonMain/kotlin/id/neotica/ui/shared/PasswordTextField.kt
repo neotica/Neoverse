@@ -28,7 +28,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import dev.icerock.moko.resources.compose.painterResource
-import id.neotica.rickpository.res.MR
+import id.neotica.res.MR
 
 @Composable
 fun PasswordTextField(

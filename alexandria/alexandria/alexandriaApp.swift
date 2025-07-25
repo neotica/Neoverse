@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import AlexandriaApp
+import Hadall
 import Firebase
 import FirebaseCore
 import FirebaseFirestore

@@ -6,12 +6,11 @@
 //
 
 import SwiftUI
-import AlexandriaApp
+import Hadall
 
 struct ComposeView: UIViewControllerRepresentable {
     func makeUIViewController(context: Context) -> UIViewController {
         MainViewControllerKt.MainViewController()
-//        MainViewControllerKt.TestView()
     }
 
     func updateUIViewController(_ uiViewController: UIViewController, context: Context) {}
@@ -19,6 +18,7 @@ struct ComposeView: UIViewControllerRepresentable {
 
 struct ContentView: View {
     var body: some View {
+//        Text("fsd")
         ComposeView().ignoresSafeArea(.all)
     }
 }

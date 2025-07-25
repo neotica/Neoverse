@@ -30,7 +30,7 @@ import androidx.navigation.NavController
 import dev.icerock.moko.resources.compose.painterResource
 import id.neotica.profile.presentation.ProfileViewModel
 import id.neotica.profile.utils.compressUri
-import id.neotica.rickpository.res.MR
+import id.neotica.res.MR
 import id.neotica.routes.RootScreen
 import id.neotica.routes.Screen
 import id.neotica.ui.shared.components.BasicScaffold
@@ -117,7 +117,6 @@ actual fun EditProfileView(
                 ImageCoil(
                     size = 100.dp,
                     url = args.profPic,
-                    context = LocalContext.current,
                     modifier = Modifier.align(Alignment.Center),
                     round = true
                 )

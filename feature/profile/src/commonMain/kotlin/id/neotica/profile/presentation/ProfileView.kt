@@ -37,7 +37,7 @@ import id.neotica.droidcore.component.alert.NeoToast
 import id.neotica.droidcore.component.icon.AlertEnum
 import id.neotica.neoverse.utils.privacyPolicy
 import id.neotica.neoverse.utils.termsOfService
-import id.neotica.rickpository.res.MR
+import id.neotica.res.MR
 import id.neotica.routes.RootScreen
 import id.neotica.routes.Screen
 import id.neotica.state.AppVariant
