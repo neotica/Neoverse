@@ -40,8 +40,8 @@ fun LibraryView(
     val books by viewModel.books.collectAsState()
     val errorMessage by viewModel.errorMessage.collectAsState()
 
-    var toast = remember { mutableStateOf(false) }
-    var toastMessage = remember { mutableStateOf("") }
+    val toast = remember { mutableStateOf(false) }
+    val toastMessage = remember { mutableStateOf("") }
 
     LaunchedEffect(Unit) {
         if (viewModel.isNotLogged.value) {
@@ -62,7 +62,7 @@ fun LibraryView(
     }
 
     BasicScaffold(
-        "The Library of Thoth",
+        "Hadall Archive",
         navController = navController,
         enableActionBar = when {
             appVariant.appName == "Alexandria" -> false
@@ -72,9 +72,7 @@ fun LibraryView(
             DotsMenuDropDown(
                 item = listOf(
                     DotsMenuItem("Author's Page") {
-                        viewModel.getPermission {
-                            navController.navigate(AlexandriaScreen.UserLibraryScreen)
-                        }
+                        navController.navigate(AlexandriaScreen.UserLibraryScreen)
                     },
                     DotsMenuItem("Admin Page") {
                         viewModel.getPermission {
@@ -108,5 +106,5 @@ fun LibraryView(
             .fillMaxSize()
             .clickable(enabled = true) { },
     ) { LoadingIndicator() }
-    if (toast.value) NeoToast(toastMessage.value .toString(), toast)
+    if (toast.value) NeoToast(toastMessage.value, toast)
 }

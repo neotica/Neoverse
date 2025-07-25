@@ -6,9 +6,9 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
-import id.neotica.ui.theme.DarkBackground
-import id.neotica.ui.theme.DarkPrimary
-import id.neotica.ui.theme.NegativePrimary
+import id.neotica.ui.shared.theme.DarkBackground
+import id.neotica.ui.shared.theme.DarkPrimary
+import id.neotica.ui.shared.theme.NegativePrimary
 
 private val DarkColorScheme = darkColorScheme(
     primary = DarkPrimary,
