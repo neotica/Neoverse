@@ -27,7 +27,6 @@ struct RealtimeFirebaseView: View {
         
         Text("Hello, World!")
         Button("Sign In") {
-            viewModel.login(email: "tarakhg@gmail.com", password: "kingkong")
         }
         
         Button("Sign Out") {

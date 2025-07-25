@@ -20,9 +20,6 @@ struct LoginView: View {
         } else {
             Text("Hello, World!")
             Button("Sign In") {
-                viewModel.login(email: "tarakhg@gmail.com", password: "kingkong") {
-                    isSignInClicked = true
-                }
             }
             Button("Sign Out") {
                 viewModel.logout()
