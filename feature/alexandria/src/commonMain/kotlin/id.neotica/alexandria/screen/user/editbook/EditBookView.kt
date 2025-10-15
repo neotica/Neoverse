@@ -22,7 +22,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import co.touchlab.kermit.Logger
 import id.neotica.alexandria.components.ChapterItem
 import id.neotica.domain.model.alexandria.Chapter
 import id.neotica.domain.model.alexandria.chapter.ChapterRequest
@@ -55,8 +54,8 @@ fun EditBookView(
 
     val searchBar = remember { mutableStateOf("") }
 
-    var toast = remember { mutableStateOf(false) }
-    var toastMessage = remember { mutableStateOf("") }
+    val toast = remember { mutableStateOf(false) }
+    val toastMessage = remember { mutableStateOf("") }
 
     var chapter by remember {
         mutableStateOf(
@@ -80,8 +79,6 @@ fun EditBookView(
         viewModel.message.collect {
             toast.value = true
             toastMessage.value = it
-            Logger.d("EditBookView") { it }
-//            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
         }
     }
 

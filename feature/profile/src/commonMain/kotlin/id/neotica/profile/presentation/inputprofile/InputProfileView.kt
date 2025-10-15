@@ -71,5 +71,5 @@ fun InputProfileView(
         }
     }
 
-    if (toast.value) NeoToast(toastMessage.value .toString(), toast)
+    if (toast.value) NeoToast(toastMessage.value, toast)
 }

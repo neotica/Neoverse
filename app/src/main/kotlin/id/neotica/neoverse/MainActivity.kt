@@ -16,7 +16,6 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.google.firebase.Firebase
 import com.google.firebase.appcheck.appCheck
 import com.google.firebase.appcheck.playintegrity.PlayIntegrityAppCheckProviderFactory
-import org.koin.compose.KoinContext
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,9 +37,7 @@ class MainActivity : ComponentActivity() {
         m3.Default.Lock
 
         setContent {
-            KoinContext {
-                NeoverseApp()
-            }
+            NeoverseApp()
         }
     }
 
