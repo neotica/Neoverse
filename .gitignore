@@ -10,6 +10,7 @@
 /.idea/assetWizardSettings.xml
 .DS_Store
 /build
+**/build/
 /captures
 .externalNativeBuild
 .cxx
@@ -23,6 +24,7 @@ local.properties
 /app/release
 #wear
 /neoversewear/build
+**/build/
 /neoversewear/release
 #xcode
 /iosApp/Neoverse/GoogleService-Info.plist

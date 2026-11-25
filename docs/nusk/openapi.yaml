@@ -1,0 +1,423 @@
+openapi: 3.0.3
+info:
+  title: Nusk Chat API
+  description: |
+    1:1 text chat service for Neoverse.
+
+    Nusk is a resource server. Clients obtain access and refresh tokens from
+    the Neoserver auth service at `https://dev.neotica.id` and send the access
+    token as a bearer token to every Nusk request.
+
+    The WebSocket endpoint is documented here for discoverability but the full
+    protocol is described in `BACKEND.md`.
+  version: 1.0.0
+servers:
+  - url: https://dev.neotica.id/nusk
+    description: Dev (public, proxy strips /nusk)
+  - url: http://localhost:8080
+    description: Local (service binds /v1 directly)
+security:
+  - bearerAuth: []
+paths:
+  /v1/health:
+    get:
+      summary: Health check
+      operationId: health
+      security: []
+      responses:
+        "200":
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthResponse"
+
+  /v1/conversations:
+    get:
+      summary: List the caller's conversations
+      operationId: listConversations
+      responses:
+        "200":
+          description: Conversations ordered by updatedAt descending
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConversationListResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+    post:
+      summary: Create or return a 1:1 conversation by exact username
+      operationId: createConversation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateConversationRequest"
+      responses:
+        "200":
+          description: Existing or newly created conversation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Conversation"
+        "400":
+          description: Invalid username or self-conversation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          description: Username not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+
+  /v1/conversations/{conversationId}/messages:
+    parameters:
+      - name: conversationId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      summary: List messages in a conversation
+      operationId: listMessages
+      parameters:
+        - name: before
+          in: query
+          required: false
+          description: Return messages older than this message UUID.
+          schema:
+            type: string
+            format: uuid
+        - name: after
+          in: query
+          required: false
+          description: Return messages newer than this message UUID.
+          schema:
+            type: string
+            format: uuid
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 50
+      responses:
+        "200":
+          description: Message page
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessagePage"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          description: Caller is not a member of the conversation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Conversation not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    post:
+      summary: Send a message
+      operationId: sendMessage
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SendMessageRequest"
+      responses:
+        "200":
+          description: Duplicate clientMessageId; returns the original message
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChatMessage"
+        "201":
+          description: Message was created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChatMessage"
+        "400":
+          description: Empty or oversized message, or malformed clientMessageId
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          description: Caller is not a member of the conversation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Conversation not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+
+  /v1/conversations/{conversationId}:
+    parameters:
+      - name: conversationId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    delete:
+      summary: Hide a conversation for the caller
+      operationId: deleteConversation
+      responses:
+        "204":
+          description: Conversation hidden for the caller
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          description: Caller is not a member of the conversation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Conversation not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /v1/me:
+    delete:
+      summary: Delete the caller's chat data
+      operationId: deleteMe
+      responses:
+        "204":
+          description: Chat data deleted
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /v1/ws:
+    get:
+      summary: Open the chat WebSocket
+      operationId: chatWebSocket
+      description: |
+        WebSocket upgrade endpoint. The client sends the access token in the
+        `Authorization: Bearer <token>` header during the handshake.
+
+        Server events:
+        - `message.created` with a `ChatMessage`
+        - `conversation.updated` with a `Conversation`
+
+        The server closes with code `4401` when the token expires. The client
+        refreshes the token, reconnects, and backfills missed messages through
+        `GET /v1/conversations/{conversationId}/messages?before=...`.
+      x-websocket-events:
+        - message.created
+        - conversation.updated
+      responses:
+        "101":
+          description: Switching Protocols
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Access token from `GET https://dev.neotica.id/auth/login`.
+
+  schemas:
+    HealthResponse:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          example: ok
+
+    UserRef:
+      type: object
+      required:
+        - id
+        - username
+      properties:
+        id:
+          type: string
+          format: uuid
+        username:
+          type: string
+        avatarUrl:
+          type: string
+          nullable: true
+
+    Conversation:
+      type: object
+      required:
+        - id
+        - peer
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+          format: uuid
+        peer:
+          $ref: "#/components/schemas/UserRef"
+        lastMessage:
+          type: string
+        createdAt:
+          type: integer
+          format: int64
+          description: Unix milliseconds
+        updatedAt:
+          type: integer
+          format: int64
+          description: Unix milliseconds
+
+    ConversationListResponse:
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/Conversation"
+
+    ChatMessage:
+      type: object
+      required:
+        - id
+        - conversationId
+        - senderId
+        - body
+        - createdAt
+      properties:
+        id:
+          type: string
+          format: uuid
+        conversationId:
+          type: string
+          format: uuid
+        senderId:
+          type: string
+          format: uuid
+        body:
+          type: string
+        createdAt:
+          type: integer
+          format: int64
+          description: Unix milliseconds
+
+    MessagePage:
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/ChatMessage"
+        nextCursor:
+          type: string
+          format: uuid
+          nullable: true
+
+    CreateConversationRequest:
+      type: object
+      required:
+        - username
+      properties:
+        username:
+          type: string
+          minLength: 1
+          example: jdoe
+
+    SendMessageRequest:
+      type: object
+      required:
+        - clientMessageId
+        - body
+      properties:
+        clientMessageId:
+          type: string
+          format: uuid
+          description: Client-generated UUID used for idempotency.
+        body:
+          type: string
+          minLength: 1
+          maxLength: 4000
+          example: see you tomorrow
+
+    ErrorResponse:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+          example: NOT_A_MEMBER
+        message:
+          type: string
+          example: Caller is not a member of this conversation
+
+  responses:
+    Unauthorized:
+      description: Missing, invalid, or expired access token
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+          example:
+            code: UNAUTHORIZED
+            message: Missing or invalid access token
+    TooManyRequests:
+      description: Rate limit exceeded
+      headers:
+        Retry-After:
+          schema:
+            type: integer
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+          example:
+            code: RATE_LIMITED
+            message: Too many requests
+
+x-internal-endpoints:
+  description: |
+    These endpoints live on the auth service and are not exposed publicly.
+    Nusk authenticates to them with `X-Service-Token`.
+  paths:
+    /internal/auth/users/by-username/{username}:
+      get:
+        summary: Exact username lookup for service-to-service calls
+    /internal/auth/users/{id}:
+      get:
+        summary: User lookup by UUID for service-to-service calls

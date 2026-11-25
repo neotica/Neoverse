@@ -1,0 +1,666 @@
+openapi: 3.0.3
+info:
+  title: Neoserver Admin API
+  description: |
+    Ktor backend — S3 proxy to SeaweedFS + auth3 JWT authentication.
+
+    **Rate limiting tiers:**
+    | Tier | Limit | Window | Endpoints |
+    |---|---|---|---|
+    | strict | 5 | 15 min | `/auth/login`, `/auth/register`, `/auth/forgot-password`, `/auth/reset-password`, `DELETE /auth/` |
+    | moderate | 10 | 15 min | `/auth/resend-verification`, `/auth/reload`, `/auth/check` |
+    | relaxed | 30 | 15 min | `/bucket/v1/*` |
+
+    Limited endpoints return `429 Too Many Requests` with headers:
+    `X-RateLimit-Limit`, `X-RateLimit-Remaining`, `X-RateLimit-Reset`, `Retry-After`.
+  version: 1.0.0
+servers:
+  - url: http://localhost:8082
+    description: Local dev
+
+paths:
+  # ── Health ──────────────────────────────────────────
+  /:
+    get:
+      summary: Health check
+      operationId: health
+      responses:
+        "200":
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Neoserver
+
+  # ── SeaweedFS Filer Proxy ───────────────────────────
+  /buckets/{path}:
+    parameters:
+      - name: path
+        in: path
+        required: true
+        schema:
+          type: string
+        description: Catch-all path forwarded to SeaweedFS Filer (port 8090)
+    get:
+      summary: Proxy to SeaweedFS Filer
+      operationId: proxyGet
+      security:
+        - jwt: []
+      responses:
+        "200":
+          description: Streamed response from Filer
+        "304":
+          description: Not modified (If-None-Match / If-Modified-Since)
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+    put:
+      summary: Proxy to SeaweedFS Filer
+      operationId: proxyPut
+      security:
+        - jwt: []
+      responses:
+        "200":
+          description: Streamed response
+    delete:
+      summary: Proxy to SeaweedFS Filer
+      operationId: proxyDelete
+      security:
+        - jwt: []
+      responses:
+        "200":
+          description: Streamed response
+
+  # ── Auth ────────────────────────────────────────────
+  /auth/login:
+    get:
+      summary: Login
+      operationId: login
+      parameters:
+        - name: Username
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: Password
+          in: header
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Login success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TokenPair"
+        "400":
+          $ref: "#/components/responses/MissingHeader"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/EmailNotVerified"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+      x-rate-limit: strict
+
+  /auth/reload:
+    get:
+      summary: Refresh tokens
+      operationId: refreshLogin
+      security:
+        - refreshJwt: []
+      responses:
+        "200":
+          description: New token pair
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TokenPair"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+      x-rate-limit: moderate
+
+  /auth/register:
+    post:
+      summary: Register new user
+      operationId: register
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NeoUser"
+      responses:
+        "200":
+          description: Account created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+      x-rate-limit: strict
+
+  /auth/resend-verification:
+    post:
+      summary: Resend verification email
+      operationId: resendVerification
+      parameters:
+        - name: Email
+          in: header
+          required: true
+          schema:
+            type: string
+            format: email
+      responses:
+        "200":
+          description: Verification email resent
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+        "400":
+          $ref: "#/components/responses/MissingHeader"
+      x-rate-limit: moderate
+
+  /auth/verify:
+    get:
+      summary: Verify email
+      operationId: verifyEmail
+      parameters:
+        - name: token
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Email verified
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "Email verified for jdoe. You can now log in."
+        "400":
+          description: Missing token
+
+  /auth/:
+    delete:
+      summary: Delete user
+      operationId: deleteUser
+      parameters:
+        - name: Id
+          in: header
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: User deleted
+        "400":
+          $ref: "#/components/responses/MissingHeader"
+      x-rate-limit: strict
+
+  /auth/check:
+    get:
+      summary: Check username
+      operationId: checkUser
+      parameters:
+        - name: Username
+          in: header
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: User info
+        "400":
+          $ref: "#/components/responses/MissingHeader"
+        "404":
+          description: User not found
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+      x-rate-limit: moderate
+
+  /auth/forgot-password:
+    post:
+      summary: Request password reset
+      operationId: forgotPassword
+      parameters:
+        - name: Email
+          in: header
+          required: true
+          schema:
+            type: string
+            format: email
+      responses:
+        "200":
+          description: Reset email sent (if account exists)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "If the email exists, a reset link has been sent."
+        "400":
+          $ref: "#/components/responses/MissingHeader"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+      x-rate-limit: strict
+
+  /auth/reset-password:
+    post:
+      summary: Reset password with token
+      operationId: resetPassword
+      parameters:
+        - name: Token
+          in: header
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: NewPassword
+          in: header
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Password reset
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Password reset successfully. You can now log in with your new password."
+        "400":
+          $ref: "#/components/responses/MissingHeader"
+      x-rate-limit: strict
+
+  # ── User (JWT required) ─────────────────────────────
+  /auth/user/userid:
+    get:
+      summary: Get own user ID from JWT
+      operationId: getUserid
+      security:
+        - jwt: []
+      responses:
+        "200":
+          description: User ID (plain string)
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "a1b2c3d4-..."
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /auth/user/username:
+    get:
+      summary: Get own username from JWT
+      operationId: getUsername
+      security:
+        - jwt: []
+      responses:
+        "200":
+          description: Username (plain string)
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: jdoe
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /auth/user/all:
+    get:
+      summary: List all users (admin only: laetuz)
+      operationId: getAllUsers
+      security:
+        - jwt: []
+      responses:
+        "200":
+          description: List of all users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/NeoUser"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          description: Forbidden — only user `laetuz` can access this
+
+  # ── S3 / SeaweedFS ──────────────────────────────────
+  /bucket/v1:
+    get:
+      summary: S3 bucket root
+      operationId: bucketRoot
+      responses:
+        "200":
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: bucket/v1
+      x-rate-limit: relaxed
+
+  /bucket/v1/{bucket}/upload/raw:
+    parameters:
+      - $ref: "#/components/parameters/BucketPath"
+    post:
+      summary: Raw binary upload to S3
+      operationId: uploadRaw
+      parameters:
+        - name: X-File-Name
+          in: header
+          required: true
+          schema:
+            type: string
+          example: photo.jpg
+      requestBody:
+        required: true
+        content:
+          application/octet-stream:
+            schema:
+              type: string
+              format: binary
+      responses:
+        "200":
+          description: Upload success
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "Success! Uploaded to S3: photo.jpg"
+        "500":
+          description: Upload failed
+      x-rate-limit: relaxed
+
+  /bucket/v1/{bucket}/upload/form:
+    parameters:
+      - $ref: "#/components/parameters/BucketPath"
+    post:
+      summary: Multipart form upload to S3
+      operationId: uploadForm
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        "200":
+          description: Upload success
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "Success Form Upload: photo.jpg"
+        "413":
+          description: Payload too large (> 50 MB)
+        "500":
+          description: Upload failed
+      x-rate-limit: relaxed
+
+  /bucket/v1/{bucket}/delete:
+    parameters:
+      - $ref: "#/components/parameters/BucketPath"
+    delete:
+      summary: Delete object from S3
+      operationId: deleteObject
+      security:
+        - jwt: []
+      parameters:
+        - $ref: "#/components/parameters/ObjectKey"
+      responses:
+        "200":
+          description: Delete success
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "Success deleted file: photo.jpg"
+        "400":
+          description: Missing key
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "500":
+          description: Delete failed
+      x-rate-limit: relaxed
+
+  /bucket/v1/{bucket}/delete/directory:
+    parameters:
+      - $ref: "#/components/parameters/BucketPath"
+    delete:
+      summary: Delete all objects under a prefix (recursive directory delete)
+      operationId: deleteDirectory
+      security:
+        - jwt: []
+      parameters:
+        - name: prefix
+          in: query
+          required: true
+          schema:
+            type: string
+          description: S3 key prefix (directory path). All objects matching this prefix will be deleted.
+          example: uploads/images/
+      responses:
+        "200":
+          description: Delete success
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "Success deleted 12 objects under prefix: uploads/images/"
+        "400":
+          description: Missing prefix
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "500":
+          description: Delete failed
+      x-rate-limit: relaxed
+
+  /bucket/v1/{bucket}/copy:
+    parameters:
+      - $ref: "#/components/parameters/BucketPath"
+    post:
+      summary: Server-side copy of an object within a bucket (S3 CopyObject)
+      operationId: copyObject
+      security:
+        - jwt: []
+      parameters:
+        - name: source
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Source S3 key within the bucket.
+          example: pending/abc/app.apk
+        - name: dest
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Destination S3 key within the bucket.
+          example: com.example/app.apk
+      responses:
+        "200":
+          description: Copy success
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "Success copied pending/abc/app.apk -> com.example/app.apk"
+        "400":
+          description: Missing source/dest
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "500":
+          description: Copy failed
+      x-rate-limit: relaxed
+
+components:
+  securitySchemes:
+    jwt:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT access token from `GET /auth/login`. Also accepted as cookie `auth_token`.
+    refreshJwt:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT refresh token (contains `refreshId` claim).
+    adminBasic:
+      type: http
+      scheme: basic
+      description: Basic auth (currently `admin`/`neotica` — not wired).
+
+  schemas:
+    NeoUser:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Auto-generated UUID
+          example: "a1b2c3d4-..."
+        username:
+          type: string
+          example: jdoe
+        email:
+          type: string
+          format: email
+          example: jdoe@example.com
+        password:
+          type: string
+          description: Plaintext on register; blanked in responses
+          example: secret123
+        createdAt:
+          type: integer
+          description: Unix millis
+          example: 1712345678000
+        emailVerified:
+          type: boolean
+          default: false
+      required:
+        - username
+        - email
+        - password
+
+    TokenPair:
+      type: object
+      properties:
+        token:
+          type: string
+          description: JWT access token
+        refreshToken:
+          type: string
+          description: JWT refresh token
+        expirationTime:
+          type: integer
+          description: Unix seconds
+          example: 1712345678
+
+    MessageResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Account created. Check your email for verification."
+        email:
+          type: string
+          format: email
+
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+        - message
+
+  parameters:
+    BucketPath:
+      name: bucket
+      in: path
+      required: true
+      schema:
+        type: string
+        enum: [neomart-assets, neotica-assets, neomart, neostore, orpheum]
+    ObjectKey:
+      name: key
+      in: query
+      required: true
+      schema:
+        type: string
+      description: S3 object key to delete
+
+  responses:
+    Conflict:
+      description: Username already taken or email already registered; verify the email or log in
+      content:
+        text/plain:
+          schema:
+            type: string
+            example: "Email is already registered. Check your email to verify your account, or log in."
+    EmailNotVerified:
+      description: Email not verified — check your email for the verification link
+      content:
+        text/plain:
+          schema:
+            type: string
+            example: "Please check your email to verify your account."
+    InternalServerError:
+      description: Internal server error (details are logged server-side only)
+      content:
+        text/plain:
+          schema:
+            type: string
+            example: "Internal server error"
+    Unauthorized:
+      description: Invalid or missing authentication
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    MissingHeader:
+      description: Required header not provided
+      content:
+        text/plain:
+          schema:
+            type: string
+            example: "Missing 'username' header"
+    TooManyRequests:
+      description: Rate limit exceeded
+      headers:
+        Retry-After:
+          schema:
+            type: integer
+        X-RateLimit-Limit:
+          schema:
+            type: integer
+        X-RateLimit-Remaining:
+          schema:
+            type: integer
+        X-RateLimit-Reset:
+          schema:
+            type: integer
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
