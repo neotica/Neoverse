@@ -35,21 +35,31 @@ Nusk is a lightweight, standalone 1:1 plain-text chat service optimized for low 
 
 | Concern | Service | Public URL |
 |---|---|---|
-| Authentication | Existing auth service | `https://dev.neotica.id` |
-| Chat REST | Nusk | `https://dev.neotica.id/nusk` |
-| Chat WebSocket | Nusk | `wss://dev.neotica.id/nusk/v1/ws` |
+| Authentication | Existing auth service | `{AUTH_SERVICE_URL}` |
+| Chat REST | Nusk | `{NUSK_BASE_URL}` |
+| Chat WebSocket | Nusk | `{NUSK_WS_URL}` |
+
+URLs are environment-specific placeholders:
+
+- `{AUTH_SERVICE_URL}` — auth service base URL.
+- `{NUSK_BASE_URL}` — public Nusk base including `/nusk/v1/`.
+- `{NUSK_WS_URL}` — public Nusk WebSocket URL.
+
+Endpoint sections below use service-root paths (`/v1/...`). The public client
+base `{NUSK_BASE_URL}` already includes `/nusk/v1/`, so the Android client calls
+`/health`, `/conversations`, etc.
 
 Nusk is a resource server. It does not issue JWTs and does not share a database with the auth service.
 
 ```text
 Android app
-  ├── POST/GET auth ──────────────► dev.neotica.id
-  └── REST + WebSocket ───────────► dev.neotica.id/nusk (reverse proxy strips /nusk)
+  ├── POST/GET auth ──────────────► {AUTH_SERVICE_URL}
+  └── REST + WebSocket ───────────► {NUSK_BASE_URL} (proxy strips /nusk)
                                          │
                                          ├── validates auth access JWT
                                          ├── Postgres: chat_users, conversations, direct_conversations,
                                          │             conversation_members, messages
-                                         └── internal user lookup ──► AUTH_SERVICE_URL
+                                         └── auth3 lookup ──► {AUTH_SERVICE_URL}
 ```
 
 **Reverse Proxy Convention:** The reverse proxy terminates TLS, upgrades WebSockets, forwards `/nusk/*` to Nusk with the `/nusk` prefix stripped, and **blocks all public access to `/internal/*`**. Therefore, Nusk binds routes at `/v1/*` and `/internal/*`.
@@ -98,7 +108,7 @@ nusk/
 │   │   ├── mod.rs
 │   │   ├── jwt.rs              # AuthUser extractor + JWT verification
 │   │   ├── service_token.rs    # ServiceAuth extractor for /internal/* (constant-time compare)
-│   │   └── client.rs           # Reqwest client for auth service internal lookups
+│   │   └── client.rs           # Reqwest client for auth3 checks and username lookups
 │   ├── db/
 │   │   ├── mod.rs
 │   │   ├── conversations.rs    # Inbox, create/get 1:1, hide, membership check
@@ -135,27 +145,28 @@ Nusk validates:
 - Signature & allowed algorithm (explicitly configured via `JWT_ALGORITHM`, default `HS256`, using `JWT_SECRET`).
 - `exp` (not expired).
 - `iss` (validated if `JWT_ISSUER` is non-empty).
-- Required claims:
-  - `sub`: valid UUID string (caller's `user_id`).
-  - `username`: non-empty string (caller's current username).
+- Identity:
+  - `id` claim (or `sub` fallback): valid UUID string (caller's `user_id`).
+  - `username`: optional. If missing, Nusk resolves the caller through auth3 and caches the result.
 
-Expose `AuthUser { user_id: Uuid, username: String, exp: i64 }` as an Axum `FromRequestParts` extractor.
+Expose `AuthUser { user_id: Uuid, exp: i64, ... }` as an Axum `FromRequestParts` extractor.
 
-### Internal Auth Service Lookups (Outbound from Nusk)
+### Auth3 Lookups (Outbound from Nusk)
 
-Nusk resolves exact usernames through the auth service's internal API:
+Nusk uses auth3 instead of dedicated internal auth routes:
 
 ```http
-GET {AUTH_SERVICE_URL}/internal/auth/users/by-username/{username}
-GET {AUTH_SERVICE_URL}/internal/auth/users/{id}
-X-Service-Token: <SERVICE_TOKEN>
+GET {AUTH_SERVICE_URL}/auth/check
+Username: <username>
+GET {AUTH_SERVICE_URL}/auth/user/username
 ```
 
-Expected responses:
-
-- `200 OK`: `{ "id": "<uuid>", "username": "<string>" }`
-- `404 Not Found`: return `404 USER_NOT_FOUND` to caller.
-- `401` / `5xx` / timeout: log error and return `500 INTERNAL_ERROR` (or `502`/`503` mapped to `INTERNAL_ERROR`). Set a short timeout (e.g., 5 seconds).
+- `/auth/check` resolves an exact target username.
+- `/auth/user/username` resolves the caller when the JWT has no username claim.
+- Cache lookup results to respect auth3 rate limits.
+- `404` from `/auth/check` returns `404 USER_NOT_FOUND` to the caller.
+- `5xx`/timeout returns `500 INTERNAL_ERROR`.
+- No `/internal/auth/*` routes are required.
 
 ### Internal Cleanup Route (Inbound to Nusk)
 
@@ -380,7 +391,7 @@ Runs shared `delete_user_chat_data(user_id)`:
 ### Endpoint & Handshake
 
 ```text
-wss://dev.neotica.id/nusk/v1/ws
+{NUSK_WS_URL}
 Authorization: Bearer <accessToken>
 ```
 
@@ -479,14 +490,14 @@ Return `429 Too Many Requests` with header `Retry-After: <seconds>` and JSON err
 | Variable | Required | Default | Purpose |
 |---|---|---|---|
 | `HOST` | No | `0.0.0.0` | Bind address |
-| `PORT` | No | `8080` | HTTP port |
+| `PORT` | No | `8078` | HTTP port |
 | `DATABASE_URL` | **Yes** | — | Postgres URL (`postgres://user:pass@host:5432/nusk`) |
 | `DATABASE_MAX_CONNECTIONS` | No | `8` | SQLx pool max connections |
 | `RUN_MIGRATIONS` | No | `true` | Run embedded SQLx migrations on boot |
 | `JWT_SECRET` | **Yes** | — | Shared HMAC secret for access tokens |
 | `JWT_ALGORITHM` | No | `HS256` | JWT signing algorithm (`HS256`, `HS384`, `HS512`) |
 | `JWT_ISSUER` | No | `""` | Expected `iss` claim if non-empty |
-| `AUTH_SERVICE_URL` | **Yes** | — | Internal auth service base URL |
+| `AUTH_SERVICE_URL` | **Yes** | — | auth3 base URL |
 | `SERVICE_TOKEN` | **Yes** | — | Shared secret for `X-Service-Token` |
 | `MAX_CONNECTIONS_PER_USER` | No | `5` | Max concurrent WebSockets per user |
 | `RUST_LOG` | No | `nusk=info,tower_http=info` | Tracing filter |

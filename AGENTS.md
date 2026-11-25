@@ -12,8 +12,9 @@ Kotlin/Compose Multiplatform monorepo with several apps. `:app` is now a chat-on
 - `feature/world`, `feature/tavern`, `feature/raven`, `feature/friend`, `core:ui`, `core:network`, `core:firebase` — legacy modules kept in the repo but not in `:app` dependencies.
 
 ## Current backend
-- Auth: `https://dev.neotica.id` (Neoserver auth).
-- Chat: `https://dev.neotica.id/nusk` (Rust/Axum/SQLx service); WebSocket `wss://dev.neotica.id/nusk/v1/ws`.
+- Auth and chat base URLs are configured in `core/core/src/commonMain/kotlin/id/neotica/neoverse/utils/Constants.kt` (`authBaseUrl`, `chatBaseUrl`, `chatWebSocketUrl`).
+- Auth: Neoserver auth.
+- Chat: Rust/Axum/SQLx Nusk service.
 - Backend contracts: `docs/nusk/BACKEND.md` and `docs/nusk/openapi.yaml`.
 - Auth uses access + refresh JWTs. Refresh through `GET /auth/reload` with the refresh token as bearer.
 
@@ -38,7 +39,7 @@ Kotlin/Compose Multiplatform monorepo with several apps. `:app` is now a chat-on
 - Routes live in `core/routes/src/commonMain/kotlin/id/neotica/routes/Screen.kt`. The phone chat uses `Screen.Conversation`; the old `Screen.Chat` remains for legacy Wear code.
 - Koin is manual. `:app` includes `authModules`, `profileModules`, `chatModules`, `ktorModule`, and its own view-model module.
 - Auth (`feature/auth`):
-  - Ktor client for `dev.neotica.id`.
+  - Ktor client for the configured auth base URL.
   - `TokenStore` expect/actual (Android EncryptedSharedPreferences, iOS NSUserDefaults for now).
   - `SessionRepositoryImpl` implements both `SessionRepository` and `TokenProvider`.
   - Login/register/verification/password reset follow the Neoserver auth contract.
@@ -64,4 +65,4 @@ Kotlin/Compose Multiplatform monorepo with several apps. `:app` is now a chat-on
 ## Testing quirks
 - `core:domain` uses JUnit 5 (`android-junit5` + Jupiter); most other modules use JUnit 4 + Mockito + `kotlinx-coroutines-test`.
 - `:app:testDebugUnitTest` is the quick verification for app-shell changes.
-- The chat backend is external; client code can be tested with Ktor `MockEngine` and a fake `TokenProvider`. End-to-end chat requires the `/nusk` service.
+- The chat backend is external; client code can be tested with Ktor `MockEngine` and a fake `SessionRepository`. End-to-end chat requires the configured Nusk service.

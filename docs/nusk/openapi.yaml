@@ -1,245 +1,307 @@
 openapi: 3.0.3
 info:
-  title: Nusk Chat API
+  title: Nusk Chat Service API
+  version: 0.1.0
   description: |
-    1:1 text chat service for Neoverse.
+    Standalone 1:1 plain-text chat service.
 
-    Nusk is a resource server. Clients obtain access and refresh tokens from
-    the Neoserver auth service at `https://dev.neotica.id` and send the access
-    token as a bearer token to every Nusk request.
+    Conventions:
+    - JSON fields are camelCase.
+    - Timestamps are Unix epoch milliseconds (`int64`), never RFC 3339.
+    - The production reverse proxy exposes this service at `/nusk` and strips
+      that prefix before forwarding; the app itself binds `/v1/*` and `/internal/*`.
+    - Message IDs are server-generated UUIDv7 values; `before`/`after` cursors
+      are raw message UUIDs.
+  contact:
+    name: Neoverse backend
+tags:
+  - name: Health
+    description: Public service health.
+  - name: Conversations
+    description: 1:1 conversation inbox, creation, and per-user hiding.
+  - name: Messages
+    description: Message history and idempotent sending.
+  - name: Account
+    description: Account-deletion cleanup.
+  - name: Internal
+    description: Service-to-service routes, blocked by the public reverse proxy.
+  - name: WebSocket
+    description: Live delivery endpoint and server events.
 
-    The WebSocket endpoint is documented here for discoverability but the full
-    protocol is described in `BACKEND.md`.
-  version: 1.0.0
 servers:
-  - url: https://dev.neotica.id/nusk
-    description: Dev (public, proxy strips /nusk)
-  - url: http://localhost:8080
-    description: Local (service binds /v1 directly)
+  - url: /nusk
+    description: Public deployment (reverse proxy strips `/nusk`).
+  - url: {baseUrl}
+    description: Local development (no prefix).
+
 security:
   - bearerAuth: []
+
 paths:
   /v1/health:
     get:
+      tags: [Health]
       summary: Health check
-      operationId: health
+      description: Verifies Postgres connectivity with `SELECT 1`.
       security: []
       responses:
-        "200":
-          description: Service is healthy
+        '200':
+          description: Service and database are healthy.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/HealthResponse"
+                $ref: '#/components/schemas/Health'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
 
   /v1/conversations:
     get:
-      summary: List the caller's conversations
-      operationId: listConversations
+      tags: [Conversations]
+      summary: List visible conversations
+      description: |
+        Returns conversations where the caller's `hidden_at` is null, ordered by
+        `updatedAt` descending, then conversation id descending.
       responses:
-        "200":
-          description: Conversations ordered by updatedAt descending
+        '200':
+          description: Visible conversations for the caller.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ConversationListResponse"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
+                $ref: '#/components/schemas/ConversationList'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalError'
     post:
-      summary: Create or return a 1:1 conversation by exact username
-      operationId: createConversation
+      tags: [Conversations]
+      summary: Create or reopen a 1:1 conversation
+      description: |
+        Resolves the exact username through the auth service, then creates the
+        unique unordered pair conversation or returns the existing one. Reopening
+        clears the caller's hidden flag. Rate limit: 10 requests / minute / user.
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/CreateConversationRequest"
+              $ref: '#/components/schemas/CreateConversationRequest'
+            example:
+              username: jdoe
       responses:
-        "200":
-          description: Existing or newly created conversation
+        '200':
+          description: Conversation created or already existed.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Conversation"
-        "400":
-          description: Invalid username or self-conversation
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "404":
-          description: Username not found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "429":
-          $ref: "#/components/responses/TooManyRequests"
-
-  /v1/conversations/{conversationId}/messages:
-    parameters:
-      - name: conversationId
-        in: path
-        required: true
-        schema:
-          type: string
-          format: uuid
-    get:
-      summary: List messages in a conversation
-      operationId: listMessages
-      parameters:
-        - name: before
-          in: query
-          required: false
-          description: Return messages older than this message UUID.
-          schema:
-            type: string
-            format: uuid
-        - name: after
-          in: query
-          required: false
-          description: Return messages newer than this message UUID.
-          schema:
-            type: string
-            format: uuid
-        - name: limit
-          in: query
-          required: false
-          schema:
-            type: integer
-            minimum: 1
-            maximum: 100
-            default: 50
-      responses:
-        "200":
-          description: Message page
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/MessagePage"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "403":
-          description: Caller is not a member of the conversation
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "404":
-          description: Conversation not found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-    post:
-      summary: Send a message
-      operationId: sendMessage
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/SendMessageRequest"
-      responses:
-        "200":
-          description: Duplicate clientMessageId; returns the original message
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ChatMessage"
-        "201":
-          description: Message was created
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ChatMessage"
-        "400":
-          description: Empty or oversized message, or malformed clientMessageId
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "403":
-          description: Caller is not a member of the conversation
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "404":
-          description: Conversation not found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "429":
-          $ref: "#/components/responses/TooManyRequests"
+                $ref: '#/components/schemas/Conversation'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
 
   /v1/conversations/{conversationId}:
     parameters:
-      - name: conversationId
-        in: path
-        required: true
-        schema:
-          type: string
-          format: uuid
+      - $ref: '#/components/parameters/ConversationId'
     delete:
+      tags: [Conversations]
       summary: Hide a conversation for the caller
-      operationId: deleteConversation
+      description: |
+        Sets `hidden_at` for the caller only. A later message from either member
+        unhides the conversation for both. Returns 404 for a missing conversation
+        and 403 when the caller is not a member.
       responses:
-        "204":
-          description: Conversation hidden for the caller
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "403":
-          description: Caller is not a member of the conversation
+        '204':
+          description: Conversation hidden.
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /v1/conversations/{conversationId}/messages:
+    parameters:
+      - $ref: '#/components/parameters/ConversationId'
+    get:
+      tags: [Messages]
+      summary: List message history
+      description: |
+        `before` returns older messages in descending id order. `after` returns
+        newer messages in ascending id order (reconnect backfill). If neither is
+        supplied, the newest messages are returned in descending id order.
+        `nextCursor` is present when more rows exist in the same direction.
+      parameters:
+        - $ref: '#/components/parameters/Before'
+        - $ref: '#/components/parameters/After'
+        - $ref: '#/components/parameters/Limit'
+      responses:
+        '200':
+          description: Message page.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "404":
-          description: Conversation not found
+                $ref: '#/components/schemas/MessageList'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+    post:
+      tags: [Messages]
+      summary: Send a message
+      description: |
+        Idempotent per `(conversationId, clientMessageId)`. A fresh insert returns
+        201 and broadcasts WebSocket events after commit. A duplicate returns 200
+        with the original message and does not rebroadcast. The trimmed body must
+        be 1-4000 characters. Rate limit: 30 requests / minute / user.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SendMessageRequest'
+            example:
+              clientMessageId: 1cbfcd09-8c4f-4a3e-b98d-5e4a9e43a001
+              body: see you tomorrow
+      responses:
+        '200':
+          description: Duplicate `clientMessageId`; returns the existing message without rebroadcasting.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/Message'
+        '201':
+          description: Message created and committed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
 
   /v1/me:
     delete:
+      tags: [Account]
       summary: Delete the caller's chat data
-      operationId: deleteMe
+      description: |
+        Removes the caller's memberships and `chat_users` row, deletes orphaned
+        conversations/messages, and closes the caller's WebSockets with close
+        code 4403. Idempotent.
       responses:
-        "204":
-          description: Chat data deleted
-        "401":
-          $ref: "#/components/responses/Unauthorized"
+        '204':
+          description: Chat data deleted.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /internal/users/{userId}:
+    parameters:
+      - $ref: '#/components/parameters/UserId'
+    delete:
+      tags: [Internal]
+      summary: Delete a user's chat data (service-to-service)
+      description: |
+        Requires `X-Service-Token` (constant-time comparison). Runs the same
+        cleanup as `DELETE /v1/me`, closes that user's WebSockets with 4403, and
+        is idempotent. Public reverse proxies must block `/internal/*`.
+      security:
+        - serviceToken: []
+      responses:
+        '204':
+          description: Chat data deleted (or already absent).
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalError'
 
   /v1/ws:
     get:
-      summary: Open the chat WebSocket
-      operationId: chatWebSocket
+      tags: [WebSocket]
+      summary: WebSocket upgrade
       description: |
-        WebSocket upgrade endpoint. The client sends the access token in the
-        `Authorization: Bearer <token>` header during the handshake.
+        Validates the JWT during the HTTP upgrade. Requires
+        `Authorization: Bearer <accessToken>`. Rejects with HTTP 401 for missing,
+        invalid, or expired tokens, and HTTP 429 with `Retry-After: 5` when the
+        user already has `MAX_CONNECTIONS_PER_USER` open sockets (default 5).
 
-        Server events:
-        - `message.created` with a `ChatMessage`
-        - `conversation.updated` with a `Conversation`
+        After upgrade, the server pushes JSON text frames for every conversation
+        the user belongs to:
 
-        The server closes with code `4401` when the token expires. The client
-        refreshes the token, reconnects, and backfills missed messages through
-        `GET /v1/conversations/{conversationId}/messages?before=...`.
-      x-websocket-events:
-        - message.created
-        - conversation.updated
+        `message.created`:
+        ```json
+        {
+          "type": "message.created",
+          "conversationId": "7d2e4af0-9f43-4c7d-b2c8-6a5f0f2f1c11",
+          "message": {
+            "id": "01950f8d-8f3c-764b-9fc1-7b2f4f1a1c22",
+            "conversationId": "7d2e4af0-9f43-4c7d-b2c8-6a5f0f2f1c11",
+            "senderId": "e7e4b3bd-4f5f-4a9d-8df2-7ee5c3e9b3e1",
+            "body": "see you tomorrow",
+            "createdAt": 1780000005000
+          }
+        }
+        ```
+
+        `conversation.updated` (tailored per recipient so `peer` is the other user):
+        ```json
+        {
+          "type": "conversation.updated",
+          "conversation": {
+            "id": "7d2e4af0-9f43-4c7d-b2c8-6a5f0f2f1c11",
+            "peer": {
+              "id": "e7e4b3bd-4f5f-4a9d-8df2-7ee5c3e9b3e1",
+              "username": "jdoe",
+              "avatarUrl": null
+            },
+            "lastMessage": "see you tomorrow",
+            "createdAt": 1780000000000,
+            "updatedAt": 1780000005000
+          }
+        }
+        ```
+
+        Heartbeat: protocol Ping every 30 seconds; sockets with no client frame
+        for 60 seconds are closed. Close codes: 4401 token expired, 4403 user
+        deleted, 4410 server shutting down.
       responses:
-        "101":
-          description: Switching Protocols
-        "401":
-          $ref: "#/components/responses/Unauthorized"
+        '101':
+          description: Switching Protocols; messages are delivered as JSON text frames.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
 
 components:
   securitySchemes:
@@ -247,79 +309,207 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT
-      description: Access token from `GET https://dev.neotica.id/auth/login`.
+      description: |
+        auth3 access token signed with the shared `JWT_SECRET`. Nusk accepts the
+        `id` claim (or `sub`) as the UUID user id; when the token has no
+        `username` claim, nusk resolves it through auth3.
+    serviceToken:
+      type: apiKey
+      in: header
+      name: X-Service-Token
+      description: Shared service secret for `/internal/*` routes.
+
+  parameters:
+    ConversationId:
+      name: conversationId
+      in: path
+      required: true
+      description: Conversation UUID.
+      schema:
+        type: string
+        format: uuid
+    UserId:
+      name: userId
+      in: path
+      required: true
+      description: User UUID.
+      schema:
+        type: string
+        format: uuid
+    Before:
+      name: before
+      in: query
+      required: false
+      description: Return messages with `id < before`, ordered by id descending. Cannot be combined with `after`.
+      schema:
+        type: string
+        format: uuid
+    After:
+      name: after
+      in: query
+      required: false
+      description: Return messages with `id > after`, ordered by id ascending (reconnect backfill). Cannot be combined with `before`.
+      schema:
+        type: string
+        format: uuid
+    Limit:
+      name: limit
+      in: query
+      required: false
+      description: Page size; values outside 1-100 return 400 INVALID_REQUEST.
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 50
+
+  responses:
+    BadRequest:
+      description: Invalid request. Codes include `INVALID_REQUEST`, `SELF_CONVERSATION`, and `EMPTY_MESSAGE`.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: INVALID_REQUEST
+            message: Invalid request
+    Unauthorized:
+      description: Missing or invalid credentials.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: UNAUTHORIZED
+            message: Unauthorized
+    Forbidden:
+      description: The caller is not a member of the conversation.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: NOT_A_MEMBER
+            message: Not a member of this conversation
+    NotFound:
+      description: User or conversation not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: CONVERSATION_NOT_FOUND
+            message: Conversation not found
+    Conflict:
+      description: Concurrent conversation creation could not be resolved.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: CONVERSATION_CONFLICT
+            message: Conversation conflict
+    RateLimited:
+      description: Per-user rate limit exceeded.
+      headers:
+        Retry-After:
+          description: Seconds to wait before retrying.
+          schema:
+            type: integer
+            minimum: 1
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: RATE_LIMITED
+            message: Rate limit exceeded
+    InternalError:
+      description: Internal server or upstream auth error.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: INTERNAL_ERROR
+            message: Internal server error
+    ServiceUnavailable:
+      description: Database unavailable.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: INTERNAL_ERROR
+            message: Database unavailable
 
   schemas:
-    HealthResponse:
+    Health:
       type: object
-      required:
-        - status
+      required: [status]
       properties:
         status:
           type: string
-          example: ok
+          enum: [ok]
 
-    UserRef:
+    Peer:
       type: object
-      required:
-        - id
-        - username
+      required: [id, username, avatarUrl]
       properties:
         id:
           type: string
           format: uuid
         username:
           type: string
+          description: Falls back to `deleted_user` when the peer's chat data was removed.
         avatarUrl:
           type: string
           nullable: true
+          description: Always null in v1.
+      example:
+        id: e7e4b3bd-4f5f-4a9d-8df2-7ee5c3e9b3e1
+        username: jdoe
+        avatarUrl: null
 
     Conversation:
       type: object
-      required:
-        - id
-        - peer
-        - createdAt
-        - updatedAt
+      required: [id, peer, lastMessage, createdAt, updatedAt]
       properties:
         id:
           type: string
           format: uuid
         peer:
-          $ref: "#/components/schemas/UserRef"
+          $ref: '#/components/schemas/Peer'
         lastMessage:
           type: string
+          nullable: true
+          description: First 200 Unicode scalar values of the latest message body.
         createdAt:
           type: integer
           format: int64
-          description: Unix milliseconds
+          description: Unix epoch milliseconds.
         updatedAt:
           type: integer
           format: int64
-          description: Unix milliseconds
+          description: Unix epoch milliseconds.
+      example:
+        id: 7d2e4af0-9f43-4c7d-b2c8-6a5f0f2f1c11
+        peer:
+          id: e7e4b3bd-4f5f-4a9d-8df2-7ee5c3e9b3e1
+          username: jdoe
+          avatarUrl: null
+        lastMessage: see you tomorrow
+        createdAt: 1780000000000
+        updatedAt: 1780000005000
 
-    ConversationListResponse:
+    Message:
       type: object
-      required:
-        - data
-      properties:
-        data:
-          type: array
-          items:
-            $ref: "#/components/schemas/Conversation"
-
-    ChatMessage:
-      type: object
-      required:
-        - id
-        - conversationId
-        - senderId
-        - body
-        - createdAt
+      required: [id, conversationId, senderId, body, createdAt]
       properties:
         id:
           type: string
           format: uuid
+          description: Server-generated UUIDv7 (time-ordered).
         conversationId:
           type: string
           format: uuid
@@ -331,93 +521,101 @@ components:
         createdAt:
           type: integer
           format: int64
-          description: Unix milliseconds
+          description: Unix epoch milliseconds.
+      example:
+        id: '01950f8d-8f3c-764b-9fc1-7b2f4f1a1c22'
+        conversationId: 7d2e4af0-9f43-4c7d-b2c8-6a5f0f2f1c11
+        senderId: e7e4b3bd-4f5f-4a9d-8df2-7ee5c3e9b3e1
+        body: see you tomorrow
+        createdAt: 1780000005000
 
-    MessagePage:
+    ConversationList:
       type: object
-      required:
-        - data
+      required: [data]
       properties:
         data:
           type: array
           items:
-            $ref: "#/components/schemas/ChatMessage"
+            $ref: '#/components/schemas/Conversation'
+
+    MessageList:
+      type: object
+      required: [data, nextCursor]
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Message'
         nextCursor:
           type: string
           format: uuid
           nullable: true
+          description: Last returned message id when more rows exist; otherwise null.
 
     CreateConversationRequest:
       type: object
-      required:
-        - username
+      required: [username]
       properties:
         username:
           type: string
-          minLength: 1
-          example: jdoe
+          description: Exact username, trimmed before lookup. Empty values return 400 INVALID_REQUEST.
 
     SendMessageRequest:
       type: object
-      required:
-        - clientMessageId
-        - body
+      required: [clientMessageId, body]
       properties:
         clientMessageId:
           type: string
           format: uuid
-          description: Client-generated UUID used for idempotency.
+          description: Client-generated idempotency key unique per conversation.
         body:
           type: string
           minLength: 1
           maxLength: 4000
-          example: see you tomorrow
+          description: Trimmed before validation; counted in Unicode scalar values.
 
-    ErrorResponse:
+    MessageCreatedEvent:
       type: object
-      required:
-        - code
-        - message
+      required: [type, conversationId, message]
+      properties:
+        type:
+          type: string
+          enum: [message.created]
+        conversationId:
+          type: string
+          format: uuid
+        message:
+          $ref: '#/components/schemas/Message'
+
+    ConversationUpdatedEvent:
+      type: object
+      required: [type, conversation]
+      properties:
+        type:
+          type: string
+          enum: [conversation.updated]
+        conversation:
+          $ref: '#/components/schemas/Conversation'
+
+    Error:
+      type: object
+      required: [code, message]
       properties:
         code:
           type: string
-          example: NOT_A_MEMBER
+          enum:
+            - INVALID_REQUEST
+            - SELF_CONVERSATION
+            - EMPTY_MESSAGE
+            - UNAUTHORIZED
+            - NOT_A_MEMBER
+            - USER_NOT_FOUND
+            - CONVERSATION_NOT_FOUND
+            - CONVERSATION_CONFLICT
+            - RATE_LIMITED
+            - INTERNAL_ERROR
         message:
           type: string
-          example: Caller is not a member of this conversation
-
-  responses:
-    Unauthorized:
-      description: Missing, invalid, or expired access token
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/ErrorResponse"
-          example:
-            code: UNAUTHORIZED
-            message: Missing or invalid access token
-    TooManyRequests:
-      description: Rate limit exceeded
-      headers:
-        Retry-After:
-          schema:
-            type: integer
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/ErrorResponse"
-          example:
-            code: RATE_LIMITED
-            message: Too many requests
-
-x-internal-endpoints:
-  description: |
-    These endpoints live on the auth service and are not exposed publicly.
-    Nusk authenticates to them with `X-Service-Token`.
-  paths:
-    /internal/auth/users/by-username/{username}:
-      get:
-        summary: Exact username lookup for service-to-service calls
-    /internal/auth/users/{id}:
-      get:
-        summary: User lookup by UUID for service-to-service calls
+      example:
+        code: CONVERSATION_NOT_FOUND
+        message: Conversation not found
