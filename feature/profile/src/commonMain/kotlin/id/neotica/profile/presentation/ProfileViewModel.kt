@@ -1,125 +1,57 @@
 package id.neotica.profile.presentation
 
-import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import co.touchlab.kermit.Logger
 import id.neotica.auth.domain.AuthRepository
 import id.neotica.domain.ApiResult
-import id.neotica.domain.NeoUser
-import id.neotica.domain.local.CurrentUserRepository
-import id.neotica.domain.local.FriendDaoRepository
-import id.neotica.domain.model.User
-import id.neotica.profile.domain.ProfileRepository
-import id.neotica.routes.Screen
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO
+import id.neotica.domain.remote.ConversationRepository
+import id.neotica.domain.session.SessionRepository
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 class ProfileViewModel(
     private val authRepo: AuthRepository,
-    private val profileRepo: ProfileRepository,
-    private val friendDatabase: FriendDaoRepository,
-    private val currentUserDatabase: CurrentUserRepository
-): ViewModel() {
+    private val conversationRepo: ConversationRepository,
+    private val session: SessionRepository,
+) : ViewModel() {
 
-    private var _user: MutableStateFlow<ApiResult<User?>> = MutableStateFlow(ApiResult.Loading())
+    val username: String = session.getUsername().orEmpty()
 
-    private var _currentUser: MutableStateFlow<ApiResult<User>?> = MutableStateFlow(
-        ApiResult.Loading()
-    )
-    val currentUser = _currentUser.asStateFlow()
+    private val _events = Channel<ProfileEvent>(Channel.BUFFERED)
+    val events = _events.receiveAsFlow()
 
-    private var _profile: MutableStateFlow<NeoUser?> = MutableStateFlow(null)
-    val profile = _profile.asStateFlow()
-
-    private var _profileChannel = Channel<ProfileState>()
-    val profileChannel = _profileChannel.receiveAsFlow()
-
-    init {
-        getUser()
-    }
-
-    fun isLoggedIn(): Boolean {
-        return authRepo.isLoggedIn()
-    }
+    fun isLoggedIn(): Boolean = authRepo.isLoggedIn()
 
     fun logout() = viewModelScope.launch {
         authRepo.logout()
     }
 
     fun deleteAccount() = viewModelScope.launch {
-        authRepo.deleteAccount()
-        friendDatabase.clearFriends()
-        currentUserDatabase.clearCurrent()
-    }
-
-    private fun getUser() = viewModelScope.launch {
-        val userNew = profileRepo.getUserDetailNew(authRepo.getUserId().toString())
-        userNew.collect {
-            when (it) {
-                is ApiResult.Success -> {
-                    currentUserDatabase.saveNeoUser(it.data!!)
-                    _profile.value = it.data
-                    Logger.d("profileVM") { it.data.toString() }
-                }
-                is ApiResult.Error -> {
-                    Logger.e("profileVM") { it.errorMessage.toString() }
-                    _profileChannel.send(
-                        ProfileState.OnError(
-                            message = it.errorMessage.toString(),
-                        ),
-                    )
-                    _profileChannel.send(
-                        ProfileState.OnNavigate(Screen.InputProfileScreen)
-                    )
-                    _user.value = ApiResult.Error(it.errorMessage.toString())
-                }
-                is ApiResult.Loading -> {}
-            }
-        }
-    }
-
-    fun changeProfilePic(uri: String) = CoroutineScope(Dispatchers.IO).launch {
-        getUser()
-        profileRepo.changeProfilePicture(uri)
-        currentUserDatabase.getUser().collect {
-            val db = it[0]
-            val tempUser = User(
-                userId = db.userId,
-                username = db.username,
-                userEmail = db.userEmail,
-                status = db.status,
-                imageUrl = profileRepo.getUserProfilePic()
-            )
-            profileRepo.changeUserProfile(tempUser)
-            currentUserDatabase.saveUser(tempUser)
-            getUser()
-        }
-    }
-
-    val visiblePermissionQueue = mutableStateListOf<String>()
-
-    fun onPermissionResult(
-        permission: String,
-        isGranted: Boolean
-    ) {
-        if (!isGranted) {
-            visiblePermissionQueue.add(0, permission)
+        conversationRepo.deleteMyChatData()
+        when (val result = authRepo.deleteAccount()) {
+            is ApiResult.Success -> _events.send(ProfileEvent.AccountDeleted)
+            is ApiResult.Error -> _events.send(ProfileEvent.Error(result.errorMessage ?: "Unable to delete account"))
+            is ApiResult.Loading -> Unit
         }
     }
 
     fun resetPassword(email: String) = viewModelScope.launch {
-        authRepo.resetPassword(email)
+        when (val result = authRepo.requestPasswordReset(email)) {
+            is ApiResult.Success -> _events.send(ProfileEvent.Message(result.data ?: "Reset email sent"))
+            is ApiResult.Error -> _events.send(ProfileEvent.Error(result.errorMessage ?: "Unable to send reset email"))
+            is ApiResult.Loading -> Unit
+        }
     }
 
-    sealed interface ProfileState {
-        data class OnError(val message: String): ProfileState
-        data class OnNavigate(val route: Screen?): ProfileState
+
+    fun changeProfilePic(uri: String) = Unit
+
+    fun onPermissionResult(permission: String, isGranted: Boolean) = Unit
+
+    sealed interface ProfileEvent {
+        data object AccountDeleted : ProfileEvent
+        data class Message(val text: String) : ProfileEvent
+        data class Error(val text: String) : ProfileEvent
     }
 }

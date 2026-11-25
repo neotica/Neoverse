@@ -27,10 +27,8 @@ import co.touchlab.kermit.Logger
 import dev.icerock.moko.resources.compose.painterResource
 import id.neotica.neoverse.presentation.navigation.NavGraph
 import id.neotica.res.MR
-import id.neotica.routes.AlexandriaScreen
 import id.neotica.routes.RootScreen
 import id.neotica.routes.Screen
-import id.neotica.routes.WorldScreen
 import id.neotica.ui.shared.components.navigation.CustomNavBar
 import id.neotica.ui.shared.components.navigation.CustomNavigationSuiteScaffold
 import id.neotica.ui.shared.components.navigation.NavigationSuiteScaffoldDefaults
@@ -57,11 +55,6 @@ fun MainView() {
                 screen = RootScreen.HomeNav
             ),
             NavigationItem(
-                title = "World",
-                icon = painterResource(MR.images.ic_world),
-                screen = RootScreen.WorldNav
-            ),
-            NavigationItem(
                 title = "Profile",
                 icon = painterResource(MR.images.ic_profile),
                 screen = RootScreen.ProfileNav
@@ -72,43 +65,18 @@ fun MainView() {
             Screen.Splash,
             Screen.LoginScreen,
             Screen.RegisterScreen,
-            Screen.VerifyEmailScreen,
+            Screen.VerifyEmailScreen(),
+            Screen.Conversation(),
             Screen.PrivacyPolicyScreen,
             Screen.TermsOfServiceScreen,
             Screen.DeleteAccountScreen,
             Screen.AboutScreen,
             Screen.AddChatScreen,
             Screen.UpdateAppScreen,
-            Screen.CameraPreviewScreen,
-            Screen.SearchUserScreen,
-            Screen.FriendScreen,
-            Screen.ResetPassword,
-            Screen.Chat(),
-            Screen.EditProfileScreen(),
-            Screen.InputProfileScreen
+            Screen.ResetPassword
         )
 
-        val worldScreen = setOf(
-            WorldScreen.TavernScreen,
-            WorldScreen.MiningScreen,
-            WorldScreen.LeaderBoardsScreen,
-            WorldScreen.TerminalScreen,
-            WorldScreen.RavenScreen,
-            WorldScreen.RavenChatScreen,
-            WorldScreen.ItemDetailScreen(),
-        )
-
-        val alexandriaSet = setOf(
-            AlexandriaScreen.HomeScreen,
-            AlexandriaScreen.BookScreen(),
-            AlexandriaScreen.UserLibraryScreen,
-            AlexandriaScreen.EditBookScreen(),
-            AlexandriaScreen.EditChapterScreen(),
-            AlexandriaScreen.BookContentScreen(),
-            AlexandriaScreen.AdminLibraryScreen
-        )
-
-        val bottomBarExcludedRoutes = screenSet + worldScreen + alexandriaSet
+        val bottomBarExcludedRoutes = screenSet
 
         val includeRoute = navBackStackEntry.showExcept(bottomBarExcludedRoutes)
         Logger.d("currentRoute") { navBackStackEntry?.destination?.route.toString() }

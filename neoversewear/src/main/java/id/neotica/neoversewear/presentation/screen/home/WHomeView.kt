@@ -57,7 +57,7 @@ fun WearHomeScreen(navController: NavController, viewModel: WHomeViewModel = koi
     LaunchedEffect(isPressed) {
         isPressed = false
         if (viewModel.isLoggedIn()) {
-            if (!viewModel.isUserVerified()) navController.navigate(Screen.VerifyEmailScreen) {
+            if (!viewModel.isUserVerified()) navController.navigate(Screen.VerifyEmailScreen()) {
                 popUpTo(RootScreen.HomeNav) {
                     inclusive = true
                 }

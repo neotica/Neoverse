@@ -3,8 +3,8 @@ package id.neotica.auth.presentation.register
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
-import id.neotica.domain.ApiResult
 import id.neotica.auth.domain.AuthRepository
+import id.neotica.domain.ApiResult
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
@@ -12,9 +12,6 @@ import kotlinx.coroutines.launch
 class RegisterViewModel(
     private val authRepo: AuthRepository,
 ): ViewModel() {
-
-    private var _doesUserExist = MutableSharedFlow<Boolean>()
-    val doesUserExist = _doesUserExist.asSharedFlow()
 
     private var _loading = MutableSharedFlow<Boolean>()
     val loading = _loading.asSharedFlow()
@@ -24,8 +21,7 @@ class RegisterViewModel(
 
     fun register(username: String, email: String, password: String, callback: () -> Unit) = viewModelScope.launch {
         _loading.emit(true)
-        val result = authRepo.register(username, email, password)
-        when(result) {
+        when (val result = authRepo.register(username, email, password)) {
             is ApiResult.Loading -> _loading.emit(true)
             is ApiResult.Success -> {
                 _loading.emit(false)
@@ -34,24 +30,8 @@ class RegisterViewModel(
             }
             is ApiResult.Error -> {
                 _loading.emit(false)
-                Logger.e { "registervm: ${result.errorMessage.toString()}" }
+                Logger.e { "registervm: ${result.errorMessage}" }
                 _registerResult.emit(result.errorMessage.toString())
-            }
-        }
-    }
-
-    fun checkUsername(username: String) = viewModelScope.launch {
-        _doesUserExist.emit(false)
-        val user = authRepo.isUsernameExist(username)
-        when(user) {
-            is ApiResult.Loading -> {
-                _doesUserExist.emit(false)
-            }
-            is ApiResult.Success -> {
-                user.data?.let { _doesUserExist.emit(it) }
-            }
-            is ApiResult.Error -> {
-                _doesUserExist.emit(false)
             }
         }
     }

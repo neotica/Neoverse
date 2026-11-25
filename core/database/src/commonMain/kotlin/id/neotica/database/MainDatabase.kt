@@ -8,8 +8,8 @@ import id.neotica.database.dao.CurrentUserDao
 import id.neotica.database.dao.FriendDao
 import id.neotica.database.entity.FriendEntity
 import id.neotica.database.entity.CurrentUserEntity
-import id.neotica.profile.data.local.ProfileDao
-import id.neotica.profile.data.local.ProfileEntity
+import id.neotica.database.profile.ProfileDao
+import id.neotica.database.profile.ProfileEntity
 
 @Database(
     entities = [

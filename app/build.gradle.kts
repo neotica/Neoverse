@@ -1,7 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
-    alias(libs.plugins.google.services)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.composeMultiplatform)
@@ -19,8 +18,8 @@ android {
         applicationId = "id.neotica.neoverse"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = 68
-        versionName = "1.2.3"
+        versionCode = 69
+        versionName = "1.2.4"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -62,19 +61,16 @@ android {
 }
 
 dependencies {
-    implementation(projects.core.database)
-    implementation(projects.core.domain)
-    implementation(projects.core.network)
-    implementation(projects.core.uiShared)
-    implementation(projects.core.routes)
+    implementation(projects.core.chat)
     implementation(projects.core.core)
-    implementation(projects.core.camera)
-    implementation(projects.feature.world)
+    implementation(projects.core.domain)
+    implementation(projects.core.ktor)
+    implementation(projects.core.routes)
+    implementation(projects.core.uiShared)
     implementation(projects.feature.auth)
-    implementation(projects.feature.profile)
-    implementation(projects.feature.home)
     implementation(projects.feature.chat)
-    implementation(projects.feature.friend)
+    implementation(projects.feature.home)
+    implementation(projects.feature.profile)
 
     // Testing
     testImplementation(libs.bundles.unit.test)

@@ -10,7 +10,7 @@ import kotlinx.coroutines.launch
 
 class LoginViewModel(
     private val authRepo: AuthRepository,
-): ViewModel() {
+) : ViewModel() {
 
     private var _loginResult = MutableSharedFlow<String>()
     val loginResult = _loginResult.asSharedFlow()
@@ -18,10 +18,9 @@ class LoginViewModel(
     private var _loading = MutableSharedFlow<Boolean>()
     val loading get() = _loading.asSharedFlow()
 
-    fun login(email: String, password: String, callback: () -> Unit) = viewModelScope.launch {
+    fun login(username: String, password: String, callback: () -> Unit) = viewModelScope.launch {
         _loading.emit(true)
-        val result = authRepo.login(email, password)
-        when (result) {
+        when (val result = authRepo.login(username, password)) {
             is ApiResult.Loading -> _loading.emit(true)
             is ApiResult.Success -> {
                 _loading.emit(false)
@@ -30,7 +29,11 @@ class LoginViewModel(
             }
             is ApiResult.Error -> {
                 _loading.emit(false)
-                _loginResult.emit(result.errorMessage.toString())
+                val message = when (result.errorMessage) {
+                    "EMAIL_NOT_VERIFIED" -> "Please verify your email before logging in."
+                    else -> result.errorMessage.toString()
+                }
+                _loginResult.emit(message)
             }
         }
     }

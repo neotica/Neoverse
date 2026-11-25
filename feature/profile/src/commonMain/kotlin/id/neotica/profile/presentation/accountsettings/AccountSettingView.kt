@@ -34,9 +34,8 @@ fun AccountSettingView(
         Column(
             Modifier.padding(16.dp)
         ) {
-            MenuItem("Change Password") {
-                toast.value = true
-                toastMessage.value = "Please contact our support email to change password."
+            MenuItem("Reset Password") {
+                navController.navigate(Screen.ResetPassword)
             }
             MenuItem(
                 "Delete Account",

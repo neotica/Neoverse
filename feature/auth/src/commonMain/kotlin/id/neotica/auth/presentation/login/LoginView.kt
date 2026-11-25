@@ -126,7 +126,7 @@ fun LoginView(
                     modifier = Modifier.weight(1f),
                 ) {
                     Column {
-                        NeoTextField(value = emailValue, label = "Email")
+                        NeoTextField(value = emailValue, label = "Username")
                         Spacer(modifier = Modifier.padding(4.dp))
                         PasswordTextField(value = passwordValue, placeholder = "Password")
                     }

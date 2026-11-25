@@ -14,7 +14,6 @@ import id.neotica.neoverse.presentation.screen.SettingView
 import id.neotica.neoverse.presentation.screen.SplashView
 import id.neotica.routes.Screen
 import id.neotica.state.AppVariant
-import id.neotica.world.worldNavGraph
 import org.koin.compose.getKoin
 
 @Composable
@@ -30,14 +29,12 @@ fun NavGraph(
         enterTransition = { fadeIn(tween(100)) },
         popEnterTransition = { EnterTransition.None },
         exitTransition = { fadeOut(tween(100)) },
-        popExitTransition = { ExitTransition.None }
+        popExitTransition = { ExitTransition.None },
     ) {
         composable<Screen.Splash> { SplashView(navController = navController) }
         composable<Screen.Setting> { SettingView(paddingValues) }
 
         homeNavGraph(navController, paddingValues)
         profileNavGraph(navController, paddingValues, appVariant)
-        worldNavGraph(navController, paddingValues, appVariant)
-        friendNavGraph(navController, paddingValues)
     }
 }

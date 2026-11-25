@@ -19,6 +19,11 @@ sealed class Screen {
         val chatroomId: String ?= ""
     )
     @Serializable
+    data class Conversation(
+        val conversationId: String = "",
+        val peerUsername: String = ""
+    )
+    @Serializable
     data object UpdateAppScreen: Screen()
 
     @Serializable
@@ -40,7 +45,7 @@ sealed class Screen {
     @Serializable
     data object InputProfileScreen: Screen()
     @Serializable
-    data object VerifyEmailScreen: Screen()
+    data class VerifyEmailScreen(val email: String = ""): Screen()
     @Serializable
     data object PrivacyPolicyScreen: Screen()
     @Serializable

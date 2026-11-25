@@ -1,13 +1,7 @@
 package id.neotica.domain.usecase
 
-import id.neotica.domain.remote.UserRepository
+import id.neotica.domain.session.SessionRepository
 
-class GetUserIdUseCase(private val userRepo: UserRepository) {
-    operator fun invoke(): String {
-        return if (userRepo.isLoggedIn()) {
-            userRepo.getUserId()
-        } else {
-            ""
-        }
-    }
+class GetUserIdUseCase(private val session: SessionRepository) {
+    operator fun invoke(): String = session.getUserId().orEmpty()
 }

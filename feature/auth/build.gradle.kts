@@ -3,8 +3,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlinMultiplatform)
-//    alias(libs.plugins.compose.compiler)
-//    alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.compose.compiler)
 }
 
@@ -34,11 +33,11 @@ kotlin {
         commonMain.dependencies {
             api(projects.core.uiShared)
             implementation(projects.core.routes)
-            api(projects.core.firebase)
             implementation(projects.core.ktor)
         }
         androidMain.dependencies {
             implementation(projects.core.core)
+            implementation(libs.androidx.security.crypto)
         }
         androidUnitTest.dependencies {
             implementation(libs.bundles.unit.test)
@@ -59,23 +58,6 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
-//    buildTypes {
-//        debug {
-////            isMinifyEnabled = true
-////            isShrinkResources = true
-//            proguardFiles(
-//                getDefaultProguardFile("proguard-android-optimize.txt"),
-//                "proguard-rules.pro"
-//            )
-//        }
-//        release {
-//            isMinifyEnabled = false
-//            proguardFiles(
-//                getDefaultProguardFile("proguard-android-optimize.txt"),
-//                "proguard-rules.pro"
-//            )
-//        }
-//    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11

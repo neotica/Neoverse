@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -30,31 +29,33 @@ import org.koin.compose.viewmodel.koinViewModel
 fun VerifyEmailView(
     navController: NavController,
     paddingValues: PaddingValues,
+    email: String,
     modifier: Modifier = Modifier,
     viewModel: VerifyEmailViewModel = koinViewModel()
 ) {
     var toast = remember { mutableStateOf(false) }
     var toastMessage = remember { mutableStateOf("") }
 
-    LaunchedEffect(Unit) {
-        if (viewModel.isUserVerified()) {
-            viewModel.logout()
-            navController.navigate(Screen.LoginScreen)
-        } else
-            viewModel.sendEmailVerification()
+    fun backToLogin() {
+        viewModel.logout()
+        navController.navigate(Screen.LoginScreen) {
+            popUpTo(0) { inclusive = true }
+            launchSingleTop = true
+        }
     }
-    BasicScaffold (
+
+    BasicScaffold(
         "Verify email",
         horizontalAlignment = Alignment.CenterHorizontally,
+        paddingValues = paddingValues
     ) {
         Box(Modifier.padding(4.dp)) {
             Column {
                 Box(Modifier.weight(1f)) {
                     Column {
                         Text(
-                            text = "You have been successfully registered. " +
-                                    "Now kindly verify your email address " +
-                                    "with the link that we had just sent to your email address.",
+                            text = "Your account has been created. Verify your email address " +
+                                    "using the link sent to ${email.ifBlank { "your email" }}.",
                         )
                     }
                 }
@@ -63,11 +64,10 @@ fun VerifyEmailView(
                     horizontalArrangement = Arrangement.Center
                 ) {
                     NeoButton(
-                        "My Email is verified",
+                        "My email is verified",
                         maxWidth = true
                     ) {
-                        viewModel.logout()
-                        navController.navigate(Screen.LoginScreen)
+                        backToLogin()
                     }
                 }
                 Row(
@@ -83,9 +83,14 @@ fun VerifyEmailView(
                         fontSize = 14.sp,
                         text = "Resend email.",
                         modifier = Modifier.clickable {
-                            viewModel.sendEmailVerification()
-                            toastMessage.value = "Email sent."
-                            toast.value = true
+                            if (email.isBlank()) {
+                                toastMessage.value = "Email address is unavailable."
+                                toast.value = true
+                            } else {
+                                viewModel.resend(email)
+                                toastMessage.value = "Email sent."
+                                toast.value = true
+                            }
                         }
                     )
                 }
@@ -93,5 +98,5 @@ fun VerifyEmailView(
             }
         }
     }
-    if (toast.value) NeoToast(toastMessage.value .toString(), toast)
+    if (toast.value) NeoToast(toastMessage.value, toast)
 }

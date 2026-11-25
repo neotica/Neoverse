@@ -19,7 +19,8 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
--keep class com.google.android.gms.** { *; }
--keep class com.google.firebase.** { *; }
 -keep class id.neotica.domain.model.** { *; }
 #-keep class id.neotica.domain.model.chat* { *; }
+# Tink / EncryptedSharedPreferences optional annotations
+-dontwarn com.google.errorprone.annotations.**
+-dontwarn javax.annotation.**

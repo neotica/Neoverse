@@ -32,7 +32,6 @@ kotlin {
         commonMain.dependencies {
             implementation(projects.core.core)
             implementation(projects.core.domain)
-            implementation(projects.feature.profile)
             api(libs.room.runtime)
             api(libs.sqlite.bundled)
         }

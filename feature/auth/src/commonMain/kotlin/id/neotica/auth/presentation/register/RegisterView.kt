@@ -46,8 +46,6 @@ fun RegisterView(
     val passwordValue = remember { mutableStateOf("") }
     var isButtonPressed by remember { mutableStateOf(false) }
     var isLoading by remember { mutableStateOf(false) }
-    var isUserExist by remember { mutableStateOf(false) }
-    var onValueChange by remember { mutableStateOf(false) }
     var checkEnabled by remember { mutableStateOf(false) }
 
     var toast = remember { mutableStateOf(false) }
@@ -66,14 +64,6 @@ fun RegisterView(
         }
     }
 
-    LaunchedEffect(Unit) {
-        viewModel.doesUserExist.collect { isUserExist = !it }
-    }
-
-    LaunchedEffect(onValueChange) {
-        viewModel.checkUsername(nameValue.value)
-    }
-
     BasicScaffold(
         "Register",
         true,
@@ -84,16 +74,10 @@ fun RegisterView(
                 LoadingIndicatorBool(isLoading = isLoading) {
                     Box(Modifier.weight(1f)) {
                         Column {
-                            NeoTextField(
-                                value = nameValue, label = "Username",
-                                onValueChange = {
-                                    onValueChange = !onValueChange
-                                }
-                            )
+                            NeoTextField(value = nameValue, label = "Username")
                             val errorMessage = when {
                                 viewModel.blockedWord.any { nameValue.value.contains(it, ignoreCase = true) } -> "Username contains prohibited words."
                                 nameValue.value.length < 3 && nameValue.value.isNotEmpty() -> "Username must be at least 3 characters."
-                                !isUserExist  -> "Username is already used."
                                 else -> null
                             }
 
@@ -145,7 +129,6 @@ fun RegisterView(
                         Column {
                             val nullCheck = when {
                                 nameValue.value.isEmpty() -> "Please fill all the fields."
-                                !isUserExist -> "Username is already used."
                                 !checkEnabled -> "Please agree to the terms and conditions."
                                 else -> null
                             }
@@ -164,12 +147,11 @@ fun RegisterView(
                                         && passwordValue.value.isNotEmpty()
                                         && nameValue.value.length >= 3
                                         && nameNoWhiteSpace
-                                        && checkEnabled
-                                        && isUserExist,
+                                        && checkEnabled,
                             ) {
                                 isButtonPressed = true
                                 viewModel.register(nameValue.value.lowercase(), emailValue.value, passwordValue.value) {
-                                    navController.navigate(Screen.VerifyEmailScreen)
+                                    navController.navigate(Screen.VerifyEmailScreen(emailValue.value))
                                     toast.value = true
                                     toastMessage.value = "Success registered ${nameValue.value}"
                                 }

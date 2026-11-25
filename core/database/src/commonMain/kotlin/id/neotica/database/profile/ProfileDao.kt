@@ -1,4 +1,4 @@
-package id.neotica.profile.data.local
+package id.neotica.database.profile
 
 import androidx.room.Dao
 import androidx.room.Insert

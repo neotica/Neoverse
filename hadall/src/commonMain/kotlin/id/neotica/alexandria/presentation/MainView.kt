@@ -84,7 +84,7 @@ fun MainView() {
             Screen.Splash,
             Screen.LoginScreen,
             Screen.RegisterScreen,
-            Screen.VerifyEmailScreen,
+            Screen.VerifyEmailScreen(),
             Screen.PrivacyPolicyScreen,
             Screen.TermsOfServiceScreen,
             Screen.DeleteAccountScreen,
