@@ -11,156 +11,125 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
-import id.neotica.droidcore.component.alert.NeoToast
-import id.neotica.droidcore.component.textfield.NeoTextField
-import id.neotica.routes.Screen
-import id.neotica.ui.shared.PasswordTextField
 import id.neotica.ui.shared.components.BasicScaffold
-import id.neotica.ui.shared.components.LoadingIndicatorBool
+import id.neotica.ui.shared.components.LoadingIndicator
 import id.neotica.ui.shared.components.NeoButton
+import id.neotica.ui.shared.components.ToastHost
+import id.neotica.ui.shared.components.textfield.ControlledNeoTextField
+import id.neotica.ui.shared.components.textfield.ControlledPasswordTextField
 import id.neotica.ui.shared.theme.DarkPrimary
 import id.neotica.ui.shared.theme.FontSize
 import id.neotica.ui.shared.theme.NegativePrimary
-import org.koin.compose.viewmodel.koinViewModel
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun RegisterView(
-    navController: NavController,
-    viewModel: RegisterViewModel = koinViewModel()
-    ) {
-    val nameValue = remember { mutableStateOf("") }
-    val nameNoWhiteSpace = remember(nameValue.value) {
-        !nameValue.value.contains(Regex("\\s"))
-    }
-    val emailValue = remember { mutableStateOf("") }
-    val passwordValue = remember { mutableStateOf("") }
-    var isButtonPressed by remember { mutableStateOf(false) }
-    var isLoading by remember { mutableStateOf(false) }
-    var checkEnabled by remember { mutableStateOf(false) }
-
-    var toast = remember { mutableStateOf(false) }
-    var toastMessage = remember { mutableStateOf("") }
-
-    LaunchedEffect(Unit) {
-        viewModel.loading.collect {
-            isLoading = it
-        }
-    }
-
-    LaunchedEffect(Unit) {
-        viewModel.registerResult.collect {
-            toast.value = true
-            toastMessage.value = it
-        }
-    }
-
+    state: RegisterState,
+    onUsernameChange: (String) -> Unit,
+    onEmailChange: (String) -> Unit,
+    onPasswordChange: (String) -> Unit,
+    onAgreedChange: (Boolean) -> Unit,
+    onTogglePasswordVisibility: () -> Unit,
+    onSubmit: () -> Unit,
+    onBack: () -> Unit,
+    onPrivacyPolicy: () -> Unit,
+    onTermsOfService: () -> Unit,
+    onToastDismissed: () -> Unit,
+) {
     BasicScaffold(
-        "Register",
-        true,
-        navController = navController
+        topBarTitle = "Register",
+        enableActionBar = true,
+        customActionBar = onBack,
     ) {
         Box(Modifier.padding(vertical = 4.dp, horizontal = 16.dp)) {
             Column {
-                LoadingIndicatorBool(isLoading = isLoading) {
-                    Box(Modifier.weight(1f)) {
-                        Column {
-                            NeoTextField(value = nameValue, label = "Username")
-                            val errorMessage = when {
-                                viewModel.blockedWord.any { nameValue.value.contains(it, ignoreCase = true) } -> "Username contains prohibited words."
-                                nameValue.value.length < 3 && nameValue.value.isNotEmpty() -> "Username must be at least 3 characters."
-                                else -> null
-                            }
-
-                            errorMessage?.let {
-                                Text(
-                                    it,
-                                    color = NegativePrimary,
-                                    fontSize = FontSize.Small
-                                )
-                            }
-                            NeoTextField(value = emailValue, label = "Email")
-                            Spacer(Modifier.padding(4.dp))
-                            PasswordTextField(value = passwordValue, placeholder = "Password")
-                            Spacer(Modifier.padding(4.dp))
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.Center
-                            ) {
-                                Text(
-                                    color = DarkPrimary,
-                                    fontSize = 14.sp,
-                                    text = "Privacy Policy",
-                                    modifier = Modifier.clickable {
-                                        navController.navigate(Screen.PrivacyPolicyScreen)
-                                    }
-                                )
-                                Spacer(Modifier.weight(1f))
-                                Text(
-                                    color = DarkPrimary,
-                                    fontSize = 14.sp,
-                                    text = "Terms of Service",
-                                    modifier = Modifier.clickable {
-                                        navController.navigate(Screen.TermsOfServiceScreen)
-                                    }
-                                )
-                            }
-                            Spacer(Modifier.padding(16.dp))
-                            Text("By registering, you are already accepting the Terms and Service and Privacy Policy of this app.")
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                Text("Yes, I agree.")
-                                Checkbox(checkEnabled, {checkEnabled = !checkEnabled})
-                            }
+                Box(Modifier.weight(1f)) {
+                    Column {
+                        ControlledNeoTextField(
+                            value = state.username,
+                            onValueChange = onUsernameChange,
+                            label = "Username",
+                            isError = state.usernameError != null,
+                        )
+                        state.usernameError?.let {
+                            Text(it, color = NegativePrimary, fontSize = FontSize.Small)
                         }
-                    }
-                    Row(
-                        Modifier.padding(horizontal = 20.dp),
-                        horizontalArrangement = Arrangement.Center
-                    ) {
-                        Column {
-                            val nullCheck = when {
-                                nameValue.value.isEmpty() -> "Please fill all the fields."
-                                !checkEnabled -> "Please agree to the terms and conditions."
-                                else -> null
-                            }
-                            nullCheck?.let {
-                                Text(
-                                    it,
-                                    color = NegativePrimary,
-                                    fontSize = FontSize.Small
-                                )
-                            }
-                            NeoButton(
-                                "Register",
-                                maxWidth = true,
-                                enabled = nameValue.value.isNotEmpty()
-                                        && emailValue.value.isNotEmpty()
-                                        && passwordValue.value.isNotEmpty()
-                                        && nameValue.value.length >= 3
-                                        && nameNoWhiteSpace
-                                        && checkEnabled,
-                            ) {
-                                isButtonPressed = true
-                                viewModel.register(nameValue.value.lowercase(), emailValue.value, passwordValue.value) {
-                                    navController.navigate(Screen.VerifyEmailScreen(emailValue.value))
-                                    toast.value = true
-                                    toastMessage.value = "Success registered ${nameValue.value}"
-                                }
-                            }
+                        ControlledNeoTextField(
+                            value = state.email,
+                            onValueChange = onEmailChange,
+                            label = "Email",
+                        )
+                        Spacer(Modifier.padding(4.dp))
+                        ControlledPasswordTextField(
+                            value = state.password,
+                            onValueChange = onPasswordChange,
+                            isPasswordVisible = state.isPasswordVisible,
+                            onTogglePasswordVisibility = onTogglePasswordVisibility,
+                            placeholder = "Password",
+                        )
+                        Spacer(Modifier.padding(4.dp))
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.Center,
+                        ) {
+                            Text(
+                                color = DarkPrimary,
+                                fontSize = 14.sp,
+                                text = "Privacy Policy",
+                                modifier = Modifier.clickable(onClick = onPrivacyPolicy),
+                            )
+                            Spacer(Modifier.weight(1f))
+                            Text(
+                                color = DarkPrimary,
+                                fontSize = 14.sp,
+                                text = "Terms of Service",
+                                modifier = Modifier.clickable(onClick = onTermsOfService),
+                            )
+                        }
+                        Spacer(Modifier.padding(16.dp))
+                        Text("By registering, you are already accepting the Terms and Service and Privacy Policy of this app.")
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text("Yes, I agree.")
+                            Checkbox(state.agreedToTerms, onCheckedChange = onAgreedChange)
                         }
                     }
                 }
+                Row(
+                    Modifier.padding(horizontal = 20.dp),
+                    horizontalArrangement = Arrangement.Center,
+                ) {
+                    NeoButton(
+                        text = "Register",
+                        maxWidth = true,
+                        enabled = state.canSubmit,
+                        onClick = onSubmit,
+                    )
+                }
             }
+            if (state.isLoading) LoadingIndicator()
         }
     }
-    if (toast.value) NeoToast(toastMessage.value .toString(), toast)
+    ToastHost(state.toastMessage, onToastDismissed)
+}
+
+@Preview
+@Composable
+private fun RegisterViewPreview() {
+    RegisterView(
+        state = RegisterState(username = "jdoe", email = "jdoe@example.com", password = "secret", agreedToTerms = true),
+        onUsernameChange = {},
+        onEmailChange = {},
+        onPasswordChange = {},
+        onAgreedChange = {},
+        onTogglePasswordVisibility = {},
+        onSubmit = {},
+        onBack = {},
+        onPrivacyPolicy = {},
+        onTermsOfService = {},
+        onToastDismissed = {},
+    )
 }

@@ -52,6 +52,7 @@ kotlin {
         commonMain.dependencies {
             //put your multiplatform dependencies here
             api(projects.core.core)
+            api(libs.compose.ui.tooling.preview)
             api(libs.droidcore.maven)
 
             implementation(compose.material3)
@@ -99,3 +100,7 @@ android {
 //    androidTestImplementation(libs.androidx.junit)
 //    androidTestImplementation(libs.androidx.espresso.core)
 //}
+
+dependencies {
+    debugImplementation(libs.compose.ui.tooling)
+}

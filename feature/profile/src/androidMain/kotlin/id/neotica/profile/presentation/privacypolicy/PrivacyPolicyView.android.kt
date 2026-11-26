@@ -1,7 +1,6 @@
 package id.neotica.profile.presentation.privacypolicy
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.graphics.Bitmap
 import android.net.http.SslError
 import android.webkit.SslErrorHandler
@@ -12,39 +11,33 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.navigation.NavController
 import id.neotica.neoverse.utils.privacyPolicy
 import id.neotica.ui.shared.components.BasicScaffold
 import id.neotica.ui.shared.components.LoadingIndicator
 import id.neotica.ui.shared.theme.NeoPadding
-import androidx.core.net.toUri
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
-actual fun PrivacyPolicyView(navController: NavController) {
+actual fun PrivacyPolicyView(
+    state: PrivacyPolicyState,
+    onLoadingChanged: (Boolean) -> Unit,
+    onBack: () -> Unit,
+    onOpenExternal: (String) -> Unit,
+) {
     BasicScaffold(
         topBarTitle = "Privacy Policy",
-        true,
-        navController = navController,
-//        paddingValues = paddingValues,
-        fullScreen = true
+        enableActionBar = true,
+        customActionBar = onBack,
+        fullScreen = true,
     ) {
-        var isLoading by remember { mutableStateOf(true) }
-        if (isLoading) BackHandler {}
-
-        Box(
-            Modifier.padding(top = NeoPadding.topBarPadding)
-        ) {
+        if (state.isLoading) BackHandler {}
+        Box(Modifier.padding(top = NeoPadding.topBarPadding)) {
             AndroidView(
-                factory = {
-                    isLoading = true
-                    WebView(it).apply {
+                factory = { context ->
+                    WebView(context).apply {
                         settings.javaScriptEnabled = true
                         settings.loadWithOverviewMode = true
                         settings.useWideViewPort = true
@@ -52,42 +45,45 @@ actual fun PrivacyPolicyView(navController: NavController) {
                             override fun onReceivedSslError(
                                 view: WebView?,
                                 handler: SslErrorHandler?,
-                                error: SslError?
+                                error: SslError?,
                             ) {
-                                isLoading = false
+                                onLoadingChanged(false)
                                 handler?.cancel()
-                                navController.navigateUp().apply {
-                                    val intent = Intent(Intent.ACTION_VIEW, privacyPolicy.toUri())
-                                    context.startActivity(intent)
-                                }
+                                onBack()
+                                onOpenExternal(privacyPolicy)
                             }
 
                             override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
                                 super.onPageStarted(view, url, favicon)
-                                isLoading = true
+                                onLoadingChanged(true)
                             }
 
                             override fun onPageCommitVisible(view: WebView?, url: String?) {
                                 super.onPageCommitVisible(view, url)
-                                isLoading = false
+                                onLoadingChanged(false)
                             }
 
                             override fun shouldOverrideUrlLoading(
                                 view: WebView?,
-                                request: WebResourceRequest?
-                            ): Boolean {
-                                return super.shouldOverrideUrlLoading(view, request)
-                            }
+                                request: WebResourceRequest?,
+                            ): Boolean = super.shouldOverrideUrlLoading(view, request)
                         }
                     }
                 },
-                update = {
-                    it.loadUrl(privacyPolicy)
-                }
+                update = { it.loadUrl(privacyPolicy) },
             )
-            if (isLoading) {
-                LoadingIndicator()
-            }
+            if (state.isLoading) LoadingIndicator()
         }
     }
+}
+
+@Preview
+@Composable
+private fun PrivacyPolicyViewPreview() {
+    PrivacyPolicyView(
+        state = PrivacyPolicyState(isLoading = false),
+        onLoadingChanged = {},
+        onBack = {},
+        onOpenExternal = {},
+    )
 }

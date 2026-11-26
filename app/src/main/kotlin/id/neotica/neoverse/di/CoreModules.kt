@@ -8,6 +8,7 @@ import id.neotica.domain.observer.ConnectivityObserver
 import id.neotica.home.HomeViewModel
 import id.neotica.home.addchat.AddChatViewModel
 import id.neotica.ktor.ktorModule
+import id.neotica.neoverse.presentation.screen.SplashViewModel
 import id.neotica.neoverse.presentation.screen.main.MainViewModel
 import id.neotica.neoverse.utils.connectionchecker.AndroidConnectivityObserver
 import id.neotica.profile.di.profileModules
@@ -27,6 +28,7 @@ val viewModelModules = module {
     viewModelOf(::AddChatViewModel)
     viewModelOf(::ChatViewModel)
     viewModelOf(::MainViewModel)
+    viewModelOf(::SplashViewModel)
 }
 
 val appVariantModule = module {

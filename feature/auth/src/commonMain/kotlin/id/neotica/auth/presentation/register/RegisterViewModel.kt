@@ -5,35 +5,78 @@ import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
 import id.neotica.auth.domain.AuthRepository
 import id.neotica.domain.ApiResult
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class RegisterViewModel(
     private val authRepo: AuthRepository,
-): ViewModel() {
+) : ViewModel() {
 
-    private var _loading = MutableSharedFlow<Boolean>()
-    val loading = _loading.asSharedFlow()
+    private val _state = MutableStateFlow(RegisterState())
+    val state = _state.asStateFlow()
 
-    private var _registerResult = MutableSharedFlow<String>()
-    val registerResult = _registerResult.asSharedFlow()
+    private val _events = Channel<RegisterEvent>(Channel.BUFFERED)
+    val events = _events.receiveAsFlow()
 
-    fun register(username: String, email: String, password: String, callback: () -> Unit) = viewModelScope.launch {
-        _loading.emit(true)
-        when (val result = authRepo.register(username, email, password)) {
-            is ApiResult.Loading -> _loading.emit(true)
-            is ApiResult.Success -> {
-                _loading.emit(false)
-                _registerResult.emit(result.data.toString())
-                callback()
-            }
-            is ApiResult.Error -> {
-                _loading.emit(false)
-                Logger.e { "registervm: ${result.errorMessage}" }
-                _registerResult.emit(result.errorMessage.toString())
+    fun onUsernameChange(value: String) {
+        _state.update { it.copy(username = value, usernameError = validateUsername(value)) }
+    }
+
+    fun onEmailChange(value: String) {
+        _state.update { it.copy(email = value) }
+    }
+
+    fun onPasswordChange(value: String) {
+        _state.update { it.copy(password = value) }
+    }
+
+    fun onAgreedChange(value: Boolean) {
+        _state.update { it.copy(agreedToTerms = value) }
+    }
+
+    fun onTogglePasswordVisibility() {
+        _state.update { it.copy(isPasswordVisible = !it.isPasswordVisible) }
+    }
+
+    fun register() {
+        if (!_state.value.canSubmit) return
+        viewModelScope.launch {
+            _state.update { it.copy(isLoading = true, toastMessage = null) }
+            val current = _state.value
+            when (val result = authRepo.register(
+                username = current.username.lowercase(),
+                email = current.email,
+                password = current.password,
+            )) {
+                is ApiResult.Success -> {
+                    _state.update { it.copy(isLoading = false) }
+                    _events.send(RegisterEvent.Registered(current.email))
+                }
+                is ApiResult.Error -> {
+                    Logger.e { "registervm: ${result.errorMessage}" }
+                    _state.update {
+                        it.copy(isLoading = false, toastMessage = result.errorMessage ?: "Registration failed")
+                    }
+                }
+                is ApiResult.Loading -> Unit
             }
         }
+    }
+
+    fun onToastDismissed() {
+        _state.update { it.copy(toastMessage = null) }
+    }
+
+    private fun validateUsername(username: String): String? = when {
+        username.isBlank() -> null
+        blockedWord.any { username.contains(it, ignoreCase = true) } -> "Username contains prohibited words."
+        username.length < 3 -> "Username must be at least 3 characters."
+        username.contains(" ") -> "Username cannot contain spaces."
+        else -> null
     }
 
     val blockedWord = listOf(

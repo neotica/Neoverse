@@ -4,33 +4,49 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import id.neotica.auth.domain.AuthRepository
 import id.neotica.domain.ApiResult
-import id.neotica.domain.model.chat.Conversation
 import id.neotica.domain.remote.ConversationRepository
 import id.neotica.domain.session.SessionRepository
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
     private val authRepo: AuthRepository,
     private val conversationRepo: ConversationRepository,
-    private val session: SessionRepository,
+    session: SessionRepository,
 ) : ViewModel() {
 
-    private val _conversations = MutableStateFlow<ApiResult<List<Conversation>>>(ApiResult.Loading())
-    val conversations = _conversations.asStateFlow()
+    private val _state = MutableStateFlow(
+        HomeState(username = session.getUsername().orEmpty())
+    )
+    val state = _state.asStateFlow()
 
-    val username: String = session.getUsername().orEmpty()
+    private val _events = Channel<HomeEvent>(Channel.BUFFERED)
+    val events = _events.receiveAsFlow()
 
-    fun isLoggedIn(): Boolean = authRepo.isLoggedIn()
-
-    fun loadConversations() = viewModelScope.launch {
-        _conversations.value = ApiResult.Loading()
-        _conversations.value = conversationRepo.getConversations()
+    init {
+        if (!authRepo.isLoggedIn()) {
+            viewModelScope.launch { _events.send(HomeEvent.RequireLogin) }
+        }
     }
 
-    fun deleteConversation(conversationId: String) = viewModelScope.launch {
-        conversationRepo.deleteConversation(conversationId)
-        loadConversations()
+    fun onQueryChange(value: String) {
+        _state.update { it.copy(query = value) }
+    }
+
+    fun loadConversations() = viewModelScope.launch {
+        _state.update { it.copy(isLoading = true, error = null) }
+        when (val result = conversationRepo.getConversations()) {
+            is ApiResult.Success -> _state.update {
+                it.copy(conversations = result.data.orEmpty(), isLoading = false)
+            }
+            is ApiResult.Error -> _state.update {
+                it.copy(isLoading = false, error = result.errorMessage ?: "Unable to load chats")
+            }
+            is ApiResult.Loading -> Unit
+        }
     }
 }

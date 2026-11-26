@@ -11,7 +11,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import id.neotica.neoverse.presentation.screen.SettingView
-import id.neotica.neoverse.presentation.screen.SplashView
+import id.neotica.neoverse.presentation.screen.SplashRoute
 import id.neotica.routes.Screen
 import id.neotica.state.AppVariant
 import org.koin.compose.getKoin
@@ -31,7 +31,7 @@ fun NavGraph(
         exitTransition = { fadeOut(tween(100)) },
         popExitTransition = { ExitTransition.None },
     ) {
-        composable<Screen.Splash> { SplashView(navController = navController) }
+        composable<Screen.Splash> { SplashRoute(navController = navController) }
         composable<Screen.Setting> { SettingView(paddingValues) }
 
         homeNavGraph(navController, paddingValues)

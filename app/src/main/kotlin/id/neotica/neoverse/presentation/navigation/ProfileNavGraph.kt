@@ -8,13 +8,13 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import id.neotica.auth.authNavGraph
-import id.neotica.profile.presentation.ProfileView
-import id.neotica.profile.presentation.about.AboutView
-import id.neotica.profile.presentation.accountsettings.AccountSettingView
-import id.neotica.profile.presentation.deleteaccount.DeleteAccountView
-import id.neotica.profile.presentation.privacypolicy.PrivacyPolicyView
-import id.neotica.profile.presentation.resetpassword.ResetPasswordView
-import id.neotica.profile.presentation.termsofservice.TermsOfServiceView
+import id.neotica.profile.presentation.ProfileRoute
+import id.neotica.profile.presentation.about.AboutRoute
+import id.neotica.profile.presentation.accountsettings.AccountSettingRoute
+import id.neotica.profile.presentation.deleteaccount.DeleteAccountRoute
+import id.neotica.profile.presentation.privacypolicy.PrivacyPolicyRoute
+import id.neotica.profile.presentation.resetpassword.ResetPasswordRoute
+import id.neotica.profile.presentation.termsofservice.TermsOfServiceRoute
 import id.neotica.routes.RootScreen
 import id.neotica.routes.Screen
 import id.neotica.state.AppVariant
@@ -30,47 +30,47 @@ fun NavGraphBuilder.profileNavGraph(
         authNavGraph(navController, paddingValues, appVariant)
 
         composable<Screen.ProfileScreen> {
-            ProfileView(
+            ProfileRoute(
                 navController,
                 paddingValues = paddingValues,
-                appVariant,
+                appVariant = appVariant,
             )
         }
         composable<Screen.PrivacyPolicyScreen>(
             enterTransition = { EnterTransition.None },
             exitTransition = { ExitTransition.None },
         ) {
-            PrivacyPolicyView(navController)
+            PrivacyPolicyRoute(navController)
         }
         composable<Screen.TermsOfServiceScreen>(
             enterTransition = { EnterTransition.None },
             exitTransition = { ExitTransition.None },
         ) {
-            TermsOfServiceView(navController)
+            TermsOfServiceRoute(navController)
         }
         composable<Screen.AccountSettingScreen>(
             enterTransition = { EnterTransition.None },
             exitTransition = { ExitTransition.None },
         ) {
-            AccountSettingView(navController, paddingValues)
+            AccountSettingRoute(navController, paddingValues)
         }
         composable<Screen.DeleteAccountScreen>(
             enterTransition = { EnterTransition.None },
             exitTransition = { ExitTransition.None },
         ) {
-            DeleteAccountView(navController, paddingValues)
+            DeleteAccountRoute(navController, paddingValues)
         }
         composable<Screen.AboutScreen>(
             enterTransition = { EnterTransition.None },
             exitTransition = { ExitTransition.None },
         ) {
-            AboutView(navController)
+            AboutRoute(navController)
         }
         composable<Screen.ResetPassword>(
             enterTransition = { EnterTransition.None },
             exitTransition = { ExitTransition.None },
         ) {
-            ResetPasswordView(navController)
+            ResetPasswordRoute(navController)
         }
     }
 }

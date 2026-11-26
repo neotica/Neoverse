@@ -65,3 +65,7 @@ android {
 }
 
 dependencies {}
+
+dependencies {
+    debugImplementation(libs.compose.ui.tooling)
+}

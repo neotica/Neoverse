@@ -40,6 +40,8 @@ dependencies {
     implementation(projects.core.domain)
     implementation(projects.feature.auth)
 
+    debugImplementation(libs.compose.ui.tooling)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

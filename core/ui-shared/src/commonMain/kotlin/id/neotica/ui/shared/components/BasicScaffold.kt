@@ -69,7 +69,7 @@ fun BasicScaffold(
                     colors = TopAppBarDefaults.topAppBarColors(
                         containerColor = if (topBarBackground!= null) topBarColor else Transparent,
                         titleContentColor = White,
-//                        scrolledContainerColor = Transparent
+                        scrolledContainerColor = Transparent
                     ),
                     navigationIcon = {
                         if (enableActionBar) {

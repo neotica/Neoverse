@@ -1,5 +1,6 @@
 package id.neotica.chat.client
 
+import android.util.Log
 import id.neotica.domain.session.SessionRepository
 import id.neotica.neoverse.utils.chatWebSocketUrl
 import io.ktor.client.HttpClient
@@ -81,7 +82,9 @@ internal class ChatRealtimeClient(
                         }
                     }
 
-                    when (runCatching { closeReason.await()?.code?.toInt() }.getOrNull()) {
+                    val reason = runCatching { closeReason.await() }.getOrNull()
+                    val code = reason?.code?.toInt()
+                    when (code) {
                         4403 -> {
                             session.clearSession()
                             stopReconnecting = true
@@ -89,7 +92,7 @@ internal class ChatRealtimeClient(
                         4401 -> session.refreshAccessToken()
                     }
                 }
-            } catch (_: Exception) {
+            } catch (e: Exception) {
                 session.refreshAccessToken()
             }
 

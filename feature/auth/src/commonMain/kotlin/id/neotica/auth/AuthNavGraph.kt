@@ -6,9 +6,9 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
-import id.neotica.auth.presentation.login.LoginView
-import id.neotica.auth.presentation.register.RegisterView
-import id.neotica.auth.verify.VerifyEmailView
+import id.neotica.auth.presentation.login.LoginRoute
+import id.neotica.auth.presentation.register.RegisterRoute
+import id.neotica.auth.verify.VerifyEmailRoute
 import id.neotica.routes.RootScreen
 import id.neotica.routes.Screen
 import id.neotica.state.AppVariant
@@ -22,14 +22,14 @@ fun NavGraphBuilder.authNavGraph(
         startDestination = Screen.LoginScreen,
     ) {
         composable<Screen.LoginScreen> {
-            LoginView(navController, appVariant)
+            LoginRoute(navController, appVariant)
         }
         composable<Screen.RegisterScreen> {
-            RegisterView(navController)
+            RegisterRoute(navController)
         }
         composable<Screen.VerifyEmailScreen> {
             val args = it.toRoute<Screen.VerifyEmailScreen>()
-            VerifyEmailView(navController, paddingValues, args.email)
+            VerifyEmailRoute(navController, paddingValues, args.email)
         }
     }
 }

@@ -25,11 +25,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.White
@@ -37,59 +32,55 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import id.neotica.domain.model.chat.ChatMessage
 import id.neotica.domain.utils.convertLongToTime
-import id.neotica.routes.RootScreen
 import id.neotica.ui.shared.components.BasicScaffold
+import id.neotica.ui.shared.components.ToastHost
 import id.neotica.ui.shared.components.topbar.DotsMenuDropDown
 import id.neotica.ui.shared.components.topbar.DotsMenuItem
 import id.neotica.ui.shared.theme.DarkBackground
 import id.neotica.ui.shared.theme.DarkPrimary
 import id.neotica.ui.shared.theme.DarkPrimaryTransparent2
 import id.neotica.ui.shared.theme.FontSize
-import id.neotica.ui.shared.theme.Transparent
 import id.neotica.ui.shared.theme.TransparentText20
 import id.neotica.ui.shared.theme.TransparentText40
-import org.koin.compose.viewmodel.koinViewModel
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun ChatView(
-    navController: NavController,
+    state: ChatState,
     paddingValues: PaddingValues,
-    viewModel: ChatViewModel = koinViewModel(),
+    onDraftChange: (String) -> Unit,
+    onSend: () -> Unit,
+    onBack: () -> Unit,
+    onDelete: () -> Unit,
+    onToastDismissed: () -> Unit,
 ) {
-    val messages by viewModel.messages.collectAsState()
     val listState = rememberLazyListState()
 
-    LaunchedEffect(messages.size) {
-        if (messages.isNotEmpty()) {
-            listState.scrollToItem(messages.lastIndex)
+    LaunchedEffect(state.messages.size) {
+        if (state.messages.isNotEmpty()) {
+            listState.scrollToItem(state.messages.lastIndex)
         }
     }
 
     BasicScaffold(
-        topBarTitle = viewModel.peerUsername,
+        topBarTitle = state.peerUsername,
+        fullScreen = true,
+        topBarVisibility = true,
         enableActionBar = true,
-        customActionBar = { navController.popBackStack() },
-        navController = navController,
+        customActionBar = onBack,
         paddingValues = paddingValues,
         trailingIcon = {
             DotsMenuDropDown(
                 item = listOf(
-                    DotsMenuItem("Delete chat") {
-                        viewModel.deleteConversation()
-                        navController.navigate(RootScreen.HomeNav) {
-                            popUpTo(RootScreen.HomeNav) { inclusive = true }
-                            launchSingleTop = true
-                        }
-                    }
+                    DotsMenuItem("Delete chat", action = onDelete)
                 ),
             )
         },
     ) {
         Column(Modifier.fillMaxSize()) {
-            if (messages.isEmpty()) {
+            if (state.messages.isEmpty()) {
                 Box(Modifier.weight(1f), contentAlignment = Alignment.Center) {
                     Text(
                         text = "No messages yet. Say hello!",
@@ -103,34 +94,37 @@ fun ChatView(
                     state = listState,
                     contentPadding = PaddingValues(vertical = 8.dp),
                 ) {
-                    items(messages, key = { it.id }) { message ->
+                    items(state.messages, key = { it.id }) { message ->
                         ChatBubble(
                             message = message,
-                            isCurrentUser = message.senderId == viewModel.currentUserId(),
+                            isCurrentUser = message.senderId == state.currentUserId,
                         )
                     }
                 }
             }
 
             MessageComposer(
+                draft = state.draft,
+                onDraftChange = onDraftChange,
+                onSend = onSend,
                 modifier = Modifier.padding(
                     start = 8.dp,
                     end = 8.dp,
                     bottom = WindowInsets.systemBars.asPaddingValues().calculateBottomPadding(),
                 ),
-                onSend = viewModel::sendMessage,
             )
         }
     }
+    ToastHost(state.toastMessage, onToastDismissed)
 }
 
 @Composable
 private fun MessageComposer(
+    draft: String,
+    onDraftChange: (String) -> Unit,
+    onSend: () -> Unit,
     modifier: Modifier = Modifier,
-    onSend: (String) -> Unit,
 ) {
-    var text by remember { mutableStateOf("") }
-
     Card(
         modifier = modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors().copy(containerColor = DarkBackground),
@@ -138,8 +132,8 @@ private fun MessageComposer(
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             BasicTextField(
-                value = text,
-                onValueChange = { text = it },
+                value = draft,
+                onValueChange = onDraftChange,
                 modifier = Modifier
                     .weight(1f)
                     .padding(horizontal = 16.dp, vertical = 12.dp),
@@ -147,7 +141,7 @@ private fun MessageComposer(
                 cursorBrush = SolidColor(White),
             ) { inner ->
                 Box {
-                    if (text.isEmpty()) {
+                    if (draft.isEmpty()) {
                         Text("Message", color = TransparentText40, fontSize = FontSize.Normal)
                     }
                     inner()
@@ -155,10 +149,7 @@ private fun MessageComposer(
             }
             IconButton(
                 onClick = {
-                    if (text.isNotBlank()) {
-                        onSend(text)
-                        text = ""
-                    }
+                    if (draft.isNotBlank()) onSend()
                 }
             ) {
                 Icon(
@@ -203,4 +194,26 @@ private fun ChatBubble(
             )
         }
     }
+}
+
+@Preview
+@Composable
+private fun ChatViewPreview() {
+    ChatView(
+        state = ChatState(
+            peerUsername = "jdoe",
+            currentUserId = "me",
+            messages = listOf(
+                ChatMessage(id = "1", conversationId = "c", senderId = "jdoe", body = "see you tomorrow", createdAt = 1_780_000_000_000),
+                ChatMessage(id = "2", conversationId = "c", senderId = "me", body = "sounds good", createdAt = 1_780_000_005_000),
+            ),
+            draft = "On my way",
+        ),
+        paddingValues = PaddingValues(),
+        onDraftChange = {},
+        onSend = {},
+        onBack = {},
+        onDelete = {},
+        onToastDismissed = {},
+    )
 }

@@ -5,9 +5,9 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import id.neotica.chat.ChatView
-import id.neotica.home.HomeView
-import id.neotica.home.addchat.AddChatView
+import id.neotica.chat.ChatRoute
+import id.neotica.home.HomeRoute
+import id.neotica.home.addchat.AddChatRoute
 import id.neotica.routes.RootScreen
 import id.neotica.routes.Screen
 
@@ -19,13 +19,13 @@ fun NavGraphBuilder.homeNavGraph(
         startDestination = Screen.HomeScreen,
     ) {
         composable<Screen.HomeScreen> {
-            HomeView(navController, paddingValues)
+            HomeRoute(navController, paddingValues)
         }
         composable<Screen.AddChatScreen> {
-            AddChatView(navController, paddingValues)
+            AddChatRoute(navController, paddingValues)
         }
         composable<Screen.Conversation> {
-            ChatView(navController, paddingValues)
+            ChatRoute(navController, paddingValues)
         }
     }
 }

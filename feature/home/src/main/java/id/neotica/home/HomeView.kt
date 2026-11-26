@@ -1,5 +1,6 @@
 package id.neotica.home
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -12,67 +13,45 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import dev.icerock.moko.resources.compose.painterResource
-import id.neotica.domain.ApiResult
 import id.neotica.domain.model.chat.Conversation
 import id.neotica.domain.utils.convertLongToTime
 import id.neotica.res.MR
-import id.neotica.routes.Screen
 import id.neotica.ui.shared.components.BasicScaffold
 import id.neotica.ui.shared.components.ChatListItem
+import id.neotica.ui.shared.components.ControlledNeoSearchBar
 import id.neotica.ui.shared.components.LoadingIndicator
 import id.neotica.ui.shared.components.NeoFAB
-import id.neotica.ui.shared.components.droidcore.NeoSearchBar
 import id.neotica.ui.shared.theme.FontSize
 import id.neotica.ui.shared.theme.TransparentText20
-import org.koin.compose.viewmodel.koinViewModel
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 private const val DefaultAvatar =
     "https://www.pngarts.com/files/6/User-Avatar-in-Suit-PNG.png"
 
 @Composable
 fun HomeView(
-    navController: NavController,
+    state: HomeState,
     paddingValues: PaddingValues,
-    viewModel: HomeViewModel = koinViewModel(),
+    onQueryChange: (String) -> Unit,
+    onRetry: () -> Unit,
+    onConversationClick: (Conversation) -> Unit,
+    onNewChat: () -> Unit,
 ) {
-    val state by viewModel.conversations.collectAsState()
-    val search = rememberSaveable { mutableStateOf("") }
-
-    LaunchedEffect(Unit) {
-        viewModel.loadConversations()
-    }
-
-    LaunchedEffect(Unit) {
-        if (!viewModel.isLoggedIn()) {
-            navController.navigate(Screen.LoginScreen) {
-                popUpTo(0) { inclusive = true }
-                launchSingleTop = true
-            }
-        }
-    }
-
     BasicScaffold(
         topBarTitle = "Chats",
-        navController = navController,
         paddingValues = paddingValues,
     ) {
         Box(Modifier.fillMaxSize()) {
             Column(Modifier.fillMaxSize()) {
                 Text(
                     modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp),
-                    text = "Welcome, ${viewModel.username.ifBlank { "there" }}!",
+                    text = "Welcome, ${state.username.ifBlank { "there" }}!",
                     fontSize = FontSize.Big,
                     fontWeight = FontWeight.Bold,
                     maxLines = 1,
@@ -84,47 +63,35 @@ fun HomeView(
                     fontSize = FontSize.Small,
                     color = TransparentText20,
                 )
-                NeoSearchBar(
-                    value = search,
+                ControlledNeoSearchBar(
+                    value = state.query,
+                    onValueChange = onQueryChange,
                     label = "Search chats",
                     padding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
                 )
 
-                when (val result = state) {
-                    is ApiResult.Loading -> LoadingIndicator()
-                    is ApiResult.Error -> Text(
+                when {
+                    state.isLoading -> LoadingIndicator()
+                    state.error != null -> Column(Modifier.padding(16.dp)) {
+                        Text(state.error, color = TransparentText20)
+                        Text(
+                            text = "Tap to retry",
+                            modifier = Modifier
+                                .padding(top = 8.dp)
+                                .clickable { onRetry() },
+                        )
+                    }
+                    state.filteredConversations.isEmpty() -> Text(
                         modifier = Modifier.padding(16.dp),
-                        text = result.errorMessage ?: "Unable to load chats",
+                        text = "No conversations yet. Start a new chat.",
                         color = TransparentText20,
                     )
-                    is ApiResult.Success -> {
-                        val conversations = result.data.orEmpty().filter { conversation ->
-                            search.value.isBlank() ||
-                                conversation.peerUsername.contains(search.value, ignoreCase = true) ||
-                                conversation.lastMessage.contains(search.value, ignoreCase = true)
-                        }
-                        if (conversations.isEmpty()) {
-                            Text(
-                                modifier = Modifier.padding(16.dp),
-                                text = "No conversations yet. Start a new chat.",
-                                color = TransparentText20,
-                            )
-                        } else {
-                            LazyColumn(
-                                modifier = Modifier.fillMaxSize(),
-                                contentPadding = PaddingValues(bottom = 96.dp),
-                            ) {
-                                items(conversations, key = { it.id }) { conversation ->
-                                    ConversationRow(conversation) {
-                                        navController.navigate(
-                                            Screen.Conversation(
-                                                conversationId = conversation.id,
-                                                peerUsername = conversation.peerUsername,
-                                            )
-                                        )
-                                    }
-                                }
-                            }
+                    else -> LazyColumn(
+                        modifier = Modifier.fillMaxSize(),
+                        contentPadding = PaddingValues(bottom = 96.dp),
+                    ) {
+                        items(state.filteredConversations, key = { it.id }) { conversation ->
+                            ConversationRow(conversation) { onConversationClick(conversation) }
                         }
                     }
                 }
@@ -134,7 +101,7 @@ fun HomeView(
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
                     .padding(16.dp),
-                onClick = { navController.navigate(Screen.AddChatScreen) },
+                onClick = onNewChat,
             ) {
                 Row(Modifier.padding(horizontal = 16.dp), verticalAlignment = Alignment.CenterVertically) {
                     Icon(
@@ -157,34 +124,66 @@ private fun ConversationRow(
         image = conversation.peerAvatarUrl ?: DefaultAvatar,
         onClick = onClick,
         content = {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    modifier = Modifier.weight(1f),
+                    text = conversation.peerUsername.ifBlank { "Conversation" },
+                    fontWeight = FontWeight.Bold,
+                    fontSize = FontSize.Normal,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+                if (conversation.updatedAt > 0) {
+                    Text(
+                        text = convertLongToTime(conversation.updatedAt, true),
+                        fontSize = FontSize.Smaller,
+                        color = TransparentText20,
+                        maxLines = 1,
+                    )
+                }
+            }
             Text(
-                modifier = Modifier.weight(1f),
-                text = conversation.peerUsername.ifBlank { "Conversation" },
-                fontWeight = FontWeight.Bold,
-                fontSize = FontSize.Normal,
+                text = conversation.lastMessage.ifBlank { "No messages yet" },
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
+                fontSize = FontSize.Normal,
+                color = TransparentText20,
             )
-            if (conversation.updatedAt > 0) {
-                Text(
-                    text = convertLongToTime(conversation.updatedAt, true),
-                    fontSize = FontSize.Smaller,
-                    color = TransparentText20,
-                    maxLines = 1,
-                )
-            }
         }
-        Text(
-            text = conversation.lastMessage.ifBlank { "No messages yet" },
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-            fontSize = FontSize.Normal,
-            color = TransparentText20,
-        )
-        }
+    )
+}
+
+@Preview
+@Composable
+private fun HomeViewPreview() {
+    HomeView(
+        state = HomeState(
+            username = "Ryo",
+            conversations = listOf(
+                Conversation(
+                    id = "1",
+                    peerId = "2",
+                    peerUsername = "jdoe",
+                    lastMessage = "see you tomorrow",
+                    updatedAt = 1_780_000_000_000,
+                ),
+                Conversation(
+                    id = "2",
+                    peerId = "3",
+                    peerUsername = "alex",
+                    lastMessage = "checking in",
+                    updatedAt = 1_780_000_010_000,
+                ),
+            ),
+            isLoading = false,
+        ),
+        paddingValues = PaddingValues(),
+        onQueryChange = {},
+        onRetry = {},
+        onConversationClick = {},
+        onNewChat = {},
     )
 }
